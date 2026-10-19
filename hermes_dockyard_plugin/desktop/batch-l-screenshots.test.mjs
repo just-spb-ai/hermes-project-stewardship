@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
 import { mkdirSync } from 'node:fs'
 import { ALL_PROJECTS, pickProject } from './test-support/project-scope.mjs'
+import { CONSOLE_TABS, ROADMAP_WORDS, WORK_CARD_WORDS } from './src/lib/panel-words.js'
+import { KIND_LABEL } from './src/lib/plan-vocab.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -89,7 +91,7 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
         await pickProject(page, ALL_PROJECTS)
 
         // Roadmap: open a project; a ready initiative shows "Ready to confirm".
-        await page.getByRole('tab', { name: 'Roadmap' }).click()
+        await page.getByRole('tab', { name: CONSOLE_TABS.roadmap }).click()
         await page.locator('[data-roadmap-screen]').waitFor()
         // The row that carries the ready initiative: payments-relaunch.
         await page.locator('[data-rm-node="project:payments-relaunch"]').click()
@@ -101,7 +103,7 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
         // The confirm dialog on a ready initiative.
         const ready = page.locator('[data-rm-node^="initiative:"]').filter({ hasText: 'Confirm me when ready' }).first()
         if (await ready.count()) {
-          await ready.getByRole('button', { name: 'Confirm as delivered' }).click().catch(() => {})
+          await ready.getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).click().catch(() => {})
           await page.locator('[data-rm-confirm-dialog]').waitFor({ timeout: 3000 }).catch(() => {})
           await setTheme(page, theme)
           await page.screenshot({ path: `${SHOTS}/roadmap-confirm-${theme}-${width}.png` })
@@ -115,7 +117,7 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
               const ms = proj.milestones.find((m) => m.initiative_ref === ini.ref)
               const obj = proj.objectives.find((o) => o.milestone_id === ms.id)
               await proxyCall(`/projects/payments-relaunch/objectives/${obj.id}/assessment`, { method: 'POST', body: { passed: false, evidence: ['shot:stale'] } })
-              await page.locator('[data-rm-confirm-dialog]').getByRole('button', { name: 'Confirm as delivered' }).click()
+              await page.locator('[data-rm-confirm-dialog]').getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).click()
               await page.waitForFunction(() => /not ready to confirm|every milestone must be reached/i.test(document.querySelector('[data-rm-confirm-dialog]')?.textContent ?? ''), null, { timeout: 8000 })
               await setTheme(page, theme)
               await page.screenshot({ path: `${SHOTS}/roadmap-refusal-${theme}-${width}.png` })
@@ -124,7 +126,7 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
           }
           // Close the dialog through its own control, then reload: a fresh load
           // guarantees no backdrop is left to intercept the next capture.
-          await page.locator('[data-rm-confirm-dialog] [aria-label="Close confirm dialog"]').click().catch(() => {})
+          await page.locator(`[data-rm-confirm-dialog] [aria-label="${ROADMAP_WORDS.closeConfirmDialog}"]`).click().catch(() => {})
           await page.goto(BASE)
           await page.waitForTimeout(1200)
           await pickProject(page, ALL_PROJECTS)
@@ -135,7 +137,10 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
         await page.goto(BASE)
         await page.waitForTimeout(1200)
         await pickProject(page, 'atlas-mobile')
-        await page.getByRole('tab', { name: /Board|Work/i }).first().click()
+        // The console "Workflows" section: the old /Board|Work/i matched the "Work"
+        // inside its English label. It reads the published label now, so the same
+        // screen — and the same set of captures — is driven as before.
+        await page.getByRole('tab', { name: CONSOLE_TABS.workflows }).first().click()
         await page.waitForTimeout(1500)
         await setTheme(page, theme)
         await page.screenshot({ path: `${SHOTS}/board-${theme}-${width}.png` })
@@ -145,7 +150,7 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
         const firstCard = page.locator('[data-work-card]').first()
         if (await firstCard.count()) {
           await firstCard.locator('[data-card-toggle]').click()
-          await firstCard.getByRole('button', { name: 'Open full details' }).click().catch(() => {})
+          await firstCard.getByRole('button', { name: WORK_CARD_WORDS.openDetails }).click().catch(() => {})
           await page.locator('[data-work-item-detail]').waitFor({ timeout: 5000 }).catch(() => {})
           await setTheme(page, theme)
           await page.screenshot({ path: `${SHOTS}/work-item-${theme}-${width}.png` })
@@ -154,25 +159,25 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
         }
 
         // Approval Inbox: the ready-to-confirm section.
-        await page.getByRole('tab', { name: /Inbox|Approval/i }).first().click()
+        await page.getByRole('tab', { name: CONSOLE_TABS.inbox }).first().click()
         await page.waitForTimeout(1500)
         await setTheme(page, theme)
         await page.screenshot({ path: `${SHOTS}/inbox-${theme}-${width}.png` })
 
         // Notifications: both new ladder kinds with their plain words.
-        await page.getByRole('tab', { name: /Notif/i }).first().click().catch(() => {})
+        await page.getByRole('tab', { name: CONSOLE_TABS.notifications }).first().click().catch(() => {})
         await page.waitForTimeout(1500)
         await setTheme(page, theme)
         await page.screenshot({ path: `${SHOTS}/notifications-${theme}-${width}.png` })
 
         // Vision: the goal drawer with the check editor and its pickers.
-        await page.getByRole('tab', { name: /Board|Work/i }).first().click()
+        await page.getByRole('tab', { name: CONSOLE_TABS.workflows }).first().click()
         await page.waitForTimeout(800)
         await page.locator('[data-work-card]').first().waitFor({ timeout: 10000 }).catch(() => {})
         const vCard = page.locator('[data-work-card]').filter({ hasText: 'Build setup screens' }).first()
         if (await vCard.count()) {
           await vCard.locator('[data-card-toggle]').click()
-          await vCard.getByRole('button', { name: /^Milestone:/ }).first().click().catch(() => {})
+          await vCard.getByRole('button', { name: new RegExp(`^${KIND_LABEL.milestone}:`) }).first().click().catch(() => {})
           await page.locator('[data-plan-screen]').waitFor({ timeout: 6000 }).catch(() => {})
           const goalRow = page.locator('[data-plan-row="goal"]').first()
           if (await goalRow.count()) {
@@ -184,17 +189,19 @@ test('Batch L R1: capture every changed screen for signoff', { timeout: 300000 }
         }
 
         // Guards: subtext meets WCAG AA, and "Place…" is not clipped at 1440.
-        await page.getByRole('tab', { name: 'Roadmap' }).click()
+        await page.getByRole('tab', { name: CONSOLE_TABS.roadmap }).click()
         await page.waitForTimeout(1000)
         const lowContrast = await contrastOk(page)
         assert.deepEqual(lowContrast, [], `subtext meets WCAG AA (${theme} ${width})`)
         if (width === 1440) {
-          const clipped = await page.evaluate(() => {
+          // The word is handed to the page: a closure over a node-side constant
+          // would not exist in the browser context.
+          const clipped = await page.evaluate((placeWord) => {
             for (const b of document.querySelectorAll('button')) {
-              if (b.textContent.trim() === 'Place…' && b.scrollWidth > b.clientWidth + 1) return true
+              if (b.textContent.trim() === placeWord && b.scrollWidth > b.clientWidth + 1) return true
             }
             return false
-          })
+          }, ROADMAP_WORDS.place)
           assert.equal(clipped, false, '"Place…" is not clipped at 1440')
         }
 

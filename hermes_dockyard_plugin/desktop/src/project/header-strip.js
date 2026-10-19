@@ -35,6 +35,7 @@ import { useDialogFocusManager } from '../lib/ui.js'
 import { Menu } from './plan/plan-ui.js'
 import { chatOutcomeMessage } from './chat.js'
 import { chatTargets } from './chat.js'
+import { chatTargetLabel } from './chat.js'
 import { openProjectChat } from './chat.js'
 import { projectAttention } from './attention.js'
 import { deliveryCounts } from './attention.js'
@@ -42,13 +43,13 @@ import { lastActivity } from './attention.js'
 import { timeAgo } from './attention.js'
 
 const SEGMENTS = [
-  ['done', 'done'], ['active', 'active'], ['blocked', 'blocked'], ['backlog', 'backlog'],
+  ['done', 'готово'], ['active', 'в работе'], ['blocked', 'заблокировано'], ['backlog', 'бэклог'],
 ]
 
 function ageText(days) {
   if (typeof days !== 'number' || !Number.isFinite(days)) return null
   if (days < 1) return 'Меньше дня'
-  return `${number(days)} ${days === 1 ? 'day' : 'days'}`
+  return `${number(days)} ${days === 1 ? 'день' : 'дней'}`
 }
 
 // Chat with the project's bots (checks round 1, pick 1a): the team, lead
@@ -71,12 +72,12 @@ function ProjectChatMenu({ projectId, lead }) {
     emitToast(tone, message)
   }
   return jsx('span', { className: 'dy-ov-chat', 'data-strip-chat': projectId, children: jsx(Menu, {
-    label: `Chat with a bot on ${projectId}`,
+    label: `Чат с ботом проекта ${projectId}`,
     action: 'project-chat',
     trigger: jsxs(Fragment, { children: [jsx(Icon, { name: 'message-square' }), jsx('span', { children: 'Чат' })] }),
     items: targets.map((target) => ({
       id: target.profile,
-      label: target.role === 'lead' ? `${target.profile} (lead)` : target.profile,
+      label: chatTargetLabel(target),
       onSelect: () => open(target.profile),
     })),
   }) })
@@ -100,8 +101,8 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
   const sub = !attention.available
     ? 'Проверка внимания не загрузилась, поэтому список пуст. Обновите и попробуйте снова.'
     : items.length === 0
-      ? `Nothing needs action in ${projectId} right now.`
-      : `${number(items.length)} ${items.length === 1 ? 'thing needs' : 'things need'} action in ${projectId}. Most urgent first.`
+      ? `В проекте ${projectId} сейчас ничего не требует действий.`
+      : `${number(items.length)} ${items.length === 1 ? 'дело требует' : 'дел требуют'} действий в проекте ${projectId}. Сначала самые срочные.`
   return jsx('section', {
     className: 'dockyard-modal-layer dy-ov-attn-layer',
     'data-attention-drawer': projectId,
@@ -141,7 +142,7 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
             ]}, item.key)
           }) })
           : jsx('p', { className: 'dy-ov-attn-empty', 'data-attention-empty': true, children: attention.available
-            ? 'The banner turns amber or red when work is overdue, blocked or stalled, and blue when a decision waits for you.'
+            ? 'Баннер становится янтарным или красным, когда работа просрочена, заблокирована или застряла, и синим, когда тебя ждёт решение.'
             : 'Статус не показывается, чтобы не гадать.' }),
       ],
     }),
@@ -166,7 +167,7 @@ export function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, on
       className: 'dy-ov-banner', role: 'button', tabIndex: 0,
       'data-tone': attention.tone, 'data-attention-state': attention.state,
       'aria-haspopup': 'dialog', 'aria-expanded': open,
-      'aria-label': `Project status: ${attention.label}. ${attention.summary.replace(/\.$/, '')}. Open attention details.`,
+      'aria-label': `Состояние проекта: ${attention.label}. ${attention.summary.replace(/\.$/, '')}. Открыть подробности внимания.`,
       title: 'Открыть подробности внимания',
       onClick: openDrawer,
       onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDrawer() } },
@@ -183,14 +184,14 @@ export function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, on
       jsxs('p', { className: 'dy-ov-eyebrow', children: [
         jsx('span', { className: 'dy-ov-proj', 'data-strip-project': true, children: project.id }),
         lead ? sep('lead-sep') : null,
-        lead ? jsx('span', { children: `Lead ${lead}` }, 'lead') : null,
+        lead ? jsx('span', { children: `Ведущий ${lead}` }, 'lead') : null,
         project.health !== 'healthy' ? sep('evidence-sep') : null,
         project.health !== 'healthy'
-          ? jsxs('span', { className: 'dy-ov-evidence', 'data-tone': healthTone, 'data-strip-evidence': project.health ?? 'unknown', children: [jsx('i', { 'aria-hidden': true }), `Evidence: ${healthLabel}`] }, 'evidence')
+          ? jsxs('span', { className: 'dy-ov-evidence', 'data-tone': healthTone, 'data-strip-evidence': project.health ?? 'unknown', children: [jsx('i', { 'aria-hidden': true }), `Доказательства: ${healthLabel}`] }, 'evidence')
           : null,
       ]}),
       jsxs('div', { className: 'dy-ov-meta', children: [
-        jsx('span', { 'data-strip-updated': true, children: recent ? `Updated ${recent}` : 'Активности пока нет' }),
+        jsx('span', { 'data-strip-updated': true, children: recent ? `Обновлено ${recent}` : 'Активности пока нет' }),
         jsx('span', { 'data-roadmap-link': true, children: jsx('a', { href: '#', onClick: (event) => { event.preventDefault(); onOpenRoadmap?.() }, children: 'Открыть в дорожной карте' }) }),
         jsx(ProjectChatMenu, { projectId: project.id, lead }, `chat:${project.id}`),
         jsx('button', { type: 'button', className: 'dy-ov-refresh', 'data-action': 'refresh', 'aria-label': 'Обновить', title: 'Обновить', onClick: onRefresh, children: jsx(Icon, { name: 'refresh' }) }),
@@ -200,11 +201,11 @@ export function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, on
     jsxs('div', { className: 'dy-ov-progress', 'data-strip-progress': true, children: [
       jsxs('span', { className: 'dy-ov-pct', children: [
         delivery.percent === null ? 'Работы пока нет' : `${delivery.percent}%`,
-        delivery.total > 0 ? jsx('small', { children: `complete · ${number(delivery.done)} of ${number(delivery.total)} work items` }) : null,
+        delivery.total > 0 ? jsx('small', { children: `готово · ${number(delivery.done)} из ${number(delivery.total)} рабочих элементов` }) : null,
       ]}),
       jsx('div', {
         className: 'dy-ov-track', role: 'img',
-        'aria-label': delivery.total > 0 ? `Delivery: ${legendText}` : 'Поставка: рабочих элементов пока нет',
+        'aria-label': delivery.total > 0 ? `Поставка: ${legendText}` : 'Поставка: рабочих элементов пока нет',
         children: legend.map(([key]) => jsx('span', { className: key, style: { width: `${(delivery[key] / delivery.total) * 100}%` } }, key)),
       }),
       legend.length > 0 ? jsx('div', { className: 'dy-ov-legend', children: legend.map(([key, word]) =>

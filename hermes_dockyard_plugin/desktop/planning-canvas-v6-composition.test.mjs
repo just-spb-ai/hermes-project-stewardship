@@ -31,6 +31,18 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { DASHBOARD, REPO, buildDesktopBundle, chromium } from './planning-canvas-test-bundle.mjs';
 import { pickProject } from './test-support/project-scope.mjs';
+// The words a person reads are read from the source module that renders them,
+// never spelled out here: the panel stays translatable without touching this test.
+import { CANVAS_WORDS } from './src/lib/canvas-words.js';
+const rendered = (text, pattern, what) => { const found = text.match(pattern); if (!found) throw new Error(`src no longer renders ${what}`); return found[1] };
+const wordRe = (word) => new RegExp(String(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+const CANVAS_SRC = readFileSync(new URL('./src/project/canvas.js', import.meta.url), 'utf8');
+const CONNECT_OBJECTS = rendered(CANVAS_SRC, /action: 'connect-canvas-objects',[^}]*children: '([^']+)'/, 'the connect-objects control');
+const REVISION_WORD = rendered(CANVAS_SRC, /\$\{CANVAS_WORDS\.canvasSaved\} ([^$]+)\$\{saved\.revision\}/, 'the canvas revision notice').split(/\s+/).filter(Boolean).pop();
+const CONFLICT_HEAD = rendered(CANVAS_SRC, /`([^`$]+) — [^`$]*\$\{fresh\.revision\}/, 'the revision-conflict notice');
+const SCRATCH_LABEL = rendered(CANVAS_SRC, /· ([^`$]+) · [^`$]*\$\{number\(\(proposal\.source_object_ids/, 'the scratch + suggestion label').trim();
+const PENDING_STATUS = rendered(CANVAS_SRC, /status === 'pending' \? '([^']+)' : status === 'approved'/, 'the pending proposal status');
+const RECORDED_WORD = rendered(CANVAS_SRC, /\$\{result\.status === 'approved' \? '[^']+' : '[^']+'\}([^;`]+);/, 'the recorded-decision notice').trim().replace(/^—\s*/, '');
 
 // The vocabulary is read from the REAL persistence module, not retyped: if the
 // schema ever changes, this file follows it instead of drifting.
@@ -249,7 +261,7 @@ test('Planning canvas v6: the spatial composition renders with every preserved h
     assert.ok(await canvas.locator('[data-action="pc-mode-connect"]').count(), 'Connect mode control');
     assert.ok(await canvas.locator('[data-canvas-kind-picker]').count(), 'kind picker');
     assert.ok(await canvas.locator('[data-canvas-draft]').count(), 'capture input (preserved hook)');
-    assert.ok(await canvas.getByRole('button', { name: 'Add object' }).count(), 'Add object (preserved hook)');
+    assert.ok(await canvas.getByRole('button', { name: CANVAS_WORDS.addObject }).count(), 'Add object (preserved hook)');
     for (const kind of REAL_KINDS) {
       assert.ok(await canvas.locator(`[data-canvas-add-kind="${kind}"]`).count(), `toolbar offers the real kind ${kind}`);
     }
@@ -349,14 +361,14 @@ test('Planning canvas v6: drag, connect, zoom, remove and save all reach the rea
     assert.equal(Number(persisted.x), moved.x, 'the drag position is what went on the wire');
     assert.equal(Number(persisted.y), moved.y, 'the drag position went on the wire for y too');
     assert.equal(Number(host.state.canvas.revision), 5, 'the real contract bumped the revision');
-    assert.match(await canvas.locator('[data-canvas-notice]').innerText(), /revision 5/, 'the surface reports the new revision');
+    assert.match(await canvas.locator('[data-canvas-notice]').innerText(), wordRe(REVISION_WORD + ' 5'), 'the surface reports the new revision');
 
     // --- stale revision is refused, never silently overwritten -------------
     host.state.canvas = { ...host.state.canvas, revision: 41 };
     await canvas.locator('[data-action="pc-save"]').click();
     await page.waitForTimeout(300);
     const conflict = await canvas.locator('[data-canvas-notice]').innerText();
-    assert.match(conflict, /conflict/i, 'a stale save states the conflict');
+    assert.ok(conflict.includes(CONFLICT_HEAD), 'a stale save states the conflict');
     assert.equal(Number(host.state.canvas.revision), 41, 'the stale save did NOT write (revision untouched)');
     assert.equal(await revisionHooks(page).getAttribute('data-canvas-revision'), '41', 'the surface reloaded the canonical revision');
 
@@ -378,7 +390,7 @@ test('Planning canvas v6: drag, connect, zoom, remove and save all reach the rea
     await editor.locator('select').nth(0).selectOption('obj-qu');
     await editor.locator('select').nth(1).selectOption('contradicts');
     await editor.locator('select').nth(2).selectOption('obj-pl');
-    await editor.getByRole('button', { name: 'Connect objects' }).click();
+    await editor.getByRole('button', { name: CONNECT_OBJECTS }).click();
     await page.waitForTimeout(120);
     assert.equal(await canvas.locator('[data-canvas-connector]').count(), edgesBefore + 2, 'the editor added its connector');
     await canvas.locator('[data-action="pc-save"]').click();
@@ -464,8 +476,8 @@ test('Planning canvas v6: curation proposes as scratch only and nothing auto-app
     await page.waitForTimeout(300);
     assert.ok(await canvas.locator('[data-canvas-proposal]').count(), 'answer produced proposal(s)');
     const proposalText = await canvas.locator('[data-canvas-proposals]').innerText();
-    assert.match(proposalText, /scratch \+ suggested/, 'proposals are labelled scratch + suggested');
-    assert.match(proposalText, /pending/, 'proposals start pending');
+    assert.match(proposalText, wordRe(SCRATCH_LABEL), 'proposals are labelled scratch + suggested');
+    assert.match(proposalText, wordRe(PENDING_STATUS), 'proposals start pending');
     assert.equal(JSON.stringify(host.state.canvas), canvasBefore, 'curation changed no object and no connector');
 
     // Approve through the real decision route, then read the state back.
@@ -477,7 +489,7 @@ test('Planning canvas v6: curation proposes as scratch only and nothing auto-app
     const decided = await canvas.locator('[data-canvas-proposal]').first().getAttribute('data-canvas-proposal-status');
     assert.equal(decided, 'approved', 'the recorded status is the one displayed');
     assert.equal(JSON.stringify(host.state.canvas), canvasBefore, 'approving applied nothing to the canvas');
-    assert.match(await canvas.locator('[data-canvas-notice]').innerText(), /recorded only/, 'the surface states the decision was recorded, not applied');
+    assert.match(await canvas.locator('[data-canvas-notice]').innerText(), wordRe(RECORDED_WORD), 'the surface states the decision was recorded, not applied');
 
     // A second decision on the same proposal is refused by the real route.
     const approvedId = await canvas.locator('[data-canvas-proposal]').first().getAttribute('data-canvas-proposal');

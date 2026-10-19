@@ -33,7 +33,7 @@ const labelled = (text, control) => {
   return label
 }
 
-export const roundsWords = (n) => `Up to ${n} round${n === 1 ? '' : 's'}, then asks you`
+export const roundsWords = (n) => `До ${n} раундов, затем спросит вас`
 
 // The step panel's extra sections for one step.
 function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
@@ -70,7 +70,7 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
   let repeatBox = null
   const repeat = section('Повтор')
   if (repeats) {
-    repeat.appendChild(el('p', 'dy-wfx-help', `${roundsWords(roundsNow)}. The repeat settings are on this step's frame on the canvas.`))
+    repeat.appendChild(el('p', 'dy-wfx-help', `${roundsWords(roundsNow)}. Настройки повтора — на рамке этого шага на холсте.`))
     const open = el('button', 'dy-btn', 'Изменить повторение'); open.type = 'button'; open.setAttribute('data-wfx-edit-frame', node.node_id)
     open.addEventListener('click', () => onEditFrame?.(node.node_id, open.getBoundingClientRect()))
     repeat.appendChild(open)
@@ -92,10 +92,10 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
   const askLabel = el('label', 'dy-wfx-check'); askLabel.append(askBox, el('span', '', 'Спросить меня перед этим шагом'))
   ask.appendChild(askLabel)
 
-  const limits = section('Limits', { preview: true, help: 'Боту пока не отправлено.' })
+  const limits = section('Ограничения', { preview: true, help: 'Боту пока не отправлено.' })
   const turns = el('input', 'dy-wfx-input'); turns.type = 'number'; turns.min = '1'; turns.value = current.limits.turns; turns.setAttribute('data-wfx-turns', '')
   const minutes = el('input', 'dy-wfx-input'); minutes.type = 'number'; minutes.min = '1'; minutes.value = current.limits.minutes; minutes.setAttribute('data-wfx-minutes', '')
-  const skills = el('input', 'dy-wfx-input'); skills.value = current.limits.skills; skills.placeholder = 'e.g. github-pr-workflow'; skills.setAttribute('data-wfx-skills', '')
+  const skills = el('input', 'dy-wfx-input'); skills.value = current.limits.skills; skills.placeholder = 'напр. github-pr-workflow'; skills.setAttribute('data-wfx-skills', '')
   const pair = el('div', 'dy-wfx-pair'); pair.append(labelled('Не более ходов', turns), labelled('Не более минут', minutes))
   limits.append(pair, labelled('Инструменты (навыки)', skills))
   root.append(ask, limits)
@@ -131,8 +131,8 @@ export function canvasDesignHooks({ draft, members, storedNode, settingsKey, onE
     compactFacts: true,
     panelExtras: (node) => panelExtras({ node, stored: storedNode(node.node_id), members: team(), settingsKey, onEditFrame }),
     cardNote: (node) => {
-      if (node.loop) return '↻ Repeats'
-      if (node.when) return `If ${shortName(node.when.node)} ${node.when.status === 'blocked' ? 'gets stuck' : 'is done'}`
+      if (node.loop) return '↻ Повтор'
+      if (node.when) return `Если «${shortName(node.when.node)}» ${node.when.status === 'blocked' ? 'застревает' : 'выполнено'}`
       // "Sign-off", not "Your sign-off": the gate's status ("awaiting
       // decision") is the longest on the card and they share the line.
       if (node.human_gate) return 'Подписание'
@@ -145,7 +145,7 @@ export function canvasDesignHooks({ draft, members, storedNode, settingsKey, onE
         id: n.node_id,
         nodeIds: [n.node_id],
         label: `↻ ${roundsWords(Number(n.loop.max_iterations))}`,
-        sublabel: check.by !== 'none' ? `Checked by: ${CHECK_WORDS[check.by]} (preview)` : null,
+        sublabel: check.by !== 'none' ? `Проверяет: ${CHECK_WORDS[check.by]} (предпросмотр)` : null,
         onOpen: (rect) => onEditFrame?.(n.node_id, rect),
       }
     }),

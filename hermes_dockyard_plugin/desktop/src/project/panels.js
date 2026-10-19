@@ -47,13 +47,13 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
   const enabled = lifecycleState?.enabled !== false
   const phase = lifecycleState?.phase || project.phase || 'unknown'
   const lifecycleCopy = {
-    enable: { endpoint: 're-enable', label: 'Включить', past: 'enabled' },
-    disable: { endpoint: 'disable', label: 'Выключить', past: 'disabled' },
-    pause: { endpoint: 'pause', label: 'Пауза', past: 'paused' },
-    resume: { endpoint: 'resume', label: 'Продолжить', past: 'resumed' },
-    freeze: { endpoint: 'freeze', label: 'Заморозить', past: 'frozen' },
-    archive: { endpoint: 'archive', label: 'В архив', past: 'archived' },
-    restore: { endpoint: 'restore', label: 'Восстановить', past: 'restored' },
+    enable: { endpoint: 're-enable', label: 'Включить', past: 'включён' },
+    disable: { endpoint: 'disable', label: 'Выключить', past: 'выключен' },
+    pause: { endpoint: 'pause', label: 'Пауза', past: 'поставлен на паузу' },
+    resume: { endpoint: 'resume', label: 'Продолжить', past: 'продолжен' },
+    freeze: { endpoint: 'freeze', label: 'Заморозить', past: 'заморожен' },
+    archive: { endpoint: 'archive', label: 'В архив', past: 'архивирован' },
+    restore: { endpoint: 'restore', label: 'Восстановить', past: 'восстановлен' },
   }
   const archived = Boolean(lifecycleState?.archived_at)
   // A switched-off project can be archived too, and Restore brings it back
@@ -133,7 +133,7 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
       setLifecycleState(readback)
       if (readback.enabled === false) setEditing(false)
       setPendingLifecycle(null)
-      emitToast('success', `Project ${config.past}.`)
+      emitToast('success', `Проект ${config.past}.`)
       onRefresh?.()
     } catch (failure) {
       setMessage({ tone: 'danger', text: String(failure?.message ?? failure) })
@@ -145,7 +145,7 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
       jsxs('div', { children: [jsx('h2', { children: 'Конфигурация проекта' }), jsx('p', { children: 'Границы владения, автономии, верификации, релиза и уведомлений.' })] }),
       jsxs('div', { className: 'dockyard-project-state-summary', children: [
         jsx('span', { 'data-project-enabled-state': true, children: jsx(StatusTag, { tone: enabled ? 'success' : 'neutral', label: enabled ? 'Включено' : 'Выключено' }) }),
-        jsx('span', { 'data-project-phase-state': true, children: jsx(StatusTag, { tone: phase === 'active' ? 'success' : 'warning', label: phase.charAt(0).toUpperCase() + phase.slice(1) }) }),
+        jsx('span', { 'data-project-phase-state': true, children: jsx(StatusTag, { tone: phase === 'active' ? 'success' : 'warning', label: { active: 'Активен', paused: 'На паузе', frozen: 'Заморожен', disabled: 'Выключено', archived: 'В архиве' }[phase] ?? phase }) }),
       ]}),
     ]}),
     jsxs('section', { className: 'dockyard-lifecycle-panel', 'data-project-lifecycle': true, children: [
@@ -182,7 +182,7 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
         jsxs('label', { className: 'dockyard-field', children: [
           jsx('span', { children: 'Уровень автономии' }),
           jsx('select', { 'data-setting-field': 'autonomy', value: form.autonomyLevel, onChange: (event) => update('autonomyLevel', event.target.value), children:
-            [0, 1, 2, 3, 4, 5].map((level) => jsx('option', { value: String(level), children: `${level} / ${level === 0 ? 'manual' : level === 5 ? 'bounded maximum' : 'bounded'}` }, String(level))),
+            [0, 1, 2, 3, 4, 5].map((level) => jsx('option', { value: String(level), children: `${level} / ${level === 0 ? 'вручную' : level === 5 ? 'ограниченный максимум' : 'ограниченно'}` }, String(level))),
           }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
@@ -238,13 +238,13 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
     }) : jsx('p', { className: 'dockyard-meta', children: 'Включите проект, прежде чем редактировать его конфигурацию.' }),
     jsxs('section', { className: 'dockyard-modal-layer', 'data-lifecycle-confirm': true, hidden: !pendingLifecycle, children: [
       jsxs('div', { className: 'dockyard-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dockyard-lifecycle-title', children: [
-        jsx('h2', { id: 'dockyard-lifecycle-title', children: `${lifecycleCopy[pendingLifecycle]?.label || 'Change'} project?` }),
+        jsx('h2', { id: 'dockyard-lifecycle-title', children: `${lifecycleCopy[pendingLifecycle]?.label || 'Изменить'} проект?` }),
         jsx('p', { 'data-lifecycle-confirm-text': pendingLifecycle || '', children: pendingLifecycle === 'archive'
-          ? `${project.id} will be hidden everywhere: dashboard, projects, roadmap, inbox, search and alerts. Stewardship stops for it while it is archived. Nothing is deleted: its Hermes project, board, tasks and repository stay exactly as they are. Restore it any time from ${RESTORE_FROM}, and it comes back exactly as it is now (${enabled ? 'switched on' : 'switched off'}, ${phase}).`
-          : `This changes ${project.id} from its current ${enabled ? 'enabled' : 'disabled'} and ${phase} state.` }),
+          ? `Проект ${project.id} будет скрыт везде: в обзоре, проектах, дорожной карте, входящих, поиске и оповещениях. Пока он в архиве, сопровождение для него остановится. Ничего не удаляется: его проект Hermes, доска, задачи и репозиторий остаются точно такими же. Его можно восстановить в любой момент из ${RESTORE_FROM}, и он вернётся ровно таким, как сейчас (${enabled ? 'включён' : 'выключен'}, ${phase}).`
+          : `Состояние проекта ${project.id} изменится с текущего (${enabled ? 'включён' : 'выключен'}, ${phase}).` }),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
           jsx(Button, { disabled: lifecycleBusy, onClick: () => setPendingLifecycle(null), children: 'Отмена' }),
-          jsx(Button, { action: 'confirm-lifecycle-action', variant: ['disable', 'freeze', 'archive'].includes(pendingLifecycle) ? 'danger' : 'primary', disabled: lifecycleBusy, onClick: confirmLifecycle, children: lifecycleBusy ? 'Применение…' : `Confirm ${lifecycleCopy[pendingLifecycle]?.label || 'change'}` }),
+          jsx(Button, { action: 'confirm-lifecycle-action', variant: ['disable', 'freeze', 'archive'].includes(pendingLifecycle) ? 'danger' : 'primary', disabled: lifecycleBusy, onClick: confirmLifecycle, children: lifecycleBusy ? 'Применение…' : `Подтвердить: ${lifecycleCopy[pendingLifecycle]?.label || 'изменение'}` }),
         ]}),
       ]}),
     ]}),

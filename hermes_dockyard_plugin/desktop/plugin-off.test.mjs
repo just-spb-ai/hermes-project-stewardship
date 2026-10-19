@@ -7,15 +7,27 @@
 //
 // The host's answer is replayed in the browser for every plugin route, as the
 // real host gives it, so no backend state changes.
+//
+// The words a person reads are not spelled out here: the modules that render
+// them publish them (data/plugin-off.js for the "switched off" panel, lib/ui.js
+// for the error card), and this journey reads them, so the panel stays
+// translatable without touching the test.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { PLUGIN_OFF_TITLE, PLUGIN_OFF_COMMAND, PLUGIN_OFF_NEXT_STEP } from './src/data/plugin-off.js'
+import { FLEET_SUMMARY, all, one } from './test-support/src-words.mjs'
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const ROUTES = '**/api/plugins/hermes-project-stewardship/**'
-const TITLE = 'Project Stewardship is not switched on for this profile'
-const COMMAND = 'hermes -p <profile> plugins enable hermes-project-stewardship'
-const ERROR_CARD = 'Project Stewardship could not load this view'
+const TITLE = PLUGIN_OFF_TITLE
+const COMMAND = PLUGIN_OFF_COMMAND
+const retry = all('src/lib/ui.js', /action: 'retry'[^}]*children: '([^']+)'/)
+assert.equal(new Set(retry).size, 1, 'the one retry button word')
+const TRY_AGAIN = retry[0]
+// The error card's own heading, for any failure that is not the plugin being off.
+const ERROR_CARD = one('src/lib/ui.js', /data-state': 'error'[\s\S]*?jsx\('h2', \{ children: '([^']+)' \}\)/)
+const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const pluginNotFound = (route) => route.fulfill({
   status: 404, contentType: 'application/json', body: JSON.stringify({ detail: 'Plugin not found' }),
@@ -36,15 +48,15 @@ test('a profile without the plugin says how to switch it on, then loads once it 
     await panel.waitFor()
     assert.equal(await page.getByRole('heading', { name: TITLE }).count(), 1)
     assert.equal(await page.locator('[data-plugin-off-command]').innerText(), COMMAND)
-    assert.match(await panel.innerText(), /Plugins page/)
+    assert.match(await panel.innerText(), new RegExp(escape(PLUGIN_OFF_NEXT_STEP)))
     // None of the failure words: no red card, no status code, no host message.
     assert.equal(await page.getByRole('heading', { name: ERROR_CARD }).count(), 0)
-    assert.doesNotMatch(await page.locator('body').innerText(), /\b404\b|Plugin not found|could not load/i)
+    assert.doesNotMatch(await page.locator('body').innerText(), new RegExp(`\\b404\\b|Plugin not found|${escape(ERROR_CARD)}`))
 
     // Switched on: Try again loads the real page.
     await page.unroute(ROUTES, pluginNotFound)
-    await page.getByRole('button', { name: 'Try again' }).click()
-    await page.locator('section[aria-label="Fleet summary"]').waitFor()
+    await page.getByRole('button', { name: TRY_AGAIN }).click()
+    await page.locator(`section[aria-label="${FLEET_SUMMARY}"]`).waitFor()
     assert.equal(await panel.count(), 0)
     assert.deepEqual(errors, [])
   } finally {

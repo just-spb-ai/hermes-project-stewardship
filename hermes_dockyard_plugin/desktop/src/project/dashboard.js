@@ -19,6 +19,7 @@ import { ProjectSettingsPanel } from '../project/panels.js'
 import { ProjectReportsPanel } from '../project/reports.js'
 import { Fragment } from '../runtime/react.js'
 import { StatusTag } from '../lib/ui.js'
+import { PROJECT_VIEWS } from '../lib/panel-words.js'
 import { UnlinkedNotice } from '../lib/ui.js'
 import { isUnlinked } from '../data/unlinked.js'
 import { WorkBar } from '../views/dashboard.js'
@@ -90,21 +91,21 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
   useEffect(() => {
     if (!pendingWorkRef || !project) return
     const target = (view.workItems ?? []).find((item) => item.ref === pendingWorkRef)
-    setWorkNotice(target ? null : `Work item ${pendingWorkRef} is not in this project's board data.`)
+    setWorkNotice(target ? null : `Рабочего элемента ${pendingWorkRef} нет в данных доски этого проекта.`)
     if (target) setProjectView('board')
     setSelectedWorkItem(target ?? null)
     onPendingWorkConsumed?.()
   }, [pendingWorkRef])
   if (!project && view.missingProject) {
     return jsxs('section', { className: 'dockyard-deep-link-miss', 'data-deep-link-miss': view.missingProject, children: [
-      jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Project ${view.missingProject} no longer exists or is not connected. Nothing was substituted.` }),
+      jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Проект ${view.missingProject} больше не существует или не подключён. Ничего не подставлялось.` }),
       jsx(Button, { onClick: () => onSelectProject?.((view.projects ?? [])[0]?.id ?? null), children: 'Назад к флоту' }),
     ]})
   }
   if (!project) return jsx(EmptyState, { title: 'Проект не выбран', description: 'Подключите проект, прежде чем открывать его панель.', icon: 'project' })
   const [healthTone, healthLabel] = healthDetails(project.health)
   const views = [
-    ['overview', 'Обзор'], ['plan', 'Видение'], ['board', 'Канбан'], ['planning', 'Планирование'], ['workflows', 'Процессы'], ['content', 'Контент'], ['memory', 'Память'], ['activity', 'Активность'], ['reports', 'Отчёты'], ['settings', 'Настройки'],
+    ['overview', PROJECT_VIEWS.overview], ['plan', PROJECT_VIEWS.plan], ['board', PROJECT_VIEWS.board], ['planning', PROJECT_VIEWS.planning], ['workflows', PROJECT_VIEWS.workflows], ['content', PROJECT_VIEWS.content], ['memory', PROJECT_VIEWS.memory], ['activity', PROJECT_VIEWS.activity], ['reports', PROJECT_VIEWS.reports], ['settings', PROJECT_VIEWS.settings],
   ]
   // C1: Open on a "Needs attention" item goes to the exact place to act.
   const openAttentionItem = (item) => {
@@ -112,7 +113,7 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
     if (target.kind === 'deep_link') { onOpenLink?.(target.link); return }
     if (target.kind === 'work') {
       const found = (view.workItems ?? []).find((entry) => entry.ref === target.ref)
-      setWorkNotice(found ? null : `Work item ${target.ref} is not in this project's board data.`)
+      setWorkNotice(found ? null : `Рабочего элемента ${target.ref} нет в данных доски этого проекта.`)
       setSelectedWorkItem(found ?? null)
       return
     }
@@ -163,18 +164,18 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
         jsxs('section', { className: 'dockyard-feature-card dockyard-project-hero', children: [
           jsx(StatusTag, { tone: healthTone, label: healthLabel }),
           jsx('h2', { children: view.settings?.mission || project.id }),
-          jsx('p', { children: 'Work distribution and current delivery state from the canonical Project Stewardship backend.' }),
-          jsx(WorkBar, { work: project.work ?? {}, label: `${project.id} delivery state` }),
+          jsx('p', { children: 'Распределение работ и текущее состояние поставки из канонического бэкенда Project Stewardship.' }),
+          jsx(WorkBar, { work: project.work ?? {}, label: `${project.id}: состояние поставки` }),
           jsxs('div', { className: 'dockyard-work-legend', children: [
-            jsxs('span', { className: 'backlog', children: [jsx('i', {}), `${number(project.work?.backlog ?? 0)} backlog`] }),
-            jsxs('span', { className: 'active', children: [jsx('i', {}), `${number(project.work?.active ?? 0)} active`] }),
-            jsxs('span', { className: 'done', children: [jsx('i', {}), `${number(project.work?.done ?? 0)} done`] }),
+            jsxs('span', { className: 'backlog', children: [jsx('i', {}), `${number(project.work?.backlog ?? 0)} бэклог`] }),
+            jsxs('span', { className: 'active', children: [jsx('i', {}), `${number(project.work?.active ?? 0)} в работе`] }),
+            jsxs('span', { className: 'done', children: [jsx('i', {}), `${number(project.work?.done ?? 0)} готово`] }),
           ]}),
         ]}),
         jsxs('section', { className: 'dockyard-feature-card', children: [
-          jsx('span', { className: 'dockyard-card-label', children: 'CURRENT SIGNALS' }),
-          jsx('h2', { children: `${number(project.work?.blocked ?? 0)} blocked` }),
-          jsx('p', { children: `${number(view.workItems?.length ?? 0)} work items and ${number(view.initiatives?.length ?? 0)} initiatives are attached to this project.` }),
+          jsx('span', { className: 'dockyard-card-label', children: 'ТЕКУЩИЕ СИГНАЛЫ' }),
+          jsx('h2', { children: `${number(project.work?.blocked ?? 0)} заблокировано` }),
+          jsx('p', { children: `К этому проекту привязано рабочих элементов: ${number(view.workItems?.length ?? 0)} и инициатив: ${number(view.initiatives?.length ?? 0)}.` }),
         ]}),
       ]}),
       jsxs('div', { className: 'dockyard-project-overview-grid', children: [
@@ -183,8 +184,8 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
           jsx('p', { children: 'Текущая работа, владение и стадия.' }),
           visibleWork.length > 0 ? jsx('div', { className: 'dockyard-overview-list', children:
             visibleWork.map((item) => jsxs('article', { children: [
-              jsxs('span', { children: [jsx('strong', { children: item.title || item.ref }), jsx('small', { children: `${item.ref} / ${item.assignee || 'Unassigned'}` })] }),
-              jsx(StatusTag, { tone: ['done', 'completed'].includes(item.status) ? 'success' : item.status === 'in_progress' ? 'info' : 'neutral', label: String(item.status || 'unknown').replaceAll('_', ' ') }),
+              jsxs('span', { children: [jsx('strong', { children: item.title || item.ref }), jsx('small', { children: `${item.ref} / ${item.assignee || 'Не назначен'}` })] }),
+              jsx(StatusTag, { tone: ['done', 'completed'].includes(item.status) ? 'success' : item.status === 'in_progress' ? 'info' : 'neutral', label: String(item.status || 'неизвестно').replaceAll('_', ' ') }),
             ]}, item.ref)),
           })
             : jsx('p', { className: 'dockyard-meta', children: 'Рабочие элементы не прикреплены.' }),
@@ -234,7 +235,7 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
       jsxs('div', { className: 'dockyard-modal', role: 'alertdialog', 'aria-modal': true, 'aria-label': 'Несохранённые изменения доски планирования',
         onKeyDown: (event) => { if (event.key === 'Escape' && !viewSaving) { event.stopPropagation(); setPendingView(null) } }, children: [
         jsx('h2', { children: 'Несохранённые изменения на этой доске' }),
-        jsx('p', { children: 'The planning board has edits that are not saved. Save them before you leave, discard them, or cancel to keep editing.' }),
+        jsx('p', { children: 'На доске планирования есть несохранённые правки. Сохраните их перед уходом, отмените их или закройте окно, чтобы продолжить правку.' }),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
           jsx(Button, { action: 'view-switch-cancel', disabled: viewSaving, onClick: () => setPendingView(null), children: 'Отмена' }),
           jsx(Button, { variant: 'danger', action: 'view-switch-discard', disabled: viewSaving, onClick: () => leaveView(pendingView), children: 'Отменить правки' }),

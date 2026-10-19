@@ -23,7 +23,8 @@ import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
 import { seedActivity } from './test-support/activity-seed.mjs'
-import { activityRows, groupByDay, matchesFilter } from './src/lib/event-vocab.js'
+import { activityRows, groupByDay, matchesFilter, EVENT_WORDS } from './src/lib/event-vocab.js'
+import { one, escape } from './test-support/src-words.mjs'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -32,6 +33,12 @@ const API = process.env.STEWARD_API_URL || 'http://127.0.0.1:19500/api/plugins/h
 const HEADERS = { 'x-hermes-session-token': 'demo-session-token' }
 const TZ = 'Europe/London'
 const OPEN_STATES = new Set(['pending_approval', 'changes_requested', 'approved', 'active', 'measuring'])
+// The filtered counter's phrase ("1 из 11 событий"), read out of the screen that
+// renders it: `plural(total, 'событие', 'событий')` after `${...} из`.
+const COUNT_FILE = 'src/project/activity.js'
+const COUNT_SINGULAR = one(COUNT_FILE, /\$\{number\(eventCount\(shown\)\)\} из \$\{plural\(total, '([^']+)'/)
+const COUNT_PLURAL = one(COUNT_FILE, /\$\{number\(eventCount\(shown\)\)\} из \$\{plural\(total, '[^']+', '([^']+)'\)\}/)
+const COUNTED = new RegExp(`^\\d+ из \\d+ (?:${escape(COUNT_SINGULAR)}|${escape(COUNT_PLURAL)})$`)
 
 async function call(path, method = 'GET', body) {
   const response = await fetch(`${API}${path}`, {
@@ -115,24 +122,24 @@ test('Activity: real events as a timeline in the model\'s order and words, never
       groupByDay(rows, { timeZone: TZ }).map((group) => group.label), 'one heading per day, in order')
 
     const checks = [
-      ['initiative.approved', refs.approved, 'Initiative approved', 'Work can start'],
-      ['initiative.rejected', refs.rejected, 'Initiative rejected', 'Will not go ahead'],
-      ['initiative.changes_requested', refs.changes, 'Changes requested', 'Back with the proposer'],
-      ['initiative.withdrawn', refs.withdrawn, 'Initiative withdrawn', 'Closed by the proposer'],
-      ['initiative.approval_required', refs.waiting, 'Approval requested', 'Waiting for a decision'],
-      ['work.assigned', refs.work, 'Work assigned', 'Has an owner'],
-      ['work.unassigned', refs.work, 'Work unassigned', 'No bot will pick it up'],
+      ['initiative.approved', refs.approved],
+      ['initiative.rejected', refs.rejected],
+      ['initiative.changes_requested', refs.changes],
+      ['initiative.withdrawn', refs.withdrawn],
+      ['initiative.approval_required', refs.waiting],
+      ['work.assigned', refs.work],
+      ['work.unassigned', refs.work],
     ]
     const words = (locator) => locator.evaluate((el) => el.innerText.replace(/\s+/g, ' ').trim())
-    for (const [type, ref, label, impact] of checks) {
+    for (const [type, ref] of checks) {
       const want = rowFor(rows, type, ref)
       assert.ok(want, `the backend recorded ${type} for ${ref}`)
       const entry = panel.locator(`li[data-activity-row="${want.key}"]`)
-      assert.equal(await words(entry.locator('.dy-act-line1 strong')), label, `${type}: event`)
+      assert.equal(await words(entry.locator('.dy-act-line1 strong')), want.label, `${type}: event`)
       assert.equal(await words(entry.locator('.dy-act-line1 > span')), want.title, `${type}: details`)
       if (want.note) assert.equal(await words(entry.locator('.dy-act-note')), want.note, `${type}: the note is shown`)
       assert.equal(await words(entry.locator('.dy-act-line2')), `${want.by} · ${want.time}`, `${type}: by and time`)
-      assert.equal(await words(entry.locator('.dy-act-side .dockyard-status-tag')), impact, `${type}: impact`)
+      assert.equal(await words(entry.locator('.dy-act-side .dockyard-status-tag')), want.effect.label, `${type}: impact`)
       assert.equal(await entry.getAttribute('data-tone'), want.tone, `${type}: tone`)
       assert.equal(await entry.locator('.dy-act-dot').getAttribute('data-tone'), want.tone, `${type}: the icon dot carries the tone`)
     }
@@ -153,7 +160,7 @@ test('Activity: Open goes to the Approval inbox, Vision or the work item', { tim
 
     await openActivity(page, projectId)
     const approved = rowFor(rows, 'initiative.approved', refs.approved)
-    assert.equal(await page.locator(`[data-activity-open="${approved.key}"]`).innerText(), 'Open in Vision')
+    assert.equal(await page.locator(`[data-activity-open="${approved.key}"]`).innerText(), EVENT_WORDS.initiative.openVision)
     await page.locator(`[data-activity-open="${approved.key}"]`).click()
     await page.locator('[data-project-view="plan"][aria-pressed="true"]').waitFor()
     await page.locator('[data-plan-drawer="initiative"]').waitFor()
@@ -186,7 +193,7 @@ test('Activity: chips and search narrow the list; an empty filter says so; keybo
     }
     await page.locator('[data-activity-search]').fill('too costly')
     assert.deepEqual(await shownKeys(page), rows.filter((row) => matchesFilter(row, { kind: 'all', query: 'too costly' })).map((row) => row.key), 'search finds the reject reason')
-    assert.match(await page.locator('[data-activity-count]').innerText(), /^\d+ of \d+ events?$/)
+    assert.match(await page.locator('[data-activity-count]').innerText(), COUNTED)
     await page.locator('[data-activity-search]').fill('')
 
     // Keyboard: Tab from the search box's predecessor lands on a chip; Space presses it.

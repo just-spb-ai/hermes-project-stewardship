@@ -22,6 +22,7 @@ import { plural } from '../lib/ui.js'
 import { api } from '../runtime/context.js'
 import { emitToast } from '../runtime/context.js'
 import { readableLabel } from '../data/loaders.js'
+import { WORK_CARD_WORDS } from '../lib/panel-words.js'
 import { WorkTable } from './table.js'
 import {
   STAGES, stageKeyOf, stageLabel, groupByStage, unplacedItems, dropStatusOf, movesFor, typeLabel, initialsOf,
@@ -48,7 +49,7 @@ function Avatar({ name }) {
 // The expanded part of a card: labelled sections, then the actions.
 function CardBody({ id, item, facts, moves, moving, today, onMove, onOpenItem, onOpenRef, onNavigate }) {
   const linkRow = (card) => jsx('li', { children: jsxs('button', { type: 'button', className: 'dy-kb-link', 'data-link-ref': card.ref, 'data-done': card.done ? 'true' : undefined,
-    title: `Open ${card.ref}`, onClick: () => onOpenRef(card.ref), children: [
+    title: `Открыть ${card.ref}`, onClick: () => onOpenRef(card.ref), children: [
       jsx('span', { className: 'dy-kb-key', children: card.ref }),
       jsx('span', { className: 'dy-kb-link-title', children: card.title || typeLabel(card.type) }),
       jsx('span', { className: 'dy-kb-link-status', children: statusText(card.status) }),
@@ -61,7 +62,7 @@ function CardBody({ id, item, facts, moves, moving, today, onMove, onOpenItem, o
   // Each planning link opens that item on the project's Vision screen
   // ("plan:<kind>:<id>", the same entry the Roadmap's Open uses).
   if (facts.initiative) planning.push(row('Инициатива', goto('Инициатива', () => onNavigate(`plan:initiative:${facts.initiative.ref}`), facts.initiative.title || facts.initiative.ref)))
-  facts.milestones.forEach((milestone, index) => planning.push(row('Веха', goto('Веха', () => onNavigate(`plan:milestone:${milestone.id}`), milestone.due ? `${milestone.name} · due ${shortDate(milestone.due, today)}` : milestone.name), {}, `milestone:${index}`)))
+  facts.milestones.forEach((milestone, index) => planning.push(row('Веха', goto('Веха', () => onNavigate(`plan:milestone:${milestone.id}`), milestone.due ? `${milestone.name} · срок ${shortDate(milestone.due, today)}` : milestone.name), {}, `milestone:${index}`)))
   // v42: the goal this task works towards. A task with no goal says so.
   if (facts.goal) {
     planning.push(row('Цель', jsxs('span', { children: [
@@ -72,22 +73,22 @@ function CardBody({ id, item, facts, moves, moving, today, onMove, onOpenItem, o
   }
 
   const details = [row('Исполнитель', item.assignee ? displayName(item.assignee) : 'Не назначен')]
-  if (facts.due) details.push(row('Срок', facts.overdue ? `${shortDate(facts.due, today)} · Overdue` : shortDate(facts.due, today), facts.overdue ? { 'data-overdue': 'true' } : {}))
+  if (facts.due) details.push(row('Срок', facts.overdue ? `${shortDate(facts.due, today)} · просрочено` : shortDate(facts.due, today), facts.overdue ? { 'data-overdue': 'true' } : {}))
   if (facts.labels.length) details.push(row('Метки', facts.labels.join(', ')))
 
   return jsxs('div', { className: 'dy-kb-card-body', id, 'data-card-body': item.ref, children: [
     facts.blockedBy.length ? section('blocked_by', 'Блокируется', jsx('ul', { className: 'dy-kb-links', children: facts.blockedBy.map(linkRow) })) : null,
     facts.blocks.length ? section('blocks', 'Блокирует', jsx('ul', { className: 'dy-kb-links', children: facts.blocks.map(linkRow) })) : null,
     planning.length ? section('planning', 'Планирование', jsx('dl', { children: planning })) : null,
-    section('details', 'Details', jsx('dl', { children: details })),
+    section('details', 'Детали', jsx('dl', { children: details })),
     jsxs('div', { className: 'dy-kb-card-actions', children: [
       moves.targets.length
-        ? jsxs('select', { 'aria-label': `Move ${item.ref}`, 'data-card-move': item.ref, disabled: moving, value: '', onChange: (event) => onMove(item.ref, event.target.value), children: [
+        ? jsxs('select', { 'aria-label': `Переместить ${item.ref}`, 'data-card-move': item.ref, disabled: moving, value: '', onChange: (event) => onMove(item.ref, event.target.value), children: [
             jsx('option', { value: '', children: 'Переместить в…' }),
             ...moves.targets.map((target) => jsx('option', { value: target.status, children: target.label }, target.key)),
           ]})
         : moves.reason ? jsx('p', { className: 'dy-kb-move-none', 'data-card-move-none': item.ref, children: moves.reason }) : null,
-      jsxs('button', { type: 'button', className: 'dockyard-button small', 'data-card-open': item.ref, onClick: () => onOpenItem(item), children: [jsx(Icon, { name: 'arrow-up-right' }), 'Полные детали'] }),
+      jsxs('button', { type: 'button', className: 'dockyard-button small', 'data-card-open': item.ref, onClick: () => onOpenItem(item), children: [jsx(Icon, { name: 'arrow-up-right' }), WORK_CARD_WORDS.openDetails] }),
     ]}),
   ]})
 }
@@ -105,7 +106,7 @@ function Card({ item, facts, fields, open, moves, moving, today, onToggle, onDra
   return jsxs('article', { className: 'dockyard-work-card', 'data-work-card': item.ref, 'data-open': open ? 'true' : 'false', 'data-type': item.type || 'task',
     draggable: moves.targets.length > 0 && !moving, onDragStart, onDragEnd, children: [
     jsxs('button', { type: 'button', className: 'dy-kb-card-toggle', 'data-card-toggle': item.ref, 'aria-expanded': open, 'aria-controls': open ? bodyId : undefined,
-      'aria-label': `${typeLabel(item.type)} ${item.ref}: ${item.title}${fields.assignee ? `, ${item.assignee ? `assigned to ${displayName(item.assignee)}` : 'unassigned'}` : ''}`,
+      'aria-label': `${typeLabel(item.type)} ${item.ref}: ${item.title}${fields.assignee ? `, ${item.assignee ? `исполнитель: ${displayName(item.assignee)}` : 'без исполнителя'}` : ''}`,
       'aria-describedby': hasSummary ? summaryId : undefined, onClick: () => onToggle(item.ref, !open), children: [
       jsxs('span', { className: 'dy-kb-card-top', children: [
         jsxs('span', { className: 'dy-kb-type', 'data-type': item.type || 'task', title: typeLabel(item.type), children: [jsx(Icon, { name: typeIcon(item.type) }), jsx('span', { children: typeLabel(item.type) })] }),
@@ -147,11 +148,11 @@ function ViewsPanel({ views, currentName, working, edited, startNew, busy, error
   const onKeyDown = (event) => { if (event.key === 'Escape') { event.stopPropagation(); close() } }
 
   const trimmed = newName.trim()
-  const newProblem = !trimmed ? 'Дайте виду имя.' : names.includes(trimmed) ? `A view called "${trimmed}" already exists.` : null
+  const newProblem = !trimmed ? 'Дайте виду имя.' : names.includes(trimmed) ? `Вид с именем «${trimmed}» уже есть.` : null
   const renameProblem = (from) => {
     const text = renameText.trim()
     if (!text) return 'Дайте виду имя.'
-    if (text !== from && names.includes(text)) return `A view called "${text}" already exists.`
+    if (text !== from && names.includes(text)) return `Вид с именем «${text}» уже есть.`
     return null
   }
 
@@ -182,14 +183,14 @@ function ViewsPanel({ views, currentName, working, edited, startNew, busy, error
     if (saved && renaming === name) {
       const problem = renameProblem(name)
       actions = jsxs('form', { className: 'dy-kb-rename', onSubmit: (event) => { event.preventDefault(); if (!problem && !busy) onRename(saved, renameText.trim()).then((ok) => { if (ok) setRenaming(null) }) }, children: [
-        jsx('input', { type: 'text', 'aria-label': `New name for ${name}`, 'data-view-rename-input': name, value: renameText, maxLength: 80, autoFocus: true, onChange: (event) => setRenameText(event.target.value) }),
+        jsx('input', { type: 'text', 'aria-label': `Новое имя для ${name}`, 'data-view-rename-input': name, value: renameText, maxLength: 80, autoFocus: true, onChange: (event) => setRenameText(event.target.value) }),
         jsx('button', { type: 'submit', className: 'dockyard-button small primary', disabled: Boolean(problem) || busy, children: 'Сохранить имя' }),
         jsx('button', { type: 'button', className: 'dockyard-button small', onClick: () => setRenaming(null), children: 'Отмена' }),
         problem && renameText.trim() ? jsx('p', { className: 'dy-kb-panel-problem', role: 'alert', children: problem }) : null,
       ]})
     } else if (saved && confirming === name) {
       actions = jsxs('div', { className: 'dy-kb-confirm', role: 'alert', children: [
-        jsx('span', { children: `Delete "${name}"? This can't be undone.` }),
+        jsx('span', { children: `Удалить «${name}»? Это нельзя отменить.` }),
         jsx('button', { type: 'button', className: 'dockyard-button small danger', 'data-view-delete-confirm': name, disabled: busy, onClick: () => onDelete(saved).then(() => setConfirming(null)), children: 'Удалить' }),
         jsx('button', { type: 'button', className: 'dockyard-button small', onClick: () => setConfirming(null), children: 'Отмена' }),
       ]})
@@ -201,14 +202,14 @@ function ViewsPanel({ views, currentName, working, edited, startNew, busy, error
         saved ? small('Дублировать', 'copy', () => onDuplicate(saved), { 'data-view-duplicate': name }) : null,
         saved && mine ? small(saved.shared ? 'Сделать только моим' : 'Поделиться с проектом', saved.shared ? 'user' : 'send', () => onShare(saved, !saved.shared), { 'data-view-share': name }) : null,
         saved && mine ? small('Удалить', 'trash-2', () => { setConfirming(name); setRenaming(null) }, { 'data-view-delete': name }) : null,
-        saved && !mine ? jsx('span', { className: 'dy-kb-panel-meta', children: saved.owner ? `Shared by ${displayName(saved.owner)}. Duplicate it to make your own.` : 'Общий вид. Продублируйте, чтобы сделать свой.' }) : null,
+        saved && !mine ? jsx('span', { className: 'dy-kb-panel-meta', children: saved.owner ? `Общий вид от ${displayName(saved.owner)}. Продублируйте, чтобы сделать свой.` : 'Общий вид. Продублируйте, чтобы сделать свой.' }) : null,
       ]})
     }
     return jsxs('li', { className: 'dy-kb-view-row', 'data-view-row': name, 'data-current': isCurrent ? 'true' : undefined, children: [
       jsxs('div', { className: 'dy-kb-view-row-head', children: [
         jsx('strong', { children: name }),
         jsx('span', { className: 'dy-kb-badge', children: badge }),
-        isCurrent ? jsx('span', { className: 'dy-kb-badge current', children: 'Showing' }) : null,
+        isCurrent ? jsx('span', { className: 'dy-kb-badge current', children: 'Показан' }) : null,
       ]}),
       jsx('p', { className: 'dy-kb-panel-meta', children: describeDefinition(definition) }),
       actions,
@@ -217,7 +218,7 @@ function ViewsPanel({ views, currentName, working, edited, startNew, busy, error
 
   const fields = working.fields
   const adjust = jsxs('section', { className: 'dy-kb-panel-section', 'data-view-adjust': currentName ?? ALL_WORK, children: [
-    jsx('h3', { children: `Adjust "${currentName ?? ALL_WORK}"` }),
+    jsx('h3', { children: `Настроить «${currentName ?? ALL_WORK}»` }),
     jsxs('fieldset', { className: 'dy-kb-choice', children: [jsx('legend', { children: 'Показывать на карточках' }),
       ...CARD_FIELDS.map((key) => jsxs('label', { children: [
         jsx('input', { type: 'checkbox', 'data-card-field': key, checked: Boolean(fields[key]), onChange: () => onFields({ ...fields, [key]: !fields[key] }) }),
@@ -239,7 +240,7 @@ function ViewsPanel({ views, currentName, working, edited, startNew, busy, error
       jsx('h2', { id: 'dy-kb-panel-title', tabIndex: -1, children: 'Управление видами' }),
       jsx('button', { type: 'button', className: 'dy-kb-collapse', 'aria-label': 'Закрыть управление представлениями', 'data-views-close': true, onClick: close, children: jsx(Icon, { name: 'x' }) }),
     ]}),
-    jsx('p', { className: 'dy-kb-panel-meta', 'data-views-note': true, children: 'A view only changes what this board shows. It never runs automations, assigns work or changes permissions.' }),
+    jsx('p', { className: 'dy-kb-panel-meta', 'data-views-note': true, children: 'Вид меняет только то, что показывает эта доска. Он никогда не запускает автоматизацию, не назначает работу и не меняет права.' }),
     error ? jsx('p', { className: 'dy-kb-note', role: 'alert', 'data-views-error': true, children: error }) : null,
     newForm,
     jsxs('section', { className: 'dy-kb-panel-section', children: [
@@ -352,9 +353,9 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
       if (!(readback.work_items ?? []).some((item) => item.ref === ref && item.status === status)) throw new Error('Hermes не подтвердил новую колонку')
       focusCard.current = { ref, stage: stageKeyOf({ status }) }
       onRefresh?.()
-      emitToast('success', `Work item moved to ${status.replaceAll('_', ' ')}.`)
+      emitToast('success', `Рабочий элемент перемещён в статус ${statusText(status)}.`)
     } catch (failure) {
-      setWorkNotice(`Could not move ${ref}: ${String(failure?.message ?? failure)}. The board shows what Hermes has now.`)
+      setWorkNotice(`Не удалось переместить ${ref}: ${String(failure?.message ?? failure)}. Доска показывает то, что есть у Hermes сейчас.`)
       onRefresh?.()
     } finally {
       moveLock.current = false
@@ -383,27 +384,27 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
       setBusy(false)
     }
   }
-  const saveCurrent = () => currentSaved && runView(`Could not save "${currentSaved.name}"`, async () => {
+  const saveCurrent = () => currentSaved && runView(`Не удалось сохранить «${currentSaved.name}»`, async () => {
     await putView(currentSaved.name, working, currentSaved.shared)
     upsertLocal(currentSaved.name, working, currentSaved.shared)
     dropDraft(currentSaved.name)
-    emitToast('success', `Saved "${currentSaved.name}".`)
+    emitToast('success', `«${currentSaved.name}» сохранён.`)
   })
-  const createView = (name, shared) => runView(`Could not create "${name}"`, async () => {
+  const createView = (name, shared) => runView(`Не удалось создать «${name}»`, async () => {
     await putView(name, working, shared)
     upsertLocal(name, working, shared)
     dropDraft(currentName)
     selectView(name)
-    emitToast('success', `Created "${name}".`)
+    emitToast('success', `«${name}» создан.`)
   })
-  const renameView = (saved, name) => name === saved.name ? Promise.resolve(true) : runView(`Could not rename "${saved.name}"`, async () => {
+  const renameView = (saved, name) => name === saved.name ? Promise.resolve(true) : runView(`Не удалось переименовать «${saved.name}»`, async () => {
     const definition = definitionOf(saved)
     await putView(name, definition, saved.shared)
     upsertLocal(name, definition, saved.shared)
     try {
       await api(`/projects/${encoded}/views/${encodeURIComponent(saved.name)}`, { method: 'DELETE' })
     } catch (failure) {
-      throw new Error(`saved as "${name}", but the old view could not be removed (${String(failure?.message ?? failure)})`)
+      throw new Error(`сохранено как «${name}», но старый вид не удалось убрать (${String(failure?.message ?? failure)})`)
     }
     setViewList((list) => list.filter((candidate) => candidate.name !== saved.name))
     updateHeld((base) => {
@@ -411,20 +412,20 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
       if (drafts[saved.name]) { drafts[name] = drafts[saved.name]; delete drafts[saved.name] }
       return { drafts, currentName: base.currentName === saved.name ? name : base.currentName }
     })
-    emitToast('success', `Renamed to "${name}".`)
+    emitToast('success', `Переименовано в «${name}».`)
   })
-  const duplicateView = (saved) => runView(`Could not duplicate "${saved.name}"`, async () => {
-    const name = freeName(`${saved.name} copy`, [ALL_WORK, ...viewList.map((candidate) => candidate.name)])
+  const duplicateView = (saved) => runView(`Не удалось продублировать «${saved.name}»`, async () => {
+    const name = freeName(`${saved.name} — копия`, [ALL_WORK, ...viewList.map((candidate) => candidate.name)])
     await putView(name, definitionOf(saved), false)
     upsertLocal(name, definitionOf(saved), false)
-    emitToast('success', `Duplicated as "${name}" (only you can see it).`)
+    emitToast('success', `Продублировано как «${name}» (видно только вам).`)
   })
-  const shareView = (saved, shared) => runView(`Could not change who sees "${saved.name}"`, async () => {
+  const shareView = (saved, shared) => runView(`Не удалось изменить, кто видит «${saved.name}»`, async () => {
     await putView(saved.name, definitionOf(saved), shared)
     upsertLocal(saved.name, definitionOf(saved), shared)
-    emitToast('success', shared ? `"${saved.name}" is now shared with the project.` : `"${saved.name}" is now only yours.`)
+    emitToast('success', shared ? `«${saved.name}» теперь общий для проекта.` : `«${saved.name}» теперь виден только вам.`)
   })
-  const deleteView = (saved) => runView(`Could not delete "${saved.name}"`, async () => {
+  const deleteView = (saved) => runView(`Не удалось удалить «${saved.name}»`, async () => {
     await api(`/projects/${encoded}/views/${encodeURIComponent(saved.name)}`, { method: 'DELETE' })
     setViewList((list) => list.filter((candidate) => candidate.name !== saved.name))
     updateHeld((base) => {
@@ -432,7 +433,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
       delete drafts[saved.name]
       return { drafts, currentName: base.currentName === saved.name ? null : base.currentName }
     })
-    emitToast('success', `Deleted "${saved.name}".`)
+    emitToast('success', `«${saved.name}» удалён.`)
   })
   const resetView = () => { dropDraft(currentName); setOverrides({}) }
   const openPanel = (mode) => { setViewError(null); setPanel({ mode, at: Date.now() }) }
@@ -444,7 +445,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
     const active = name === currentName
     return jsxs('button', { type: 'button', className: 'dy-kb-viewtab', 'data-view-tab': label, 'aria-pressed': active, title: saved ? describeDefinition(definitionOf(saved)) : 'Всё — на доске', onClick: () => selectView(name), children: [
       jsx('span', { className: 'dy-kb-viewtab-name', children: label }),
-      editedNames.has(name) ? jsx('span', { className: 'dy-kb-dot', 'aria-label': 'unsaved changes', role: 'img' }) : null,
+      editedNames.has(name) ? jsx('span', { className: 'dy-kb-dot', 'aria-label': 'несохранённые изменения', role: 'img' }) : null,
     ]}, label)
   }
   const viewsBar = jsxs('div', { className: 'dy-kb-viewsbar', children: [
@@ -473,25 +474,25 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
         ...values.map((value) => jsx('option', { value, children: key === 'type' ? typeLabel(value) : key === 'assignee' ? displayName(value) : value }, value)),
       ]}) }, key)),
     filters.statuses.length ? jsxs('button', { type: 'button', className: 'dy-kb-control dy-kb-button', 'data-kanban-status-filter': true, onClick: () => setFilters({ ...filters, statuses: [] }),
-      'aria-label': 'Убрать фильтр по статусу', children: [`Status: ${filters.statuses.map(statusText).join(', ')}`, jsx(Icon, { name: 'x' })] }) : null,
+      'aria-label': 'Убрать фильтр по статусу', children: [`Статус: ${filters.statuses.map(statusText).join(', ')}`, jsx(Icon, { name: 'x' })] }) : null,
     jsx('button', { type: 'button', className: 'dy-kb-control dy-kb-button', 'data-kanban-clear': true, disabled: !filtersActive(filters), onClick: () => setFilters(emptyFilters()), children: 'Сбросить фильтры' }),
     jsx('span', { className: 'dy-kb-toolbar-gap', 'aria-hidden': true }),
-    segmented('Раскладка', 'layout', working.layout, [['board', 'Доска'], ['list', 'List']], (layout) => setWorking({ ...working, layout })),
+    segmented('Раскладка', 'layout', working.layout, [['board', 'Доска'], ['list', 'Список']], (layout) => setWorking({ ...working, layout })),
     // Sahil 05/10: "Expanded" did not say what it did. One button opens (or closes) every card.
     working.layout === 'board' ? jsx('button', { type: 'button', className: 'dy-kb-control dy-kb-button', 'data-kanban-open-all': true, 'aria-pressed': working.density === 'detailed',
       title: "Показывать подробности всех карточек, не открывая каждую", onClick: () => { setOverrides({}); setWorking({ ...working, density: working.density === 'detailed' ? 'compact' : 'detailed' }) },
       children: 'Открыть все карточки' }) : null,
-    jsx('span', { className: 'dy-kb-count', 'data-kanban-count': true, role: 'status', children: `${number(liveCount)} ${plural(liveCount, 'item')}` }),
+    jsx('span', { className: 'dy-kb-count', 'data-kanban-count': true, role: 'status', children: `${number(liveCount)} ${plural(liveCount, 'рабочий элемент', 'рабочих элементов')}` }),
   ]})
 
   // How to move a card; drag is never the only way (kept from C's board).
   const help = working.layout === 'board'
-    ? jsx('p', { className: 'dy-kb-help', 'data-kanban-help': true, children: 'Drag a card to another column, or open the card and use Move to. Only moves Hermes accepts are offered.' })
+    ? jsx('p', { className: 'dy-kb-help', 'data-kanban-help': true, children: 'Перетащите карточку в другую колонку или откройте карточку и выберите «Переместить в». Предлагаются только те переходы, которые принимает Hermes.' })
     : null
 
   const editedStrip = edited ? jsxs('div', { className: 'dy-kb-edited', 'data-view-edited': currentName ?? ALL_WORK, role: 'status', children: [
     jsx('span', { className: 'dy-kb-dot', 'aria-hidden': true }),
-    jsx('span', { className: 'dy-kb-edited-text', children: currentSaved ? `Unsaved changes to "${currentSaved.name}".` : 'Вы изменили «Всю работу». Сохраните как представление, чтобы оставить это.' }),
+    jsx('span', { className: 'dy-kb-edited-text', children: currentSaved ? `Несохранённые изменения в «${currentSaved.name}».` : 'Вы изменили «Всю работу». Сохраните как представление, чтобы оставить это.' }),
     currentSaved && currentSaved.mine !== false ? jsx('button', { type: 'button', className: 'dockyard-button small primary', 'data-view-save': true, disabled: busy, onClick: saveCurrent, children: 'Сохранить' }) : null,
     jsx('button', { type: 'button', className: 'dockyard-button small', 'data-view-save-as': true, disabled: busy, onClick: () => openPanel('new'), children: 'Сохранить как новый вид' }),
     jsx('button', { type: 'button', className: 'dockyard-button small', 'data-view-reset': true, onClick: resetView, children: 'Сброс' }),
@@ -502,7 +503,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
     roadmap.status === 'error' ? jsx('p', { className: 'dy-kb-note', 'data-kanban-note': 'objectives', role: 'status', children: 'Задачи-цели недоступны. Они не показаны.' }, 'roadmap') : null,
     // Never hide work: an item whose status no column lists is named here.
     unplaced.length ? jsxs('div', { className: 'dy-kb-note', 'data-kanban-note': 'unplaced', role: 'status', children: [
-      jsx('span', { children: `${number(unplaced.length)} ${plural(unplaced.length, 'item')} not on the board: Hermes gave ${unplaced.length === 1 ? 'it a status' : 'them statuses'} no column lists. ` }),
+      jsx('span', { children: `${number(unplaced.length)} ${plural(unplaced.length, 'рабочий элемент', 'рабочих элементов')} не на доске: Hermes дал ${unplaced.length === 1 ? 'ему статус, который не показывает ни одна колонка' : 'им статусы, которые не показывает ни одна колонка'}. ` }),
       ...unplaced.map((item) => jsx('button', { type: 'button', className: 'dy-kb-goto', onClick: () => onOpenItem(item), children: `${item.ref} (${item.status})` }, item.ref)),
     ]}, 'unplaced') : null,
   ]
@@ -518,7 +519,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
   const openRef = (ref) => {
     const target = allItems.find((item) => item.ref === ref)
     if (target) onOpenItem(target)
-    else setWorkNotice(`Work item ${ref} is not in this project's board data.`)
+    else setWorkNotice(`Рабочего элемента ${ref} нет в данных доски этого проекта.`)
   }
   const toggleColumn = (key) => {
     const willCollapse = !collapsed[key]
@@ -545,13 +546,13 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
       onDrop: (event) => { event.preventDefault(); if (canDrop) transitionStatus(dragged.ref, dropStatusOf(stage.key)); setDragged(null) },
       children: isCollapsed
         ? [jsxs('button', { type: 'button', className: 'dy-kb-strip', 'data-board-strip': stage.key, 'aria-expanded': false,
-            'aria-label': `Expand ${stage.label}, ${number(stageItems.length)} ${plural(stageItems.length, 'item')}`, onClick: () => toggleColumn(stage.key), children: [
+            'aria-label': `Развернуть ${stage.label}, ${number(stageItems.length)} ${plural(stageItems.length, 'рабочий элемент', 'рабочих элементов')}`, onClick: () => toggleColumn(stage.key), children: [
             jsx('span', { className: 'dy-kb-strip-count', children: number(stageItems.length) }),
             jsx('span', { className: 'dy-kb-strip-label', children: stage.label }),
           ]}, 'strip')]
         : [
             jsxs('header', { children: [
-              jsx('button', { type: 'button', className: 'dy-kb-collapse', 'data-board-collapse': stage.key, 'aria-expanded': true, 'aria-label': `Collapse ${stage.label}`, onClick: () => toggleColumn(stage.key), children: jsx(Icon, { name: 'chevrons-left' }) }),
+              jsx('button', { type: 'button', className: 'dy-kb-collapse', 'data-board-collapse': stage.key, 'aria-expanded': true, 'aria-label': `Свернуть ${stage.label}`, onClick: () => toggleColumn(stage.key), children: jsx(Icon, { name: 'chevrons-left' }) }),
               jsx('h3', { title: stage.hint, children: stage.label }),
               jsx('span', { children: number(stageItems.length) }),
             ]}, 'header'),
@@ -566,7 +567,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
   const moveCell = (item) => {
     const moves = movesOf(item)
     return moves.targets.length
-      ? jsxs('select', { 'aria-label': `Move ${item.ref}`, 'data-card-move': item.ref, disabled: moving, value: '', onChange: (event) => transitionStatus(item.ref, event.target.value), children: [
+      ? jsxs('select', { 'aria-label': `Переместить ${item.ref}`, 'data-card-move': item.ref, disabled: moving, value: '', onChange: (event) => transitionStatus(item.ref, event.target.value), children: [
           jsx('option', { value: '', children: 'Переместить в…' }),
           ...moves.targets.map((target) => jsx('option', { value: target.status, children: target.label }, target.key)),
         ]})
@@ -574,7 +575,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
   }
   const facts = (item) => factsByRef[item.ref]
   const listColumns = [
-    { key: 'ref', heading: 'Ref', cell: (item) => jsx('button', { type: 'button', className: 'dy-kb-goto', onClick: () => onOpenItem(item), children: item.ref }) },
+    { key: 'ref', heading: 'Номер', cell: (item) => jsx('button', { type: 'button', className: 'dy-kb-goto', onClick: () => onOpenItem(item), children: item.ref }) },
     { key: 'title', heading: 'Заголовок', cell: (item) => item.title },
     { key: 'type', heading: 'Тип', cell: (item) => typeLabel(item.type) },
     { key: 'status', heading: 'Состояние', cell: (item) => statusText(item.status) },
@@ -584,7 +585,7 @@ export function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenIt
     { key: 'initiative', heading: 'Инициатива', cell: (item) => facts(item).initiative ? (facts(item).initiative.title || facts(item).initiative.ref) : '' },
     { key: 'milestone', heading: 'Веха', cell: (item) => facts(item).milestones.map((milestone) => milestone.name).join(', ') },
     { key: 'goal', heading: 'Цель', cell: (item) => facts(item).goal ? facts(item).goal.title : '' },
-    { key: 'due', heading: 'Срок', cell: (item) => facts(item).due ? `${shortDate(facts(item).due, today)}${facts(item).overdue ? ' · Overdue' : ''}` : '' },
+    { key: 'due', heading: 'Срок', cell: (item) => facts(item).due ? `${shortDate(facts(item).due, today)}${facts(item).overdue ? ' · просрочено' : ''}` : '' },
     { key: 'move', heading: 'Переместить', cell: moveCell },
   ]
   const list = jsx('div', { className: 'dy-kb-list', children: jsx(WorkTable, { columns: listColumns, className: 'dy-kb-table',

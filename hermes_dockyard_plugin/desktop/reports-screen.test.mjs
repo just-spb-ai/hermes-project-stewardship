@@ -21,7 +21,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
-import { reportSections, reportTypeLabel, reportWhen } from './src/lib/report-vocab.js'
+import { parseReport, reportHint, reportTypeLabel, reportWhen, REPORT_META } from './src/lib/report-vocab.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -60,6 +60,11 @@ async function seedOnce() {
   return seeded
 }
 const listed = async (pid) => (await call(`/projects/${pid}/reports`)).reports ?? []
+// The "## " headings a saved report carries. A saved report is stored in the
+// backend's own words (English) while the tab's hint is Russian
+// (report-words.test.mjs: neither side dictates the other), so the page is
+// held to the sections it was saved with, not to the hint's words.
+const savedHeadings = (content) => parseReport(content).blocks.filter((block) => block.kind === 'heading').map((block) => block.text)
 const tableRowsIn = (content) => Math.max(0, content.split('\n').filter((line) => line.startsWith('| ') && !/^\|( --- \|)+$/.test(line)).length - 1)
 
 async function withPage(viewport, run) {
@@ -109,8 +114,8 @@ test('Reports: the newest report opens as a formatted page, never raw Markdown',
     await page.locator(`[data-report-history="${newest.report_id}"][aria-current="true"]`).waitFor(MARKER)
     const shown = await shownReport(page.locator('[data-report-pane]'))
     assert.equal(shown.title, saved.title)
-    assert.equal(shown.meta, `${reportTypeLabel('full')} · Generated ${reportWhen(saved.generated_at, TZ)} by ${saved.generated_by}`)
-    assert.deepEqual(shown.headings, reportSections('full', true), 'exactly the sections the hint names')
+    assert.equal(shown.meta, `${reportTypeLabel('full')} · ${REPORT_META.generated} ${reportWhen(saved.generated_at, TZ)} · ${REPORT_META.by} ${saved.generated_by}`)
+    assert.deepEqual(shown.headings, savedHeadings(saved.content), 'exactly the sections the saved report carries')
     assert.deepEqual(shown.tableHead, ['Ref', 'Work item', 'Status', 'Assignee'])
     assert.equal(shown.tableRows, tableRowsIn(saved.content), 'every work row of the saved report')
     assert.ok(shown.tableRows > 0, 'the project has work, so the table has rows')
@@ -132,22 +137,23 @@ test('Reports: Generate opens the new report first; Risk turns activity off and 
     await page.locator('[data-report-type]').selectOption('risk')
     assert.equal(await box.isDisabled(), true, 'Risk reports never include activity')
     assert.equal(await box.isChecked(), false)
-    assert.equal((await page.locator('[data-report-hint]').innerText()).trim(), 'Sections: Configuration · Risks and decisions. Risk reports never include recent activity.')
+    assert.equal((await page.locator('[data-report-hint]').innerText()).trim(), reportHint('risk', false))
     await page.locator('[data-action="generate-report"]').click()
     await page.waitForFunction((count) => document.querySelectorAll('[data-report-history]').length === count + 1, before.length, MARKER)
     const after = await historyIds(page)
     assert.ok(!before.includes(after[0]), 'the new report is first in the list')
     assert.equal((await listed(pid))[0].report_id, after[0], 'and it is the newest saved report')
     await page.locator(`[data-report-history="${after[0]}"][aria-current="true"]`).waitFor(MARKER)
+    const generated = await call(`/projects/${pid}/reports/${after[0]}`)
     const risk = await shownReport(page.locator('[data-report-pane]'))
-    assert.deepEqual(risk.headings, reportSections('risk', true))
+    assert.deepEqual(risk.headings, savedHeadings(generated.content))
     assert.deepEqual(risk.tableHead, [], 'a risk report has no work table')
-    assert.match(risk.meta, /^Risk and decisions · Generated /)
+    assert.match(risk.meta, new RegExp(`^${reportTypeLabel('risk')} · ${REPORT_META.generated} `))
 
     await page.locator('[data-report-type]').selectOption('delivery')
     assert.equal(await box.isDisabled(), false)
     assert.equal(await box.isChecked(), true, 'the box comes back as it was')
-    assert.equal((await page.locator('[data-report-hint]').innerText()).trim(), 'Sections: Configuration · Delivery, with the work list · Recent activity')
+    assert.equal((await page.locator('[data-report-hint]').innerText()).trim(), reportHint('delivery', true))
 
     await page.locator(`[data-report-history="${after[1]}"]`).focus()
     await page.keyboard.press('Enter')
@@ -158,6 +164,7 @@ test('Reports: Generate opens the new report first; Risk turns activity off and 
 test('Reports: the pick is fixed (no review bar; old review links change nothing)', { timeout: 180000 }, async () => {
   const { projectId, pid } = await seedOnce()
   const [newest, older] = await listed(pid)
+  const olderSaved = await call(`/projects/${pid}/reports/${older.report_id}`)
   await withPage({ width: 1440, height: 900 }, async (page) => {
     // The flags the 06/10 review prototype read. Sahil picked "side by side";
     // the flags are gone. The list of past reports renders in either layout,
@@ -173,7 +180,7 @@ test('Reports: the pick is fixed (no review bar; old review links change nothing
     await page.locator(`[data-report-history="${older.report_id}"][aria-current="true"]`).waitFor(MARKER)
     await page.locator(`[data-report-pane] [data-report-preview="${older.report_id}"]`).waitFor(MARKER)
     assert.equal(await page.locator('[data-report-drawer], [data-project-reports] [role="dialog"]').count(), 0, 'a past report opens on the page, not in a side panel')
-    assert.deepEqual((await shownReport(page.locator('[data-report-pane]'))).headings, reportSections(older.report_type, older.options?.activity_included !== false))
+    assert.deepEqual((await shownReport(page.locator('[data-report-pane]'))).headings, savedHeadings(olderSaved.content))
   })
 })
 

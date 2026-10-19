@@ -7,6 +7,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
+import { CONSOLE_TABS } from './src/lib/panel-words.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -39,7 +40,7 @@ test('Notifications: dark theme recolours chips, labels, day headings, pop-ups a
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } })
   try {
     await page.goto(BASE)
-    await page.getByRole('tab', { name: 'Notifications' }).click()
+    await page.getByRole('tab', { name: CONSOLE_TABS.notifications }).click()
     // The filter bar always renders; the settings panel needs at least one notification.
     await page.locator('.dy-notif-filters').waitFor()
     // A key press makes the next script focus count as keyboard focus (:focus-visible).

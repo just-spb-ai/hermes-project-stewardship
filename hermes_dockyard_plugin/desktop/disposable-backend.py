@@ -15,6 +15,11 @@ os.environ["DOCKYARD_PLUGIN_DB"] = str(root / "dockyard.db")
 os.environ["STEWARD_DB_PATH"] = str(root / "dockyard.db")
 os.environ["HERMES_DASHBOARD_SESSION_TOKEN"] = "demo-session-token"
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "dashboard"))
+# HPS_EXTRA_SITE: extra site-packages directories, appended AFTER the venv's
+# own, for a dependency that lives in another environment on this machine
+# (appending keeps the venv's fastapi/pydantic authoritative).
+for _extra in filter(None, os.environ.get("HPS_EXTRA_SITE", "").split(os.pathsep)):
+    sys.path.append(_extra)
 # The practice server stays offline, like the pytest suite: every connection
 # off this machine and every GitHub CLI run is refused and recorded
 # (tests/offline_guard.py). /health reports the refusals and

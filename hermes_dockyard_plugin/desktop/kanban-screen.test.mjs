@@ -15,19 +15,57 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { ALL_WORK, CARD_WORDS, shortDate, stageKeyOf, stageLabel } from './src/kanban/model.js'
+import { all, escape, fill, one, pairs, pickProject, template } from './test-support/src-words.mjs'
+
+// The words a person reads come from the module that renders them: the
+// columns' names, the cards' signals and dates and the built-in view's name
+// from kanban/model.js; the toolbar, the card body, the List's headings and the
+// views panel's words out of kanban/board.js's own source (a node test cannot
+// load a module that imports React); the drawer's Assignee control out of
+// work-item/detail.js. Nothing here spells a displayed word a second time.
+const BOARD = 'src/kanban/board.js'
+// The five columns the fixture's statuses reach, each with the column's own word.
+const COLUMN = Object.fromEntries(['backlog', 'in_progress', 'in_review', 'blocked', 'done']
+  .map((status) => [status, stageLabel(stageKeyOf({ status }))]))
+// Board or List, as the toolbar publishes them.
+const LAYOUT_WORDS = pairs(BOARD, /\['(board|list)', '([^']+)'\]/)
+const OPEN_ALL_CARDS = one(BOARD, /'data-kanban-open-all': true[\s\S]*?children: '([^']+)'/)
+// How a card is moved: the board's own sentence, and the toast a move shows.
+const BOARD_HELP = one(BOARD, /'data-kanban-help': true, children: '([^']+)'/)
+const MOVE_TOAST = (status) => fill(BOARD, /emitToast\('success', `([^`]*statusText\(status\)[^`]*)`/, stageLabel(stageKeyOf({ status })))
+// The collapsed strip's whole sentence; the column and the count are wildcards.
+const STRIP_OPEN = template(BOARD, /'data-board-strip': stage\.key, 'aria-expanded': false,\s*'aria-label': `([^`]+)`/)
+// The card's working rows: initiative, milestone and goal, each with its own label.
+const INITIATIVE_LABEL = one(BOARD, /goto\('([^']+)', \(\) => onNavigate\(`plan:initiative:/)
+const MILESTONE_LABEL = one(BOARD, /goto\('([^']+)', \(\) => onNavigate\(`plan:milestone:/)
+const GOAL_LABEL = one(BOARD, /goto\('([^']+)', \(\) => onNavigate\(`plan:goal:/)
+const MILESTONE_ROW = fill(BOARD, /milestone\.due \? `([^`]+)` : milestone\.name/, 'Beta launch', shortDate('2099-03-01'))
+// The search box, the List's headings and a card's Move control.
+const SEARCH_WORK = one(BOARD, /'aria-label': '([^']+)', placeholder: /)
+const LIST_HEADINGS = all(BOARD, /heading: '([^']+)', cell/)
+// The views panel: the sentence a changed view shows and the Shared badge.
+const unsavedChanges = (name) => fill(BOARD, /'dy-kb-edited-text', children: currentSaved \? `([^`]+)`/, name)
+const SHARED_BADGE = one(BOARD, /const badge = !saved \? '[^']+' : saved\.shared \? '([^']+)'/)
+// How many work items the board says it is showing.
+const ITEM_ONE = one(BOARD, /plural\(liveCount, '([^']+)'/)
+const ITEM_MANY = one(BOARD, /plural\(liveCount, '[^']+', '([^']+)'/)
+// The details drawer names its Assignee control itself.
+const ASSIGNEE_LABEL = one('src/work-item/detail.js', /'aria-label': '([^']+)', value: draft\?\.assignee/)
+// The two notes the board shows when a read fails, each with the note's own word.
+const NOTE_WORDS = pairs(BOARD, /'data-kanban-note': '([a-z]+)', role: 'status', children: '([^']+)'/)
+// Duplicating a view names the copy in the panel's own words.
+const duplicateName = (name) => fill(BOARD, /freeName\(`([^`]+)`, \[ALL_WORK/, name)
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
 const PROJECT = 'atlas-mobile'
 const TOKEN = { 'x-hermes-session-token': 'demo-session-token' }
 const get = async (path) => { const r = await fetch(API + path, { headers: TOKEN }); assert.ok(r.ok, `${path} -> ${r.status}`); return r.json() }
-const COLUMN = { backlog: 'Backlog', in_progress: 'In progress', in_review: 'Review', blocked: 'Blocked', done: 'Done' }
 const storage = (page) => page.evaluate(() => JSON.stringify([Object.entries(localStorage), Object.entries(sessionStorage)]))
 
 async function goToBoard(page) {
-  await page.getByRole('button', { name: 'Project context', exact: true }).click()
-  await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-  await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+  await pickProject(page, PROJECT)
   await page.locator('[data-tab="project"]').click()
   await page.locator('[data-project-view="board"]').click()
   await page.locator('[data-kanban-screen]').waitFor()
@@ -61,18 +99,18 @@ test('board: five columns, every live item placed, views bar, no sidebar, no pag
   assert.deepEqual(await page.locator('[data-board-column] h3').allInnerTexts(), Object.values(COLUMN))
   assert.equal(await page.locator('[data-work-card]').count(), d.live.length)
   assert.equal(await page.locator('[data-kanban-note="unplaced"]').count(), 0)
-  assert.deepEqual(await page.locator('[data-view-tab]').evaluateAll((tabs) => tabs.map((tab) => tab.getAttribute('data-view-tab'))), ['All work', "Ada's work", "Grace's bugs", 'Mobile, all cards open'])
-  assert.equal(await page.locator('[data-view-tab="All work"]').getAttribute('aria-pressed'), 'true')
+  assert.deepEqual(await page.locator('[data-view-tab]').evaluateAll((tabs) => tabs.map((tab) => tab.getAttribute('data-view-tab'))), [ALL_WORK, "Ada's work", "Grace's bugs", 'Mobile, all cards open'])
+  assert.equal(await page.locator(`[data-view-tab="${ALL_WORK}"]`).getAttribute('aria-pressed'), 'true')
   // C's sub-tabs became controls: Board or List, and one button that opens every card (Sahil 05/10:
   // "Expanded" did not say what it did). Milestones are not on the board any more.
-  assert.deepEqual(await page.locator('[data-kanban-layout]').allInnerTexts(), ['Board', 'List'])
+  assert.deepEqual(await page.locator('[data-kanban-layout]').allInnerTexts(), [LAYOUT_WORDS.board, LAYOUT_WORDS.list])
   assert.equal(await page.locator('[data-kanban-layout="board"]').getAttribute('aria-pressed'), 'true')
-  assert.equal((await page.locator('[data-kanban-open-all]').innerText()).trim(), 'Open all cards')
+  assert.equal((await page.locator('[data-kanban-open-all]').innerText()).trim(), OPEN_ALL_CARDS)
   assert.equal(await page.locator('[data-kanban-open-all]').getAttribute('aria-pressed'), 'false')
   assert.equal(await page.locator('[data-kanban-page], [data-plan-screen]').count(), 0)
   assert.equal(await page.locator('.dockyard-sidebar, [data-sidebar]').count(), 0)
   // Drag is never the only way to move: the board says how (kept from C's board).
-  assert.match(await page.locator('[data-kanban-help]').innerText(), /open the card and use Move to/)
+  assert.match(await page.locator('[data-kanban-help]').innerText(), new RegExp(escape(BOARD_HELP)))
   await page.locator('[data-kanban-layout="list"]').click()
   await page.locator('.dy-kb-list').waitFor()
   assert.equal(await page.locator('[data-kanban-help]').count(), 0, 'the List has its own Move column, so no drag help')
@@ -85,9 +123,9 @@ test('cards: summary facts from real data; expanded card names links with ref, t
   const screens = d.by('Build setup screens'), guided = d.by('Guided setup'), crash = d.by('Crash on first launch')
   const analytics = d.by('Wire up analytics'), spike = d.by('Try offline sync'), epic = d.by('Mobile app revamp')
   const signals = (title) => card(title).locator('[data-signal]').allInnerTexts()
-  assert.deepEqual(await signals('Build setup screens'), ['Blocked by 2', 'Blocks 1', 'Overdue · 15 Jan 2000'])
+  assert.deepEqual(await signals('Build setup screens'), [CARD_WORDS.blockedBy(2), CARD_WORDS.blocks(1), CARD_WORDS.overdue(shortDate('2000-01-15'))])
   assert.deepEqual(await card('Build setup screens').locator('[data-card-label]').allInnerTexts(), ['mobile', 'ux'])
-  assert.deepEqual(await signals('Guided setup'), ['Blocks 1', 'Due 30 Jun 2099'])
+  assert.deepEqual(await signals('Guided setup'), [CARD_WORDS.blocks(1), CARD_WORDS.due(shortDate('2099-06-30'))])
   assert.equal(await card('Build setup screens').locator('.dy-kb-avatar').innerText(), 'AL')
   assert.equal(await card('Wire up analytics').locator('.dy-kb-avatar').innerText(), 'GH')
   assert.deepEqual(await signals('Mobile app revamp'), [], 'an epic with no links shows no link signal')
@@ -107,10 +145,10 @@ test('cards: summary facts from real data; expanded card names links with ref, t
   const planning = await card('Build setup screens').locator('[data-card-section="planning"] .dy-kb-row').allInnerTexts()
   // v42: a task works towards ONE goal, so the card names that goal directly.
   // There is no "through the initiative" hop any more.
-  assert.deepEqual(planning.map((row) => row.replace(/\s+/g, ' ').trim()), ['Initiative Make setup effortless', 'Milestone Beta launch · due 1 Mar 2099', 'Goal Setup under two minutes'])
+  assert.deepEqual(planning.map((row) => row.replace(/\s+/g, ' ').trim()), [`${INITIATIVE_LABEL} Make setup effortless`, `${MILESTONE_LABEL} ${MILESTONE_ROW}`, `${GOAL_LABEL} Setup under two minutes`])
   await card('Crash on first launch').locator('[data-card-toggle]').click()
   const done = await card('Crash on first launch').locator(`[data-link-ref="${spike.ref}"]`).innerText()
-  assert.match(done.replace(/\s+/g, ' '), /Try offline sync Done$/, 'a done blocker says Done in words')
+  assert.match(done.replace(/\s+/g, ' '), new RegExp(`Try offline sync ${escape(stageLabel('done'))}$`), `a done blocker says ${stageLabel('done')} in words`)
   assert.equal(epic.type, 'epic')
 }))
 
@@ -181,8 +219,8 @@ test('a linked item opens; Open full details opens the drawer; board names never
     return names('[data-kanban-toolbar] [aria-label], .dy-kb-viewsbar [aria-label]').filter((name) => drawer.includes(name))
   })
   assert.deepEqual(clashes, [])
-  assert.equal(await page.locator('select[aria-label="Assignee"]').count(), 1)
-  assert.equal(await page.locator('[data-work-item-detail] select[aria-label="Assignee"]').count(), 1)
+  assert.equal(await page.locator(`select[aria-label="${ASSIGNEE_LABEL}"]`).count(), 1)
+  assert.equal(await page.locator(`[data-work-item-detail] select[aria-label="${ASSIGNEE_LABEL}"]`).count(), 1)
 }))
 
 test('filters narrow the board; search finds linked items; nothing is stored in the browser; reload resets', () => withBrowser(async (browser) => {
@@ -196,11 +234,11 @@ test('filters narrow the board; search finds linked items; nothing is stored in 
   await page.locator('[data-kanban-filter="type"]').selectOption('bug')
   const bugs = grace.filter((item) => item.type === 'bug').length
   assert.equal(await cards(), bugs)
-  assert.equal(await page.locator('[data-kanban-count]').innerText(), `${bugs} ${bugs === 1 ? 'item' : 'items'}`)
+  assert.equal(await page.locator('[data-kanban-count]').innerText(), `${bugs} ${bugs === 1 ? ITEM_ONE : ITEM_MANY}`)
   await page.locator('[data-kanban-clear]').click()
   assert.equal(await page.locator('[data-kanban-filter="type"]').inputValue(), '')
 
-  const search = page.getByRole('searchbox', { name: 'Search work items' })
+  const search = page.getByRole('searchbox', { name: SEARCH_WORK })
   await search.fill('guided')
   assert.equal(await cards(), 1)
   const screens = d.by('Build setup screens').ref
@@ -223,8 +261,8 @@ test('filters narrow the board; search finds linked items; nothing is stored in 
   assert.equal(await storage(page), before, 'no browser storage written')
   await page.reload({ waitUntil: 'networkidle' })
   await goToBoard(page)
-  assert.equal(await page.locator('[data-view-tab="All work"]').getAttribute('aria-pressed'), 'true')
-  assert.equal(await page.getByRole('searchbox', { name: 'Search work items' }).inputValue(), '')
+  assert.equal(await page.locator(`[data-view-tab="${ALL_WORK}"]`).getAttribute('aria-pressed'), 'true')
+  assert.equal(await page.getByRole('searchbox', { name: SEARCH_WORK }).inputValue(), '')
   assert.equal(await page.locator('[data-card-body]').count(), 0)
   assert.equal(await page.locator('[data-view-edited]').count(), 0)
 }))
@@ -241,11 +279,13 @@ test('columns collapse to a strip that takes a drop; focus follows; refused move
     const strip = page.locator('[data-board-strip="active"]')
     await strip.waitFor()
     assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('data-board-strip')), 'active')
-    assert.match(await strip.getAttribute('aria-label'), /^Expand In progress, \d+ items?$/)
+    const stripLabel = await strip.getAttribute('aria-label')
+    assert.match(stripLabel, STRIP_OPEN)
+    assert.ok(stripLabel.includes(stageLabel('active')), 'the strip names the column it opens')
     assert.ok((await page.locator('[data-board-column="active"]').boundingBox()).width <= 56)
     restore = { ref: guided.ref, status: guided.status }
     await card('Guided setup').dragTo(page.locator('[data-board-column="active"]'))
-    await page.getByText('Work item moved to in progress.', { exact: true }).waitFor()
+    await page.getByText(MOVE_TOAST('in_progress'), { exact: true }).waitFor()
     assert.equal((await data()).by('Guided setup').status, 'in_progress')
     // C's backend-browser guarantees: the signed-in principal is recorded, and another project's route refuses the item.
     const history = (await get(`/projects/${PROJECT}/work-items/${guided.ref}`)).history ?? []
@@ -266,13 +306,13 @@ test('columns collapse to a strip that takes a drop; focus follows; refused move
 }))
 
 test('if dependencies or objectives fail to load, the board still works and says so', () => withBrowser(async (browser) => {
-  for (const [route, note, text] of [['**/work-dependencies', 'dependencies', /Dependencies unavailable/], ['**/roadmap?*', 'objectives', /Objectives unavailable/]]) {
+  for (const [route, note] of [['**/work-dependencies', 'dependencies'], ['**/roadmap?*', 'objectives']]) {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
     await page.route(route, (request) => request.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'unavailable', message: 'x' } }) }))
     await page.goto(BASE, { waitUntil: 'networkidle' })
     await goToBoard(page)
     await page.locator(`[data-kanban-note="${note}"]`).waitFor()
-    assert.match(await page.locator(`[data-kanban-note="${note}"]`).innerText(), text)
+    assert.match(await page.locator(`[data-kanban-note="${note}"]`).innerText(), new RegExp(escape(NOTE_WORDS[note])))
     assert.equal(await page.locator('[data-work-card]').count(), (await data()).live.length, 'every card still shows')
     if (note === 'dependencies') assert.equal(await page.locator('[data-signal="blocked_by"], [data-signal="blocks"]').count(), 0, 'no invented links')
     await page.close()
@@ -285,10 +325,10 @@ test("List: C's columns, grouped by stage, linked items named, no sideways scrol
   await page.locator('[data-kanban-layout="list"]').click()
   assert.equal(await page.locator('[data-work-table]').count(), 1)
   assert.equal(await page.locator('[data-work-card]').count(), 0)
-  assert.deepEqual(await page.locator('[data-work-table] thead th').allInnerTexts(), ['Ref', 'Title', 'Type', 'State', 'Assignee', 'Blocked by', 'Blocks', 'Initiative', 'Milestone', 'Goal', 'Due', 'Move'])
+  assert.deepEqual(await page.locator('[data-work-table] thead th').allInnerTexts(), LIST_HEADINGS)
   const row = await page.locator(`[data-work-row="${d.by('Build setup screens').ref}"]`).innerText()
   for (const text of [`${d.by('Guided setup').ref} Guided setup`, 'Make setup effortless', 'Beta launch', 'Setup under two minutes']) assert.ok(row.includes(text), `${text} in ${row}`)
-  assert.ok((await page.locator('[data-work-group]').allInnerTexts()).some((text) => /^Backlog \(\d+\)$/.test(text)))
+  assert.ok((await page.locator('[data-work-group]').allInnerTexts()).some((text) => new RegExp(`^${escape(stageLabel('backlog'))} \\(\\d+\\)$`).test(text)))
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true)
 }))
 
@@ -310,7 +350,7 @@ test('milestones are managed on the Vision screen, not on the board; a card\'s m
   const { page, card } = await open(browser)
   assert.equal(await page.locator('[data-kanban-page], [data-plan-screen]').count(), 0)
   await card('Build setup screens').locator('[data-card-toggle]').click()
-  await card('Build setup screens').getByRole('button', { name: /^Milestone: Beta launch/ }).click()
+  await card('Build setup screens').getByRole('button', { name: new RegExp(`^${escape(MILESTONE_LABEL)}: Beta launch`) }).click()
   // Design round f: the link lands on that milestone's details in Vision.
   await page.locator('[data-project-view="plan"].active').waitFor()
   await page.locator('[data-plan-drawer="milestone"]').waitFor()
@@ -383,7 +423,7 @@ test('views: save, save as new, rename, share, duplicate and delete, all through
   await page.locator(`[data-view-tab="Ada's work"]`).click()
   assert.equal(await page.locator('[data-kanban-filter="assignee"]').inputValue(), 'ada-lovelace')
   await page.locator('[data-kanban-open-all]').click()
-  assert.match(await page.locator('[data-view-edited]').innerText(), /Unsaved changes to "Ada's work"/)
+  assert.match(await page.locator('[data-view-edited]').innerText(), new RegExp(escape(unsavedChanges("Ada's work"))))
   await page.locator('[data-view-edited] [data-view-save]').click()
   await page.locator('[data-view-edited]').waitFor({ state: 'detached' })
   assert.equal((await views())["Ada's work"].filters.display.density, 'detailed')
@@ -407,20 +447,20 @@ test('views: save, save as new, rename, share, duplicate and delete, all through
   assert.ok(saved['Ada, mobile only'] && !saved['Ada mobile'], 'renamed, old name gone')
 
   await row('Ada, mobile only').locator('[data-view-share]').click()
-  await row('Ada, mobile only').getByText('Shared', { exact: true }).waitFor()
+  await row('Ada, mobile only').getByText(SHARED_BADGE, { exact: true }).waitFor()
   assert.equal((await views())['Ada, mobile only'].shared, true)
 
   assert.equal(await row("Grace's bugs").locator('[data-view-rename], [data-view-share], [data-view-delete]').count(), 0, "someone else's view cannot be changed")
   await row("Grace's bugs").locator('[data-view-duplicate]').click()
-  await row("Grace's bugs copy").waitFor()
-  const copy = (await views())["Grace's bugs copy"]
+  await row(duplicateName("Grace's bugs")).waitFor()
+  const copy = (await views())[duplicateName("Grace's bugs")]
   assert.deepEqual([copy.layout, copy.filters.types, copy.shared, copy.mine], ['table', ['bug'], false, true])
 
   await row('Ada, mobile only').locator('[data-view-delete]').click()
   await page.locator('[data-view-delete-confirm="Ada, mobile only"]').click()
   await row('Ada, mobile only').waitFor({ state: 'detached' })
   assert.equal((await views())['Ada, mobile only'], undefined)
-  assert.equal(await page.locator('[data-view-tab="All work"]').getAttribute('aria-pressed'), 'true', 'deleting the current view falls back to All work')
+  assert.equal(await page.locator(`[data-view-tab="${ALL_WORK}"]`).getAttribute('aria-pressed'), 'true', `deleting the current view falls back to ${ALL_WORK}`)
   assert.equal(await storage(page), before, 'no browser storage written')
   assert.deepEqual(errors, [])
 }))
@@ -437,13 +477,11 @@ test('views live in the backend: a saved view survives a reload and never shows 
     await page.reload({ waitUntil: 'networkidle' })
     await goToBoard(page)
     await page.locator(`[data-view-tab="${name}"]`).waitFor()
-    assert.equal(await page.locator('[data-view-tab="All work"]').getAttribute('aria-pressed'), 'true', 'a reload starts on All work')
+    assert.equal(await page.locator(`[data-view-tab="${ALL_WORK}"]`).getAttribute('aria-pressed'), 'true', `a reload starts on ${ALL_WORK}`)
     await page.locator(`[data-view-tab="${name}"]`).click()
     assert.equal(await page.locator('[data-kanban-filter="label"]').inputValue(), 'mobile', 'the saved filter comes back from the backend')
     // Another project never sees it, on screen or through the API.
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill('payments-relaunch')
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: 'payments-relaunch', exact: true }).click()
+    await pickProject(page, 'payments-relaunch')
     await page.locator('[data-project-dashboard="payments-relaunch"]').waitFor()
     await page.locator('[data-project-view="board"]').click()
     await page.locator('[data-project-dashboard="payments-relaunch"] [data-kanban-screen]').waitFor()

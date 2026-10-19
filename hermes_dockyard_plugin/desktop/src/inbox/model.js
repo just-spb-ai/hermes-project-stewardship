@@ -55,8 +55,20 @@ export function filterByTab(items, tab, now = new Date()) {
   return []
 }
 
-// 'today' | '1 day old' | 'N days old' | '' — honest about missing data.
-const daysOld = (days) => (days <= 0 ? 'today' : days === 1 ? '1 day old' : `${days} days old`)
+// The words a row shows, in one place: a translation is one edit here, and
+// the unit test (inbox-model.test.mjs) reads them instead of spelling the copy
+// out a second time.
+export const AGE_WORDS = Object.freeze({
+  today: 'сегодня',
+  day: (count) => `${count} день назад`,
+  days: (count) => `${count} дн. назад`,
+})
+export const ROW_WORDS = Object.freeze({ project: 'проект', initiative: 'инициатива' })
+export const RISK_WORD = Object.freeze({ low: 'низкий', medium: 'средний', high: 'высокий', critical: 'критический' })
+export const riskPhrase = (risk) => `риск: ${RISK_WORD[String(risk ?? '').toLowerCase()] ?? risk}`
+
+// 'сегодня' | '1 день назад' | 'N дн. назад' | '' — honest about missing data.
+const daysOld = (days) => (days <= 0 ? AGE_WORDS.today : days === 1 ? AGE_WORDS.day(1) : AGE_WORDS.days(days))
 
 export function ageLabel(item, now = new Date()) {
   if (item?.age_days != null && Number.isFinite(Number(item.age_days))) {
@@ -86,7 +98,7 @@ export function rowSummary(item, now = new Date()) {
   const risk = String(item?.risk ?? '').toLowerCase()
   const attention = isAttention(item)
   const age = ageLabel(item, now)
-  const meta = [attention ? 'project' : 'initiative', risk ? `${risk} risk` : '', age].filter(Boolean).join(' · ')
+  const meta = [attention ? ROW_WORDS.project : ROW_WORDS.initiative, risk ? riskPhrase(risk) : '', age].filter(Boolean).join(' · ')
   return { project: item?.project ?? '', meta, risk }
 }
 
@@ -111,11 +123,20 @@ export function mergeActivity(payload = {}) {
   return merged
 }
 
+// The words the honest attention panel puts in front of a person, in one
+// place: a translation is one edit here, and the tests read the same list
+// instead of spelling the copy out a second time.
+export const PANEL_WORDS = {
+  title: 'Проект требует внимания',
+  frozen: 'заморожен или отключён, поэтому его ожидающую работу здесь решить нельзя.',
+  next: 'Откройте проект, чтобы увидеть, что его блокирует.',
+}
+
 // Copy for the honest attention panel. Never pretends to be decidable.
 export function attentionPanel(item) {
   return {
-    title: 'Проект требует внимания',
-    description: `${item?.project ?? 'This project'} is frozen or disabled, so its pending work cannot be decided here. Open the project to see what is blocking it.`,
+    title: PANEL_WORDS.title,
+    description: `${item?.project ?? 'Этот проект'} ${PANEL_WORDS.frozen} ${PANEL_WORDS.next}`,
     project: item?.project ?? '',
     deeplink: item?.deep_link ?? null,
     decidable: false,

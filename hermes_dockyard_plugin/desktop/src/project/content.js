@@ -93,7 +93,7 @@ export function ProjectContentPanel({ project, content, onRefresh }) {
       setSelected(null)
       setPreviewState('idle')
       setContentAction(null)
-      emitToast('success', `Content ${contentAction === 'remove' ? 'removed' : `${contentAction}d`}.`)
+      emitToast('success', { remove: 'Файл удалён.', archive: 'Файл перемещён в архив.', restore: 'Файл восстановлен.' }[contentAction] ?? 'Готово.')
       onRefresh?.()
     } catch (failure) {
       setError(String(failure?.message ?? failure))
@@ -104,25 +104,25 @@ export function ProjectContentPanel({ project, content, onRefresh }) {
     jsxs('section', { className: 'dockyard-feature-card', children: [
       jsxs('div', { className: 'dockyard-section-head', children: [
         jsxs('div', { children: [jsx('h2', { children: 'Документация проекта' }), jsx('p', { children: 'Материалы, связанные с этим проектом.' })] }),
-        jsx(StatusTag, { tone: 'neutral', label: `${number(items.length)} ${plural(items.length, 'file')}` }),
+        jsx(StatusTag, { tone: 'neutral', label: `${number(items.length)} ${plural(items.length, 'файл', 'файлов')}` }),
       ]}),
       items.length > 0 ? jsx('div', { className: 'dockyard-content-list', children: items.map((item) => jsxs('button', { type: 'button', 'data-project-content-item': item.content_id, onClick: () => openPreview(item), children: [
-        jsxs('span', { children: [jsx('strong', { children: item.filename }), jsx('small', { children: `${mediaTypeLabel(item.media_type)} / ${formatBytes(item.size_bytes)} / ${formatWhen(item.uploaded_at) || 'Uploaded'}` })] }),
+        jsxs('span', { children: [jsx('strong', { children: item.filename }), jsx('small', { children: `${mediaTypeLabel(item.media_type)} / ${formatBytes(item.size_bytes)} / ${formatWhen(item.uploaded_at) || 'Загружено'}` })] }),
         jsx(Icon, { name: 'chevron' }),
       ]}, item.content_id)) }) : jsx('p', { className: 'dockyard-meta', children: 'Материалы пока не загружены.' }),
       jsxs('div', { className: 'dockyard-upload-panel', children: [
         jsxs('label', { className: 'dockyard-upload-dropzone', children: [
           jsx('span', { children: file ? file.name : 'Выбрать материалы' }),
-          jsx('small', { children: file ? `${formatBytes(file.size)} selected` : 'Текст, Markdown, PDF или изображение до 5 МБ, либо видео MP4 или WebM до 25 МБ.' }),
+          jsx('small', { children: file ? `${formatBytes(file.size)} — выбран` : 'Текст, Markdown, PDF или изображение до 5 МБ, либо видео MP4 или WebM до 25 МБ.' }),
           jsx('input', { type: 'file', 'data-content-file': true, accept: '.txt,.md,.pdf,.png,.jpg,.jpeg,.webp,.mp4,.webm,text/plain,text/markdown,application/pdf,image/png,image/jpeg,image/webp,video/mp4,video/webm', onChange: (event) => { setFile(event.target.files?.[0] ?? null); setError(null) } }),
         ]}),
         jsx(Button, { action: 'upload-project-content', variant: 'primary', disabled: uploading || !file || file.size <= 0 || tooBig(file), onClick: upload, children: uploading ? 'Загрузка…' : 'Загрузить контент' }),
       ]}),
-      tooBig(file) ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `This file exceeds the ${limitOf(mediaTypeOf(file)) / (1024 * 1024)} MB limit.` }) : null,
+      tooBig(file) ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Файл превышает лимит в ${limitOf(mediaTypeOf(file)) / (1024 * 1024)} МБ.` }) : null,
       error ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: error }) : null,
     ]}),
     jsxs('aside', { className: 'dockyard-feature-card dockyard-content-preview-card', children: [
-      jsx('span', { className: 'dockyard-card-label', children: 'PREVIEW' }),
+      jsx('span', { className: 'dockyard-card-label', children: 'ПРЕДПРОСМОТР' }),
       selected ? jsx('h2', { children: selected.filename }) : jsx('h2', { children: 'Выберите документ' }),
       previewState === 'loading' ? jsx('p', { children: 'Загрузка предпросмотра…' }) : null,
       previewState === 'ready' && selected?.preview_kind === 'text'
@@ -130,11 +130,11 @@ export function ProjectContentPanel({ project, content, onRefresh }) {
         : previewState === 'ready' && selected?.preview_kind === 'image' && selected.data_base64
           ? jsx('img', { 'data-content-preview': true, 'data-preview-kind': 'image', className: 'dockyard-content-image', alt: selected.filename, src: `data:${selected.media_type};base64,${selected.data_base64}` })
         : previewState === 'ready' && selected?.preview_kind === 'pdf' && mediaUrl
-          ? jsx('iframe', { 'data-content-preview': true, 'data-preview-kind': 'pdf', className: 'dockyard-content-pdf', title: `PDF preview: ${selected.filename}`, src: mediaUrl, sandbox: 'allow-same-origin' })
+          ? jsx('iframe', { 'data-content-preview': true, 'data-preview-kind': 'pdf', className: 'dockyard-content-pdf', title: `Предпросмотр PDF: ${selected.filename}`, src: mediaUrl, sandbox: 'allow-same-origin' })
         : previewState === 'ready' && selected?.preview_kind === 'video' && mediaUrl
-          ? jsx('video', { 'data-content-preview': true, 'data-preview-kind': 'video', className: 'dockyard-content-video', controls: true, preload: 'metadata', 'aria-label': `Video: ${selected.filename}`, src: mediaUrl })
+          ? jsx('video', { 'data-content-preview': true, 'data-preview-kind': 'video', className: 'dockyard-content-video', controls: true, preload: 'metadata', 'aria-label': `Видео: ${selected.filename}`, src: mediaUrl })
         : previewState === 'ready'
-          ? jsx('div', { 'data-content-preview': true, className: 'dockyard-report-placeholder', children: `Preview is not available for ${mediaTypeLabel(selected?.media_type)}. File metadata remains visible.` })
+          ? jsx('div', { 'data-content-preview': true, className: 'dockyard-report-placeholder', children: `Предпросмотр недоступен для ${mediaTypeLabel(selected?.media_type)}. Метаданные файла по-прежнему видны.` })
           : previewState === 'idle'
             ? jsx('p', { className: 'dockyard-meta', children: 'Здесь показываются текст, Markdown, изображения, PDF и видео.' })
             : null,
@@ -147,8 +147,8 @@ export function ProjectContentPanel({ project, content, onRefresh }) {
     ]}),
     contentAction ? jsx(ConfirmDialog, {
       confirmKey: `content-${contentAction}`,
-      title: `${contentAction === 'remove' ? 'Remove' : readableLabel(contentAction)} this content?`,
-      description: contentAction === 'remove' ? 'The managed file is deleted only after authority, dependency, containment and identity checks pass.' : 'Запись содержимого и история сохраняются.',
+      title: `${contentAction === 'remove' ? 'Удалить' : readableLabel(contentAction)} это содержимое?`,
+      description: contentAction === 'remove' ? 'Управляемый файл удаляется только после проверок полномочий, зависимостей, вхождения и идентичности.' : 'Запись содержимого и история сохраняются.',
       confirmLabel: contentAction === 'remove' ? 'Удалить управляемый файл' : readableLabel(contentAction),
       busy: actionBusy,
       onConfirm: applyContentAction,

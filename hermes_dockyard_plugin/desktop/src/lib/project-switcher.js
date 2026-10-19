@@ -14,6 +14,8 @@ import { useState } from '../runtime/react.js'
 import { jsx } from '../runtime/react.js'
 import { jsxs } from '../runtime/react.js'
 import { Icon } from './ui.js'
+import { pluralRu } from './ui.js'
+import { SWITCHER_WORDS } from './panel-words.js'
 
 // The "All projects" choice. "*" can never be a project id (the backend
 // stores the same value for the app to reopen on).
@@ -32,16 +34,32 @@ export const healthOf = (project) => HEALTH[project?.health] ?? [null, '']
 export const projectName = (project) => project?.name || project?.id || ''
 const initials = (label) => String(label).split(/[^A-Za-z0-9]+/).filter(Boolean).slice(0, 2)
   .map((part) => part[0]).join('').toUpperCase() || '?'
-const plural = (count, one, many = `${one}s`) => `${count} ${count === 1 ? one : many}`
+// The phase and work-count words a project row shows. "active" is the ordinary
+// phase and shows nothing; an unusual one reads with the same vocabulary as the
+// project attention strip. Published so a screen or a test reads one table.
+export const PHASE_WORD = Object.freeze({
+  discovery: 'Исследование', paused: 'На паузе', frozen: 'Заморожен', disabled: 'Выключено', archived: 'В архиве',
+})
+// The one way to the archived list: its footer action names itself.
+export const ARCHIVED_MENU = 'Архивные проекты'
+export const META_WORDS = Object.freeze({
+  inProgress: (count) => `${count} в работе`,
+  blocked: (count) => `${count} заблокировано`,
+  backlog: (count) => `${count} в бэклоге`,
+  everyProject: (count) => `Все проекты · ${count} ${pluralRu(count, 'проект', 'проекта', 'проектов')}`,
+})
 
 export function projectMeta(project) {
   const work = project?.work ?? {}
   const parts = []
   // "active" is the ordinary phase; only an unusual phase (paused, discovery...) is worth saying.
-  if (project?.phase && String(project.phase).toLowerCase() !== 'active') parts.push(String(project.phase).replace(/[_-]+/g, ' ').replace(/^./, (c) => c.toUpperCase()))
-  if (Number(work.active) > 0) parts.push(`${work.active} in progress`)
-  if (Number(work.blocked) > 0) parts.push(`${work.blocked} blocked`)
-  if (!Number(work.active) && !Number(work.blocked) && Number(work.backlog) > 0) parts.push(`${work.backlog} in backlog`)
+  if (project?.phase && String(project.phase).toLowerCase() !== 'active') {
+    const phase = String(project.phase).toLowerCase()
+    parts.push(PHASE_WORD[phase] ?? String(project.phase).replace(/[_-]+/g, ' ').replace(/^./, (c) => c.toUpperCase()))
+  }
+  if (Number(work.active) > 0) parts.push(META_WORDS.inProgress(work.active))
+  if (Number(work.blocked) > 0) parts.push(META_WORDS.blocked(work.blocked))
+  if (!Number(work.active) && !Number(work.blocked) && Number(work.backlog) > 0) parts.push(META_WORDS.backlog(work.backlog))
   return parts.join(' · ')
 }
 
@@ -94,12 +112,12 @@ function SwitcherSearch({ idPrefix, list, onPick, onClose }) {
     jsx('input', {
       autoFocus: true,
       role: 'combobox',
-      'aria-label': 'Найти проект',
+      'aria-label': SWITCHER_WORDS.find,
       'aria-expanded': true,
       'aria-controls': `${idPrefix}-options`,
       'aria-autocomplete': 'list',
       'aria-activedescendant': list.entries[list.active] ? `${idPrefix}-option-${list.active}` : undefined,
-      placeholder: 'Найти проект',
+      placeholder: SWITCHER_WORDS.find,
       value: list.query,
       onChange: (event) => list.setQuery(event.target.value),
       onKeyDown: (event) => list.onKeyDown(event, onPick, onClose),
@@ -111,11 +129,11 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
   const activeId = `${idPrefix}-option-${list.active}`
   useEffect(() => { document.getElementById(activeId)?.scrollIntoView?.({ block: 'nearest' }) }, [activeId])
   if (!list.entries.length) return jsx('p', { role: 'status', className: 'dy-sw-empty', children: 'Нет подходящих проектов' })
-  return jsx('div', { role: 'listbox', id: `${idPrefix}-options`, 'aria-label': 'Проекты', className: 'dy-sw-options', children:
+  return jsx('div', { role: 'listbox', id: `${idPrefix}-options`, 'aria-label': SWITCHER_WORDS.list, className: 'dy-sw-options', children:
     list.entries.map((entry, index) => {
       const project = entry.project
       const [tone, healthLabel] = entry.all ? ['neutral', ''] : healthOf(project)
-      const meta = entry.all ? `Every project · ${plural(projects.length, 'project')}` : projectMeta(project)
+      const meta = entry.all ? META_WORDS.everyProject(projects.length) : projectMeta(project)
       return jsxs('div', {
         role: 'option',
         id: `${idPrefix}-option-${index}`,
@@ -142,7 +160,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
 
 function TriggerLabel({ projects, scope }) {
   const current = scope && scope !== ALL_PROJECTS ? projects.find((project) => project.id === scope) : null
-  const label = scope === ALL_PROJECTS ? 'Все проекты' : current ? projectName(current) : (scope || 'Выбрать проект')
+  const label = scope === ALL_PROJECTS ? 'Все проекты' : current ? projectName(current) : (scope || SWITCHER_WORDS.empty)
   return [
     jsx(ProjectAvatar, { project: current ?? { id: label }, all: scope === ALL_PROJECTS }, 'avatar'),
     jsx('span', { className: 'dy-sw-trigger-name', children: label }, 'name'),
@@ -166,7 +184,7 @@ function SwitcherFoot({ onNewProject, onOnboardExisting, onOpenArchived, archive
     onOnboardExisting ? action('data-switcher-onboard-existing', 'folder-open', 'Подключить существующий проект', onOnboardExisting) : null,
     // Archived projects are hidden everywhere else; this is the way to them (11/10/2026).
     onOpenArchived && archivedCount > 0
-      ? action('data-switcher-archived', 'archive', `Archived projects (${archivedCount})`, onOpenArchived) : null,
+      ? action('data-switcher-archived', 'archive', `${ARCHIVED_MENU} (${archivedCount})`, onOpenArchived) : null,
   ].filter(Boolean)
   return actions.length ? jsx('div', { className: 'dy-sw-foot', children: actions }) : null
 }
@@ -187,7 +205,7 @@ export function ProjectSwitcher({ projects, scope, onChange, onNewProject, onOnb
         ref: trigger,
         type: 'button',
         className: 'dy-sw-trigger',
-        'aria-label': 'Контекст проекта',
+        'aria-label': SWITCHER_WORDS.context,
         'aria-haspopup': 'listbox',
         'aria-expanded': open,
         'data-scope': scope ?? '',
@@ -203,24 +221,45 @@ export function ProjectSwitcher({ projects, scope, onChange, onNewProject, onOnb
   })
 }
 
+// The words on a screen that follows the switcher while it is on one project.
+// The nouns a caller passes are the genitive plural forms ("N элементов в
+// других проектах"), one per screen, published here so shell/dashboard-page.js
+// and any test read the same list.
+export const SCOPE_NOUNS = Object.freeze({
+  needsYou: 'элементов, которые ждут вас',
+  items: 'элементов',
+  approvals: 'одобрений',
+  notifications: 'уведомлений',
+})
+export const SCOPE_WORDS = Object.freeze({
+  showingOnly: (name) => `Показан только ${name}.`,
+  inOtherProjects: (count, noun) => `${count} ${noun} в других проектах.`,
+  showAll: 'Показать все проекты',
+})
+
 // Shown on screens that follow the switcher while it is on one project.
-export function ScopeNote({ name, hidden = 0, noun = 'items', onShowAll }) {
+export function ScopeNote({ name, hidden = 0, noun = SCOPE_NOUNS.items, onShowAll }) {
   return jsxs('div', { className: 'dy-scope-note', role: 'note', 'data-scope-note': 'true', children: [
     jsx(Icon, { name: 'filter' }),
     jsxs('span', { children: [
-      jsx('strong', { children: `Showing ${name} only.` }),
-      hidden > 0 ? ` ${plural(hidden, noun.replace(/s$/, ''), noun)} in other projects.` : '',
+      jsx('strong', { children: SCOPE_WORDS.showingOnly(name) }),
+      hidden > 0 ? ` ${SCOPE_WORDS.inOtherProjects(hidden, noun)}` : '',
     ] }),
-    jsx('button', { type: 'button', className: 'dockyard-button small', 'data-show-all-projects': 'true', onClick: onShowAll, children: 'Показать все проекты' }),
+    jsx('button', { type: 'button', className: 'dockyard-button small', 'data-show-all-projects': 'true', onClick: onShowAll, children: SCOPE_WORDS.showAll }),
   ] })
 }
 
 // Screens that work on one project ask for one while "All projects" is on.
+export const CHOOSER_WORDS = Object.freeze({
+  title: (screen) => `${screen}: выберите проект`,
+  body: (screen) => `${screen} работает с одним проектом за раз. Переключатель стоит на «Все проекты», поэтому выберите проект здесь или в переключателе.`,
+})
+
 export function ProjectChooser({ projects, screen, onPick, onNewProject, onOnboardExisting }) {
   return jsxs('section', { className: 'dy-chooser', 'data-project-chooser': screen, children: [
     jsxs('header', { children: [
-      jsx('h1', { children: `${screen}: choose a project` }),
-      jsx('p', { children: `${screen} works on one project at a time. The switcher is on All projects, so pick one here or in the switcher.` }),
+      jsx('h1', { children: CHOOSER_WORDS.title(screen) }),
+      jsx('p', { children: CHOOSER_WORDS.body(screen) }),
     ] }),
     projects.length
       ? jsx('ul', { className: 'dy-chooser-list', children: projects.map((project) => {

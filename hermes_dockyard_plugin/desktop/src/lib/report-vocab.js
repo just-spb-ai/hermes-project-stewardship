@@ -25,6 +25,11 @@ export const REPORT_TYPES = Object.freeze([
 ])
 const ACTIVITY = 'Недавняя активность'
 
+// The two words a saved report's one-line meta is built with, beside the
+// type label: "<type> · Создан <when> · автор: <who>". A browser test reads
+// these instead of restating them (reports-screen.test.mjs).
+export const REPORT_META = Object.freeze({ generated: 'Создан', by: 'автор:' })
+
 const sentence = (value) => {
   const words = String(value ?? '').replace(/[._]+/g, ' ').replace(/\s+/g, ' ').trim()
   return words ? words[0].toUpperCase() + words.slice(1) : ''
@@ -46,7 +51,7 @@ export function reportHint(value, includeActivity) {
   const type = reportType(value)
   if (!type) return ''
   const parts = reportSections(value, includeActivity).map((section) => (section === 'Поставка' && type.work ? 'Поставка, со списком работ' : section))
-  return `Sections: ${parts.join(' · ')}${type.activity ? '' : '. Risk reports never include recent activity.'}`
+  return `Разделы: ${parts.join(' · ')}${type.activity ? '' : '. Отчёты по рискам не включают недавнюю активность.'}`
 }
 
 // "6 Oct 2026, 12:58" in the person's own time zone (or `timeZone`).

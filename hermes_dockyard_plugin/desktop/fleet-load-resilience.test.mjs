@@ -18,13 +18,29 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from './browser-harness.mjs';
+import { readFileSync } from 'node:fs'
+import { CONSOLE_TABS, SWITCHER_WORDS } from './src/lib/panel-words.js'
+// The words a person reads are read from the source module that renders them,
+// never spelled out here: the panel stays translatable without touching this test.
+const sourceText = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8')
+const rendered = (text, pattern, what) => {
+  const found = text.match(pattern)
+  if (!found) throw new Error(`src no longer renders ${what}`)
+  return found[1]
+}
+const wordRe = (word) => new RegExp(String(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+const FLEET_SUMMARY = rendered(sourceText('./src/views/dashboard.js'), /className: 'dockyard-command-metrics', 'aria-label': '([^']+)'/, 'the fleet summary section')
+// The chooser's data hook carries the screen name the panel shows for it,
+// so the hook value is read from the shell that publishes it.
+const ONE_PROJECT_TABS_SRC = rendered(sourceText('./src/shell/dashboard-page.js'), /const ONE_PROJECT_TABS = Object\.freeze\(\{ ([^}]+) \}\)/, 'the one-project screen names')
+const CHOOSER = Object.fromEntries([...ONE_PROJECT_TABS_SRC.matchAll(/(\w+): '([^']+)'/g)].map((found) => [found[1], found[2]]))
 
 const BASE = process.env.STEWARD_DESKTOP_URL;
 const API = process.env.STEWARD_API_URL;
 const ROUTES = '**/api/plugins/hermes-project-stewardship';
 const GHOST = 'legacy-integration';
 const ALL_PROJECTS = '*';
-const ERROR_CARD = 'Project Stewardship could not load this view';
+const ERROR_CARD = rendered(sourceText('./src/lib/ui.js'), /'data-state': 'error',[\s\S]*?jsx\('h2', \{ children: '([^']+)' \}/, 'the load-failure heading');
 
 // The suite preload forgets the remembered project once per file; each test
 // here needs that starting point, so it forgets it again.
@@ -65,17 +81,17 @@ test('an unlinked project leaves every fleet tab working', async () => {
     });
     await page.goto(BASE);
     // The Command Center's fleet summary: present whenever there are projects.
-    assert.equal(await shows(page, 'section[aria-label="Fleet summary"]'), 'content', 'Dashboard');
+    assert.equal(await shows(page, `section[aria-label="${FLEET_SUMMARY}"]`), 'content', 'Dashboard');
     const trigger = page.locator('.dy-sw-trigger');
     await trigger.waitFor();
     assert.equal(await trigger.getAttribute('data-scope'), ALL_PROJECTS);
-    await page.getByRole('tab', { name: 'Projects', exact: true }).click();
-    assert.equal(await shows(page, '[data-project-chooser="Projects"]'), 'content', 'Projects');
+    await page.getByRole('tab', { name: CONSOLE_TABS.project, exact: true }).click();
+    assert.equal(await shows(page, `[data-project-chooser="${CHOOSER.project}"]`), 'content', 'Projects');
     // Still listed: unlinked is a state to fix, not a reason to hide it.
-    await page.locator(`[data-project-chooser="Projects"] [data-choose-project="${GHOST}"]`).waitFor();
-    await page.getByRole('tab', { name: 'Backlog', exact: true }).click();
-    assert.equal(await shows(page, '[data-project-chooser="Backlog"]'), 'content', 'Backlog');
-    await page.getByRole('tab', { name: 'Workflows', exact: true }).click();
+    await page.locator(`[data-project-chooser="${CHOOSER.project}"] [data-choose-project="${GHOST}"]`).waitFor();
+    await page.getByRole('tab', { name: CONSOLE_TABS.backlog, exact: true }).click();
+    assert.equal(await shows(page, `[data-project-chooser="${CHOOSER.backlog}"]`), 'content', 'Backlog');
+    await page.getByRole('tab', { name: CONSOLE_TABS.workflows, exact: true }).click();
     assert.equal(await shows(page, '[data-workflow-library-screen]'), 'content', 'Workflows');
     assert.deepEqual(asked, [], 'asked for work items of a project /dashboard marked unlinked');
   } finally { await browser.close(); }
@@ -98,7 +114,7 @@ test('a quick tab switch still fills the project switcher', async () => {
       await route.fulfill({ response });
     });
     await page.goto(BASE);
-    await page.getByRole('tab', { name: 'Roadmap' }).click();
+    await page.getByRole('tab', { name: CONSOLE_TABS.roadmap }).click();
     await page.locator('[data-roadmap-screen]').waitFor();
     release();
     const trigger = page.locator('.dy-sw-trigger');
@@ -138,15 +154,15 @@ test('an older project list that arrives last does not replace a newer one', asy
       return oldAnswered;
     });
     await page.goto(BASE);
-    await page.getByRole('tab', { name: 'Projects', exact: true }).click();
-    await page.locator(`[data-project-chooser="Projects"] [data-choose-project="${GHOST}"]`).waitFor();
+    await page.getByRole('tab', { name: CONSOLE_TABS.project, exact: true }).click();
+    await page.locator(`[data-project-chooser="${CHOOSER.project}"] [data-choose-project="${GHOST}"]`).waitFor();
     release();
     await oldAnswered;
     // Let the older load finish its follow-up reads before looking.
     await page.waitForLoadState('networkidle');
-    await page.getByRole('button', { name: 'Project context', exact: true }).click();
-    await page.getByRole('combobox', { name: 'Find project' }).fill(GHOST);
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: GHOST, exact: true }).waitFor();
+    await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click();
+    await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(GHOST);
+    await page.getByRole('listbox', { name: SWITCHER_WORDS.list }).getByRole('option', { name: GHOST, exact: true }).waitFor();
     assert.equal(reads >= 2, true, 'the newer load read the Dashboard too');
   } finally { await browser.close(); }
 });

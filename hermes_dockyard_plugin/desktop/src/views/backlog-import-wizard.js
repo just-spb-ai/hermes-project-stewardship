@@ -3,8 +3,9 @@
 import { Fragment, jsx, jsxs } from '../runtime/react.js'
 import { Button } from '../lib/ui.js'
 import { Icon } from '../lib/ui.js'
-import { number } from '../lib/ui.js'
+import { number, pluralRu } from '../lib/ui.js'
 import { readableLabel } from '../data/loaders.js'
+import { dockyardTypeLabel as typeLabel } from './backlog-model.js'
 
 export function BacklogImportWizard(props) {
   const {
@@ -19,12 +20,12 @@ export function BacklogImportWizard(props) {
         jsxs('header', { className: 'dockyard-onboarding-head', children: [
           jsxs('div', { children: [
             jsx('h2', { id: 'dockyard-import-title', children: 'Массовый импорт пунктов бэклога' }),
-            jsx('p', { children: `Import into ${project.name || project.id}. Paste JSON or choose a CSV file, validate every row, then confirm. No rows are written during preview.` }),
+            jsx('p', { children: `Импорт в проект ${project.name || project.id}. Вставьте JSON или выберите CSV-файл, проверьте каждую строку и подтвердите. Во время предпросмотра строки не записываются.` }),
           ] }),
           jsx('button', { type: 'button', className: 'dockyard-modal-close', 'aria-label': 'Закрыть массовый импорт', onClick: closeImport, children: '×' }),
         ] }),
         jsx('div', { className: 'dockyard-wizard-progress', role: 'progressbar', 'aria-label': 'Ход импорта', 'aria-valuemin': 1, 'aria-valuemax': 3, 'aria-valuenow': importStep, children:
-          [['Source', 'Загрузить или вставить'], ['Предпросмотр', 'Проверить каждую строку'], ['Результат', 'Зафиксировать результат']].map(([label, detail], index) => jsxs('div', { className: index + 1 < importStep ? 'complete' : index + 1 === importStep ? 'active' : '', children: [
+          [['Источник', 'Загрузить или вставить'], ['Предпросмотр', 'Проверить каждую строку'], ['Результат', 'Зафиксировать результат']].map(([label, detail], index) => jsxs('div', { className: index + 1 < importStep ? 'complete' : index + 1 === importStep ? 'active' : '', children: [
             jsx('span', { children: index + 1 < importStep ? '✓' : number(index + 1) }),
             jsxs('span', { children: [jsx('strong', { children: label }), jsx('small', { children: detail })] }),
           ] }, label)),
@@ -32,7 +33,7 @@ export function BacklogImportWizard(props) {
         jsxs('div', { className: 'dockyard-wizard-body', children: [
           jsxs('div', { className: importStep === 1 ? 'dockyard-wizard-step active' : 'dockyard-wizard-step', hidden: importStep !== 1, 'data-import-step': '1', children: [
             jsx('h3', { children: 'Укажите источник' }),
-            jsx('p', { className: 'import-source-hint', children: 'Required: row_key, type, title. Other supported columns are optional; open Column reference for formats and examples.' }),
+            jsx('p', { className: 'import-source-hint', children: 'Обязательны: row_key, type, title. Остальные поддерживаемые колонки необязательны; откройте «Ссылку на колонку», чтобы увидеть форматы и примеры.' }),
             jsxs('div', { className: 'dockyard-tabs', role: 'tablist', children: [
               jsx('button', { type: 'button', role: 'tab', 'aria-selected': String(importMode === 'csv'), className: importMode === 'csv' ? 'active' : '', onClick: () => { setImportMode('csv'); setImportRows(null) }, children: 'CSV' }),
               jsx('button', { type: 'button', role: 'tab', 'aria-selected': String(importMode === 'json'), className: importMode === 'json' ? 'active' : '', onClick: () => { setImportMode('json'); setImportRows(null) }, children: 'JSON' }),
@@ -41,10 +42,10 @@ export function BacklogImportWizard(props) {
               'data-import-input': true, 'aria-label': 'Содержимое импорта CSV или JSON', spellCheck: false, value: importText,
               onInput: (event) => { setImportText(event.target.value); setImportRows(null); setImportValid(false); setImportError(null) },
               placeholder: importMode === 'json'
-                ? '[{"row_key":"release-1","type":"task","title":"Verify release checklist","estimate_days":2}]'
-                : 'row_key,type,title,parent_key,labels,estimate_days,due\nrelease-1,task,Verify release checklist,,,2,',
+                ? '[{"row_key":"release-1","type":"task","title":"Проверить релизный чек-лист","estimate_days":2}]'
+                : 'row_key,type,title,parent_key,labels,estimate_days,due\nrelease-1,task,Проверить релизный чек-лист,,,2,',
             }),
-            jsx('div', { className: 'import-source-divider', 'aria-hidden': true, children: 'or upload a file' }),
+            jsx('div', { className: 'import-source-divider', 'aria-hidden': true, children: 'или загрузите файл' }),
             jsxs('div', { className: 'dockyard-import-actions-row', children: [
               importMode === 'csv' ? jsxs('div', { className: 'import-drop', 'data-import-drop': true,
                 onDragOver: (event) => { event.preventDefault(); event.currentTarget.classList.add('dragover') },
@@ -68,12 +69,12 @@ export function BacklogImportWizard(props) {
                     reader.onerror = () => setImportError('Не удалось прочитать выбранный CSV-файл.')
                     reader.readAsText(file)
                   } }),
-                ] }) : jsx('div', { className: 'create-help', children: 'JSON is paste-only. Use an array of objects with row_key, type and title; optional parent_key, labels, estimate_days and due.' }),
+                ] }) : jsx('div', { className: 'create-help', children: 'JSON можно только вставить. Используйте массив объектов с полями row_key, type и title; необязательные: parent_key, labels, estimate_days и due.' }),
               jsx(Button, { action: 'import-download-template', small: true, onClick: () => {
                 // P6.10: the downloadable template must match the shared
                 // validator exactly; prefer the backend template and fall
                 // back to the same columns locally if the host is offline.
-                const fallback = ['row_key,type,title,parent_key,labels,estimate_days,due','epic-1,epic,Partner API v3,,,,','feature-1,feature,Usage dashboard,,,','task-1,task,Rotation cron,feature-1,,3,2026-10-01','bug-1,bug,Login 500 on expired token,,,,'].join(String.fromCharCode(10))
+                const fallback = ['row_key,type,title,parent_key,labels,estimate_days,due','epic-1,epic,Партнёрский API v3,,,,','feature-1,feature,Панель использования,,,','task-1,task,Регламент ротации,feature-1,,3,2026-10-01','bug-1,bug,Ошибка входа 500 при истёкшем токене,,,,'].join(String.fromCharCode(10))
                 api(`/projects/${encodeURIComponent(project.id)}/backlog/import-template`).then((template) => {
                   const csv = String(template?.csv ?? fallback)
                   const blob = new Blob([csv], { type: 'text/csv' })
@@ -93,7 +94,7 @@ export function BacklogImportWizard(props) {
               }, children: jsxs(Fragment, { children: [jsx(Icon, { name: 'download' }), 'Скачать CSV-шаблон'] }) }),
             ] }),
             importColumnMetadata.length ? jsxs('details', { className: 'import-column-reference', children: [
-              jsx('summary', { children: `Column reference · ${importColumnMetadata.filter((column) => column.required).map((column) => column.name).join(', ')} required · ${importColumnMetadata.length} supported` }),
+              jsx('summary', { children: `Ссылка на колонку · обязательны: ${importColumnMetadata.filter((column) => column.required).map((column) => column.name).join(', ')} · поддерживается колонок: ${importColumnMetadata.length}` }),
               jsxs('div', { className: 'import-column-scroll', children: [
                 jsx('table', { children: [jsx('thead', { children: jsx('tr', { children: ['Колонка', 'Требование', 'Описание', 'Формат / пример'].map((heading) => jsx('th', { children: heading }, heading)) }) }),
                   jsx('tbody', { children: importColumnMetadata.map((column) => jsx('tr', { children: [jsx('td', { children: jsx('code', { children: column.name }) }), jsx('td', { children: jsx('span', { className: column.required ? 'import-required' : 'import-optional', children: column.required ? 'Обязательно' : 'Необязательно' }) }), jsx('td', { children: column.description }), jsx('td', { children: `${column.format} · ${column.example}` })] }, column.name)) }),
@@ -107,10 +108,10 @@ export function BacklogImportWizard(props) {
             // Approved design: four validation summary cards + warnings-only
             // toggle. Warnings never block; errors do.
             jsxs('div', { className: 'import-summary', 'data-import-summary': true, children: [
-              jsxs('div', { className: 'import-stat', children: [jsx('strong', { children: importRows.length }), jsx('span', { children: importRows.length === 1 ? 'row detected' : 'rows detected' })] }),
-              jsxs('div', { className: 'import-stat valid', children: [jsx(Icon, { name: 'circle-check' }), jsxs('span', { children: [jsx('strong', { children: importRows.filter((row) => !row.problems.length).length }), ' valid'] })] }),
-              jsxs('div', { className: 'import-stat warn', children: [jsx(Icon, { name: 'triangle-alert' }), jsxs('span', { children: [jsx('strong', { children: importRows.filter((row) => row.warnings.length).length }), ' warning', importRows.filter((row) => row.warnings.length).length === 1 ? '' : 's'] })] }),
-              jsxs('div', { className: 'import-stat errored', children: [jsx(Icon, { name: 'alert' }), jsxs('span', { children: [jsx('strong', { children: importRows.filter((row) => row.errors.length).length }), ' error', importRows.filter((row) => row.errors.length).length === 1 ? '' : 's'] })] }),
+              jsxs('div', { className: 'import-stat', children: [jsx('strong', { children: importRows.length }), jsx('span', { children: pluralRu(importRows.length, 'строка обнаружена', 'строки обнаружены', 'строк обнаружено') })] }),
+              jsxs('div', { className: 'import-stat valid', children: [jsx(Icon, { name: 'circle-check' }), jsxs('span', { children: [jsx('strong', { children: importRows.filter((row) => !row.problems.length).length }), ' без проблем'] })] }),
+              jsxs('div', { className: 'import-stat warn', children: [jsx(Icon, { name: 'triangle-alert' }), jsxs('span', { children: [jsx('strong', { children: importRows.filter((row) => row.warnings.length).length }), ' ', pluralRu(importRows.filter((row) => row.warnings.length).length, 'предупреждение', 'предупреждения', 'предупреждений')] })] }),
+              jsxs('div', { className: 'import-stat errored', children: [jsx(Icon, { name: 'alert' }), jsxs('span', { children: [jsx('strong', { children: importRows.filter((row) => row.errors.length).length }), ' ', pluralRu(importRows.filter((row) => row.errors.length).length, 'ошибка', 'ошибки', 'ошибок')] })] }),
             ] }),
             jsxs('div', { className: 'import-review-toolbar', children: [
               jsx('p', { className: 'dockyard-meta', children: importValid ? 'Серверная проверка пройдена. Только предпросмотр: ничего не записано.' : 'Серверная проверка нашла ошибки строк. Импорт невозможен, пока их не исправят.' }),
@@ -160,7 +161,7 @@ export function BacklogImportWizard(props) {
                   jsxs('div', { className: 'import-parsed', children: [
                     jsx('strong', { children: 'Разобранные значения (из CSV)' }),
                     jsx('dl', { children: [
-                      jsxs('div', { children: [jsx('dt', { children: 'Тип' }), jsx('dd', { children: selectedRow.type || 'task' })] }),
+                      jsxs('div', { children: [jsx('dt', { children: 'Тип' }), jsx('dd', { children: typeLabel(selectedRow.type || 'task') })] }),
                       jsxs('div', { children: [jsx('dt', { children: 'Заголовок' }), jsx('dd', { children: selectedRow.title || '—' })] }),
                       jsxs('div', { children: [jsx('dt', { children: 'Родитель' }), jsx('dd', { children: selectedRow.parent || '—' })] }),
                       jsxs('div', { children: [jsx('dt', { children: 'Метки' }), jsx('dd', { children: selectedRow.labels || '—' })] }),
@@ -171,8 +172,8 @@ export function BacklogImportWizard(props) {
                   ] }),
                   jsxs('div', { className: 'import-as', children: [
                     jsx('strong', { children: 'Будет импортировано как' }),
-                    jsx('p', { children: `${readableLabel(selectedRow.type || 'task')} → ${readableLabel('backlog')}` }),
-                    jsx('small', { className: 'dockyard-meta', children: `A new ${selectedRow.type || 'task'} will be created in ${project.name || project.id}.` }),
+                    jsx('p', { children: `${typeLabel(selectedRow.type || 'task')} → «Бэклог»` }),
+                    jsx('small', { className: 'dockyard-meta', children: `В проекте ${project.name || project.id} будет создан новый элемент: ${typeLabel(selectedRow.type || 'task')}.` }),
                   ] }),
                 ] })
               })(),
@@ -181,8 +182,8 @@ export function BacklogImportWizard(props) {
           importResult ? jsxs('div', { className: importStep === 3 ? 'dockyard-wizard-step active' : 'dockyard-wizard-step', hidden: importStep !== 3, 'data-import-step': '3', children: [
             jsx('h3', { children: importResult.written ? 'Импорт завершён' : 'Пункты не импортированы' }),
             jsxs('p', { role: 'status', children: [
-              `Imported ${importResult.written} item${importResult.written === 1 ? '' : 's'}.`,
-              importResult.failed.length ? ` ${importResult.failed.length} row(s) failed: ${importResult.failed.join(' | ')}` : '',
+              `Импортировано ${importResult.written} ${pluralRu(importResult.written, 'элемент', 'элемента', 'элементов')}.`,
+              importResult.failed.length ? ` Строк с ошибкой: ${importResult.failed.length} — ${importResult.failed.join(' | ')}` : '',
             ] }),
             importResult.items?.length ? jsxs('div', { className: 'import-result-refs', children: [
               jsx('strong', { children: 'Созданные рабочие элементы' }),
@@ -199,8 +200,8 @@ export function BacklogImportWizard(props) {
             importStep === 3 && importResult ? jsx(Button, { onClick: () => setImportStep(1), children: 'Назад к источнику' }) : null,
           ] }),
           jsxs('span', { className: 'dockyard-wizard-actions-right', children: [
-            importStep === 1 ? jsx(Button, { action: 'import-next', variant: 'primary', disabled: importBusy, onClick: () => parseImport(true), children: importBusy ? 'Проверка…' : 'Validate and preview →' }) : null,
-importStep === 2 ? (importValid ? jsx(Button, { action: 'confirm-bulk-import', variant: 'primary', disabled: importBusy, onClick: runImport, children: importBusy ? 'Импорт…' : `Import ${importRows.length} item${importRows.length === 1 ? '' : 's'} →` }) : jsx('button', { type: 'button', className: 'dockyard-button primary', disabled: true, 'data-import-blocked': true, children: 'Импорт заблокирован — сначала исправьте ошибки строк' })) : null,
+            importStep === 1 ? jsx(Button, { action: 'import-next', variant: 'primary', disabled: importBusy, onClick: () => parseImport(true), children: importBusy ? 'Проверка…' : 'Проверить и показать предпросмотр →' }) : null,
+importStep === 2 ? (importValid ? jsx(Button, { action: 'confirm-bulk-import', variant: 'primary', disabled: importBusy, onClick: runImport, children: importBusy ? 'Импорт…' : `Импортировать ${importRows.length} ${pluralRu(importRows.length, 'элемент', 'элемента', 'элементов')} →` }) : jsx('button', { type: 'button', className: 'dockyard-button primary', disabled: true, 'data-import-blocked': true, children: 'Импорт заблокирован — сначала исправьте ошибки строк' })) : null,
             importStep === 3 && importResult ? jsx(Button, { variant: 'primary', onClick: closeImport, children: 'Готово' }) : null,
           ] }),
         ] }),

@@ -26,6 +26,15 @@ import { rmSync } from 'node:fs';
 import { test } from 'node:test';
 import { buildDesktopBundle, chromium } from './planning-canvas-test-bundle.mjs';
 import { pickProject } from './test-support/project-scope.mjs';
+import { CANVAS_WORDS, RIBBON_GROUPS, RICH_TEXT_PROBLEMS } from './src/lib/canvas-words.js';
+
+// A word-for-word match of one of the editor's own messages, with its counts
+// left free (the editor counts nodes itself; the test names the sentence, not
+// the number). The Russian tab's words live in canvas-words.js, so a renamed
+// warning fails here instead of drifting.
+const anyNumbers = (message) => new RegExp(message.split(' ')
+  .map((word) => (/^[\d,]+$/.test(word) ? '[\\d,]+' : word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+  .join(' '));
 
 const PROJECT = 'p1';
 const MODELS = { available: true, default: { provider: 'main', model: 'main-model' }, providers: [{ slug: 'openai-codex', name: 'Codex', models: ['gpt-5.6-sol'] }, { slug: 'local', name: 'Local', models: ['qwen-3'] }] };
@@ -437,7 +446,7 @@ test('Planning boards: chat always talks to the open board and drops stale answe
     await canvas.locator('[data-action="pc-review"]').click();
     await settle(page);
     assert.equal(host.calls.filter((c) => c.path.endsWith('/curate')).at(-1).path, `/projects/${PROJECT}/canvases/board-b/curate`);
-    assert.match(await canvas.locator('[data-canvas-review]').innerText(), /1 claim|0 claim/);
+    assert.match(await canvas.locator('[data-canvas-review]').innerText(), new RegExp(`${CANVAS_WORDS.reviewClaims} [01]`));
     await canvas.locator('[data-canvas-chat-input]').fill('What next?');
     await canvas.locator('[data-canvas-chat-input]').press('Enter');
     await page.waitForSelector('[data-canvas-proposals]');
@@ -672,13 +681,13 @@ test('Planning cards: description, many links, per-type fields, member owners, i
     assert.equal(await drawer.locator('[data-canvas-link-row]').count(), 3, 'each (+) adds a new line');
     // Unsafe link is refused before anything changes.
     await drawer.locator('[data-action="apply-canvas-object"]').click();
-    assert.match(await canvas.locator('[data-canvas-notice], .dy-pc-notice').first().innerText(), /not a web link/);
+    assert.match(await canvas.locator('[data-canvas-notice], .dy-pc-notice').first().innerText(), new RegExp(CANVAS_WORDS.notWebLink));
     await drawer.locator('[data-canvas-link-url="1"]').fill('https://example.com/ticket');
     // Risk fields + owner picker lists active members and Unassigned only.
     await drawer.locator('[data-canvas-field="likelihood"]').selectOption('high');
     await drawer.locator('[data-canvas-field="impact"]').selectOption('medium');
     const owners = await drawer.locator('select[data-canvas-field="owner"] option').allInnerTexts();
-    assert.deepEqual(owners, ['Unassigned', 'octacon', 'quan'], 'departed members are not offered');
+    assert.deepEqual(owners, [CANVAS_WORDS.unassigned, 'octacon', 'quan'], 'departed members are not offered');
     await drawer.locator('select[data-canvas-field="owner"]').selectOption('quan');
     await drawer.locator('[data-action="apply-canvas-object"]').click();
     let saved = await saveAndRead(riskId);
@@ -686,7 +695,7 @@ test('Planning cards: description, many links, per-type fields, member owners, i
     assert.deepEqual(saved.content.links, [{ url: 'https://example.com/spec', label: 'Spec' }, { url: 'https://example.com/ticket' }], 'blank link line dropped');
     assert.equal(saved.content.owner, 'quan');
     assert.equal(saved.content.likelihood, 'high');
-    assert.match(await risk.locator('[data-canvas-summary]').innerText(), /quan · 2 links/);
+    assert.match(await risk.locator('[data-canvas-summary]').innerText(), new RegExp(`quan · 2 ${CANVAS_WORDS.linkMany}`));
     // Unassign again.
     await risk.click();
     await drawer.locator('select[data-canvas-field="owner"]').selectOption('');
@@ -1072,14 +1081,14 @@ test('Rich text: over the server size limits the editor warns and Apply is disab
     });
     const problem = ctx.drawer.locator('[data-canvas-rich-problem]');
     await problem.waitFor();
-    assert.match(await problem.innerText(), /25,000 of 20,000 characters/);
+    assert.equal(await problem.innerText(), RICH_TEXT_PROBLEMS.tooLong('25,000', '20,000'));
     assert.equal(await apply.isDisabled(), true, 'Apply disabled while too long');
     await page.keyboard.press('Control+z');
     assert.equal(await problem.count(), 0, 'undo clears the warning');
     assert.equal(await apply.isDisabled(), false);
     await pasteHtml(page, Array.from({ length: 1600 }, (_, i) => `<p><b>p${i}</b></p>`).join(''));
     await problem.waitFor();
-    assert.match(await problem.innerText(), /Too much formatting/);
+    assert.match(await problem.innerText(), anyNumbers(RICH_TEXT_PROBLEMS.tooMuchFormatting('0', '0')));
     assert.equal(await apply.isDisabled(), true);
   });
 });
@@ -1195,7 +1204,7 @@ test('Rich text: Quan re-check 2 - stale redo, caret after undo, server-sized li
     await pasteHtml(page, Array.from({ length: 330 }, (_, i) => `<span data-size="huge"><b><i><u><s>r${i}</s></u></i></b></span><span>-</span>`).join(''));
     const problem = drawer.locator('[data-canvas-rich-problem]');
     await problem.waitFor();
-    assert.match(await problem.innerText(), /too large to save/);
+    assert.equal(await problem.innerText(), RICH_TEXT_PROBLEMS.tooLarge);
     assert.equal(await drawer.locator('[data-action="apply-canvas-object"]').isDisabled(), true);
   });
 });
@@ -1537,7 +1546,7 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['tablet', 1024, 8
         const controls = [...el.querySelectorAll('button, select, input')].filter((b) => b.offsetParent).map((b) => b.getBoundingClientRect());
         return { groups, out: controls.filter((b) => b.left < box.left - 1 || b.right > box.right + 1).length, minControl: Math.min(...controls.map((b) => Math.min(b.width, b.height))) };
       });
-      assert.deepEqual(m.groups.map((g) => g.name), ['edit', 'add', 'view', 'ai', 'save'], 'five groups in order');
+      assert.deepEqual(m.groups.map((g) => [g.name, g.text]), RIBBON_GROUPS.map((id, i) => [id, [CANVAS_WORDS.ribbonEdit, CANVAS_WORDS.ribbonAdd, CANVAS_WORDS.ribbonView, CANVAS_WORDS.ribbonAi, CANVAS_WORDS.ribbonSave][i]]), 'five groups in order, each showing its own name');
       for (const g of m.groups) {
         assert.ok(g.labelVisible && g.labelH >= 18, `${g.name}: name strip visible`);
         assert.ok(Math.abs(g.gap) <= 1, `${g.name}: tools sit directly beneath the name (gap ${g.gap})`);
@@ -1556,7 +1565,9 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['tablet', 1024, 8
       if (width >= 1400) {
         const tops = await canvas.locator('.dy-pc-group-label').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
         assert.equal(new Set(tops).size, 1, 'single ribbon row on desktop');
-        const save = await canvas.locator('[data-pc-group="save"]').boundingBox();
+        // The group id is the stable English one published by RIBBON_GROUPS, not
+        // the label: `save` is the last of the five, in the order asserted above.
+        const save = await canvas.locator(`[data-pc-group="${RIBBON_GROUPS[RIBBON_GROUPS.length - 1]}"]`).boundingBox();
         const bar = await canvas.locator('.dy-pc-toolbar').boundingBox();
         assert.ok(Math.abs(save.x + save.width - (bar.x + bar.width)) <= 2, 'Save pinned to the right');
       }

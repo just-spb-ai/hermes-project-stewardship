@@ -2,6 +2,7 @@
 // node hermes_dockyard_plugin/desktop/build.mjs to regenerate plugin.js.
 import { LUCIDE_ICON_NODES } from '../../lucide-icons.js'
 import { ProjectSwitcher } from './project-switcher.js'
+import { CONSOLE_TABS } from './panel-words.js'
 import { jsxs } from '../runtime/react.js'
 import { jsx } from '../runtime/react.js'
 import { readableLabel } from '../data/loaders.js'
@@ -50,6 +51,18 @@ export function plural(value, singular, multiple = `${singular}s`) {
   return Number(value) === 1 ? singular : multiple
 }
 
+// Russian three-form plural: 1 / 2-4 / 5+, with the 11-14 exception. `plural()`
+// above only appends an 's', which is wrong for Russian screen copy.
+export function pluralRu(value, one, few, many) {
+  const count = Math.abs(Number(value) || 0)
+  const mod100 = count % 100
+  const mod10 = count % 10
+  if (mod100 >= 11 && mod100 <= 14) return many
+  if (mod10 === 1) return one
+  if (mod10 >= 2 && mod10 <= 4) return few
+  return many
+}
+
 export function healthDetails(value) {
   const map = {
     healthy: ['success', 'Здоров'],
@@ -66,7 +79,7 @@ export function healthDetails(value) {
 export function riskDetails(value) {
   const risk = String(value || 'medium').toLowerCase()
   if (risk === 'low') return ['success', 'Низкий риск']
-  if (risk === 'high' || risk === 'critical') return ['danger', `${risk.charAt(0).toUpperCase()}${risk.slice(1)} risk`]
+  if (risk === 'high' || risk === 'critical') return ['danger', `${risk === 'critical' ? 'Критический' : 'Высокий'} риск`]
   return ['warning', 'Средний риск']
 }
 
@@ -94,7 +107,7 @@ export function formatBytes(value) {
 
 export function mediaTypeLabel(value) {
   return {
-    'text/plain': 'Text',
+    'text/plain': 'Текст',
     'text/markdown': 'Markdown',
     'application/pdf': 'PDF',
     'image/png': 'Изображение PNG',
@@ -388,7 +401,7 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
       children: [
         jsxs('header', { className: 'dockyard-onboarding-head', children: [
           jsxs('div', { children: [
-            jsx('span', { className: 'dockyard-card-label', children: intent === 'existing' ? 'EXISTING PROJECT' : 'NEW PROJECT' }),
+            jsx('span', { className: 'dockyard-card-label', children: intent === 'existing' ? 'СУЩЕСТВУЮЩИЙ ПРОЕКТ' : 'НОВЫЙ ПРОЕКТ' }),
             jsx('h2', { id: 'dockyard-onboarding-title', children: 'Подключить проект к управлению' }),
             jsx('p', { children: 'Четыре ограниченных шага. Ничего не запускается до финального ревью.' }),
           ]}),
@@ -417,18 +430,18 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
                 ]})
               : discoverFailed
                 ? jsxs('div', { children: [
-                    jsx('p', { className: 'dockyard-inline-error', role: 'alert', 'data-discovery-failed': true, children: 'Host discovery failed. Retry — onboarding stays closed until the host answers. No fallback choices are offered. If profiles are missing, manage them in the Hermes host profile manager, then retry.' }),
+                    jsx('p', { className: 'dockyard-inline-error', role: 'alert', 'data-discovery-failed': true, children: 'Не удалось обнаружить хост. Повторите — онбординг остаётся закрытым, пока хост не ответит. Запасных вариантов не предлагается. Если профилей нет, управляйте ими в менеджере профилей хоста Hermes, затем повторите.' }),
                     jsx(Button, { action: 'refresh-onboarding-discovery', small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: 'Повторить поиск хоста' }),
                   ]})
                 : jsxs('div', { children: [
-                    jsx('p', { className: 'dockyard-meta', children: 'Loading host discovery…' }),
+                    jsx('p', { className: 'dockyard-meta', children: 'Загрузка обнаружения хоста…' }),
                     jsx(Button, { action: 'refresh-onboarding-discovery', small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: 'Обновить поиск хоста' }),
                   ]}),
             // R4: connect-existing as a real selectable path — fills/binds
             // the discovered host project into the form.
             discovered && (discovered.projects ?? []).length > 0
               ? jsxs('div', { className: 'dockyard-connect-existing', 'data-connect-existing': true, children: [
-                  jsx('p', { className: 'dockyard-card-label', children: 'CONNECT AN EXISTING HOST PROJECT' }),
+                  jsx('p', { className: 'dockyard-card-label', children: 'ПОДКЛЮЧИТЬ СУЩЕСТВУЮЩИЙ ПРОЕКТ ХОСТА' }),
                   ...(discovered.projects ?? []).map((project) => jsx(Button, {
                     action: `connect-existing-${project.slug}`,
                     small: true,
@@ -436,7 +449,7 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
                       setProjectId(project.slug)
                       setRepoPath(project.repo_path)
                     },
-                    children: `Connect ${project.slug}`,
+                    children: `Подключить ${project.slug}`,
                   }, project.slug)),
                 ]})
               : null,
@@ -444,14 +457,14 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
             jsx('input', { id: 'dockyard-project-id', 'data-field': 'project-id', value: projectId, placeholder: 'payments-relaunch', autoComplete: 'off', onInput: (event) => setProjectId(event.target.value) }),
             jsx('small', { children: 'Строчные буквы, цифры и дефисы.' }),
             jsx('label', { htmlFor: 'dockyard-repo-path', children: 'Путь к репозиторию' }),
-            jsx('input', { id: 'dockyard-repo-path', 'data-field': 'repo-path', value: repoPath, placeholder: '/path/to/repos/project', autoComplete: 'off', onInput: (event) => setRepoPath(event.target.value) }),
+            jsx('input', { id: 'dockyard-repo-path', 'data-field': 'repo-path', value: repoPath, placeholder: '/путь/к/репозиториям/проекта', autoComplete: 'off', onInput: (event) => setRepoPath(event.target.value) }),
           ]}),
           jsxs('div', { className: step === 2 ? 'dockyard-wizard-step active' : 'dockyard-wizard-step', hidden: step !== 2, 'data-wizard-step': '2', children: [
             jsx('h3', { children: 'Миссия и результат' }),
             jsx('p', { children: 'Сформулируйте, что проект должен улучшить. Это станет опорой для решений по инициативам.' }),
             jsx('label', { htmlFor: 'dockyard-mission', children: 'Миссия' }),
             jsx('textarea', { id: 'dockyard-mission', 'data-field': 'mission', value: mission, rows: 5, placeholder: 'Снизить сбои платежей, не ослабляя релизные гейты.', onInput: (event) => setMission(event.target.value) }),
-            jsx('small', { children: `${number(mission.trim().length)} characters / minimum 12` }),
+            jsx('small', { children: `${number(mission.trim().length)} символов / минимум 12` }),
           ]}),
           jsxs('div', { className: step === 3 ? 'dockyard-wizard-step active' : 'dockyard-wizard-step', hidden: step !== 3, 'data-wizard-step': '3', children: [
             jsx('h3', { children: 'Роль ведущего' }),
@@ -463,14 +476,14 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
               ...(discovered?.profiles ?? []).map((profile) => jsx('option', {
                 value: profile.name,
                 disabled: profile.available === false || profile.selectable === false || ((profile.host_capabilities ?? []).length > 0 && !(profile.host_capabilities ?? []).includes('lead')),
-                children: `${profile.name}${profile.available === false || profile.selectable === false ? ' — unavailable' : ''}`,
+                children: `${profile.name}${profile.available === false || profile.selectable === false ? ' — недоступен' : ''}`,
               }, profile.name)),
             ]}),
             jsx('small', { children: discovered
-              ? `Valid host profiles: ${(discovered.profiles ?? []).map((p) => `${p.name}${p.available === false || p.selectable === false ? ' (unavailable)' : ''}`).join(', ') || 'n/a'}.`
+              ? `Доступные профили хоста: ${(discovered.profiles ?? []).map((p) => `${p.name}${p.available === false || p.selectable === false ? ' (недоступен)' : ''}`).join(', ') || 'нет данных'}.`
               : discoverFailed
                 ? 'Список профилей хоста недоступен — онбординг закрыт, пока обнаружение не удастся.'
-                : 'Loading host profiles…' }),
+                : 'Загрузка профилей хоста…' }),
             jsx('label', { htmlFor: 'dockyard-member-search', children: 'Участники команды' }),
             jsx('input', { id: 'dockyard-member-search', 'data-field': 'member-search', value: memberSearch, placeholder: 'Поиск профилей', autoComplete: 'off', onInput: (event) => setMemberSearch(event.target.value) }),
             jsx('div', { 'data-member-picker': true, children: (discovered?.profiles ?? [])
@@ -485,7 +498,7 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
                     disabled: !selectable,
                     onChange: (event) => setMemberProfiles((current) => event.target.checked ? [...current, profile.name] : current.filter((name) => name !== profile.name)),
                   }),
-                  `${profile.name}${selectable ? '' : ' — unavailable'}`,
+                  `${profile.name}${selectable ? '' : ' — недоступен'}`,
                 ] }, profile.name)
               }) }),
             jsx('small', { children: 'Это фиксирует владение; права не расширяются.' }),
@@ -510,7 +523,7 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
                   className: preflightState.ok ? 'dockyard-review-note' : 'dockyard-inline-error',
                   role: preflightState.ok ? undefined : 'alert',
                   'data-preflight-result': preflightState.ok ? preflightState.mode : 'error',
-                  children: preflightState.ok ? `${preflightState.text} Host projects: ${preflightState.projects.join(', ') || 'none'}.` : preflightState.message,
+                  children: preflightState.ok ? `${preflightState.text} Проекты хоста: ${preflightState.projects.join(', ') || 'нет'}.` : preflightState.message,
                 })
               : null,
             // P7.4: the exact proposed governance/board/automation preview.
@@ -528,11 +541,11 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
                   jsx('p', { className: 'dockyard-card-label', children: 'ПРЕДЛОЖЕННЫЕ ЗАДАЧИ-ЦЕЛИ ВРУЧНУЮ — ничего не запускается автоматически' }),
                   ...preflightState.suggestions.map((suggestion) => jsxs('p', { className: 'dockyard-review-note', 'data-suggestion': suggestion.name, children: [
                     `${suggestion.name} — ${suggestion.description}`,
-                    suggestion.supported === false ? ' (unsupported — shown for review only)' : '',
+                    suggestion.supported === false ? ' (не поддерживается — показано только для проверки)' : '',
                   ] }, suggestion.name)),
                 ]})
               : null,
-            jsx('p', { className: 'dockyard-review-note', children: 'Onboarding creates the project record and its initial oversight surfaces. It does not approve future initiatives.' }),
+            jsx('p', { className: 'dockyard-review-note', children: 'Онбординг создаёт запись проекта и его первые поверхности надзора. Он не одобряет будущие инициативы.' }),
           ]}),
         ]}),
         error ? jsx('p', { className: 'dockyard-inline-error', children: error }) : null,
@@ -548,7 +561,7 @@ export function OnboardingWizard({ onClose, onComplete, intent = 'new' }) {
                 disabled: submitting || !preflightCurrent,
                 data: { 'data-preflight-gate': preflightCurrent ? 'open' : 'locked' },
                 onClick: submit,
-                children: submitting ? 'Onboarding…' : (preflightCurrent ? 'Подключить проект' : 'Проверить перед онбордингом'),
+                children: submitting ? 'Онбординг…' : (preflightCurrent ? 'Подключить проект' : 'Проверить перед онбордингом'),
               }),
         ]}),
       ],
@@ -614,15 +627,15 @@ export function ConsoleBar({ tab, counts, onTab, onNewProject, onOnboardExisting
   // Sahil 05/10: the Onboard tab became the "Onboard existing project" button
   // beside New project; both open the onboarding wizard.
   const tabs = [
-    ['dashboard', 'Панель', null],
-    ['project', 'Проекты', null],
-    ['roadmap', 'Дорожная карта', null],
-    ['backlog', 'Бэклог', null],
-    ['workflows', 'Процессы', null],
-    ['inbox', 'Входящие одобрения', counts.approvals],
-    ['notifications', 'Уведомления', counts.notifications],
+    ['dashboard', CONSOLE_TABS.dashboard, null],
+    ['project', CONSOLE_TABS.project, null],
+    ['roadmap', CONSOLE_TABS.roadmap, null],
+    ['backlog', CONSOLE_TABS.backlog, null],
+    ['workflows', CONSOLE_TABS.workflows, null],
+    ['inbox', CONSOLE_TABS.inbox, counts.approvals],
+    ['notifications', CONSOLE_TABS.notifications, counts.notifications],
     // Sahil 04/10: app-wide settings only; each project's settings live in the project.
-    ['settings', 'Настройки приложения', null],
+    ['settings', CONSOLE_TABS.settings, null],
   ]
   const moveTab = (event, index) => {
     let next = null

@@ -10,6 +10,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { CONSOLE_TABS } from './src/lib/panel-words.js'
+import { pickProject } from './test-support/src-words.mjs'
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
@@ -40,14 +42,12 @@ test('App settings: the whole app only; project settings are one click away; eve
     const errors = []
     page.on('pageerror', (error) => errors.push(String(error)))
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+    await pickProject(page, PROJECT)
     await until(async () => (await api('/settings/last-project')).project_id === PROJECT, 'choosing a project was not remembered')
     const storageBefore = await storage(page)
 
     const tab = page.locator('[data-tab="settings"]')
-    assert.equal((await tab.innerText()).trim(), 'App settings')
+    assert.equal((await tab.innerText()).trim(), CONSOLE_TABS.settings)
     await tab.click()
     const screen = page.locator('[data-app-settings]')
     await screen.waitFor()

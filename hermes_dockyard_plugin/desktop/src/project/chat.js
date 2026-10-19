@@ -63,8 +63,22 @@ export async function openProjectChat({ host, api, projectId, profile }) {
   return { opened: true, linked, via: route ? 'route' : 'profile' }
 }
 
+// The one word the team list adds after the lead's name, and the sentences
+// that say what happened. Pure, so the tests read them instead of restating
+// them (project-chat.test.mjs, project-chat-screen.test.mjs).
+export const CHAT_WORDS = Object.freeze({ lead: 'ведущий' })
+
+export const chatTargetLabel = (target) =>
+  target?.role === 'lead' ? `${target.profile} (${CHAT_WORDS.lead})` : String(target?.profile ?? '')
+
+export const CHAT_MESSAGES = Object.freeze({
+  unsupported: 'Эта версия Hermes Desktop не может открыть чат из Project Stewardship. Обновите Hermes Desktop.',
+  unlinked: (profile) => `Чат с ${profile} открыт, но без памяти этого проекта: Project Stewardship не смог связать его.`,
+  opened: (profile) => `Чат с ${profile} открыт. Первое сообщение принесёт память этого проекта.`,
+})
+
 export function chatOutcomeMessage(profile, outcome) {
-  if (!outcome?.opened) return ['danger', 'This version of Hermes Desktop cannot open a chat from Project Stewardship. Update Hermes Desktop.']
-  if (!outcome.linked) return ['danger', `Chat with ${profile} opened, but without this project's memory: Project Stewardship could not link it.`]
-  return ['success', `Chat with ${profile} opened. Its first message brings this project's memory.`]
+  if (!outcome?.opened) return ['danger', CHAT_MESSAGES.unsupported]
+  if (!outcome.linked) return ['danger', CHAT_MESSAGES.unlinked(profile)]
+  return ['success', CHAT_MESSAGES.opened(profile)]
 }

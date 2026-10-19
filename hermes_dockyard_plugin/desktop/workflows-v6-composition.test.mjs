@@ -47,7 +47,7 @@ function buildDesktopBundle() {
     "createRoot(document.getElementById('root')).render(page.render());",
   ].join('\n'))
   const nm = join(DASHBOARD, 'node_modules')
-  execFileSync(join(nm, '.bin', 'esbuild'), [
+  execFileSync(process.execPath, [join(nm, 'esbuild', 'bin', 'esbuild'), 
     entry, '--bundle', '--format=esm', `--outfile=${bundle}`, '--jsx=automatic',
     `--alias:@hermes/plugin-sdk=${sdk}`,
     `--alias:react=${join(nm, 'react')}`,

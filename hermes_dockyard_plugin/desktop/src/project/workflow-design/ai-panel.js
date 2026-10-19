@@ -48,7 +48,7 @@ export function createdConversation(workflowName, { describe, plan }) {
   return [
     aiEntry({ role: 'user', text: describe }),
     aiEntry({ role: 'ai', plan, did: plan.did ?? [] }),
-    aiEntry({ role: 'ai', reply: [`Created "${workflowName}". Ask me about it or for changes here: I suggest each change first, and nothing changes until you press Apply.`] }),
+    aiEntry({ role: 'ai', reply: [`Процесс «${workflowName}» создан. Спрашивайте о нём или просите изменения здесь: я сначала предлагаю каждое изменение, и ничего не меняется, пока вы не нажмёте «Применить».`] }),
   ]
 }
 
@@ -87,11 +87,11 @@ function SuggestionCard({ entry, status, onApply, onNotYet, onUndo }) {
     jsx('h4', { children: s.kind === 'draft' ? 'Предлагаемые шаги' : 'Предложенное изменение' }),
     entry.did?.length ? jsx('ul', { className: 'dy-wfd-ai-changes', 'data-wfd-ai-changes': true, children: entry.did.map((d, i) => jsx('li', { children: d }, `${i}-${d}`)) }) : null,
     s.kind === 'change' ? jsxs('details', { children: [jsx('summary', { children: 'Все шаги после этого изменения' }), jsx(StepsPreview, { nodes: s.nodes })] }) : null,
-    entry.undone ? jsx('p', { className: 'dockyard-meta', children: 'Undone.' })
+    entry.undone ? jsx('p', { className: 'dockyard-meta', children: 'Отменено.' })
       : entry.settled ? jsx('p', { className: 'dockyard-meta', 'data-wfd-ai-settled': entry.settled, children: `${STATUS_WORDS.applied} ${SETTLED_WORDS[entry.settled]}` })
         : jsx('p', { className: 'dockyard-meta', children: STATUS_WORDS[status] }),
     status === 'pending' ? jsxs('div', { className: 'dy-wfd-ai-suggestion-actions', children: [
-      jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-apply', onClick: onApply, children: 'Apply' }),
+      jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-apply', onClick: onApply, children: 'Применить' }),
       jsx(Button, { small: true, action: 'wfd-ai-not-yet', onClick: onNotYet, children: 'Пока нет' }),
     ] }) : null,
     status === 'parked' ? jsx('div', { className: 'dy-wfd-ai-suggestion-actions', children: jsx(Button, { small: true, action: 'wfd-ai-apply', onClick: onApply, children: 'Применить после всех' }) }) : null,
@@ -215,8 +215,8 @@ export function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pin
     jsx(PracticeAiNote, {}),
     jsxs('div', { className: 'dy-wfd-ai-thread', ref: listRef, 'aria-live': 'polite', children: [
       thread.length ? null : jsx('p', { className: 'dockyard-meta', children: empty
-        ? 'Say what the workflow should do. I suggest the steps here first; nothing goes on the canvas until you press Apply.'
-        : `Ask about "${workflowTitle}" or ask for a change. I suggest each change here first; nothing changes until you press Apply.` }),
+        ? 'Скажите, что должен делать процесс. Я сначала предложу здесь шаги; на холсте ничего не появится, пока вы не нажмёте «Применить».'
+        : `Спрашивайте о процессе «${workflowTitle}» или просите изменение. Я сначала предложу каждое изменение здесь; ничего не изменится, пока вы не нажмёте «Применить».` }),
       ...thread.map((entry) => (entry.role === 'user'
         ? jsx('p', { className: 'dy-wfd-ai-user', 'data-wfd-ai-user': true, children: entry.text }, entry.id)
         : renderAi(entry))),

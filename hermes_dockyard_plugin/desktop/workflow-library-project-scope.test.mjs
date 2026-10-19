@@ -1,6 +1,36 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {chromium} from './browser-harness.mjs';
+import {readFileSync} from 'node:fs';
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// src/views/workflow-library.js imports React, so a Node test cannot import it.
+// The two sentences this journey reads back (the enablement line and the run
+// toast) are templates the screen fills in, so they are read out of its own
+// source and the known values are put back in - never out of the built bundle.
+const LIBRARY_SOURCE = readFileSync(new URL('./src/views/workflow-library.js', import.meta.url), 'utf8')
+const libraryWord = (pattern, what) => {
+  const found = pattern.exec(LIBRARY_SOURCE)
+  assert.ok(found, `${what} was read from src/views/workflow-library.js`)
+  return found[1]
+}
+const escapeRegex = (text) => String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// A published template with its ${...} holes filled in with what this test knows.
+const filled = (template, what, ...values) => {
+  const parts = template.split(/\$\{[^}]*\}/)
+  assert.equal(parts.length, values.length + 1, `${what} has ${parts.length - 1} holes, ${values.length} values given`)
+  return new RegExp(parts.map((part, index) => (index ? escapeRegex(values[index - 1]) : '') + escapeRegex(part)).join(''))
+}
+const ENABLED_FOR_GLOBAL = libraryWord(/children: row\.scope === 'global' \? `([^`]+)`/, 'the enablement line')
+const RUN_STARTED = libraryWord(/setRefusals\(\(current\) => \(\{ \.\.\.current, \[key\]: null \}\)\)\r?\n\s*emitToast\('success', `([^`]+)`\)/, 'the run-started toast')
 
 // Batch W review (Kensei): the top Workflows tab is the library (Option A), and
 // per-project switches act on the project chosen in the global picker. Runs
@@ -34,15 +64,15 @@ test('library toggles and runs act on the selected project, not the first one', 
     const page = await browser.newPage({viewport: {width: 1280, height: 900}});
     page.on('pageerror', (e) => errors.push(String(e)));
     await page.goto(BASE, {waitUntil: 'load'});
-    await page.getByRole('button', {name: 'Project context', exact: true}).click();
-    await page.getByRole('combobox', {name: 'Find project'}).fill(target);
-    await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: target, exact: true}).click();
+    await page.getByRole('button', {name: CONTEXT_LABEL, exact: true}).click();
+    await page.getByRole('combobox', {name: FIND_LABEL}).fill(target);
+    await page.getByRole('listbox', {name: PROJECTS_LABEL}).getByRole('option', {name: target, exact: true}).click();
     // Top tab opens the library directly (Option A).
     await page.locator('[data-tab="workflows"]').click();
     await page.locator('[data-workflow-library-screen]').waitFor();
     const row = page.locator(`[data-library-row="${name}"]`);
     await row.waitFor();
-    assert.match(await row.innerText(), new RegExp(`On for ${target}`));
+    assert.match(await row.innerText(), filled(ENABLED_FOR_GLOBAL, 'the enablement line', target));
     const toggle = row.locator(`[data-wf-enablement="global:${name}"]`);
     assert.equal(await toggle.getAttribute('aria-checked'), 'false');
     await toggle.click();
@@ -53,14 +83,14 @@ test('library toggles and runs act on the selected project, not the first one', 
     assert.equal(await enabledFor(first, name), false);
     // Start run goes to the selected project.
     await row.locator(`[data-wf-run-start="global:${name}"]`).click();
-    await page.getByText(`Run of ${name} started for ${target}.`).waitFor();
+    await page.getByText(filled(RUN_STARTED, 'the run-started toast', name, target)).waitFor();
     const runs = await call('GET', `/projects/${target}/workflows/global/${name}/runs`);
     assert.equal(runs.status, 200);
     assert.equal(runs.json.runs.length, 1);
     // Switching project re-reads that project's switches.
-    await page.getByRole('button', {name: 'Project context', exact: true}).click();
-    await page.getByRole('combobox', {name: 'Find project'}).fill(first);
-    await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: first, exact: true}).click();
+    await page.getByRole('button', {name: CONTEXT_LABEL, exact: true}).click();
+    await page.getByRole('combobox', {name: FIND_LABEL}).fill(first);
+    await page.getByRole('listbox', {name: PROJECTS_LABEL}).getByRole('option', {name: first, exact: true}).click();
     await page.locator('[data-tab="workflows"]').click();
     await page.waitForFunction((sel) => document.querySelector(sel)?.getAttribute('aria-checked') === 'false',
       `[data-wf-enablement="global:${name}"]`);

@@ -12,7 +12,7 @@ export const UNLINKED_DETAIL = 'У Hermes нет проекта с таким id
 export const UNLINKED_LABEL = 'Не связан'
 
 export function unlinkedNextStep(projectId) {
-  return `Create a Hermes project with the slug "${projectId}" to link it.`
+  return `Создайте проект Hermes со слагом "${projectId}", чтобы привязать его.`
 }
 
 // /dashboard marks each project linked or not.
@@ -47,7 +47,7 @@ export async function hermesRead(link, read, empty) {
 // blamed the work host for every reason, including archived records and a
 // project Hermes answered for: it has no such project.
 export function unavailableWords(reason) {
-  if (reason === 'unlinked') return `${UNLINKED_TITLE}: its work cannot be shown.`
+  if (reason === 'unlinked') return `${UNLINKED_TITLE}: его работа не может быть показана.`
   if (reason === 'archived') return 'Недоступно: в архиве.'
   return 'Недоступно: хост работы не ответил.'
 }

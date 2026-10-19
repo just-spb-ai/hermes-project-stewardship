@@ -16,15 +16,65 @@
 // Evidence health stays separate from delivery status (rule P6.1): it never
 // changes the banner, it only adds a row when the evidence is out of date.
 
+import { UNLINKED_LABEL, UNLINKED_TITLE } from '../data/unlinked.js'
+
 export const STALLED_AFTER_DAYS = 14
 
-const PHASE_LABEL = { paused: 'На паузе', frozen: 'Заморожен', disabled: 'Выключено', archived: 'В архиве' }
+export const PHASE_LABEL = { paused: 'На паузе', frozen: 'Заморожен', disabled: 'Выключено', archived: 'В архиве' }
 
-const plural = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`
+// Every word this module puts in front of a person, in one place: a
+// translation is one edit here, and the tests read the same list instead of
+// spelling the Russian out a second time.
+export const ATTENTION_WORDS = {
+  unavailable: 'Статус недоступен',
+  unavailableSummary: 'проверка внимания не загрузилась. Обновите и попробуйте снова.',
+  unlinked: UNLINKED_LABEL,
+  unlinkedTitle: UNLINKED_TITLE,
+  unlinkedSummary: 'У Hermes нет для него проекта, поэтому его работа не может быть показана',
+  approvalWaiting: 'Одобрение ожидается',
+  blocked: 'Заблокировано',
+  overdue: 'Просрочено',
+  evidenceStale: 'Доказательства устарели',
+  milestone: 'Веха просрочена',
+  stalled: 'Застряло',
+  atRisk: 'Под угрозой',
+  review: 'Нужна проверка',
+  idle: 'Простой',
+  onTrack: 'В графике',
+  projectState: 'Состояние проекта',
+  openProjectSettings: 'Настройки проекта',
+  kinds: {
+    blocked: ['заблокированный элемент', 'заблокированных элементов'],
+    overdue: ['просроченный элемент', 'просроченных элементов'],
+    milestone: ['просроченная веха', 'просроченных вех'],
+    approval: ['одобрение', 'одобрений'],
+  },
+  waitOne: 'ждёт',
+  waitMany: 'ждут',
+  waitYou: 'тебя',
+  stalledSentence: `работа не двигалась ${STALLED_AFTER_DAYS} дней или дольше`,
+  idleSentence: 'ничего не выполняется и нет открытых вех',
+  nothingSentence: 'сейчас от тебя ничего не требуется',
+  disabledSentence: 'ничего не запускается, пока проект не включат',
+  lifecycleSentence: 'состояние жизненного цикла требует решения',
+  stateSentence: (state) => `проект в состоянии ${state}`,
+  milestoneNote: (milestone) => `Срок ${milestone.due} прошёл, а веха всё ещё открыта${Number.isFinite(Number(milestone.total)) ? ` (${Number(milestone.done ?? 0)} из ${Number(milestone.total)} выполнено)` : ''}.`,
+}
 
-function joinAnd(parts) {
+// "2h ago" recency, in the reader's language.
+export const AGO = {
+  now: 'только что',
+  minutes: (n) => `${n} мин назад`,
+  hours: (n) => `${n} ч назад`,
+  days: (n) => `${n} дн. назад`,
+  months: (n) => `${n} мес. назад`,
+}
+
+export const plural = (count, one, many) => `${count} ${Number(count) === 1 ? one : many}`
+
+export function joinAnd(parts) {
   if (parts.length <= 1) return parts[0] ?? ''
-  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`
+  return `${parts.slice(0, -1).join(', ')} и ${parts[parts.length - 1]}`
 }
 
 // "2h ago" style recency. Unparseable or missing input gives null, never 0.
@@ -32,13 +82,13 @@ export function timeAgo(value, now = new Date()) {
   const at = Date.parse(value ?? '')
   if (Number.isNaN(at)) return null
   const minutes = Math.max(0, Math.floor((now.getTime() - at) / 60000))
-  if (minutes < 1) return 'just now'
-  if (minutes < 60) return `${minutes} min ago`
+  if (minutes < 1) return AGO.now
+  if (minutes < 60) return AGO.minutes(minutes)
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
+  if (hours < 24) return AGO.hours(hours)
   const days = Math.floor(hours / 24)
-  if (days < 60) return `${days}d ago`
-  return `${Math.floor(days / 30)} months ago`
+  if (days < 60) return AGO.days(days)
+  return AGO.months(Math.floor(days / 30))
 }
 
 // The newest moment anything happened: the portfolio's last work change or
@@ -82,8 +132,8 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
   const row = (portfolio?.projects ?? []).find((entry) => entry?.project_id === id) ?? null
   if (!id || !row) {
     return {
-      available: false, state: 'unknown', tone: 'neutral', label: 'Статус недоступен',
-      summary: 'проверка внимания не загрузилась. Обновите и попробуйте снова.', items: [],
+      available: false, state: 'unknown', tone: 'neutral', label: ATTENTION_WORDS.unavailable,
+      summary: ATTENTION_WORDS.unavailableSummary, items: [],
     }
   }
   const groups = portfolio.groups ?? {}
@@ -93,9 +143,9 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
     // Signed 16/09: an approval item is amber in the drawer (the banner
     // state it causes, "Needs review", is blue).
     items.push({
-      key: `approval:${decision.ref}`, kind: 'approval', tone: 'warning', label: 'Одобрение ожидается',
+      key: `approval:${decision.ref}`, kind: 'approval', tone: 'warning', label: ATTENTION_WORDS.approvalWaiting,
       title: decision.title || decision.ref, ref: decision.ref,
-      note: `Initiative waiting for your decision${decision.risk ? ` (${decision.risk} risk)` : ''}.`,
+      note: `Инициатива ждёт твоего решения${decision.risk ? ` (риск: ${decision.risk})` : ''}.`,
       ageDays: decision.age_days, owner: null,
       next: 'Решение принимается во «Входящих одобрениях», где показан отпечаток.',
       target: { kind: 'deep_link', link: decision.deep_link || `s6:initiative/${decision.ref}` },
@@ -106,36 +156,36 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
     if (entry?.project !== id) continue
     const base = { ref: entry.ref, ageDays: entry.age_days, owner: entry.owner ?? null, next: entry.next_action ?? null }
     if (entry.cause === 'blocked_item') {
-      items.push({ ...base, key: `blocked:${entry.ref}`, kind: 'blocked', tone: 'danger', label: 'Заблокировано',
+      items.push({ ...base, key: `blocked:${entry.ref}`, kind: 'blocked', tone: 'danger', label: ATTENTION_WORDS.blocked,
         title: `${entry.ref} · ${entry.title}`, note: entry.detail || 'Заблокировано без записанной причины.',
         target: { kind: 'work', ref: entry.ref }, openLabel: 'Открыть рабочий элемент' })
     } else if (entry.cause === 'overdue_item') {
-      items.push({ ...base, key: `overdue:${entry.ref}`, kind: 'overdue', tone: 'warning', label: 'Просрочено',
+      items.push({ ...base, key: `overdue:${entry.ref}`, kind: 'overdue', tone: 'warning', label: ATTENTION_WORDS.overdue,
         title: `${entry.ref} · ${entry.title}`, note: entry.detail || 'Просрочено и не выполнено.',
         target: { kind: 'work', ref: entry.ref }, openLabel: 'Открыть рабочий элемент' })
     } else if (entry.cause === 'evidence_stale') {
-      items.push({ ...base, key: 'evidence', kind: 'evidence', tone: 'warning', label: 'Доказательства устарели',
+      items.push({ ...base, key: 'evidence', kind: 'evidence', tone: 'warning', label: ATTENTION_WORDS.evidenceStale,
         title: entry.title || 'Последняя проверка здоровья устарела', note: entry.detail || '',
         target: { kind: 'view', view: 'overview' }, openLabel: 'Открыть оценку' })
     } else if (entry.cause === 'unlinked_project') {
       // Hermes has no project for it (10/10/2026): its work cannot be read.
-      items.push({ ...base, key: 'unlinked', kind: 'unlinked', tone: 'warning', label: 'Не связан',
-        title: entry.title || 'Не привязан к проекту Hermes', note: entry.detail || '',
-        target: { kind: 'view', view: 'settings' }, openLabel: 'Настройки проекта' })
+      items.push({ ...base, key: 'unlinked', kind: 'unlinked', tone: 'warning', label: ATTENTION_WORDS.unlinked,
+        title: entry.title || ATTENTION_WORDS.unlinkedTitle, note: entry.detail || '',
+        target: { kind: 'view', view: 'settings' }, openLabel: ATTENTION_WORDS.openProjectSettings })
     } else if (entry.cause === 'project_attention') {
       const switchedOff = project.enabled === false || row.enabled === false
       items.push({ ...base, key: 'project', kind: 'project', tone: 'neutral',
-        label: switchedOff ? 'Выключено' : (PHASE_LABEL[project.phase ?? row.phase] ?? 'Состояние проекта'),
-        title: switchedOff ? 'Этот проект выключен' : `This project is ${project.phase ?? row.phase}`,
+        label: switchedOff ? PHASE_LABEL.disabled : (PHASE_LABEL[project.phase ?? row.phase] ?? ATTENTION_WORDS.projectState),
+        title: switchedOff ? 'Этот проект выключен' : `Проект в состоянии ${project.phase ?? row.phase}`,
         note: switchedOff ? 'Для него ничего не запускается, пока кто-нибудь не включит его снова.' : 'Его состояние жизненного цикла требует решения.',
-        target: { kind: 'view', view: 'settings' }, openLabel: 'Настройки проекта' })
+        target: { kind: 'view', view: 'settings' }, openLabel: ATTENTION_WORDS.openProjectSettings })
     }
   }
   for (const milestone of overdueMilestones(milestones, now)) {
     items.push({
-      key: `milestone:${milestone.id}`, kind: 'milestone', tone: 'warning', label: 'Веха просрочена',
+      key: `milestone:${milestone.id}`, kind: 'milestone', tone: 'warning', label: ATTENTION_WORDS.milestone,
       title: milestone.name, ref: milestone.id,
-      note: `Due ${milestone.due} and still open${Number.isFinite(Number(milestone.total)) ? ` (${Number(milestone.done ?? 0)} of ${Number(milestone.total)} done)` : ''}.`,
+      note: ATTENTION_WORDS.milestoneNote(milestone),
       ageDays: Math.max(0, Math.floor((now.getTime() - Date.parse(milestone.due)) / 86400000)), owner: null,
       next: 'Пересмотрите дату или закройте веху.',
       target: { kind: 'plan', entry: `plan:milestone:${milestone.id}` }, openLabel: 'Открыть в «Видении»',
@@ -143,8 +193,8 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
   }
   if (row.status === 'stalled') {
     items.push({
-      key: 'stalled', kind: 'stalled', tone: 'warning', label: 'Застряло',
-      title: `No work has moved for ${STALLED_AFTER_DAYS} days or more`,
+      key: 'stalled', kind: 'stalled', tone: 'warning', label: ATTENTION_WORDS.stalled,
+      title: `Работа не двигалась ${STALLED_AFTER_DAYS} дней или дольше`,
       note: 'Есть открытая работа, но ничего в ней не изменилось.', ageDays: null, owner: null,
       next: 'Проверьте доску и перепланируйте.', target: { kind: 'view', view: 'board' }, openLabel: 'Открыть канбан',
     })
@@ -157,35 +207,35 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
   const enabled = project.enabled ?? row.enabled
   const phase = project.phase ?? row.phase
   let state
-  if (enabled === false) state = ['disabled', 'neutral', 'Выключено']
+  if (enabled === false) state = ['disabled', 'neutral', PHASE_LABEL.disabled]
   else if (phase && phase !== 'active') state = [phase, 'neutral', PHASE_LABEL[phase] ?? phase]
-  else if (row.status === 'unlinked') state = ['unlinked', 'warning', 'Не связан']
-  else if (Number(row.items?.blocked ?? 0) > 0) state = ['blocked', 'danger', 'Заблокировано']
-  else if (row.status === 'at_risk') state = ['at_risk', 'warning', 'Под угрозой']
-  else if (row.status === 'stalled') state = ['stalled', 'warning', 'Застряло']
-  else if (items.some((item) => item.kind === 'approval')) state = ['review', 'info', 'Нужна проверка']
-  else if (row.status === 'idle') state = ['idle', 'neutral', 'Простой']
-  else state = ['on_track', 'success', 'В графике']
+  else if (row.status === 'unlinked') state = ['unlinked', 'warning', ATTENTION_WORDS.unlinked]
+  else if (Number(row.items?.blocked ?? 0) > 0) state = ['blocked', 'danger', ATTENTION_WORDS.blocked]
+  else if (row.status === 'at_risk') state = ['at_risk', 'warning', ATTENTION_WORDS.atRisk]
+  else if (row.status === 'stalled') state = ['stalled', 'warning', ATTENTION_WORDS.stalled]
+  else if (items.some((item) => item.kind === 'approval')) state = ['review', 'info', ATTENTION_WORDS.review]
+  else if (row.status === 'idle') state = ['idle', 'neutral', ATTENTION_WORDS.idle]
+  else state = ['on_track', 'success', ATTENTION_WORDS.onTrack]
 
   const count = (kind) => items.filter((item) => item.kind === kind).length
-  const countable = [
-    ['blocked', 'blocked item'], ['overdue', 'overdue item'], ['milestone', 'overdue milestone'], ['approval', 'approval'],
-  ].filter(([kind]) => count(kind) > 0)
+  const countable = Object.entries(ATTENTION_WORDS.kinds)
+    .map(([kind, [one, many]]) => [kind, one, many])
+    .filter(([kind]) => count(kind) > 0)
   const sentences = []
-  if (state[0] === 'unlinked') sentences.push('У Hermes нет для него проекта, поэтому его работа не может быть показана')
+  if (state[0] === 'unlinked') sentences.push(ATTENTION_WORDS.unlinkedSummary)
   if (countable.length > 0) {
     const total = countable.reduce((sum, [kind]) => sum + count(kind), 0)
-    sentences.push(`${joinAnd(countable.map(([kind, word]) => plural(count(kind), word)))} ${total === 1 ? 'needs' : 'need'} you`)
+    sentences.push(`${joinAnd(countable.map(([kind, one, many]) => plural(count(kind), one, many)))} ${total === 1 ? ATTENTION_WORDS.waitOne : ATTENTION_WORDS.waitMany} ${ATTENTION_WORDS.waitYou}`)
   }
-  if (count('stalled') > 0) sentences.push(`no work has moved for ${STALLED_AFTER_DAYS} days or more`)
+  if (count('stalled') > 0) sentences.push(ATTENTION_WORDS.stalledSentence)
   const evidence = items.find((item) => item.kind === 'evidence')
   if (evidence) sentences.push(String(evidence.title).replace(/^Evidence/, 'evidence'))
-  if (count('project') > 0 && sentences.length === 0) sentences.push(state[0] === 'disabled' ? 'nothing runs until it is enabled' : 'its lifecycle state needs a decision')
+  if (count('project') > 0 && sentences.length === 0) sentences.push(state[0] === 'disabled' ? ATTENTION_WORDS.disabledSentence : ATTENTION_WORDS.lifecycleSentence)
   let summary = sentences.join(' · ')
   if (!summary) {
-    summary = state[0] === 'idle' ? 'nothing is in progress and no milestone is open'
-      : PHASE_LABEL[state[0]] ? `the project is ${state[0]}`
-        : 'nothing needs you right now'
+    summary = state[0] === 'idle' ? ATTENTION_WORDS.idleSentence
+      : PHASE_LABEL[state[0]] ? ATTENTION_WORDS.stateSentence(state[0])
+        : ATTENTION_WORDS.nothingSentence
   }
   return { available: true, state: state[0], tone: state[1], label: state[2], summary, items }
 }

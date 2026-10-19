@@ -17,6 +17,7 @@
 // other than text alignment.
 import { useEffect, useRef, useState, jsx, jsxs } from '../runtime/react.js'
 import { Icon } from '../lib/ui.js'
+import { RICH_TEXT_PROBLEMS } from '../lib/canvas-words.js'
 
 export const RICH_TEXT_SIZES = Object.freeze(['small', 'large', 'huge'])
 const ALIGNS = ['left', 'center', 'right', 'justify']
@@ -243,9 +244,9 @@ export function docProblem(doc, rest = {}) {
   const counted = { ...rest, description_doc: doc }
   delete counted.description
   const bytes = serverJsonBytes(counted)
-  if (chars > RICH_TEXT_LIMITS.chars) return `Too long: ${chars.toLocaleString('en-GB')} of ${RICH_TEXT_LIMITS.chars.toLocaleString('en-GB')} characters. Shorten it before applying.`
-  if (nodes > RICH_TEXT_LIMITS.nodes) return `Too much formatting: ${nodes.toLocaleString('en-GB')} of ${RICH_TEXT_LIMITS.nodes.toLocaleString('en-GB')} pieces. Remove some paragraphs or formatting before applying.`
-  if (bytes > RICH_TEXT_LIMITS.bytes) return 'Карточка слишком большая для сохранения. Уберите часть текста или форматирования перед применением.'
+  if (chars > RICH_TEXT_LIMITS.chars) return RICH_TEXT_PROBLEMS.tooLong(chars.toLocaleString('en-GB'), RICH_TEXT_LIMITS.chars.toLocaleString('en-GB'))
+  if (nodes > RICH_TEXT_LIMITS.nodes) return RICH_TEXT_PROBLEMS.tooMuchFormatting(nodes.toLocaleString('en-GB'), RICH_TEXT_LIMITS.nodes.toLocaleString('en-GB'))
+  if (bytes > RICH_TEXT_LIMITS.bytes) return RICH_TEXT_PROBLEMS.tooLarge
   return null
 }
 
@@ -828,7 +829,7 @@ export function RichTextEditor({ value, fallbackText, onChange, onProblem, rest,
     const [id, title, face, act, active] = tool
     const on = Boolean(active(state))
     return jsx('button', {
-      type: 'button', className: `dy-rt-btn${on ? ' on' : ''}`, 'data-rt': id, title: ALIGNS.includes(id) && state.anyList ? `${title} (not available in lists)` : title, 'aria-label': title, 'aria-pressed': on ? 'true' : 'false',
+      type: 'button', className: `dy-rt-btn${on ? ' on' : ''}`, 'data-rt': id, title: ALIGNS.includes(id) && state.anyList ? `${title} (недоступно в списках)` : title, 'aria-label': title, 'aria-pressed': on ? 'true' : 'false',
       // Alignment is not stored on list items (Quan re-check L1).
       disabled: readOnly || (ALIGNS.includes(id) && Boolean(state.anyList)),
       onMouseDown: (event) => event.preventDefault(), onClick: () => run(act),
@@ -847,7 +848,7 @@ export function RichTextEditor({ value, fallbackText, onChange, onProblem, rest,
         children: [['p', 'Обычный текст'], ['h1', 'Заголовок 1'], ['h2', 'Заголовок 2'], ['h3', 'Заголовок 3']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
       jsxs('select', { className: 'dy-rt-select', 'data-rt': 'size', 'aria-label': 'Размер текста', value: state.size,
         onChange: (event) => { const v = event.target.value; run((el) => applySize(el, v)) },
-        children: [['small', 'Small'], ['normal', 'Обычный размер'], ['large', 'Large'], ['huge', 'Huge']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
+        children: [['small', 'Мелкий'], ['normal', 'Обычный размер'], ['large', 'Крупный'], ['huge', 'Очень крупный']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
      ] }, 'sel'),
      jsxs('div', { className: 'dy-rt-row', children: [
       ...TOOLS.map((tool, i) => (tool ? button(tool) : jsx('span', { className: 'dy-rt-sep', 'aria-hidden': 'true' }, `sep-${i}`))),

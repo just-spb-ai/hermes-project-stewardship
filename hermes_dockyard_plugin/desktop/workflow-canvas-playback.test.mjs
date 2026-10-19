@@ -3,6 +3,7 @@ import { build } from '../dashboard/node_modules/esbuild/lib/main.js'
 import { readFile, rm, mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
 import { createRequire } from 'node:module'
 const require = createRequire(new URL('../dashboard/package.json', import.meta.url))
@@ -11,7 +12,9 @@ const { chromium } = require('playwright')
 test('canvas playback is a real timeline control and returns to live state', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'dockyard-canvas-playback-'))
   const out = join(dir, 'mount.js')
-  await build({entryPoints: [new URL('./workflow-canvas-mount.js', import.meta.url).pathname], bundle: true, format: 'iife', globalName: 'DockyardCanvas', platform: 'browser', outfile: out, loader: {'.ts': 'ts'}})
+  // fileURLToPath: on Windows a bare URL.pathname is "/C:/...", which esbuild
+  // cannot resolve ("Could not resolve /C:/...").
+  await build({entryPoints: [fileURLToPath(new URL('./workflow-canvas-mount.js', import.meta.url))], bundle: true, format: 'iife', globalName: 'DockyardCanvas', platform: 'browser', outfile: out, loader: {'.ts': 'ts'}})
   const code = await readFile(out, 'utf8')
   const browser = await chromium.launch({headless: true})
   try {

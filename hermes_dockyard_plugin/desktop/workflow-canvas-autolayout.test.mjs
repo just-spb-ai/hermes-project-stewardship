@@ -3,14 +3,31 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from './browser-harness.mjs';
 import { createBlankWorkflow, openStep } from './test-support/workflow-create.mjs';
+// The step panel's own labels, read from the module that publishes them
+// (src/project/workflow-design/step-settings.js). That module is React-free,
+// so the test imports it and reads the words instead of spelling the Russian
+// out a second time (i18n(ru), 19/10/2026).
+import { canvasDesignHooks } from './src/project/workflow-design/step-settings.js';
 
 const BASE = process.env.STEWARD_DESKTOP_URL;
+const STEP_PANEL = canvasDesignHooks({ draft: false, members: [], storedNode: (id) => ({ id, title: id }), settingsKey: (id) => ['p', 'w', id], onEditFrame: () => {} });
+const STEP_NAME = STEP_PANEL.labels.title;
+const SAVE_VERSION = STEP_PANEL.labels.save;
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
 
 async function projectWorkflows(page) {
   await page.goto(BASE);
-  await page.getByRole('button', { name: 'Project context', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Find project' }).fill('payments-relaunch');
-  await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: 'payments-relaunch', exact: true }).click();
+  await page.getByRole('button', { name: CONTEXT_LABEL, exact: true }).click();
+  await page.getByRole('combobox', { name: FIND_LABEL }).fill('payments-relaunch');
+  await page.getByRole('listbox', { name: PROJECTS_LABEL }).getByRole('option', { name: 'payments-relaunch', exact: true }).click();
   // Option A: project workflows live under Project > Workflows.
   await page.locator('[data-tab="project"]').click();
   await page.locator('[data-project-view="workflows"]').click();
@@ -41,8 +58,8 @@ test('W0-P2: after auto-layout node editor saves a new version without detaching
     await page.locator('[data-action="archive-workflow"]').waitFor();
     await page.locator('[data-action="wf-auto-layout"]').click();
     await openStep(page, name, 'step-1');
-    await page.getByLabel('Step name').fill('Edited via canvas');
-    await page.getByRole('button', { name: 'Save version', exact: true }).click();
+    await page.getByLabel(STEP_NAME).fill('Edited via canvas');
+    await page.getByRole('button', { name: SAVE_VERSION, exact: true }).click();
     // Definition versions live in a collapsed <details>; attached is the
     // correct DOM state, then expand before asserting the persisted title.
     await page.locator(`[data-workflow-definition-version]`).last().waitFor({ state: 'attached' });

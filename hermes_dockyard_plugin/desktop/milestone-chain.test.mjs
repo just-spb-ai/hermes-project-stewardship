@@ -29,6 +29,7 @@ import { evaluatePlugin as evaluatePluginBundle } from './test-support/load-plug
 import { freePort } from './test-support/free-port.mjs';
 import { createRequire } from 'node:module';
 import { LUCIDE_ICON_NODES } from './lucide-icons.js';
+import { one, template } from './test-support/src-words.mjs';
 
 const DASH_PKG = fileURLToPath(new URL('../dashboard/package.json', import.meta.url));
 const require = createRequire(DASH_PKG);
@@ -97,7 +98,12 @@ function evaluatePlugin(source, host) {
   return loaded;
 }
 
-const FALSE_EMPTY_MESSAGE = 'No milestones yet. A milestone groups the work for one delivery date.'; // kept in sync with the Vision screen's empty milestone section
+// The Vision screen's empty milestone section, read from the module that
+// publishes it (the panel is localised; the test never spells the word).
+const FALSE_EMPTY_MESSAGE = one('src/project/plan/plan-screen.js', /const EMPTY = \{[^}]*?milestone: '([^']+)'/);
+// The milestone drawer's scope line (numbers are holes): read from the module
+// that renders it, so the check survives the panel's wording.
+const SCOPE_LINE = template('src/project/plan/plan-drawer.js', /detail \? jsx\('p', \{ className: 'dockyard-meta', children: `([^`]+)` \}\)/);
 
 test('milestone journey: real UI drives real HTTP through proxy to backend', async () => {
   // 1. spawn the real server (real backend + real proxy router + temp DB)
@@ -268,12 +274,14 @@ test('milestone journey: real UI drives real HTTP through proxy to backend', asy
     await act(async () => { row.querySelector('.dy-plan-row-open').click(); await wait(120); });
     await waitFor('[data-plan-drawer="milestone"]');
     const start = Date.now();
-    while (!/Scope:/.test(doc.querySelector('[data-plan-drawer="milestone"]')?.textContent ?? '') && Date.now() - start < 8000) {
+    const scopeShown = () => [...doc.querySelectorAll('[data-plan-drawer="milestone"] .dockyard-meta')]
+      .some((line) => SCOPE_LINE.test(line.textContent.trim()));
+    while (!scopeShown() && Date.now() - start < 8000) {
       await act(async () => { await wait(60); });
     }
     assert(
-      /Scope:/.test(doc.querySelector('[data-plan-drawer="milestone"]')?.textContent ?? ''),
-      'milestone detail did not load through the real chain when its details opened',
+      scopeShown(),
+      `milestone detail did not load through the real chain when its details opened (drawer: ${(doc.querySelector('[data-plan-drawer="milestone"]')?.textContent ?? '').slice(0, 300)})`,
     );
 
     // 7. failure propagation over the real chain: an unknown milestone must

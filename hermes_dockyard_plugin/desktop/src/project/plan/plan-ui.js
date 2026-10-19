@@ -85,7 +85,7 @@ export function PlanDialog({ dialogKey, eyebrow, title, onClose, busy = false, c
 
 function Field({ id, label, required, error, hint, children }) {
   return jsxs('label', { className: `dockyard-field dy-plan-field${error ? ' invalid' : ''}`, htmlFor: id, children: [
-    jsxs('span', { children: [label, jsx('em', { className: 'dy-plan-required', children: required ? ' required' : ' optional' })] }),
+    jsxs('span', { children: [label, jsx('em', { className: 'dy-plan-required', children: required ? ' обязательно' : ' необязательно' })] }),
     children,
     error ? jsx('small', { className: 'dy-plan-field-error', id: `${id}-error`, role: 'alert', children: error }) : hint ? jsx('small', { className: 'dy-plan-field-hint', children: hint }) : null,
   ] })
@@ -101,9 +101,9 @@ const blank = (kind, item) => ({
 function validate(kind, form, mode) {
   const errors = {}
   // A resubmitted initiative keeps its proposed title (the backend has no rename).
-  if (!(mode === 'edit' && kind === 'initiative') && !form.title.trim()) errors.title = `Give the ${KIND_LABEL[kind].toLowerCase()} a name.`
+  if (!(mode === 'edit' && kind === 'initiative') && !form.title.trim()) errors.title = 'Дайте имя.'
   if (kind === 'initiative' && !form.rationale.trim()) errors.rationale = 'Скажите, почему эта инициатива важна; ревьюеры решают по ней.'
-  if (kind === 'objective' && !form.target.trim()) errors.target = 'Set a target, for example >=1.'
+  if (kind === 'objective' && !form.target.trim()) errors.target = 'Задайте цель, например >=1.'
   return errors
 }
 
@@ -111,26 +111,26 @@ function validate(kind, form, mode) {
 async function save(kind, mode, form, item, actions, linkTo) {
   const name = form.title.trim()
   if (kind === 'initiative') {
-    if (mode === 'create') { await actions.proposeInitiative(form); return `Proposed “${name}”. It waits for approval.` }
-    await actions.resubmitInitiative(item.ref, form); return `Resubmitted “${item.title}” for approval.`
+    if (mode === 'create') { await actions.proposeInitiative(form); return `Инициатива «${name}» предложена. Она ждёт одобрения.` }
+    await actions.resubmitInitiative(item.ref, form); return `«${item.title}» отправлена на одобрение заново.`
   }
   if (kind === 'milestone') {
     if (mode === 'create') {
       const created = await actions.createMilestone(form)
-      return `Created milestone “${name}”. Place it under an initiative from its drawer.`
+      return `Веха «${name}» создана. Разместите её под инициативой из её панели.`
     }
     if (name !== item.name) await actions.renameMilestone(item.name, name)
     if ((form.due || null) !== (item.due || null) || form.closed !== item.closed) await actions.updateMilestone(name, { due: form.due || null, closed: form.closed })
-    return `Saved milestone “${name}”.`
+    return `Веха «${name}» сохранена.`
   }
   if (kind === 'objective') {
-    if (mode === 'edit') { await actions.updateObjective(item.id, form); return `Saved objective “${name}”.` }
+    if (mode === 'edit') { await actions.updateObjective(item.id, form); return `Задача-цель «${name}» сохранена.` }
     const created = await actions.createObjective(form)
-    return `Created objective “${name}”. Place it under a milestone from its drawer.`
+    return `Задача-цель «${name}» создана. Разместите её под вехой из её панели.`
   }
-  if (mode === 'create') { await actions.createGoal(form); return `Created goal “${name}”.` }
+  if (mode === 'create') { await actions.createGoal(form); return `Цель «${name}» создана.` }
   await actions.updateGoal(item.id, { title: name, description: form.description.trim(), objective_ids: form.objectiveIds })
-  return `Saved goal “${name}”.`
+  return `Цель «${name}» сохранена.`
 }
 
 // Create or edit any of the four plan items. linkTo { ref, title, relationship }
@@ -165,7 +165,7 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
       // The backend cannot add checks later (resubmit keeps them as they are),
       // so the box is offered when proposing only.
       mode === 'create' ? field('checks', 'Как мы поймём, что это сработало', jsx('textarea', input('checks', { rows: 2, placeholder: 'Например: набор тестов проходит, а регистрации восстанавливаются до 40 в день.' })),
-        { hint: 'Optional. Reviewers see these checks. Hermes can only finish an initiative by itself when it has them; without them, mark it complete when the work is done.' }) : null,
+        { hint: 'Необязательно. Ревьюеры видят эти проверки. Hermes может завершить инициативу самостоятельно, только когда они есть; без них отмечайте её завершённой, когда работа сделана.' }) : null,
     ],
     milestone: () => [
       field('title', 'Имя', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
@@ -175,7 +175,7 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
     objective: () => [
       field('title', 'Имя', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
       field('description', 'Описание', jsx('textarea', input('description', { rows: 2 }))),
-      field('target', 'Цель', jsx('input', input('target', { autoComplete: 'off' })), { required: true, hint: 'How evidence is judged, for example >=1.' }),
+      field('target', 'Цель', jsx('input', input('target', { autoComplete: 'off' })), { required: true, hint: 'Как оцениваются доказательства, например >=1.' }),
       field('severity', 'Важность', jsx('select', { ...input('severity'), children: options(SEVERITIES) }), { required: true }),
     ],
     goal: () => {
@@ -195,18 +195,18 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
             return jsxs('label', { className: `dy-plan-check${owner ? ' taken' : ''}`, children: [
               jsx('input', { type: 'checkbox', 'data-plan-goal-objective': row.id, disabled: Boolean(owner), checked: form.objectiveIds.includes(row.id), onChange: (event) => toggle(row.id, event.target.checked) }),
               row.title,
-              owner ? jsx('small', { children: ` already measures “${owner.title}”${owner.archived ? ' (archived)' : ''}` }) : null,
+              owner ? jsx('small', { children: ` уже измеряет «${owner.title}»${owner.archived ? ' (в архиве)' : ''}` }) : null,
             ] }, row.id)
           }),
         ] }, 'objectives'),
       ]
     },
   }[kind]()
-  const verb = mode === 'create' ? (kind === 'initiative' ? 'Предложить' : 'Create') : (kind === 'initiative' ? 'Отправить заново' : 'Сохранить')
-  const title = mode === 'create' ? `New ${KIND_LABEL[kind].toLowerCase()}` : kind === 'initiative' ? `Revise “${item.title}”` : `Edit ${KIND_LABEL[kind].toLowerCase()}`
+  const verb = mode === 'create' ? (kind === 'initiative' ? 'Предложить' : 'Создать') : (kind === 'initiative' ? 'Отправить заново' : 'Сохранить')
+  const title = mode === 'create' ? `Новая ${KIND_LABEL[kind].toLowerCase()}` : kind === 'initiative' ? `Доработать «${item.title}»` : `Изменить: ${KIND_LABEL[kind].toLowerCase()}`
   const note = kind !== 'initiative' ? null : mode === 'create'
-    ? 'A new initiative waits for approval before work starts. Reviewers see why it matters and its risk.'
-    : 'Changes were requested. Update the proposal and resubmit it for approval. The title stays as proposed.'
+    ? 'Новая инициатива ждёт одобрения до начала работы. Ревьюеры видят, почему она важна, и её риск.'
+    : 'Запрошены правки. Обновите предложение и отправьте его на одобрение заново. Заголовок остаётся прежним.'
   return jsx(PlanDialog, {
     dialogKey: `${mode}-${kind}`, eyebrow: plan.label, title, busy, onClose,
     actions: [
@@ -244,26 +244,26 @@ export function LinkDialog({ from, target, plan, actions, onClose, onDone, onCre
       if (from.kind === 'goal') await actions.linkGoal(from.id, chosen.id)
       else if (from.kind === 'objective') await actions.linkObjective(chosen.id, from.id)
       else if (from.kind === 'milestone') await actions.linkMilestone(chosen.ref, from.id)
-      emitToast('success', `Placed “${from.title}” under “${chosen.title}”.`)
+      emitToast('success', `«${from.title}» размещена под «${chosen.title}».`)
       onDone()
     } catch (error) {
       setFailure(errorText(error)); setBusy(false)
     }
   }
   const noun = KIND_LABEL[target].toLowerCase()
-  const parentNoun = from.kind === 'goal' ? 'objective' : from.kind === 'objective' ? 'milestone' : from.kind === 'milestone' ? 'initiative' : 'milestone'
+  const parentNoun = from.kind === 'goal' ? 'задачей-целью' : from.kind === 'objective' ? 'вехой' : from.kind === 'milestone' ? 'инициативой' : 'вехой'
   return jsx(PlanDialog, {
-    dialogKey: `link-${from.kind}-${target}`, eyebrow: `${KIND_LABEL[from.kind]} · ${from.title}`, title: `Place under a ${parentNoun}`, busy, onClose,
+    dialogKey: `link-${from.kind}-${target}`, eyebrow: `${KIND_LABEL[from.kind]} · ${from.title}`, title: `Разместить под ${parentNoun}`, busy, onClose,
     actions: [
-      onCreateNew ? jsx(Button, { action: `plan-link-new-${target}`, disabled: busy, onClick: onCreateNew, children: `New ${noun}…` }, 'new') : null,
+      onCreateNew ? jsx(Button, { action: `plan-link-new-${target}`, disabled: busy, onClick: onCreateNew, children: `Новая ${noun}…` }, 'new') : null,
       jsx(Button, { onClick: onClose, disabled: busy, children: 'Отмена' }, 'cancel'),
       jsx(Button, { variant: 'primary', action: 'plan-link-confirm', disabled: busy || !chosen, onClick: submit, children: busy ? 'Размещение…' : 'Разместить' }, 'link'),
     ],
     children: jsxs('div', { className: 'dy-plan-form', children: [
       options.length === 0
-        ? jsx('p', { className: 'dy-plan-note', children: `Nothing to place it under: this project has no ${parentNoun} yet${onCreateNew ? `. Create a new ${noun} instead` : ''}.` })
+        ? jsx('p', { className: 'dy-plan-note', children: `Некуда разместить: в этом проекте пока нет родителя${onCreateNew ? `. Создайте вместо этого новую запись: ${noun}` : ''}.` })
         : jsx(Field, { id: 'dy-plan-link-choice', label: KIND_LABEL[target], required: true, children: jsxs('select', { id: 'dy-plan-link-choice', 'data-plan-link-choice': true, value: choice, onChange: (event) => setChoice(event.target.value), children: [
-          jsx('option', { value: '', children: 'Choose…' }),
+          jsx('option', { value: '', children: 'Выберите…' }),
           ...options.map((row) => jsx('option', { value: String(row.id ?? row.ref), children: row.title }, row.id ?? row.ref)),
         ] }) }),
       failure ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: failure }) : null,
@@ -277,7 +277,7 @@ export function Confirm({ spec, onCancel, onDone }) {
   const [busy, setBusy] = useState(false)
   const [failure, setFailure] = useState(null)
   return jsx(ConfirmDialog, {
-    confirmKey: spec.key, title: spec.title, confirmLabel: busy ? 'Working…' : spec.label, busy,
+    confirmKey: spec.key, title: spec.title, confirmLabel: busy ? 'Выполняется…' : spec.label, busy,
     description: failure ? `${spec.description} — ${failure}` : spec.description,
     onCancel,
     onConfirm: async () => {
@@ -305,7 +305,7 @@ export function ActionDialog({ spec, onCancel, onDone }) {
     dialogKey: spec.key, eyebrow: spec.eyebrow, title: spec.title, busy, onClose: onCancel,
     actions: [
       jsx(Button, { onClick: onCancel, disabled: busy, children: 'Отмена' }, 'cancel'),
-      jsx(Button, { variant: spec.variant ?? 'primary', action: `plan-${spec.key}-confirm`, disabled: busy, onClick: submit, children: busy ? 'Working…' : spec.label }, 'confirm'),
+      jsx(Button, { variant: spec.variant ?? 'primary', action: `plan-${spec.key}-confirm`, disabled: busy, onClick: submit, children: busy ? 'Выполняется…' : spec.label }, 'confirm'),
     ],
     children: jsxs('div', { className: 'dy-plan-form', children: [
       jsx('ul', { className: 'dy-plan-consequences', children: spec.lines.filter(Boolean).map((line) => jsx('li', { children: line }, line)) }),
@@ -342,7 +342,7 @@ export function MissionStrip({ plan, actions, onChanged, onConfirm }) {
       : jsx('p', { className: plan.mission ? '' : 'empty', children: plan.mission || 'Миссия не задана. Скажите, ради чего существует проект.' }),
     editing ? null : jsx(Button, { small: true, action: 'plan-mission-edit', onClick: () => { setDraft(plan.mission); setEditing(true) }, children: plan.mission ? 'Изменить' : 'Добавить миссию' }),
     editing ? null : jsx(Menu, { label: 'Действия миссии', trigger: '⋯', action: 'mission', items: [
-      { id: 'history', label: history ? 'Скрыть историю миссий' : `Mission history (${plan.missionHistory.length})`, onSelect: () => setHistory(!history) },
+      { id: 'history', label: history ? 'Скрыть историю миссий' : `История миссий (${plan.missionHistory.length})`, onSelect: () => setHistory(!history) },
       plan.mission ? { id: 'archive', label: 'Архивировать миссию…', onSelect: () => onConfirm({ key: 'archive-mission', title: 'Архивировать эту миссию?', description: 'Миссия перемещается в историю и убирается из активного проекта.', label: 'Архивировать миссию', done: 'Миссия отправлена в архив.', run: actions.archiveMission }) } : null,
       plan.mission ? { id: 'remove', label: 'Удалить миссию…', danger: true, onSelect: () => onConfirm({ key: 'remove-mission', title: 'Удалить эту миссию?', description: 'Активная миссия очищается, не попадая в историю миссий.', label: 'Удалить миссию', done: 'Миссия удалена.', run: actions.removeMission }) } : null,
     ] }),
@@ -351,7 +351,7 @@ export function MissionStrip({ plan, actions, onChanged, onConfirm }) {
       // Same wording as the old Objectives screen's mission history.
       ? plan.missionHistory.map((entry) => jsxs('li', { children: [
           jsx('span', { children: entry.mission }),
-          jsx('small', { children: `Archived ${formatWhen(entry.archived_at) || 'previously'} by ${entry.archived_by || 'unknown'}` }),
+          jsx('small', { children: `Архивировано ${formatWhen(entry.archived_at) || 'ранее'} · ${entry.archived_by || 'неизвестно'}` }),
         ] }, entry.archive_id))
       : jsx('li', { className: 'empty', children: 'Более ранних миссий нет.' }) }) : null,
   ] })

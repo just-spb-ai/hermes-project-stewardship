@@ -21,7 +21,53 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { pickProject } from './test-support/project-scope.mjs';
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// ---- the panel's words (i18n(ru), 19/10/2026) -------------------------------
+// Only the visible strings moved: roles, data-* hooks and wire values did not.
+const sourceOf = (file) => fs.readFileSync(fileURLToPath(new URL(`./${file}`, import.meta.url)), 'utf8')
+const oneIn = (file, pattern, what) => {
+  const found = pattern.exec(sourceOf(file))
+  assert.ok(found, `${what} is published in ${file}`)
+  return found[1]
+}
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// A line a module builds: the literal parts are kept, each ${...} hole is a
+// value the test knows, or a wildcard when the test passes null.
+const sentence = (template, ...values) => new RegExp(template.split(/\$\{[^}]*\}/)
+  .map((part, index) => escapeRegex(part) + (index < values.length ? (values[index] === null ? '[\\s\\S]*' : escapeRegex(String(values[index]))) : ''))
+  .join(''))
+// The outcome words and the board's own tab name are published by React-free
+// modules, so the test imports them.
+import { ALL_WORK, stageKeyOf, stageLabel } from './src/kanban/model.js'
+import { OUTCOME_LABEL } from './src/lib/plan-vocab.js'
+// The evaluation note, the archived row's label and the status a board filter
+// shows: the modules that render them import React, so their own source is read.
+const MEASURED_NOTE = (value) => sentence(oneIn('src/project/plan/plan-drawer.js', /result\.measured != null \? `([^`]+)` : ''/, 'the measured value'), value)
+const ARCHIVED_LABEL = oneIn('src/project/plan/plan-data.js', /if \(item\.archived\) return \{ tone: 'neutral', label: '([^']+)' \}/, 'the archived label')
+const STATUS_FILTER = stageLabel(stageKeyOf({ status: 'in_progress' }))
+// The objective's evidence row says how many results passed; that word is
+// published by the drawer the test cannot import.
+const PASS_RATE_WORD = oneIn('src/project/plan/plan-drawer.js', /item\.passRate !== null \? `, ([^`]+)\$\{Math\.round/, 'the pass-rate word')
+
+// test-support/project-scope.mjs is shared with other suites and still spells
+// the switcher's English labels, so this file drives the switcher itself: the
+// same roles, the same data-project-option hook, and the same wait that the
+// chosen scope shows up on the trigger. '*' is the wire value for All projects.
+async function pickProject(page, id) {
+  await page.getByRole('button', { name: CONTEXT_LABEL, exact: true }).click()
+  if (id !== '*') await page.getByRole('combobox', { name: FIND_LABEL }).fill(id)
+  await page.locator(`[role="listbox"] [data-project-option="${id}"]`).click()
+  await page.locator(`.dy-sw-trigger[data-scope="${id}"]`).waitFor()
+}
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
@@ -57,7 +103,7 @@ function buildBundle() {
     "createRoot(document.getElementById('root')).render(page.render());",
   ].join('\n'));
   const nm = path.join(DASHBOARD, 'node_modules');
-  execFileSync(path.join(nm, '.bin', 'esbuild'), [
+  execFileSync(process.execPath, [path.join(nm, 'esbuild', 'bin', 'esbuild'), 
     entry, '--bundle', '--format=esm', `--outfile=${bundle}`, '--jsx=automatic',
     `--alias:@hermes/plugin-sdk=${sdk}`,
     `--alias:react=${path.join(nm, 'react')}`,
@@ -100,9 +146,9 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
     page.on('pageerror', (error) => pageErrors.push(String(error)));
 
     const selectProject = async (projectId) => {
-      await page.getByRole('button', {name: 'Project context', exact: true}).click();
-      await page.getByRole('combobox', {name: 'Find project'}).fill(projectId);
-      await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: projectId, exact: true}).click();
+      await page.getByRole('button', {name: CONTEXT_LABEL, exact: true}).click();
+      await page.getByRole('combobox', {name: FIND_LABEL}).fill(projectId);
+      await page.getByRole('listbox', {name: PROJECTS_LABEL}).getByRole('option', {name: projectId, exact: true}).click();
       await page.locator('[data-project-view="board"]').click();
       await page.waitForTimeout(400);
     };
@@ -126,8 +172,8 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
       await drawer.locator('[data-action="plan-evaluate"]').click();
       await page.locator('[data-plan-evaluation]').waitFor({ timeout: 15000 });
       const note = await page.locator('[data-plan-evaluation]').textContent();
-      assert.match(note, /Passed/, `evaluation result not rendered: ${note}`);
-      assert.match(note, /measured 1/i, `measured value missing: ${note}`);
+      assert.match(note, new RegExp(escapeRegex(OUTCOME_LABEL.passed)), `evaluation result not rendered: ${note}`);
+      assert.match(note, MEASURED_NOTE(1), `measured value missing: ${note}`);
 
       const callsAfterEvaluate = await apiCalls();
       const evaluations = callsAfterEvaluate.filter((call) => /\/objectives\/\d+\/evaluate$/.test(call.path) && call.method === 'POST');
@@ -136,7 +182,7 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
       assert.equal(evaluations.filter((call) => /\/objectives\/2\/evaluate$/.test(call.path)).length, 0, 'other objectives must not be evaluated');
 
       // Evidence read-back reflects the new evaluation (it was Unknown before).
-      await page.waitForFunction(() => /Passed/.test(document.querySelector('[data-plan-row="objective"][data-plan-id="1"]')?.textContent ?? ''), null, { timeout: 10000 })
+      await page.waitForFunction((word) => new RegExp(word).test(document.querySelector('[data-plan-row="objective"][data-plan-id="1"]')?.textContent ?? ''), escapeRegex(OUTCOME_LABEL.passed), { timeout: 10000 })
         .catch(() => assert.fail('refreshed evidence did not show the evaluation outcome'));
 
       // Create a new objective through the "+ New" form.
@@ -172,10 +218,10 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
       // Archived items sit under "Show finished and archived", evidence intact.
       await objectiveRow(2).waitFor({ state: 'detached', timeout: 10000 });
       await page.check('[data-plan-show-archived]');
-      assert.match(await objectiveRow(2).textContent(), /Archived/, 'archived objective state did not render');
+      assert.match(await objectiveRow(2).textContent(), new RegExp(escapeRegex(ARCHIVED_LABEL)), 'archived objective state did not render');
       await objectiveRow(2).locator('.dy-plan-row-open').click();
       await page.locator('[data-plan-drawer="objective"][data-plan-drawer-id="2"]').waitFor();
-      assert.match(await drawer.locator('.dy-plan-facts').textContent(), /passed/i, 'archived objective lost its historical evidence');
+      assert.match(await drawer.locator('.dy-plan-facts').textContent(), new RegExp(escapeRegex(PASS_RATE_WORD)), 'archived objective lost its historical evidence');
       await page.uncheck('[data-plan-show-archived]');
     });
 
@@ -221,7 +267,7 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
       await page.click('[data-view-tab="Release focus"]');
       await page.waitForSelector('[data-kanban-screen][data-view="Release focus"]', { timeout: 10000 });
       assert.equal(await page.locator('[data-view-tab="Release focus"]').getAttribute('aria-pressed'), 'true');
-      assert.match(await page.locator('[data-kanban-status-filter]').innerText(), /In progress/, 'the stored status filter is shown');
+      assert.match(await page.locator('[data-kanban-status-filter]').innerText(), new RegExp(escapeRegex(STATUS_FILTER)), 'the stored status filter is shown');
       await page.waitForSelector('[data-work-card="HDY-12"]', { timeout: 10000 });
       const boardText = await page.locator('.dockyard-board-wrap').textContent();
       assert.match(boardText, /HDY-12/, 'recalled view must keep matching items visible');
@@ -264,12 +310,12 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
       await page.click('[data-tab="project"]');
       await page.click('[data-project-view="board"]');
       await page.waitForSelector('[data-view-tab="Release table"]', { timeout: 20000 });
-      assert.equal(await page.locator('[data-view-tab="All work"]').getAttribute('aria-pressed'), 'true', 'a reload starts on All work');
+      assert.equal(await page.locator(`[data-view-tab="${ALL_WORK}"]`).getAttribute('aria-pressed'), 'true', 'a reload starts on All work');
 
       // Project isolation: the views never leak into the other project.
       await selectProject('mobile-client');
       await page.waitForSelector('[data-project-dashboard="mobile-client"] [data-kanban-screen]', { timeout: 15000 });
-      assert.deepEqual(await tabs(), ['All work'], 'saved views leaked across projects');
+      assert.deepEqual(await tabs(), [ALL_WORK], 'saved views leaked across projects');
       await selectProject('payments-relaunch');
       await page.waitForSelector('[data-view-tab="Release table"]', { timeout: 15000 });
 
@@ -285,8 +331,8 @@ test('phase 4 real Desktop journeys: objectives, reports, saved views', { timeou
       await page.waitForSelector('[data-view-row="Release table"]', { state: 'detached', timeout: 10000 });
       const calls = await apiCalls();
       assert(calls.some((call) => call.method === 'DELETE' && /\/views\/Release%20table$/.test(call.path)), 'delete was not sent');
-      assert.deepEqual(await tabs(), ['All work', 'Release focus'], 'deleted view still listed');
-      assert.equal(await page.locator('[data-view-tab="All work"]').getAttribute('aria-pressed'), 'true', 'stale selection was not cleared after delete');
+      assert.deepEqual(await tabs(), [ALL_WORK, 'Release focus'], 'deleted view still listed');
+      assert.equal(await page.locator(`[data-view-tab="${ALL_WORK}"]`).getAttribute('aria-pressed'), 'true', 'stale selection was not cleared after delete');
     });
 
     assert.deepEqual(pageErrors, [], `page errors during journeys: ${pageErrors.join(' | ')}`);

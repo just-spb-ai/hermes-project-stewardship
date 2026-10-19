@@ -11,12 +11,12 @@ export function normaliseBulkImportText(text, mode) {
     try {
       rowsJson = JSON.parse(text)
       if (!Array.isArray(rowsJson)) throw new Error('JSON должен быть массивом')
-      if (rowsJson.some((row) => row?.initiative_ref)) throw new Error('initiative_ref is not supported by bulk import; link the item after import')
+      if (rowsJson.some((row) => row?.initiative_ref)) throw new Error('initiative_ref не поддерживается массовым импортом: свяжите элемент после импорта')
       const supported = new Set(['row_key', 'type', 'title', 'parent', 'parent_key', 'labels', 'estimate_days', 'due'])
       const unknown = rowsJson.flatMap((row) => Object.keys(row ?? {}).filter((key) => !supported.has(key)))
-      if (unknown.length) throw new Error(`Unsupported import fields: ${[...new Set(unknown)].join(', ')}`)
+      if (unknown.length) throw new Error(`Неподдерживаемые поля импорта: ${[...new Set(unknown)].join(', ')}`)
     } catch (bad) {
-      return { error: `Could not read that: ${bad?.message || bad}` }
+      return { error: `Не удалось прочитать: ${bad?.message || bad}` }
     }
     const header = 'row_key,type,title,parent_key,labels,estimate_days,due'
     const toCsvCell = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`

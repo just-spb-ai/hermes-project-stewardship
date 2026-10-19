@@ -16,6 +16,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { evaluatePlugin } from './test-support/load-plugin.mjs'
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { JSDOM } = require('jsdom')
@@ -86,7 +87,7 @@ async function mountApp({ holdDashboard = false } = {}) {
     calls,
     remembered,
     firstDashboard,
-    picker: () => [...doc.querySelectorAll('button')].find((el) => el.getAttribute('aria-label') === 'Project context')?.textContent,
+    picker: () => [...doc.querySelectorAll('button')].find((el) => el.getAttribute('aria-label') === SWITCHER_WORDS.context)?.textContent,
     click: async (selector) => {
       const element = doc.querySelector(selector)
       assert.ok(element, `missing ${selector}`)
@@ -124,7 +125,7 @@ test('a tab change before the first pick reuses the same answer and still ends w
   const app = await mountApp()
   try {
     await app.settle()
-    assert.equal(app.picker(), 'Choose project', 'no pick until the remembered project is known')
+    assert.equal(app.picker(), SWITCHER_WORDS.empty, 'no pick until the remembered project is known')
     await app.click('[data-tab="project"]')
     app.remembered.resolve({ project_id: 'alpha' })
     await app.settle(80)
@@ -141,7 +142,7 @@ test('with nothing remembered, the first pick is the default project and nothing
   try {
     app.remembered.resolve({ project_id: null })
     await app.settle(80)
-    assert.notEqual(app.picker(), 'Choose project', 'a project is picked')
+    assert.notEqual(app.picker(), SWITCHER_WORDS.empty, 'a project is picked')
     assert.equal(saves(app), 0, 'the automatic first pick is not saved')
   } finally {
     await app.dispose()

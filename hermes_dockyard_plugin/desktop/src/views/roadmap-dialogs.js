@@ -10,6 +10,7 @@ import { jsxs } from '../runtime/react.js'
 import { Button } from '../lib/ui.js'
 import { useDialogFocusManager } from '../lib/ui.js'
 import { loadRoadmapData } from '../data/loaders.js'
+import { ROADMAP_WORDS } from '../lib/panel-words.js'
 
 // v42 placement: one parent per level. The Roadmap only shows and places; each
 // item's own screen still owns create/edit. The human picks the parent from the
@@ -71,8 +72,8 @@ export function PlaceDialog({ kind, itemId, projectId, projectLabel, onClose, on
     try {
       await api(spec.path(projectId, itemId), { method: 'PUT', body: { parent_id: nextParent } })
       emitToast('success', nextParent === null
-        ? `Removed the parent of “${itemId}”. It is now not placed yet.`
-        : `Placed “${itemId}” under “${parentLabel}”.`)
+        ? `Родитель у «${itemId}» снят. Элемент снова не размещён.`
+        : `«${itemId}» размещён под «${parentLabel}».`)
       onDone()
     } catch (failure) {
       setError(String(failure?.message ?? failure))
@@ -84,23 +85,23 @@ export function PlaceDialog({ kind, itemId, projectId, projectLabel, onClose, on
     jsx('select', { id, value, onChange: (event) => onChange(event.target.value), children: options }),
   ] })
   const choose = jsxs('div', { className: 'dy-rm-modal-body', children: [
-    candidates === null && !error ? jsx('p', { role: 'status', children: 'Loading choices…' }) : null,
+    candidates === null && !error ? jsx('p', { role: 'status', children: 'Загрузка вариантов…' }) : null,
     candidates && candidates.length === 0
-      ? jsx('p', { children: `Nothing to place it under: this project has no candidates yet. Create one on the project screen first.` })
+      ? jsx('p', { children: `Разместить не под чем: у этого проекта пока нет подходящих элементов. Сначала создайте его на экране проекта.` })
       : null,
     candidates && candidates.length > 0
-      ? field('dy-rm-place-choice', spec.itemLabel === 'Milestone' ? 'Инициатива'
-          : spec.itemLabel === 'Objective' ? 'Веха'
-          : spec.itemLabel === 'Goal' ? 'Задача-цель' : 'Цель',
+      ? field('dy-rm-place-choice', spec.itemLabel === 'Веха' ? 'Инициатива'
+          : spec.itemLabel === 'Задача-цель' ? 'Веха'
+          : spec.itemLabel === 'Цель' ? 'Задача-цель' : 'Цель',
           parent, setParent, [
-            jsx('option', { value: '', children: 'Choose…' }, ''),
+            jsx('option', { value: '', children: 'Выберите…' }, ''),
             ...candidates.map((row) => jsx('option', { value: row.id, children: row.label }, row.id)),
           ])
       : null,
     jsx('p', { className: 'dy-rm-modal-error', role: 'alert', children: error }),
   ]})
   const confirm = jsxs('div', { className: 'dy-rm-modal-body', 'data-rm-place-confirm': true, children: [
-    jsx('p', { className: 'dy-rm-confirm', children: `Place the ${spec.itemLabel.toLowerCase()} “${itemId}” under “${parentLabel}”?` }),
+    jsx('p', { className: 'dy-rm-confirm', children: `Разместить «${itemId}» под «${parentLabel}»?` }),
     jsx('p', { className: 'dy-rm-confirm', children: 'Это запишет одно размещение и запись аудита под вашим именем.' }),
     jsx('p', { className: 'dy-rm-modal-error', role: 'alert', children: error }),
   ]})
@@ -112,7 +113,7 @@ export function PlaceDialog({ kind, itemId, projectId, projectLabel, onClose, on
         jsxs('div', { children: [
           jsx('p', { className: 'dockyard-meta', children: 'Разместить' }),
           jsx('h3', { children: spec.title }),
-          jsx('p', { children: `Project ${projectLabel}` }),
+          jsx('p', { children: `Проект ${projectLabel}` }),
         ] }),
         jsx(Button, { onClick: onClose, ariaLabel: 'Закрыть диалог размещения', children: '×' }),
       ] }),
@@ -140,7 +141,7 @@ export function ConfirmDeliveredDialog({ projectId, ref, title, onClose, onDone 
       await api(
         `/projects/${encodeURIComponent(projectId)}/initiatives/${encodeURIComponent(ref)}/confirm-delivered`,
         { method: 'POST', body: {} })
-      emitToast('success', `“${title}” confirmed as delivered.`)
+      emitToast('success', `«${title}»: поставка подтверждена.`)
       onDone()
     } catch (failure) {
       // A 409 (a milestone is not reached) shows its message in plain words.
@@ -151,23 +152,23 @@ export function ConfirmDeliveredDialog({ projectId, ref, title, onClose, onDone 
   return jsx('div', {
     className: 'dy-rm-modal-backdrop', 'data-rm-confirm-dialog': true,
     onKeyDown: (event) => { if (event.key === 'Escape') { event.stopPropagation(); onClose() } },
-    children: jsxs('section', { className: 'dy-rm-modal', role: 'dialog', 'aria-modal': true, 'aria-label': 'Подтвердить поставку', children: [
+    children: jsxs('section', { className: 'dy-rm-modal', role: 'dialog', 'aria-modal': true, 'aria-label': ROADMAP_WORDS.confirmDelivered, children: [
       jsxs('header', { className: 'dy-rm-modal-head', children: [
         jsxs('div', { children: [
           jsx('p', { className: 'dockyard-meta', children: 'Подтвердить' }),
-          jsx('h3', { children: 'Подтвердить поставку' }),
-          jsx('p', { children: `Project ${projectId}` }),
+          jsx('h3', { children: ROADMAP_WORDS.confirmDelivered }),
+          jsx('p', { children: `Проект ${projectId}` }),
         ] }),
-        jsx(Button, { onClick: onClose, ariaLabel: 'Закрыть диалог подтверждения', children: '×' }),
+        jsx(Button, { onClick: onClose, ariaLabel: ROADMAP_WORDS.closeConfirmDialog, children: '×' }),
       ] }),
       jsxs('div', { className: 'dy-rm-modal-body', 'data-rm-confirm-body': true, children: [
-        jsx('p', { className: 'dy-rm-confirm', children: `Confirm “${title}” as delivered? Every milestone is reached.` }),
+        jsx('p', { className: 'dy-rm-confirm', children: `Подтвердить поставку «${title}»? Все вехи достигнуты.` }),
         jsx('p', { className: 'dy-rm-confirm', children: 'Это фиксирует поставку под вашим именем и запись аудита.' }),
         jsx('p', { className: 'dy-rm-modal-error', role: 'alert', children: error }),
       ] }),
       jsxs('div', { className: 'dy-rm-modal-actions', children: [
         jsx(Button, { disabled: busy, onClick: onClose, children: 'Отмена' }),
-        jsx(Button, { variant: 'primary', disabled: busy, onClick: submit, children: busy ? 'Подтверждение…' : 'Подтвердить поставку' }),
+        jsx(Button, { variant: 'primary', disabled: busy, onClick: submit, children: busy ? 'Подтверждение…' : ROADMAP_WORDS.confirmDelivered }),
       ] }),
     ] }),
   })
@@ -187,7 +188,7 @@ export function WaiveDialog({ kind, itemId, itemLabel, projectId, onClose, onDon
       await api(
         `/projects/${encodeURIComponent(projectId)}/waivers/${encodeURIComponent(kind)}/${encodeURIComponent(itemId)}`,
         { method: 'PUT', body: { reason: reason.trim() } })
-      emitToast('success', `“${itemLabel}” is marked no longer required.`)
+      emitToast('success', `«${itemLabel}»: больше не требуется.`)
       onDone()
     } catch (failure) {
       setError(String(failure?.message ?? failure))
@@ -202,12 +203,12 @@ export function WaiveDialog({ kind, itemId, itemLabel, projectId, onClose, onDon
         jsxs('div', { children: [
           jsx('p', { className: 'dockyard-meta', children: 'Больше не требуется' }),
           jsx('h3', { children: 'Отметить как больше не требуемое' }),
-          jsx('p', { children: `Project ${projectId}` }),
+          jsx('p', { children: `Проект ${projectId}` }),
         ] }),
         jsx(Button, { onClick: onClose, ariaLabel: 'Закрыть диалог отказа', children: '×' }),
       ] }),
       jsxs('div', { className: 'dy-rm-modal-body', 'data-rm-waive-body': true, children: [
-        jsx('p', { className: 'dy-rm-confirm', children: `“${itemLabel}” stops blocking the work above it, and counts as settled. Its history stays.` }),
+        jsx('p', { className: 'dy-rm-confirm', children: `«${itemLabel}» перестаёт блокировать работу выше и считается закрытым. История сохраняется.` }),
         jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [
           jsx('span', { children: 'Почему это больше не требуется?' }),
           jsx('textarea', {
@@ -221,7 +222,7 @@ export function WaiveDialog({ kind, itemId, itemLabel, projectId, onClose, onDon
       ] }),
       jsxs('div', { className: 'dy-rm-modal-actions', children: [
         jsx(Button, { disabled: busy, onClick: onClose, children: 'Отмена' }),
-        jsx(Button, { variant: 'primary', disabled: busy || !ready, onClick: submit, children: busy ? 'Marking…' : 'Отметить как больше не требуемое' }),
+        jsx(Button, { variant: 'primary', disabled: busy || !ready, onClick: submit, children: busy ? 'Отмечаем…' : 'Отметить как больше не требуемое' }),
       ] }),
     ] }),
   })

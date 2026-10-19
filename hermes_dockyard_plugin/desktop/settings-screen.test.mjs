@@ -2,15 +2,26 @@
 // configuration panel keeps every field, and three uppercase category labels
 // (General / Autonomy & verification / Release & notifications) group the grid.
 // Runs against the disposable real backend the suite provides (STEWARD_DESKTOP_URL).
+//
+// The labels a person reads are not spelled out here: the panel publishes them
+// (the category labels in project/panels.js, the switcher's names in
+// lib/panel-words.js) and this journey reads them.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { all, one, pickProject } from './test-support/src-words.mjs'
 
 const require = createRequire(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'dashboard', 'package.json'))
 const { chromium } = require('playwright')
 const BASE = process.env.STEWARD_DESKTOP_URL || 'http://127.0.0.1:19500/desktop'
+
+// The three category labels the form publishes, uppercased as the stylesheet renders them.
+const CATEGORY_LABELS = all('src/project/panels.js', /dockyard-settings-category-label', children: '([^']+)'/)
+  .map((label) => label.toUpperCase())
+// The form's own label for the open-initiatives field.
+const MAX_OPEN = one('src/project/panels.js', /children: '([^']+)' \}\),\s*jsx\('input', \{ type: 'number', min: 1, max: 25/)
 
 test('C8 Settings: three uppercase category labels over the unchanged configuration fields', { timeout: 180000 }, async () => {
   const browser = await chromium.launch({ headless: true })
@@ -20,9 +31,7 @@ test('C8 Settings: three uppercase category labels over the unchanged configurat
   const project = 'payments-relaunch'
   try {
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(project)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: project, exact: true }).click()
+    await pickProject(page, project)
     await page.waitForTimeout(1200)
     // Sahil 04/10: the top-bar tab is App settings now; a project's settings live in the project.
     await page.locator('[data-tab="project"]').click()
@@ -31,7 +40,7 @@ test('C8 Settings: three uppercase category labels over the unchanged configurat
 
     // The three signed category labels render (CSS uppercases them).
     const labels = await page.locator('[data-project-settings-form] .dockyard-settings-category-label').allInnerTexts()
-    assert.deepEqual(labels, ['GENERAL', 'AUTONOMY & VERIFICATION', 'RELEASE & NOTIFICATIONS'])
+    assert.deepEqual(labels, CATEGORY_LABELS)
 
     // The fields themselves are unchanged — every data-setting-field hook survives.
     for (const hook of ['mission', 'lead-profile', 'members', 'autonomy', 'require-tests', 'soak-hours', 'digest']) {
@@ -58,15 +67,13 @@ test('Q3 Settings: "Maximum open initiatives" shows 5 when nothing is saved and 
   page.on('pageerror', (error) => errors.push(String(error)))
   const openSettings = async (project) => {
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(project)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: project, exact: true }).click()
+    await pickProject(page, project)
     await page.waitForTimeout(1200)
     // Sahil 04/10: the top-bar tab is App settings now; a project's settings live in the project.
     await page.locator('[data-tab="project"]').click()
     await page.locator('[data-project-view="settings"]').click()
     await page.locator('[data-project-settings-form]').waitFor({ timeout: 8000 })
-    return page.locator('[data-project-settings-form]').getByLabel('Maximum open initiatives').inputValue()
+    return page.locator('[data-project-settings-form]').getByLabel(MAX_OPEN).inputValue()
   }
   try {
     assert.equal(await openSettings('mobile-client'), '5', 'nothing saved: the backend default, 5')

@@ -14,7 +14,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
-import { chatTargets } from './src/project/chat.js'
+import { CHAT_MESSAGES, chatTargetLabel, chatTargets } from './src/project/chat.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -81,7 +81,7 @@ test('Chat: the team is listed lead first; picking a bot links the chat and open
     await items.first().waitFor(MARKER)
     assert.deepEqual(await items.evaluateAll((els) => els.map((el) => el.getAttribute('data-plan-menu-item'))),
       targets.map((target) => target.profile), 'the team, lead first')
-    assert.equal(await items.first().innerText(), `${targets[0].profile} (lead)`)
+    assert.equal(await items.first().innerText(), chatTargetLabel(targets[0]))
 
     const other = targets[1].profile
     const linked = page.waitForResponse((response) => response.url().endsWith(`/projects/${encodeURIComponent(id)}/chat-links`)
@@ -93,7 +93,7 @@ test('Chat: the team is listed lead first; picking a bot links the chat and open
     await page.waitForFunction(() => (window.__hostNewChatCalls ?? []).length === 1)
     assert.deepEqual(await page.evaluate(() => window.__hostNewChatCalls),
       [{ target: routes.find((route) => route.profile === other), options: null }], 'one chat, on the bot\'s route')
-    await page.locator('.dockyard-toast', { hasText: `Chat with ${other} opened.` }).waitFor(MARKER)
+    await page.locator('.dockyard-toast', { hasText: CHAT_MESSAGES.opened(other) }).waitFor(MARKER)
     assert.equal(await page.locator('.dockyard-toast').count(), 1, 'one toast says what happened')
   })
 })

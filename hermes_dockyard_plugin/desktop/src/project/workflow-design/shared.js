@@ -15,7 +15,7 @@ import { CHECK_WORDS } from './standins.js'
 
 export const PreviewTag = ({ children = 'Предпросмотр' }) => jsx('span', { className: 'dy-wfd-preview-tag', children })
 export const PracticeAiNote = () => jsxs('p', { className: 'dy-wfd-ai-note', 'data-wfd-practice-ai': true, children: [
-  jsx(PreviewTag, { children: 'Практика ИИ' }), ' Canned answers for this review; no model is called.',
+  jsx(PreviewTag, { children: 'Практика ИИ' }), ' Готовые ответы для этой проверки; модель не вызывается.',
 ] })
 
 // Steps in the order they run (each step after the steps it waits for).
@@ -36,11 +36,11 @@ export function runOrder(nodes) {
 // built-in template's steps say "the worker" or "the checker".
 export function stepNotes(node, nodes, roleOf = null) {
   const notes = []
-  if (node.human_gate) notes.push('your sign-off')
-  if (node.loop) notes.push(`repeats, up to ${node.loop.max_iterations} rounds`)
-  if (node.when) notes.push(`only if "${nodes.find((n) => (n.id ?? n.node_id) === node.when.node)?.title ?? node.when.node}" ${node.when.status === 'blocked' ? 'gets stuck' : 'is done'}`)
-  if (node.phase_team) notes.push(`done by ${node.phase_team}`)
-  else if (roleOf && !node.human_gate && roleOf(node)) notes.push(`the ${roleOf(node)}`)
+  if (node.human_gate) notes.push('ваше подписание')
+  if (node.loop) notes.push(`повтор, до ${node.loop.max_iterations} раундов`)
+  if (node.when) notes.push(`только если «${nodes.find((n) => (n.id ?? n.node_id) === node.when.node)?.title ?? node.when.node}» ${node.when.status === 'blocked' ? 'застревает' : 'выполнено'}`)
+  if (node.phase_team) notes.push(`выполняет ${node.phase_team}`)
+  else if (roleOf && !node.human_gate && roleOf(node)) notes.push(roleOf(node) === 'checker' ? 'проверяющий' : 'исполнитель')
   return notes
 }
 
@@ -54,7 +54,7 @@ export function StepsPreview({ nodes, roleOf = null }) {
 
 // Use a template: the built-in templates in their groups, then the ones saved
 // in the library. A pick is { source: 'builtin' | 'library', item }.
-const stepCount = (n) => `${n} step${n === 1 ? '' : 's'}`
+const stepCount = (n) => `шагов: ${n}`
 const matches = (words, ...fields) => !words || fields.some((f) => String(f ?? '').toLowerCase().includes(words))
 // The templates sit on tabs, one group at a time (Sahil 08/10/2026: tabs, not
 // one long list whose heading changed as it scrolled). Each tab shows its
@@ -88,7 +88,7 @@ export function TemplatePicker({ builtins, groups, saved, value, onPick }) {
   }
   const item = (source, t, withGroup) => {
     const nodes = source === 'builtin' ? t.nodes : t.definition?.nodes ?? []
-    const where = withGroup ? `${source === 'builtin' ? labelOf(t.group) : 'Saved'} · ` : ''
+    const where = withGroup ? `${source === 'builtin' ? labelOf(t.group) : 'Сохранено'} · ` : ''
     return jsxs('button', {
       type: 'button', role: 'radio', 'aria-checked': isPicked(source, t.name), [source === 'builtin' ? 'data-wfd-builtin' : 'data-wfd-template']: t.name,
       className: `dy-wfd-tpl-item${isPicked(source, t.name) ? ' active' : ''}`, onClick: () => onPick({ source, item: t }),
@@ -102,9 +102,9 @@ export function TemplatePicker({ builtins, groups, saved, value, onPick }) {
   let note = null
   if (words) {
     items = [...builtins.filter(builtinHit).map((t) => item('builtin', t, true)), ...(saved ?? []).filter(savedHit).map((t) => item('library', t, true))]
-    if (!items.length) note = jsx('span', { className: 'dockyard-meta', role: 'status', children: `No templates match "${filter.trim()}".` })
+    if (!items.length) note = jsx('span', { className: 'dockyard-meta', role: 'status', children: `Нет шаблонов по запросу «${filter.trim()}».` })
   } else if (current.id === 'library') {
-    if (saved === null) note = jsx('span', { className: 'dockyard-meta', role: 'status', children: 'Loading saved templates…' })
+    if (saved === null) note = jsx('span', { className: 'dockyard-meta', role: 'status', children: 'Загрузка сохранённых шаблонов…' })
     else if (!saved.length) note = jsx('span', { className: 'dockyard-meta', 'data-wfd-no-templates': true, children: 'Пока ничего не сохранено. Чтобы сделать процесс шаблоном, сохраните его для всех проектов в библиотеке.' })
     else items = saved.map((t) => item('library', t, false))
   } else {
@@ -127,7 +127,7 @@ export function TemplatePicker({ builtins, groups, saved, value, onPick }) {
     }) }),
     jsxs('div', {
       id: 'wfd-tpl-panel', className: 'dy-wfd-tpl-panel', 'data-wfd-template-panel': current ? current.id : 'matches',
-      role: current ? 'tabpanel' : 'region', 'aria-labelledby': current ? `wfd-tpl-tab-${current.id}` : undefined, 'aria-label': current ? undefined : `Templates matching ${filter.trim()}`,
+      role: current ? 'tabpanel' : 'region', 'aria-labelledby': current ? `wfd-tpl-tab-${current.id}` : undefined, 'aria-label': current ? undefined : `Шаблоны по запросу «${filter.trim()}»`,
       children: [
         items.length ? jsx('div', { className: 'dy-wfd-tpl-list', role: 'radiogroup', 'aria-label': current ? current.title : 'Подходящие шаблоны', children: items }) : null,
         note,
@@ -140,14 +140,14 @@ export function ImportResult({ result }) {
   if (!result) return null
   if (result.kind === 'invalid') return jsx('p', { className: 'dy-wfd-error', role: 'alert', 'data-wfd-import-error': true, children: result.reason })
   if (result.kind === 'dockyard') return jsxs('div', { className: 'dy-wfd-import-ok', role: 'status', 'data-wfd-import': 'dockyard', children: [
-    jsx('p', { children: `A Project Stewardship workflow${result.name ? ` ("${result.name}")` : ''} with ${result.nodes.length} step${result.nodes.length === 1 ? '' : 's'}. It imports exactly.` }),
+    jsx('p', { children: `Процесс Project Stewardship${result.name ? ` ("${result.name}")` : ''}: шагов ${result.nodes.length}. Импортируется точно.` }),
     ...result.warnings.map((w) => jsx('p', { className: 'dockyard-meta', children: w }, w)),
     jsx(StepsPreview, { nodes: result.nodes }),
   ] })
   return jsxs('div', { className: 'dy-wfd-import-ok', role: 'status', 'data-wfd-import': 'other', children: [
     jsx(PracticeAiNote, {}),
-    jsx('p', { children: `This looks like ${result.format}. The AI drafted ${result.nodes.length} step${result.nodes.length === 1 ? '' : 's'} from it.` }),
-    jsx('p', { className: 'dockyard-meta', children: `It could not carry over: ${result.notCarried.join('; ')}.` }),
+    jsx('p', { children: `Это похоже на ${result.format}. ИИ набросал по нему шагов: ${result.nodes.length}.` }),
+    jsx('p', { className: 'dockyard-meta', children: `Не удалось перенести: ${result.notCarried.join('; ')}.` }),
     jsx(StepsPreview, { nodes: result.nodes }),
   ] })
 }
@@ -255,7 +255,7 @@ export function RepeatPopover({ node, anchor, check: savedCheck, onSave, onStop,
   const top = below + height <= viewH - 90 ? below : Math.max(8, (anchor?.top ?? 120) - 6 - height)
   const run = async (action) => {
     setBusy(true); setError(null)
-    try { await action(); onClose() } catch (failure) { setError(`Couldn't save: ${String(failure?.message ?? failure).replace(/^\d{3}:\s*/, '')}`); setBusy(false) }
+    try { await action(); onClose() } catch (failure) { setError(`Не удалось сохранить: ${String(failure?.message ?? failure).replace(/^\d{3}:\s*/, '')}`); setBusy(false) }
   }
   const save = () => {
     const n = Number(rounds)
@@ -263,10 +263,10 @@ export function RepeatPopover({ node, anchor, check: savedCheck, onSave, onStop,
     run(() => onSave({ rounds: n, check }))
   }
   return jsxs('div', { className: 'dy-wfd-repeat', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'wfd-repeat-title', 'data-wfd-repeat': node.node_id ?? node.id, style: { left: `${left}px`, top: `${top}px`, width: `${width}px` }, children: [
-    jsx('h3', { id: 'wfd-repeat-title', children: `Repeat "${node.title}"` }),
+    jsx('h3', { id: 'wfd-repeat-title', children: `Повтор: «${node.title}»` }),
     jsxs('label', { children: [jsx('span', { children: 'Не более столько раундов, затем оно спросит вас' }), jsx('input', { type: 'number', min: 1, max: 10, value: rounds, 'aria-invalid': error ? 'true' : 'false', 'data-wfd-repeat-rounds': true, onChange: (e) => setRounds(e.target.value) })] }),
     jsxs('label', { children: [jsxs('span', { children: ["Как проверяется ", jsx(PreviewTag, {})] }), jsx('select', { value: check.by, 'data-wfd-repeat-check': true, onChange: (e) => setCheck({ ...check, by: e.target.value }), children: Object.entries(CHECK_WORDS).map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }),
-    check.by === 'judge' ? jsxs('label', { children: [jsx('span', { children: 'Готово, когда' }), jsx('input', { value: check.doneWhen, placeholder: 'e.g. every test passes', 'data-wfd-repeat-done-when': true, onChange: (e) => setCheck({ ...check, doneWhen: e.target.value }) })] }) : null,
+    check.by === 'judge' ? jsxs('label', { children: [jsx('span', { children: 'Готово, когда' }), jsx('input', { value: check.doneWhen, placeholder: 'напр. все тесты проходят', 'data-wfd-repeat-done-when': true, onChange: (e) => setCheck({ ...check, doneWhen: e.target.value }) })] }) : null,
     jsx('p', { className: 'dockyard-meta', children: 'Застрявший раунд начнётся заново; после последнего — спросит тебя.' }),
     error ? jsx('p', { className: 'dy-wfd-error', role: 'alert', children: error }) : null,
     jsxs('div', { className: 'dy-wfd-repeat-actions', children: [

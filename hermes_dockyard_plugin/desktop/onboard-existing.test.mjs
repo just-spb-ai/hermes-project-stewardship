@@ -8,6 +8,26 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { readFileSync } from 'node:fs'
+import { CONSOLE_TABS, SWITCHER_WORDS } from './src/lib/panel-words.js'
+// The words a person reads are read from the source module that renders them,
+// never spelled out here: the panel stays translatable without touching this test.
+const sourceText = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8')
+const rendered = (text, pattern, what) => {
+  const found = text.match(pattern)
+  if (!found) throw new Error(`src no longer renders ${what}`)
+  return found[1]
+}
+const wordRe = (word) => new RegExp(String(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+const UI_SRC = sourceText('./src/lib/ui.js')
+const NEW_PROJECT = rendered(UI_SRC, /action: 'open-onboarding',[\s\S]*?ariaLabel: '([^']+)'/, 'the New project action')
+const ONBOARD_EXISTING = rendered(UI_SRC, /action: 'open-onboard-existing',[\s\S]*?ariaLabel: '([^']+)'/, 'the Onboard existing project action')
+const CLOSE_ONBOARDING = rendered(UI_SRC, /className: 'dockyard-modal-close', 'aria-label': '([^']+)'/, 'the close-onboarding control')
+const ONBOARD_HEADING = rendered(UI_SRC, /id: 'dockyard-onboarding-title', children: '([^']+)'/, 'the onboarding heading')
+const CARD_LABELS = UI_SRC.match(/className: 'dockyard-card-label', children: intent === 'existing' \? '([^']+)' : '([^']+)'/)
+if (!CARD_LABELS) throw new Error('src no longer labels the onboarding cards')
+const cardLabelFor = (intent) => (intent === 'existing' ? CARD_LABELS[1] : CARD_LABELS[2])
+const SWITCH_PROJECT = rendered(sourceText('./src/lib/project-switcher.js'), /role: 'dialog', 'aria-label': '([^']+)'/, 'the switcher dialog')
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 
@@ -22,8 +42,8 @@ async function expectWizard(page, intent) {
   // before its discovery returned: 5 labels against 11 (gate a44f389, 11/10).
   await wizard(page).locator('[data-discovered-projects], [data-discovery-failed]').first().waitFor()
   assert.equal(await wizard(page).getAttribute('data-onboarding-intent'), intent)
-  assert.equal(await wizard(page).locator('.dockyard-onboarding-head .dockyard-card-label').innerText(), intent === 'existing' ? 'EXISTING PROJECT' : 'NEW PROJECT')
-  assert.equal(await page.getByRole('heading', { name: 'Bring a project into Project Stewardship' }).count(), 1)
+  assert.equal(await wizard(page).locator('.dockyard-onboarding-head .dockyard-card-label').innerText(), cardLabelFor(intent))
+  assert.equal(await page.getByRole('heading', { name: ONBOARD_HEADING }).count(), 1)
   return fieldLabels(page)
 }
 
@@ -44,51 +64,51 @@ test('Onboard existing project: a secondary button beside New project, and in th
     assert.equal(await page.getByRole('tab', { name: /^Onboard/ }).count(), 0, 'the Onboard tab is gone')
     const actions = page.locator('.dockyard-console-actions > button')
     assert.deepEqual(await actions.evaluateAll((nodes) => nodes.map((node) => [node.getAttribute('aria-label'), node.innerText.trim(), node.classList.contains('primary')])),
-      [['New project', 'New project', true], ['Onboard existing project', 'Onboard existing project', false]])
+      [[NEW_PROJECT, NEW_PROJECT, true], [ONBOARD_EXISTING, ONBOARD_EXISTING, false]])
 
     // Onboard existing project opens the wizard; Escape closes it and focus goes back to the button.
-    await page.getByRole('button', { name: 'Onboard existing project', exact: true }).click()
+    await page.getByRole('button', { name: ONBOARD_EXISTING, exact: true }).click()
     const existingFields = await expectWizard(page, 'existing')
     await page.keyboard.press('Escape')
     await wizard(page).waitFor({ state: 'detached' })
-    assert.equal(await focusedName(page), 'Onboard existing project')
+    assert.equal(await focusedName(page), ONBOARD_EXISTING)
 
     // New project opens the same wizard: the same steps and fields, only the label differs.
-    await page.getByRole('button', { name: 'New project', exact: true }).click()
+    await page.getByRole('button', { name: NEW_PROJECT, exact: true }).click()
     assert.deepEqual(await expectWizard(page, 'new'), existingFields)
     assert.ok(existingFields.length > 0, 'the wizard shows its first step')
-    await page.getByRole('button', { name: 'Close onboarding' }).click()
+    await page.getByRole('button', { name: CLOSE_ONBOARDING }).click()
     await wizard(page).waitFor({ state: 'detached' })
 
     // The switcher's menu: the projects, then New project, then Onboard existing project.
-    const trigger = page.getByRole('button', { name: 'Project context', exact: true })
+    const trigger = page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true })
     await trigger.click()
-    const popover = page.getByRole('dialog', { name: 'Switch project' })
+    const popover = page.getByRole('dialog', { name: SWITCH_PROJECT })
     await popover.waitFor()
     assert.deepEqual(await popover.locator('.dy-sw-foot button').evaluateAll((nodes) => nodes.map((node) => node.innerText.trim())),
-      ['New project', 'Onboard existing project'])
+      [NEW_PROJECT, ONBOARD_EXISTING])
     assert.ok(await popover.evaluate((root) => {
       const list = root.querySelector('[role="listbox"]')
       const foot = root.querySelector('.dy-sw-foot')
       return Boolean(list && foot && (list.compareDocumentPosition(foot) & Node.DOCUMENT_POSITION_FOLLOWING))
     }), 'the two actions come after the project list')
 
-    await popover.getByRole('button', { name: 'Onboard existing project', exact: true }).click()
+    await popover.getByRole('button', { name: ONBOARD_EXISTING, exact: true }).click()
     await popover.waitFor({ state: 'detached' })
     await expectWizard(page, 'existing')
     await page.keyboard.press('Escape')
     await wizard(page).waitFor({ state: 'detached' })
-    assert.equal(await focusedName(page), 'Project context', 'focus returns to the switcher')
+    assert.equal(await focusedName(page), SWITCHER_WORDS.context, 'focus returns to the switcher')
 
     await trigger.click()
-    await popover.getByRole('button', { name: 'New project', exact: true }).click()
+    await popover.getByRole('button', { name: NEW_PROJECT, exact: true }).click()
     await expectWizard(page, 'new')
     await page.keyboard.press('Escape')
     await wizard(page).waitFor({ state: 'detached' })
 
     // Narrow: both buttons stay, icon-only, with their names as labels and tooltips.
     await page.setViewportSize({ width: 700, height: 900 })
-    for (const name of ['New project', 'Onboard existing project']) {
+    for (const name of [NEW_PROJECT, ONBOARD_EXISTING]) {
       const button = page.getByRole('button', { name, exact: true }).first()
       assert.ok(await button.isVisible(), `${name} is visible when narrow`)
       assert.equal(await button.getAttribute('title'), name)
@@ -108,7 +128,7 @@ test('Switcher A only: the prototype directions and Design review bar are gone',
     page.setDefaultTimeout(10000)
     // The review links the prototype answered to now change nothing.
     await page.goto(`${BASE}?switcher=c&review=1`, { waitUntil: 'networkidle' })
-    await page.getByRole('button', { name: 'Project context', exact: true }).waitFor()
+    await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).waitFor()
     assert.equal(await page.locator('.dy-sw-slash').count(), 1, 'the breadcrumb')
     for (const gone of ['.dy-review-bar', '[data-switcher-variant]', '.dy-sw-strip', '.dy-sw-chip', '.dy-sw-kbd']) {
       assert.equal(await page.locator(gone).count(), 0, `${gone} is gone`)

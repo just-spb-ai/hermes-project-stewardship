@@ -17,14 +17,14 @@ const CHECK = 'stewardship.cycle.started'
 const HEALTH_ORDER = ['critical', 'degraded', 'watch', 'healthy']
 // The same words as healthDetails in lib/ui.js (pinned by the unit test).
 export const HEALTH_WORD = Object.freeze({ healthy: 'Здоров', watch: 'Наблюдение', degraded: 'Деградация', critical: 'Критично', unknown: 'Не проверено' })
-const TRIGGER_WORD = Object.freeze({
+export const TRIGGER_WORD = Object.freeze({
   manual: 'Запуск по запросу', gateway: 'Запуск из чата', webhook: 'Запуск вебхуком',
   internal: 'Запуск управлением проектами', schedule: 'Запуск по расписанию', scheduled: 'Запуск по расписанию',
 })
 export const EVENT_FILTERS = Object.freeze([['all', 'Все события'], ['initiatives', 'Инициативы'], ['work', 'Работа'], ['health', 'Здоровье и проверки']])
 
 // Initiative events. `note` names the payload field shown under the title.
-const INITIATIVE = Object.freeze({
+export const INITIATIVE = Object.freeze({
   'initiative.proposed': { label: 'Инициатива предложена', icon: 'sparkles', effect: ['Новое предложение', 'info'], note: 'risk' },
   'initiative.approval_required': { label: 'Одобрение запрошено', icon: 'hand', effect: ['Ожидает решения', 'warning'], note: 'risk' },
   'initiative.approved': { label: 'Инициатива одобрена', icon: 'circle-check', effect: ['Работа может начаться', 'success'] },
@@ -36,6 +36,48 @@ const INITIATIVE = Object.freeze({
   'initiative.regressed': { label: 'Инициатива откатилась', icon: 'triangle-alert', effect: ['Результат откатился', 'danger'] },
   'initiative.ready_to_confirm': { label: 'Инициатива готова к подтверждению', icon: 'circle-check', effect: ['Человек может подтвердить поставку', 'info'] },
 })
+
+// The words this module puts on a row, apart from a type's own spec above, in
+// one place: a translation is one edit here, and the unit test
+// (activity-vocab.test.mjs) reads this list instead of spelling the words out
+// a second time. The strings are the ones the screen already shows.
+export const EVENT_WORDS = Object.freeze({
+  system: 'Система',
+  unknownEvent: 'Событие проекта',
+  // Russian needs three forms, so the counted phrase is built here.
+  contradiction: Object.freeze({ one: 'противоречие', few: 'противоречия', many: 'противоречий' }),
+  scorePrefix: 'Оценка',
+  risk: 'риск',
+  health: Object.freeze({
+    label: 'Здоровье изменилось', better: 'Здоровье лучше', worse: 'Здоровье хуже', first: 'Первичное чтение',
+    criticalLabel: 'Проект критичен', criticalTitle: 'Здоровье критическое', frozen: 'Изменения заморожены автоматически',
+    verificationLabel: 'Верификация не пройдена', noContradictions: 'Доказательства не подтвердились',
+    found: 'Найдено', evidenceDisagrees: 'Доказательства противоречат',
+    reasoningLabel: 'Шаг предложения завершился ошибкой', reasoningTitle: 'Шаг предложения остановился с ошибкой', noProposals: 'Предложений нет',
+    checkLabel: 'Проверка стюардшипа', runPrefix: 'Запуск:', run: 'Прогон',
+    blockedLabel: 'Изменения заблокированы', blockedTitle: 'Ничего не изменено',
+  }),
+  initiative: Object.freeze({
+    resubmitted: 'Отправлено на одобрение заново', openInbox: 'Открыть во «Входящих одобрениях»', openVision: 'Открыть в «Видении»',
+  }),
+  work: Object.freeze({
+    assigned: 'Работа назначена', unassigned: 'Работа не назначена', assignedTo: 'Исполнитель:',
+    owner: 'Есть владелец', noBot: 'Ни один бот его не подхватит', openWork: 'Открыть рабочий элемент',
+  }),
+  day: Object.freeze({ today: 'Сегодня', yesterday: 'Вчера', unknown: 'Неизвестное время' }),
+  // The one folded row for back-to-back checks: "Прогонов: 3, 09:00 — 15:00".
+  fold: Object.freeze({
+    title: (count, from, to) => `Прогонов: ${count}, ${from} — ${to}`,
+    latest: (title) => `Последний: ${title}`,
+  }),
+})
+
+// The severity words an initiative decision's note carries ("Средний риск").
+export const RISK_WORD = Object.freeze({ low: 'Низкий', medium: 'Средний', high: 'Высокий', critical: 'Критический' })
+
+// "2 противоречия": the count with its Russian plural form, so the screen and
+// the unit test read one phrase instead of two spellings.
+export const contradictionsPhrase = (count) => `${count} ${pluralRu(count, EVENT_WORDS.contradiction.one, EVENT_WORDS.contradiction.few, EVENT_WORDS.contradiction.many)}`
 export const KNOWN_EVENT_TYPES = Object.freeze([
   ...Object.keys(INITIATIVE),
   'project.health.changed', 'project.critical', 'stewardship.verification.failed', 'stewardship.reasoning.failed',
@@ -47,7 +89,18 @@ const sentence = (value) => {
   const words = String(value ?? '').replace(/[._]+/g, ' ').replace(/\s+/g, ' ').trim()
   return words ? words[0].toUpperCase() + words.slice(1) : ''
 }
-const plural = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`
+// Russian has three plural forms and no "word + s", so a counted phrase is
+// built from the forms in the table below (the same rule as lib/ui.js
+// pluralRu, which cannot be imported here without React).
+const pluralRu = (count, one, few, many) => {
+  const n = Math.abs(Number(count) || 0)
+  const mod100 = n % 100
+  const mod10 = n % 10
+  if (mod100 >= 11 && mod100 <= 14) return many
+  if (mod10 === 1) return one
+  if (mod10 >= 2 && mod10 <= 4) return few
+  return many
+}
 const effect = (label, tone) => ({ label, tone })
 const healthWord = (state) => HEALTH_WORD[state] ?? sentence(state)
 const contradictions = (payload) => (Array.isArray(payload.contradictions) ? payload.contradictions : [])
@@ -57,19 +110,22 @@ function describeInitiative(type, spec, ref, payload, ctx) {
   const initiative = ref ? (ctx.initiatives ?? []).find((entry) => entry?.ref === ref) : null
   const name = text(payload.title) || text(initiative?.title)
   let note = ''
-  if (spec.note === 'risk') note = text(payload.risk) ? `${sentence(payload.risk)} risk` : ''
+  if (spec.note === 'risk') {
+    const severity = text(payload.risk)
+    note = severity ? `${RISK_WORD[severity.toLowerCase()] ?? sentence(severity)} ${EVENT_WORDS.risk}` : ''
+  }
   else if (spec.note) note = text(payload[spec.note])
   const pending = initiative?.status === 'pending_approval'
   return {
     kind: 'initiatives', icon: spec.icon, ref: ref || null,
-    label: type === 'initiative.approval_required' && payload.resubmitted === true ? 'Отправлено на одобрение заново' : spec.label,
+    label: type === 'initiative.approval_required' && payload.resubmitted === true ? EVENT_WORDS.initiative.resubmitted : spec.label,
     title: ref ? (name ? `${ref} · ${name}` : ref) : name,
     note,
     effect: effect(...spec.effect),
     // Still waiting: decide it where the fingerprint is shown. Otherwise open
     // it in Vision. No button for an initiative the project no longer lists.
     target: initiative ? (pending ? { kind: 'deep_link', link: `s6:initiative/${ref}` } : { kind: 'plan', entry: `plan:initiative:${ref}` }) : null,
-    openLabel: initiative ? (pending ? 'Открыть во «Входящих одобрениях»' : 'Открыть в «Видении»') : null,
+    openLabel: initiative ? (pending ? EVENT_WORDS.initiative.openInbox : EVENT_WORDS.initiative.openVision) : null,
   }
 }
 
@@ -77,21 +133,21 @@ function describeHealth(payload) {
   const from = text(payload.from)
   const to = text(payload.to)
   const score = payload.score === null || payload.score === undefined || payload.score === '' ? NaN : Number(payload.score)
-  let change = effect('Здоровье изменилось', 'neutral')
-  if (to && !from) change = effect('Первичное чтение', 'neutral')
+  let change = effect(EVENT_WORDS.health.label, 'neutral')
+  if (to && !from) change = effect(EVENT_WORDS.health.first, 'neutral')
   else if (to) {
     const before = HEALTH_ORDER.indexOf(from)
     const after = HEALTH_ORDER.indexOf(to)
     // No direction is claimed when either side is "Not verified".
-    if (before >= 0 && after >= 0 && after < before) change = effect('Здоровье хуже', to === 'critical' ? 'danger' : 'warning')
-    else if (before >= 0 && after >= 0 && after > before) change = effect('Здоровье лучше', 'success')
+    if (before >= 0 && after >= 0 && after < before) change = effect(EVENT_WORDS.health.worse, to === 'critical' ? 'danger' : 'warning')
+    else if (before >= 0 && after >= 0 && after > before) change = effect(EVENT_WORDS.health.better, 'success')
   }
   return {
-    kind: 'health', icon: 'activity', label: 'Здоровье изменилось',
+    kind: 'health', icon: 'activity', label: EVENT_WORDS.health.label,
     title: !to ? '' : from ? `${healthWord(from)} → ${healthWord(to)}` : healthWord(to),
     // An unverified project carries score 0 in the payload; that is not a
     // measurement, so no score is shown for it (unavailable is not zero).
-    note: Number.isFinite(score) && to && to !== 'unknown' ? `Score ${score}` : '',
+    note: Number.isFinite(score) && to && to !== 'unknown' ? `${EVENT_WORDS.scorePrefix} ${score}` : '',
     effect: change,
   }
 }
@@ -102,14 +158,14 @@ function describeWork(type, ref, payload, ctx) {
   const assigned = type === 'work.assigned'
   return {
     kind: 'work', icon: 'user', ref: ref || null,
-    label: assigned ? 'Работа назначена' : 'Работа не назначена',
+    label: assigned ? EVENT_WORDS.work.assigned : EVENT_WORDS.work.unassigned,
     title: ref ? (name ? `${ref} · ${name}` : ref) : name,
-    note: assigned && text(payload.to) ? `Assigned to ${text(payload.to)}` : '',
+    note: assigned && text(payload.to) ? `${EVENT_WORDS.work.assignedTo} ${text(payload.to)}` : '',
     // Unassigned: the app's own words ("no bot will pick it up", Sahil 04/10).
     // Assigned: the owner may be a person, so only say it has one.
-    effect: assigned ? effect('Есть владелец', 'success') : effect('Ни один бот его не подхватит', 'warning'),
+    effect: assigned ? effect(EVENT_WORDS.work.owner, 'success') : effect(EVENT_WORDS.work.noBot, 'warning'),
     target: item ? { kind: 'work', ref } : null,
-    openLabel: item ? 'Открыть рабочий элемент' : null,
+    openLabel: item ? EVENT_WORDS.work.openWork : null,
   }
 }
 
@@ -120,37 +176,37 @@ function describeType(type, subject, payload, ctx) {
   if (type === 'project.critical') {
     const list = contradictions(payload)
     return {
-      kind: 'health', icon: 'triangle-alert', label: 'Проект критичен', title: 'Здоровье критическое',
-      note: [list.length > 0 ? plural(list.length, 'contradiction') : '', payload.auto_freeze === true ? 'Изменения заморожены автоматически' : ''].filter(Boolean).join(' · '),
-      effect: effect('Критично', 'danger'),
+      kind: 'health', icon: 'triangle-alert', label: EVENT_WORDS.health.criticalLabel, title: EVENT_WORDS.health.criticalTitle,
+      note: [list.length > 0 ? contradictionsPhrase(list.length) : '', payload.auto_freeze === true ? EVENT_WORDS.health.frozen : ''].filter(Boolean).join(' · '),
+      effect: effect(HEALTH_WORD.critical, 'danger'),
     }
   }
   if (type === 'stewardship.verification.failed') {
     const list = contradictions(payload)
     return {
-      kind: 'health', icon: 'shield-alert', label: 'Верификация не пройдена',
-      title: list.length > 0 ? `${plural(list.length, 'contradiction')} found` : 'Доказательства не подтвердились',
-      note: firstDetail(list), effect: effect('Доказательства противоречат', 'warning'),
+      kind: 'health', icon: 'shield-alert', label: EVENT_WORDS.health.verificationLabel,
+      title: list.length > 0 ? `${EVENT_WORDS.health.found} ${contradictionsPhrase(list.length)}` : EVENT_WORDS.health.noContradictions,
+      note: firstDetail(list), effect: effect(EVENT_WORDS.health.evidenceDisagrees, 'warning'),
     }
   }
   if (type === 'stewardship.reasoning.failed') {
     return {
-      kind: 'health', icon: 'triangle-alert', label: 'Шаг предложения завершился ошибкой', title: 'Шаг предложения остановился с ошибкой',
-      note: text(payload.error).slice(0, 160), effect: effect('Предложений нет', 'warning'),
+      kind: 'health', icon: 'triangle-alert', label: EVENT_WORDS.health.reasoningLabel, title: EVENT_WORDS.health.reasoningTitle,
+      note: text(payload.error).slice(0, 160), effect: effect(EVENT_WORDS.health.noProposals, 'warning'),
     }
   }
   if (type === CHECK) {
     const trigger = text(payload.trigger_type)
     return {
-      kind: 'health', icon: 'rotate-cw', label: 'Проверка стюардшипа',
-      title: TRIGGER_WORD[trigger] ?? (trigger ? `Run: ${sentence(trigger).toLowerCase()}` : 'Прогон'),
+      kind: 'health', icon: 'rotate-cw', label: EVENT_WORDS.health.checkLabel,
+      title: TRIGGER_WORD[trigger] ?? (trigger ? `${EVENT_WORDS.health.runPrefix} ${sentence(trigger).toLowerCase()}` : EVENT_WORDS.health.run),
       note: '', effect: null,
     }
   }
   if (type === 'cycle.mutations_blocked') {
-    return { kind: 'health', icon: 'shield-alert', label: 'Изменения заблокированы', title: text(payload.reason), note: '', effect: effect('Ничего не изменено', 'neutral') }
+    return { kind: 'health', icon: 'shield-alert', label: EVENT_WORDS.health.blockedLabel, title: text(payload.reason), note: '', effect: effect(EVENT_WORDS.health.blockedTitle, 'neutral') }
   }
-  return { kind: 'other', icon: 'history', label: sentence(type) || 'Событие проекта', title: subject, note: '', effect: null }
+  return { kind: 'other', icon: 'history', label: sentence(type) || EVENT_WORDS.unknownEvent, title: subject, note: '', effect: null }
 }
 
 // One event as the words on its row:
@@ -170,7 +226,7 @@ export function describeEvent(event, ctx = {}) {
     ...describeType(type, subject, payload, ctx),
     key: `event:${event?.id ?? `${type}:${event?.ts ?? ''}`}`,
     id: event?.id ?? null, type, ts: event?.ts ?? null, at: Number.isNaN(at) ? null : at,
-    by: actor || 'System', count: 1,
+    by: actor || EVENT_WORDS.system, count: 1,
   }
   row.tone = row.effect?.tone ?? 'neutral'
   return row
@@ -200,8 +256,8 @@ export function activityRows(events, ctx = {}, { timeZone } = {}) {
   }
   for (const row of rows) {
     if (row.type !== CHECK || row.count < 2) continue
-    row.note = `Latest: ${row.title.charAt(0).toLowerCase()}${row.title.slice(1)}`
-    row.title = `Ran ${row.count} times, ${row.oldestTime} to ${row.time}`
+    row.note = EVENT_WORDS.fold.latest(`${row.title.charAt(0).toLowerCase()}${row.title.slice(1)}`)
+    row.title = EVENT_WORDS.fold.title(row.count, row.oldestTime, row.time)
   }
   return rows
 }
@@ -216,9 +272,9 @@ export function groupByDay(rows, { now = new Date(), timeZone } = {}) {
   for (const row of rows ?? []) {
     const key = row.day ?? (row.at === null ? 'unknown' : dayKey(row.at, timeZone))
     if (!groups.has(key)) {
-      let label = 'Неизвестное время'
-      if (key === today) label = 'Сегодня'
-      else if (key === yesterday) label = 'Вчера'
+      let label = EVENT_WORDS.day.unknown
+      if (key === today) label = EVENT_WORDS.day.today
+      else if (key === yesterday) label = EVENT_WORDS.day.yesterday
       else if (key !== 'unknown') {
         const sameYear = key.slice(0, 4) === today.slice(0, 4)
         label = formatter({ weekday: 'short', day: 'numeric', month: 'short', ...(sameYear ? {} : { year: 'numeric' }) }, timeZone).format(row.at).replace(/,/g, '')

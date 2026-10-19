@@ -4,6 +4,12 @@
 // every line of the saved text appears somewhere on the page, so the page,
 // Copy and Download all say the same things. Older reports (code names, raw
 // timestamps) are shown as they were saved, never rewritten.
+//
+// The words are not spelled out here. A saved report carries the backend's
+// English headings; the panel's own words (the select, the hint) are
+// Russian. These tests check the structure both sides share — the four
+// types, their section order, which type carries recent activity — and read
+// the wording from the module instead of pinning a language.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -143,25 +149,34 @@ test('Unicode text, plain lines and odd input', () => {
   assert.deepEqual(crlf.blocks.at(-1), { kind: 'table', head: ['x', 'y'], rows: [['1', '2']] }, 'a table without a --- line still parses')
 })
 
-test('the four report types are the backend\'s, with the select\'s words', () => {
+test('the four report types are the backend\'s, and each has its own word', () => {
   const service = readFileSync(fileURLToPath(new URL('../../src/hermes_project_stewardship/persistence/dockyard_service.py', import.meta.url)), 'utf8')
   assert.match(service, /if report_type not in \{"executive", "delivery", "risk", "full"\}:/, 'the backend still accepts exactly these four')
   assert.deepEqual(REPORT_TYPES.map((type) => type.value), ['executive', 'delivery', 'risk', 'full'])
-  assert.deepEqual(REPORT_TYPES.map((type) => type.label), ['Executive summary', 'Delivery report', 'Risk and decisions', 'Full project report'])
-  assert.equal(reportTypeLabel('risk'), 'Risk and decisions')
+  const labels = REPORT_TYPES.map((type) => type.label)
+  for (const label of labels) assert.ok(label && label.trim(), 'every type has a word to offer a person')
+  assert.equal(new Set(labels).size, labels.length, 'no two types answer to the same word')
+  assert.equal(reportTypeLabel('risk'), REPORT_TYPES.find((type) => type.value === 'risk').label, 'the label comes from the table, not from a second list')
   assert.equal(reportTypeLabel('quarterly_review'), 'Quarterly review', 'an unknown type still reads as words')
 })
 
-test('each type lists the sections the backend writes (the browser test checks them on real reports)', () => {
-  assert.deepEqual(reportSections('executive', true), ['Configuration', 'Delivery', 'Risks and decisions', 'Recent activity'])
-  assert.deepEqual(reportSections('executive', false), ['Configuration', 'Delivery', 'Risks and decisions'])
-  assert.deepEqual(reportSections('delivery', true), ['Configuration', 'Delivery', 'Recent activity'])
-  assert.deepEqual(reportSections('risk', true), ['Configuration', 'Risks and decisions'], 'risk never includes activity')
-  assert.deepEqual(reportSections('full', true), ['Configuration', 'Delivery', 'Risks and decisions', 'Recent activity'])
-  assert.equal(reportHint('executive', true), 'Sections: Configuration · Delivery · Risks and decisions · Recent activity')
-  assert.equal(reportHint('delivery', false), 'Sections: Configuration · Delivery, with the work list')
-  assert.equal(reportHint('full', true), 'Sections: Configuration · Delivery, with the work list · Risks and decisions · Recent activity')
-  assert.equal(reportHint('risk', true), 'Sections: Configuration · Risks and decisions. Risk reports never include recent activity.')
+test('each type lists its sections in order, and only an activity-capable one carries recent activity', () => {
+  for (const type of REPORT_TYPES) {
+    const plain = reportSections(type.value, false)
+    const withActivity = reportSections(type.value, true)
+    assert.deepEqual(plain, [...type.sections], `${type.value}: the sections it declares, in order`)
+    if (type.activity) {
+      assert.deepEqual(withActivity.slice(0, plain.length), plain, `${type.value}: activity is appended, never inserted`)
+      assert.equal(withActivity.length, plain.length + 1, `${type.value}: activity is one extra section`)
+    } else {
+      assert.deepEqual(withActivity, plain, `${type.value}: never claims recent activity`)
+    }
+    const hint = reportHint(type.value, true)
+    for (const section of withActivity) assert.ok(hint.includes(section), `${type.value}: the hint names ${section}`)
+  }
+  assert.deepEqual(reportSections('unknown_type', true), [], 'an unknown type claims no sections')
+  assert.equal(reportHint('unknown_type', true), '', 'an unknown type has no hint')
+  assert.equal(reportHint('risk', true), reportHint('risk', false), 'a risk report never claims recent activity')
 })
 
 test('dates read as day, month, year and time in the person\'s own time zone', () => {

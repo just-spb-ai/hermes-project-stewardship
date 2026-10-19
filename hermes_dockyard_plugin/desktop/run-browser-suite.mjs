@@ -11,7 +11,9 @@ const repo=path.resolve(here,'../..');
 const {makeTestStateRoot,stateEnv,disposeTestState}=await import('./test-state-guard.mjs');
 const testRoot=makeTestStateRoot('hps-desktop-suite-');
 const testEnv=stateEnv(testRoot);
-const testPython=path.join(repo,'.venv/bin/python');
+const testPython=process.platform==='win32'
+ ? path.join(repo,'.venv','Scripts','python.exe')
+ : path.join(repo,'.venv','bin','python');
 const isolatedPythonEnv={...testEnv, STEWARD_TEST_PYTHON:testPython, HPS_BROWSER_STATE_ROOT:testRoot};
 
 process.env.HPS_NODE_TEST_STATE_ROOT = testRoot;
@@ -21,7 +23,7 @@ const base=`http://127.0.0.1:${port}`;
 // Refuse to run against a server we did not start: a stale backend on the
 // port would answer the health check and silently receive every test call.
 {let taken=false;try{taken=(await fetch(base+'/health')).ok;}catch{} if(taken){console.error(`PORT_IN_USE: ${base} already answers /health; stop the stale backend first`);process.exit(2);}}
-const server=spawn(path.join(repo,'.venv/bin/python'),[path.join(here,'disposable-backend.py')],{env:{...isolatedPythonEnv,HPS_BROWSER_PORT:String(port),HPS_BROWSER_BUNDLE:bundle,HPS_CANVAS_PROVIDER:process.env.HPS_CANVAS_PROVIDER || 'fake'},stdio:'inherit'});
+const server=spawn(testPython,[path.join(here,'disposable-backend.py')],{env:{...isolatedPythonEnv,PYTHONPATH:path.join(repo,'src'),HPS_EXTRA_SITE:process.env.HPS_EXTRA_SITE || '',HPS_BROWSER_PORT:String(port),HPS_BROWSER_BUNDLE:bundle,HPS_CANVAS_PROVIDER:process.env.HPS_CANVAS_PROVIDER || 'fake'},stdio:'inherit'});
 try {
  for(let n=0;;n++){try {if((await fetch(base+'/health')).ok)break;}catch{} if(n>100)throw Error('backend not ready');await new Promise(r=>setTimeout(r,100));}
  console.log('DISPOSABLE_BACKEND',await (await fetch(base+'/health')).json());

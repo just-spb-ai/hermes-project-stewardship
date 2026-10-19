@@ -31,7 +31,7 @@ export function bindContext(ctx) {
 }
 
 export function mutationMessage(path, result) {
-  if (path === '/onboard') return `Project ${result?.project_id || 'created'} onboarded`
+  if (path === '/onboard') return `Проект ${result?.project_id || 'создан'} подключён`
   if (path.endsWith('/approve')) return 'Инициатива одобрена'
   if (path.endsWith('/reject')) return 'Инициатива отклонена'
   if (path.endsWith('/ack')) return 'Уведомление очищено'
@@ -77,10 +77,10 @@ export async function api(path, init) {
     const message = pluginOff
       ? `${PLUGIN_OFF_TITLE}.`
       : unlinked
-      ? `${UNLINKED_TITLE}. ${projectInPath ? unlinkedNextStep(decodeURIComponent(projectInPath)) : 'Link it to a Hermes project first.'}`
+      ? `${UNLINKED_TITLE}. ${projectInPath ? unlinkedNextStep(decodeURIComponent(projectInPath)) : 'Сначала привяжите его к проекту Hermes.'}`
       : /^403:\s*\[object Object\]$/.test(raw) &&
       /^\/projects\/[^/]+\/workflows\/[^/]+\/archive$/.test(path)
-      ? '403 Forbidden: archive permission (project_archive) is required or this action is denied. No change was made.'
+      ? '403: требуется право архивации (project_archive), или это действие запрещено. Ничего не изменено.'
       : /(?:error\s*)?500|internal service error/i.test(raw)
         ? 'Project Stewardship не смог подтвердить запрос.'
         : raw

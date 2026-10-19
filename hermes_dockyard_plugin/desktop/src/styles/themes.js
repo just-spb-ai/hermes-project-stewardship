@@ -37,7 +37,7 @@ export const THEMES = Object.freeze([
 )
 
 export const FONTS = Object.freeze([
-  { id: 'system', name: 'System', family: SYSTEM_STACK },
+  { id: 'system', name: 'Системный', family: SYSTEM_STACK },
   { id: 'space-grotesk', name: 'Space Grotesk', family: `"Dockyard Space Grotesk", ${SYSTEM_STACK}` },
   { id: 'jetbrains-mono', name: 'JetBrains Mono', family: '"Dockyard JetBrains Mono", ui-monospace, monospace' },
   { id: 'space-mono', name: 'Space Mono', family: '"Dockyard Space Mono", ui-monospace, monospace' },

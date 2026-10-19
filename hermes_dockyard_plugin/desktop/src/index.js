@@ -75,6 +75,7 @@ import { formatBytes } from './lib/ui.js'
 import { formatWhen } from './lib/ui.js'
 import { healthDetails } from './lib/ui.js'
 import { initials } from './data/loaders.js'
+import { POPUP_WORDS } from './data/popup-words.js'
 import { loadBacklogData } from './data/loaders.js'
 import { loadDashboardData } from './data/loaders.js'
 import { loadInboxData } from './data/loaders.js'
@@ -134,7 +135,7 @@ function surfaceMore(count) {
   host.notify({
     id: 'dockyard-notification-more',
     kind: 'info',
-    title: `and ${count} more notification${count === 1 ? '' : 's'}`,
+    title: POPUP_WORDS.moreTitle(count),
     message: 'Смотреть все в «Уведомлениях Project Stewardship».',
     action: { label: 'Открыть Project Stewardship', onClick: openDockyard },
   })

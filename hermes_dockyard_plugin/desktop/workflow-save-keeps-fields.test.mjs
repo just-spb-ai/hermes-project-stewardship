@@ -8,9 +8,56 @@
 // Real disposable backend (run-browser-suite.mjs). The proof is the stored
 // version read back from the API, not what the screen shows.
 import { after, before, test } from 'node:test'
+import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
-import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// ---- the panel's words (i18n(ru), 19/10/2026) -------------------------------
+// Only the visible strings moved: roles, data-* hooks and wire values did not.
+// Every word is read from the module that publishes it. React-free modules are
+// imported; for the ones that import React the same literal is read out of that
+// module's own source (never out of a built bundle).
+const sourceOf = (file) => readFileSync(new URL(`./${file}`, import.meta.url), 'utf8')
+const oneIn = (file, pattern, what) => {
+  const found = pattern.exec(sourceOf(file))
+  assert.ok(found, `${what} is published in ${file}`)
+  return found[1]
+}
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// A line a module builds: the literal parts are kept and each ${...} hole is a
+// value the test knows, or a wildcard when the test passes null.
+const sentence = (template, ...values) => new RegExp(template.split(/\$\{[^}]*\}/)
+  .map((part, index) => escapeRegex(part) + (index < values.length ? (values[index] === null ? '[\\s\\S]*' : escapeRegex(String(values[index]))) : ''))
+  .join(''))
+
+// The step panel's labels come from the hooks the canvas builds; the New
+// workflow dialog's "that name is taken" line from its own module.
+import { canvasDesignHooks } from './src/project/workflow-design/step-settings.js'
+const STEP = canvasDesignHooks({ draft: false, members: [], storedNode: (id) => ({ id, title: id }), settingsKey: (id) => ['keep-fields', id], onEditFrame: () => {} })
+const STEP_NAME = STEP.labels.title
+const SAVE_VERSION = STEP.labels.save
+const NAME_TAKEN = new RegExp(oneIn('src/project/workflow-design/start-dialog.js', /takenNames\.includes\(clean\) \? `([^`]+)`/, 'the name-taken error').split(/\$\{[^}]*\}/).map(escapeRegex).join('.*'))
+
+// test-support/project-scope.mjs is shared with other suites and still spells
+// the switcher's English labels, so this file drives the switcher itself: the
+// same roles, the same data-project-option hook, and the same wait that the
+// chosen scope shows up on the trigger. '*' is the wire value for All projects.
+async function pickProject(page, id) {
+  await page.getByRole('button', { name: CONTEXT_LABEL, exact: true }).click()
+  if (id !== '*') await page.getByRole('combobox', { name: FIND_LABEL }).fill(id)
+  await page.locator(`[role="listbox"] [data-project-option="${id}"]`).click()
+  await page.locator(`.dy-sw-trigger[data-scope="${id}"]`).waitFor()
+}
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
@@ -120,8 +167,8 @@ const SAVE_PATHS = [
     act: async (page, name) => {
       // One click selects a step; a double-click opens it (07/10/2026).
       await nodeIn(page, name, 'fix').dblclick()
-      await page.getByLabel('Step name').fill('Fix what failed')
-      await page.getByRole('button', { name: 'Save version', exact: true }).click()
+      await page.getByLabel(STEP_NAME).fill('Fix what failed')
+      await page.getByRole('button', { name: SAVE_VERSION, exact: true }).click()
     },
     applied: (nodes) => nodes.fix.title === 'Fix what failed' },
   { label: 'the Auto layout button', slug: 'layout',
@@ -171,7 +218,7 @@ test('Workflows: New workflow never overwrites an existing workflow, and a new n
     assert.equal(after.at(-1).definition.nodes.length, RICH.length, `New workflow replaced the workflow's ${RICH.length} steps with ${after.at(-1).definition.nodes.length}`)
     assert.deepEqual(versionPosts, [], 'New workflow posted a version over an existing workflow')
     assert.equal(after.length, before, 'New workflow saved a version over an existing workflow')
-    assert.match(await page.locator('[data-wfd-name-error]').innerText(), /already exists/)
+    assert.match(await page.locator('[data-wfd-name-error]').innerText(), NAME_TAKEN)
     const fresh = `${name}-new`
     await page.locator('[data-wfd-name]').fill(fresh)
     await page.locator('[data-action="wfd-create"]').click()

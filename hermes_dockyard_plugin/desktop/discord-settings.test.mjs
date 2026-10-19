@@ -8,10 +8,13 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { one, escape } from './test-support/src-words.mjs'
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
 const TOKEN = { 'x-hermes-session-token': 'demo-session-token' }
+// The note under the Discord controls, read out of the view that renders it.
+const NOTE = one('src/views/notifications.js', /'data-discord-note': true, children: '([^']+)'/)
 
 async function api(path, method = 'GET', body) {
   const res = await fetch(`${API}${path}`, { method, headers: { ...TOKEN, 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) })
@@ -46,7 +49,7 @@ test('Discord alerts: off by default, switched on with a level from App settings
     assert.equal(await page.locator('#dy-notif-discord-severity').isDisabled(), true, 'no level while off')
     assert.equal(await page.locator('#dy-notif-discord-severity').evaluate((el) => getComputedStyle(el).opacity), '0.5',
       'and it looks switched off')
-    assert.match(await page.locator('[data-discord-note]').innerText(), /Until then nothing is sent/)
+    assert.match(await page.locator('[data-discord-note]').innerText(), new RegExp(escape(NOTE)))
 
     const effectiveDesktop = async () => (await api('/settings/notifications/effective')).effective?.channels?.desktop
     const desktopBefore = await effectiveDesktop()

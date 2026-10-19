@@ -19,9 +19,15 @@ const ITEMS = [
   { kind: 'project_attention', project: 'payments-relaunch', ref: 'frozen', title: 'Project needs attention (phase=frozen)', risk: 'high', deep_link: 's1:project/payments-relaunch' },
 ]
 
-test('inboxTabs: All, Urgent, Today, Earlier (never Later)', () => {
+test('inboxTabs: four tabs in order, each with a word, and never Later', () => {
   assert.deepEqual(model.TAB_KEYS, ['all', 'urgent', 'today', 'earlier'])
-  assert.deepEqual(model.TAB_LABELS, { all: 'All', urgent: 'Urgent', today: 'Today', earlier: 'Earlier' })
+  assert.deepEqual(Object.keys(model.TAB_LABELS), model.TAB_KEYS, 'one word per tab, in the same order')
+  for (const key of model.TAB_KEYS) {
+    assert.equal(typeof model.TAB_LABELS[key], 'string', `${key} has a word`)
+    assert.ok(model.TAB_LABELS[key].length > 0, `${key} reads as something`)
+  }
+  assert.equal(new Set(Object.values(model.TAB_LABELS)).size, model.TAB_KEYS.length, 'each tab reads differently')
+  assert.equal('later' in model.TAB_LABELS, false, 'there is no Later tab')
 })
 
 test('countTabs returns a count per tab from the real item shape', () => {
@@ -48,11 +54,11 @@ test('isAttention marks project_attention rows undecidable', () => {
 })
 
 test('ageLabel renders an honest age from created_at or the backend age_days', () => {
-  assert.equal(model.ageLabel({ created_at: '2026-10-03T08:00:00Z' }, NOW), 'today')
-  assert.equal(model.ageLabel({ created_at: '2026-10-01T08:00:00Z' }, NOW), '2 days old')
-  assert.equal(model.ageLabel({ created_at: '2026-10-02T08:00:00Z' }, NOW), '1 day old')
-  assert.equal(model.ageLabel({ age_days: 1 }, NOW), '1 day old')
-  assert.equal(model.ageLabel({ age_days: 5 }, NOW), '5 days old')
+  assert.equal(model.ageLabel({ created_at: '2026-10-03T08:00:00Z' }, NOW), model.AGE_WORDS.today)
+  assert.equal(model.ageLabel({ created_at: '2026-10-01T08:00:00Z' }, NOW), model.AGE_WORDS.days(2))
+  assert.equal(model.ageLabel({ created_at: '2026-10-02T08:00:00Z' }, NOW), model.AGE_WORDS.day(1))
+  assert.equal(model.ageLabel({ age_days: 1 }, NOW), model.AGE_WORDS.day(1))
+  assert.equal(model.ageLabel({ age_days: 5 }, NOW), model.AGE_WORDS.days(5))
   assert.equal(model.ageLabel({}, NOW), '')
 })
 
@@ -67,8 +73,8 @@ test('rowSummary gives the list line: project, meta and risk', () => {
   const summary = model.rowSummary(ITEMS[0], NOW)
   assert.equal(summary.project, 'payments-relaunch')
   assert.equal(summary.risk, 'high')
-  assert.ok(summary.meta.includes('high risk'), `meta carries risk: ${summary.meta}`)
-  assert.ok(summary.meta.includes('today'), `meta carries age: ${summary.meta}`)
+  assert.ok(summary.meta.includes(model.riskPhrase(summary.risk)), `meta carries risk: ${summary.meta}`)
+  assert.ok(summary.meta.includes(model.AGE_WORDS.today), `meta carries age: ${summary.meta}`)
 })
 
 test('mergeActivity merges comments, receipts and events into one timeline', () => {
@@ -97,7 +103,14 @@ test('mergeActivity merges comments, receipts and events into one timeline', () 
 
 test('attentionPanel copy stays honest: what is true, what to do next', () => {
   const copy = model.attentionPanel(ITEMS[3])
-  assert.match(copy.title, /needs attention/i)
-  assert.ok(String(copy.description).length > 10)
+  assert.equal(copy.title, model.PANEL_WORDS.title)
+  assert.equal(copy.project, ITEMS[3].project)
+  assert.equal(copy.deeplink, ITEMS[3].deep_link)
+  assert.ok(copy.description.includes(ITEMS[3].project), 'the copy names the project it is about')
+  assert.ok(copy.description.includes(model.PANEL_WORDS.next), 'the copy says what to do next')
+  assert.ok(String(copy.description).length > 10, 'the copy explains itself')
   assert.equal(copy.decidable, false)
+  const other = model.attentionPanel({ ...ITEMS[3], project: 'demo-project' })
+  assert.ok(other.description.includes('demo-project'), 'the copy follows the item, never a fixed name')
+  assert.doesNotMatch(`${copy.title} ${copy.description}`, /\d/, 'the panel invents no number')
 })

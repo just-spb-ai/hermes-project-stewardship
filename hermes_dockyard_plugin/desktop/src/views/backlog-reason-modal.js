@@ -12,8 +12,8 @@ export function BacklogReasonModal(props) {
       jsxs('div', { className: 'dockyard-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dockyard-reason-title', children: [
         jsx('h2', { id: 'dockyard-reason-title', children: pendingMove?.mode === 'parent' ? 'Сменить родителя' : 'Записать причину' }),
         jsx('p', { children: pendingMove ? (pendingMove.mode === 'parent'
-          ? `Change what “${pendingMove.title}” sits under. The move is audited.`
-          : `Move ${pendingMove.title} to rank ${pendingMove.newRank}.`) : '' }),
+          ? `Изменить, под чем находится «${pendingMove.title}». Перемещение попадёт в аудит.`
+          : `Переместить «${pendingMove.title}» на ранг ${pendingMove.newRank}.`) : '' }),
         pendingMove?.mode === 'parent' ? jsxs('label', { children: [
           jsx('span', { children: 'Новый родитель' }, 'np-label'),
           jsx('select', {

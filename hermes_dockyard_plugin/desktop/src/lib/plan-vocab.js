@@ -34,23 +34,37 @@ export const REL_LABEL = Object.freeze({ delivers: 'delivers', depends_on: 'depe
 // The relationships the backend accepts for each kind of initiative link.
 export const RELATIONSHIPS = Object.freeze({ milestone: Object.freeze(['delivers', 'depends_on']), objective: Object.freeze(['supports', 'measures', 'unblocks']) })
 
+// The words a forecast or a risk line shows, in one place: a translation is
+// one edit here. ("нед." keeps the unit short, so no plural agreement is
+// needed for a computed number of weeks.)
+const OWNER_LABEL = 'владелец'
+const UNASSIGNED = 'не назначен'
+export const PLAN_WORDS = Object.freeze({
+  weeks: 'нед.',
+  owner: OWNER_LABEL,
+  unassigned: UNASSIGNED,
+  blockedBy: (item, blockers, owner) => `${item} заблокирован: ${blockers} — ${OWNER_LABEL} ${owner || UNASSIGNED}`,
+  overdue: (item, owner) => `${item} просрочен — ${OWNER_LABEL} ${owner || UNASSIGNED}`,
+  milestoneOverdue: (remaining) => `Веха просрочена, осталось элементов: ${remaining}.`,
+})
+
 // Milestone forecast: a count-based scenario from completed-item history,
 // never a delivery promise.
 export function forecastLine(fc) {
   if (!fc) return 'Прогноз недоступен.'
   if (fc.state === 'complete') return 'Прогноз: завершено.'
   if (fc.state === 'insufficient_history') {
-    return `Forecast: insufficient history (${fc.sample_size ?? 0} completions in the last ${fc.assumptions?.window_weeks ?? 4} complete weeks; needs ${fc.assumptions?.min_sample ?? 8}).`
+    return `Прогноз: недостаточно истории (завершений за последние ${fc.assumptions?.window_weeks ?? 4} полных недель: ${fc.sample_size ?? 0}; нужно ${fc.assumptions?.min_sample ?? 8}).`
   }
   if (fc.state === 'not_comparable') return 'Прогноз: история работ несопоставима.'
   const range = fc.range_weeks ?? {}
-  const upper = range.upper_open_ended ? 'открытый (наблюдалась неделя нулевого оборота)' : `${range.upper} weeks`
-  return `Forecast: ~${fc.central_weeks} weeks central (range ${range.lower}–${upper}); ${fc.sample_size} completions. A count-based scenario, not a delivery promise.`
+  const upper = range.upper_open_ended ? '«открытый» (наблюдалась неделя нулевого оборота)' : `${range.upper} ${PLAN_WORDS.weeks}`
+  return `Прогноз: ~${fc.central_weeks} ${PLAN_WORDS.weeks} в среднем (диапазон ${range.lower}–${upper}); завершений: ${fc.sample_size}. Сценарный расчёт по количеству, а не обещание поставки.`
 }
 
 export function riskLine(risk) {
-  if (risk.kind === 'dependency_blocker' && risk.item) return `${risk.item} blocked by ${(risk.blockers ?? []).join(', ')} — owner ${risk.owner || 'unassigned'}`
-  if (risk.kind === 'overdue_item' && risk.item) return `${risk.item} overdue — owner ${risk.owner || 'unassigned'}`
-  if (risk.kind === 'milestone_overdue') return `Milestone past its due date with ${risk.remaining} item(s) remaining.`
+  if (risk.kind === 'dependency_blocker' && risk.item) return PLAN_WORDS.blockedBy(risk.item, (risk.blockers ?? []).join(', '), risk.owner)
+  if (risk.kind === 'overdue_item' && risk.item) return PLAN_WORDS.overdue(risk.item, risk.owner)
+  if (risk.kind === 'milestone_overdue') return PLAN_WORDS.milestoneOverdue(risk.remaining)
   return risk.kind
 }

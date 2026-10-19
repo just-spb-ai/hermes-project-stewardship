@@ -7,6 +7,106 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { evaluatePlugin as evaluatePluginBundle, evaluateArtifact } from './test-support/load-plugin.mjs';
+import { all, escape, fill, one, pairs, template } from './test-support/src-words.mjs';
+import { ALL_WORK, definitionOf, describeDefinition, stageKeyOf, stageLabel } from './src/kanban/model.js';
+// ---------------------------------------------------------------------------
+// The words a person reads are read out of the Desktop module that publishes
+// them (test-support/src-words.mjs), never spelled here a second time. A node
+// test cannot import a module that imports React, so it parses that module's
+// own source; the Kanban labels come from kanban/model.js, which this harness
+// imports directly.
+// ---------------------------------------------------------------------------
+const DASH = 'src/views/dashboard.js'
+const BOARD = 'src/kanban/board.js'
+const BACKLOG_BOARD = 'src/views/backlog-board.js'
+const WORK_DETAIL = 'src/work-item/detail.js'
+const APPROVALS = 'src/work-item/approvals.js'
+const UI = 'src/lib/ui.js'
+const PANELS = 'src/project/panels.js'
+const PLAN_DRAWER = 'src/project/plan/plan-drawer.js'
+const NOTIFICATIONS = 'src/views/notifications.js'
+const INBOX_VIEW = 'src/views/inbox.js'
+const CONTENT_VIEW = 'src/project/content.js'
+const START_DIALOG = 'src/project/workflow-design/start-dialog.js'
+const LIBRARY = 'src/views/workflow-library.js'
+const ARCHIVED = 'src/views/archived-projects.js'
+const SWITCHER = 'src/lib/project-switcher.js'
+const CONTEXT = 'src/runtime/context.js'
+const TEAMS = 'src/views/teams.js'
+
+// The Dashboard: the empty roster, the fleet table's name, the bot-teams
+// action and the control that opens the decisions waiting for the owner.
+const EMPTY_PROJECTS = one(DASH, /empty \? jsx\(EmptyState, \{ title: '([^']+)'/)
+const fleetNames = new Set(all(DASH, /role: 'table', 'aria-label': '([^']+)'/))
+assert.equal(fleetNames.size, 1, 'the fleet table carries one name')
+const FLEET_TABLE_SELECTOR = `[role="table"][aria-label="${[...fleetNames][0]}"]`
+const BOT_TEAMS = one(DASH, /'open-bot-teams'[^}]*children: '([^']+)'/)
+const PENDING_DECISIONS = template(DASH, /waiting > 0 \? jsx\(Button, \{ variant: 'primary', onClick: onInbox, children: `([^`]+)`/)
+// The first-assessment readout.
+const ASSESSED_OK = one(DASH, /verification_ok \? '([^']+)' : '[^']+'/)
+const AUTOMATION_OFF = one(DASH, /schedules_enabled \? '[^']+' : '([^']+)'/)
+// The empty Inbox and Notifications screens, and a notification's state word.
+const NO_APPROVALS = one(INBOX_VIEW, /jsx\(EmptyState, \{ title: '([^']+)'/)
+const NO_NOTIFICATIONS = one(NOTIFICATIONS, /all\.length === 0\s*\?\s*jsx\(EmptyState, \{ title: '([^']+)'/)
+const NOTIFICATION_STATE = pairs(NOTIFICATIONS, /(new|seen|resolved): '([^']+)'/)
+// The approval panel's sections, in the panel's own order, and how a decision
+// that did not go through reads.
+const DECISION_SECTIONS = all(APPROVALS, /jsx\(Section, \{ title: ['"]([^'"]+)['"]/)
+const REJECT_VERB = one(APPROVALS, /const message = `\$\{action === 'approve' \? '[^']+' : '([^']+)'\}/)
+const failedTails = new Set(all(APPROVALS, /\} ([^$`{]+)\$\{String\(failure/))
+assert.equal(failedTails.size, 1, 'one sentence for a decision that did not go through')
+const FAILED_DECISION = [...failedTails][0].trim()
+// The work-item drawer's own title and its Hermes task id.
+const EDIT_ITEM = one(WORK_DETAIL, /'dockyard-work-item-title', children: '([^']+)'/)
+const TASK_ID = one(WORK_DETAIL, /jsx\('span', \{ children: '([^']+)' \}\),\s*jsx\('code'/)
+// A goal that measures no objective yet.
+const GOAL_UNPLACED = one(PLAN_DRAWER, /action: item\.objectiveId \? null : linkButton\('objective', '[^']*'\),\s*children: jsx\(Links, \{\s*empty: '([^']+)'/)
+// The board: what a view is and is not, the stored status filter's chip and
+// the sentence the views bar writes for a stored view.
+const VIEWS_NOTE = one(BOARD, /'data-views-note': true, children: '([^']+)'/)
+const [VIEWS_NOTE_SCOPE, VIEWS_NOTE_NEVER] = VIEWS_NOTE.split(/(?<=\.)\s+/)
+const STATUS_FILTER = (status) => fill(BOARD, /'data-kanban-status-filter': true[\s\S]{0,300}?children: \[`([^`]+)`/, stageLabel(stageKeyOf({ status })))
+const VIEW_TITLE = describeDefinition(definitionOf({ layout: 'board', filters: { status: 'in_progress' } }))
+// The Workflows library's create action: no project screen shows it.
+const LIBRARY_CREATE = one(LIBRARY, /action: 'library-create'[\s\S]{0,200}?children: '([^']+)'/)
+// The Backlog board: who a created item is attributed to, and the bulk
+// preview's word for an item that can move.
+const CREATE_AUTHOR_NOTE = one(BACKLOG_BOARD, /'aria-hidden': true \}\), '([^']+)'/)
+const BULK_ELIGIBLE = one(BACKLOG_BOARD, /\$\{item\.reason \|\| '([^']+)'\}/)
+// The bot-teams readback of a work transfer: how many items landed, of how many.
+const TEAM_TRANSFER = (landed, total) => fill(TEAMS, /'data-transfer-operation': operation\.op_id[\s\S]{0,600}?jsx\('span', \{ children: `([^`]+)`/, landed, total)
+// The New workflow dialog refusing a taken name.
+const TAKEN_NAME = (name) => fill(START_DIALOG, /takenNames\.includes\(clean\) \? `([^`]+)`/, name)
+// A content file that dependencies still reference.
+const REMOVAL_BLOCKED = one(CONTENT_VIEW, /dependencyResult\.dependencies \?\? \[\]\)\.length > 0\) throw new Error\('([^']+)'\)/)
+// Archiving a project: the confirmation's promises, and the one way back.
+const ARCHIVE_COPY = one(PANELS, /pendingLifecycle === 'archive'\s*\?\s*`([^`]+)`/)
+const ARCHIVE_SENTENCES = ARCHIVE_COPY.split(/\$\{[^}]*\}/)
+  .flatMap((piece) => piece.split(/(?<=\.)\s+/))
+  .map((sentence) => sentence.trim())
+  .filter((sentence) => sentence.length > 20)
+const [ARCHIVE_HIDDEN, , ARCHIVE_RETAINED, ARCHIVE_RESTORE_INTRO] = ARCHIVE_SENTENCES
+assert(ARCHIVE_HIDDEN && ARCHIVE_RETAINED && ARCHIVE_RESTORE_INTRO, 'the archive confirmation no longer publishes its promises')
+const RESTORE_FROM = one(ARCHIVED, /export const RESTORE_FROM = '([^']+)'/)
+const ARCHIVED_MENU = one(SWITCHER, /export const ARCHIVED_MENU = '([^']+)'/)
+const archivedCountLabel = (count) => fill(SWITCHER, /`([^`]*\(\$\{archivedCount\}\))`/, ARCHIVED_MENU, count)
+// Onboarding: the toast it emits, the host's preflight verdict, the commit
+// gate's locked word, and the two states of the discovery surface.
+const ONBOARDED = (project) => fill(CONTEXT, /if \(path === '\/onboard'\) return `([^`]+)`/, project)
+const HOST_VALIDATED = one(UI, /text: result\.mode === 'connect_existing'\s*\?\s*'[^']*'\s*:\s*'([^']+)'/)
+const SUBMIT_LOCKED = one(UI, /children: submitting \? '[^']+' : \(preflightCurrent \? '[^']+' : '([^']+)'\)/)
+const DISCOVERY_FAILED = one(UI, /'data-discovery-failed': true, children: '([^']+)'/)
+const UNSUPPORTED_NOTE = one(UI, /suggestion\.supported === false \? '([^']+)'/)
+const UNAVAILABLE_SUFFIX = one(UI, /selectable \? '' : '([^']+)'/)
+// The Dashboard's health words and the type tag it puts on an owner decision.
+const HEALTH_WORDS = pairs(DASH, /(on_track|at_risk|stalled|idle): '([^']+)'/)
+const DECISION_TAG = one(DASH, /initiative_approval'\) \{\s*return \{ tag: '([^']+)'/)
+// The drawer's assignee picker, found by the name it publishes.
+const ASSIGNEE_PICKER = `select[aria-label="${one(WORK_DETAIL, /jsx\('select', \{ 'aria-label': '([^']+)', value: draft\?\.assignee/)}"]`
+// The project state summary: whether it is switched on, and which phase it is in.
+const ENABLED_ON = one(PANELS, /label: enabled \? '([^']+)' : '[^']+'/)
+const ENABLED_OFF = one(PANELS, /label: enabled \? '[^']+' : '([^']+)'/)
+const PHASE_WORDS = pairs(PANELS, /(active|paused|frozen|archived): '([^']+)'/)
 
 const HARNESS_PACKAGE = fileURLToPath(new URL('../dashboard/package.json', import.meta.url));
 // Resolve the candidate plugin relative to this harness so a clean worktree
@@ -1021,7 +1121,7 @@ async function testStylesAndPopulatedDashboard() {
   assert.notEqual(rootStyle.backgroundColor, 'rgba(0, 0, 0, 0)', 'root background is not explicit');
   assert.notEqual(rootStyle.color, 'rgba(0, 0, 0, 0)', 'root text colour is not explicit');
   assert.equal(document.querySelectorAll('[data-project-row]').length, 2, 'dashboard should render both projects');
-  assert(document.querySelector('[role="table"][aria-label="Project fleet"]'), 'project roster is not exposed as a semantic table');
+  assert(document.querySelector(FLEET_TABLE_SELECTOR), 'project roster is not exposed as a semantic table');
   assert.equal(document.querySelectorAll('[role="columnheader"]').length, 6, 'project table should expose six column headers');
   assert.equal(document.querySelectorAll('[data-project-row][role="row"]').length, 2, 'project rows are missing semantic row roles');
   assert.match(root.textContent, /demo-project/);
@@ -1041,12 +1141,12 @@ async function testLoadingAndEmptyStates() {
 
   const empty = await createRuntime({ mode: 'empty' });
   await empty.mount();
-  assert.match(empty.dom.window.document.body.textContent, /No projects under watch/);
+  assert.match(empty.dom.window.document.body.textContent, new RegExp(escape(EMPTY_PROJECTS)));
   assert(!empty.dom.window.document.body.textContent.includes('hermes dockyard onboard'), 'empty state must not send the owner to the CLI');
   await empty.click('[data-tab="inbox"]');
-  assert.match(empty.dom.window.document.body.textContent, /No approvals waiting/);
+  assert.match(empty.dom.window.document.body.textContent, new RegExp(escape(NO_APPROVALS)));
   await empty.click('[data-tab="notifications"]');
-  assert.match(empty.dom.window.document.body.textContent, /No notifications yet/);
+  assert.match(empty.dom.window.document.body.textContent, new RegExp(escape(NO_NOTIFICATIONS)));
   await empty.dispose();
 }
 
@@ -1066,20 +1166,22 @@ async function testReferenceBenchmarkDashboardComposition() {
   await runtime.flush(60);
   const doc = runtime.dom.window.document;
 
-  const decisionRows = [...doc.querySelectorAll('.dockyard-command-attention-row')].filter((row) => row.textContent.includes('Approval'));
+  const decisionRows = [...doc.querySelectorAll('.dockyard-command-attention-row')].filter((row) => row.textContent.includes(DECISION_TAG));
   assert.equal(decisionRows.length, 2, 'command table must show the actual owner decisions, not only a count (count=' + decisionRows.length + ')');
   assert(decisionRows.every((row) => row.textContent.includes('Add weekly digest email') || row.textContent.includes('Enable one-click refunds')), 'command table rows carry the pending initiative decisions');
   assert(doc.querySelector('.dockyard-command-attention-row'), 'blocked interventions stay visible next to decisions');
   assert.equal(doc.querySelectorAll('.dockyard-command-metric').length, 4, 'dashboard must expose a four-part metric strip (count=' + doc.querySelectorAll('.dockyard-command-metric').length + ')');
-  const fleetTable = doc.querySelector('[role="table"][aria-label="Project fleet"]');
+  const fleetTable = doc.querySelector(FLEET_TABLE_SELECTOR);
   assert(fleetTable, 'dashboard is missing the Project fleet table');
   const fleetText = fleetTable.textContent;
   assert(fleetText.includes('demo-project') && fleetText.includes('payments-relaunch'), 'fleet table must expose both projects');
-  assert(fleetText.includes('On track') && fleetText.includes('At risk'), 'fleet table must expose health states');
+  assert(fleetText.includes(HEALTH_WORDS.on_track) && fleetText.includes(HEALTH_WORDS.at_risk), 'fleet table must expose health states');
   assert(fleetText.includes('3/11') || fleetText.includes('Beta'), 'fleet table must expose delivery mix and milestone context');
   assert(doc.querySelector('.dockyard-command-detail-activity'), 'dashboard is missing the attributed activity surface');
-  assert.match(doc.body.textContent, /Bot teams/, 'dashboard must expose the bot teams surface');
-  assert.match(doc.body.textContent, /Review 2 decisions/, 'dashboard must surface the pending decision count');
+  assert.match(doc.body.textContent, new RegExp(escape(BOT_TEAMS)), 'dashboard must expose the bot teams surface');
+  const pendingButton = [...doc.querySelectorAll('button')].find((button) => PENDING_DECISIONS.test(button.textContent ?? ''));
+  assert(pendingButton, 'dashboard must surface the pending decision count');
+  assert.match(pendingButton.textContent, /2/, 'the Dashboard does not say how many decisions wait');
 
   const projectRows = [...doc.querySelectorAll('[data-project-row]')];
   assert.equal(projectRows[0]?.getAttribute('data-project-row'), 'payments-relaunch', 'projects must be ordered by attention severity, not alphabetically');
@@ -1110,8 +1212,8 @@ async function testReferenceBenchmarkApprovalCardsAndReject() {
   await runtime.click('[data-inbox-ref="INI-DEMO-2"]', 60);
   const panel = doc.querySelector('[data-inbox-panel="true"]');
   assert(panel, 'opening an approval row did not reveal the detail panel');
-  for (const section of ['Requested change', 'Policy gate', 'Potential impact', 'Capability boundary', 'Who asked', 'Evidence', 'Affected work items', 'Activity', "Comments don't change the decision"]) {
-    assert.match(panel.textContent, new RegExp(section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `detail panel is missing ${section}`);
+  for (const section of DECISION_SECTIONS) {
+    assert.match(panel.textContent, new RegExp(escape(section)), `detail panel is missing ${section}`);
   }
   assert.equal(panel.querySelectorAll('[data-evidence-cell]').length, 3, 'detail panel must expose the fetched validation evidence');
   assert(panel.querySelector('[data-action="approve"]'), 'detail panel is missing the supported Approve action');
@@ -1171,14 +1273,15 @@ async function testProjectDashboardScreen() {
   await runtime.click('[data-card-open="HDY-12"]');
   const workDetail = doc.querySelector('[data-work-item-detail="HDY-12"]');
   assert(workDetail, 'board item did not open its editable detail');
-  assert.match(workDetail.textContent, /Edit backlog item|Task ID/, 'editable drawer rendered with its editing contract');
+  assert.match(workDetail.textContent, new RegExp(escape(EDIT_ITEM)), 'editable drawer rendered with its editing contract');
+  assert.match(workDetail.textContent, new RegExp(escape(TASK_ID)), 'the editable drawer does not name the Hermes task id');
   // The assignee rides an input; textContent excludes input values, so the
   // contract is asserted on the control's value (review round-6: legacy
   // harness assertion was checking the wrong surface, not missing data).
-  const assigneeControl = workDetail.querySelector('select[aria-label="Assignee"]');
+  const assigneeControl = workDetail.querySelector(ASSIGNEE_PICKER);
   assert.equal(assigneeControl?.value, 'octacon-bot', 'shared assignee picker must carry the canonical value unchanged');
   assert(!workDetail.querySelector('[data-work-field="assignee"] input'), 'legacy free-text assignee editor remains present');
-  await runtime.setValue('select[aria-label="Assignee"]', 'quan-bot');
+  await runtime.setValue(ASSIGNEE_PICKER, 'quan-bot');
   await runtime.click('[data-action="save-work-item"]', 40);
   const assignment = runtime.calls.find((call) => call.method === 'POST' && call.path.endsWith('/work-items/HDY-12/assign'));
   assert.equal(assignment?.body?.assignee_id, 'quan-bot', 'selected discovered profile changed on the Desktop-to-proxy assignment payload');
@@ -1262,7 +1365,7 @@ async function testMissionObjectiveManagementAndDestructiveGates() {
   await runtime.click(`${row('goal', 'GOAL-DEMO1')} .dy-plan-row-open`, 40);
   assert.match(doc.querySelector('[data-plan-drawer="goal"]').textContent, /Checkout reliability/, 'linked objective was not rendered on its goal');
   await runtime.click(`${row('goal', 'GOAL-DEMO2')} .dy-plan-row-open`, 40);
-  assert.match(doc.querySelector('[data-plan-drawer="goal"]').textContent, /Not placed under an objective yet/,
+  assert.match(doc.querySelector('[data-plan-drawer="goal"]').textContent, new RegExp(escape(GOAL_UNPLACED)),
     'a goal with no objective must say so honestly (v42: one objective parent)');
   assert(doc.querySelector('[data-plan-mission]'), 'mission strip is missing');
   assert.equal(doc.querySelectorAll('[data-plan-row="objective"]').length, 1, 'only the active objective shows by default');
@@ -1402,8 +1505,8 @@ async function testProjectLifecycleStateAndConfirmedActions() {
     assert(runtime.calls.some((call) => call.method === 'POST' && call.path === path), `${action} POST was not sent`);
   };
 
-  assert.equal(doc.querySelector('[data-project-enabled-state]')?.textContent.trim(), 'Enabled');
-  assert.equal(doc.querySelector('[data-project-phase-state]')?.textContent.trim(), 'Active');
+  assert.equal(doc.querySelector('[data-project-enabled-state]')?.textContent.trim(), ENABLED_ON);
+  assert.equal(doc.querySelector('[data-project-phase-state]')?.textContent.trim(), PHASE_WORDS.active);
   assertAction('disable');
   assertAction('pause');
   assertAction('freeze');
@@ -1419,7 +1522,7 @@ async function testProjectLifecycleStateAndConfirmedActions() {
   assert(!runtime.calls.some((call) => call.method === 'POST' && call.path === '/projects/payments-relaunch/disable'), 'Escape triggered a lifecycle mutation');
 
   await runAction('disable', '/projects/payments-relaunch/disable');
-  assert.equal(doc.querySelector('[data-project-enabled-state]')?.textContent.trim(), 'Disabled');
+  assert.equal(doc.querySelector('[data-project-enabled-state]')?.textContent.trim(), ENABLED_OFF);
   assert(doc.querySelector('[data-setting-field="mission"]')?.matches(':disabled'), 'disabled project settings remain editable');
   assertAction('enable');
   // A switched-off project can still be archived (11/10/2026).
@@ -1429,7 +1532,7 @@ async function testProjectLifecycleStateAndConfirmedActions() {
   await runAction('enable', '/projects/payments-relaunch/re-enable');
 
   await runAction('pause', '/projects/payments-relaunch/pause');
-  assert.equal(doc.querySelector('[data-project-phase-state]')?.textContent.trim(), 'Paused');
+  assert.equal(doc.querySelector('[data-project-phase-state]')?.textContent.trim(), PHASE_WORDS.paused);
   assertAction('resume');
   assertAction('freeze');
   assertAction('pause', false);
@@ -1441,7 +1544,7 @@ async function testProjectLifecycleStateAndConfirmedActions() {
   await runAction('resume', '/projects/payments-relaunch/resume');
 
   await runAction('freeze', '/projects/payments-relaunch/freeze');
-  assert.equal(doc.querySelector('[data-project-phase-state]')?.textContent.trim(), 'Frozen');
+  assert.equal(doc.querySelector('[data-project-phase-state]')?.textContent.trim(), PHASE_WORDS.frozen);
   assertAction('resume');
   assertAction('freeze', false);
   await runtime.dispose();
@@ -1503,7 +1606,7 @@ async function testPhase5ManagementJourneys() {
   await runtime.click('[data-wfd-way="blank"]', 40);
   await runtime.setValue('[data-wfd-name]', 'release');
   await runtime.click('[data-action="wfd-create"]', 80);
-  assert(/already exists/.test(doc.querySelector('[data-wfd-name-error]')?.textContent ?? ''), 'a taken name is refused in the dialog');
+  assert.equal((doc.querySelector('[data-wfd-name-error]')?.textContent ?? '').trim(), TAKEN_NAME('release'), 'a taken name is refused in the dialog');
   await runtime.setValue('[data-wfd-name]', 'verify-release');
   await runtime.setValue('[data-wfd-first-step]', 'Verify release');
   await runtime.click('[data-action="wfd-create"]', 80);
@@ -1557,16 +1660,16 @@ async function testPhase5ManagementJourneys() {
   await runtime.click('[data-project-content-item="CONTENT-BLOCKED"]');
   await runtime.click('[data-action="remove-project-content"]');
   await runtime.click('[data-action="confirm-destructive-action"]', 80);
-  assert([...doc.querySelectorAll('[role="alert"]')].some((node) => /Removal blocked/i.test(node.textContent ?? '')), 'content dependency refusal was not surfaced');
+  assert([...doc.querySelectorAll('[role="alert"]')].some((node) => (node.textContent ?? '').includes(REMOVAL_BLOCKED)), 'content dependency refusal was not surfaced');
   assert(!runtime.calls.some((call) => call.method === 'DELETE' && call.path === '/projects/payments-relaunch/content/CONTENT-BLOCKED'), 'dependency-blocked content reached DELETE');
 
   await runtime.click('[data-project-view="settings"]');
   await runtime.click('[data-lifecycle-action="archive"]');
   assert(doc.querySelector('[data-lifecycle-confirm]') && !doc.querySelector('[data-lifecycle-confirm]').hidden, 'project archive did not ask for confirmation');
   const archiveText = doc.querySelector('[data-lifecycle-confirm-text="archive"]')?.textContent ?? '';
-  assert.match(archiveText, /Nothing is deleted: its Hermes project, board, tasks and repository stay exactly as they are/i, 'project archive confirmation omits canonical retention assurance');
-  assert.match(archiveText, /hidden everywhere/i, 'project archive confirmation does not say the project is hidden');
-  assert.match(archiveText, /Restore it any time from the project switcher > Archived projects/i, 'project archive confirmation does not say where to restore it');
+  assert.match(archiveText, new RegExp(escape(ARCHIVE_RETAINED)), 'project archive confirmation omits canonical retention assurance');
+  assert.match(archiveText, new RegExp(escape(ARCHIVE_HIDDEN)), 'project archive confirmation does not say the project is hidden');
+  assert.match(archiveText, new RegExp(escape(`${ARCHIVE_RESTORE_INTRO} ${RESTORE_FROM}`)), 'project archive confirmation does not say where to restore it');
   await runtime.click('[data-action="confirm-lifecycle-action"]', 100);
   assert(runtime.calls.some((call) => call.path === '/projects/payments-relaunch/archive'), 'project archive did not reach proxy');
   // Archive hides the project everywhere (11/10/2026), so the app leaves it for All projects.
@@ -1575,7 +1678,7 @@ async function testPhase5ManagementJourneys() {
   assert(!doc.querySelector('[data-lifecycle-action="restore"]'), 'the archived project stayed open');
   // Restore from the one list of archived projects, in the switcher's menu.
   await runtime.click('.dy-sw-trigger');
-  assert.match(doc.querySelector('[data-switcher-archived]')?.textContent ?? '', /Archived projects \(1\)/, 'the switcher does not offer the archived project');
+  assert.match(doc.querySelector('[data-switcher-archived]')?.textContent ?? '', new RegExp(escape(archivedCountLabel(1))), 'the switcher does not offer the archived project');
   await runtime.click('[data-switcher-archived]', 100);
   assert(doc.querySelector('[data-archived-project="payments-relaunch"]'), 'the archived list does not show the project');
   await runtime.click('[data-restore-project="payments-relaunch"]');
@@ -1617,7 +1720,7 @@ async function testBacklogCreateFormValidationAndReadback() {
   await runtime.click('[data-action="open-create-backlog-item"]');
   const form = doc.querySelector('[data-create-backlog-item]');
   assert(form, 'create backlog item form is missing');
-  assert.match(form.textContent, /Sahil.*creator/i, 'creator attribution is not shown separately');
+  assert.match(form.textContent, new RegExp(escape(CREATE_AUTHOR_NOTE)), 'creator attribution is not shown separately');
   assert(form.querySelector('[data-create-field="assignee"]'), 'assignee selector is missing');
   assert(form.querySelector('[data-create-field="initiative"]'), 'initiative selector is missing');
   assert(form.querySelector('[data-create-field="rank"]'), 'initial rank field is missing');
@@ -1696,7 +1799,7 @@ async function testBacklogBulkReassignment() {
   await runtime.setValue('[data-selection-popover] [data-pop-target]', 'assign:quan-bot', 80);
   await runtime.flush(120);
   assert(doc.querySelector('[data-bulk-preview="phase4-fingerprint"]'), 'exact bulk preview/fingerprint did not render');
-  assert.match(doc.body.textContent, /HDY-13.*eligible/s);
+  assert.match(doc.body.textContent, new RegExp(`HDY-13.*${escape(BULK_ELIGIBLE)}`, 's'));
   await runtime.click('[data-pop-action="execute"]', 60);
   const post = runtime.calls.find((call) => call.method === 'POST' && /\/reassignments$/.test(call.path));
   assert.deepEqual(post?.body?.selected_ids, ['HDY-13'], 'selected canonical item ids were not preserved');
@@ -1726,7 +1829,7 @@ async function testBotTeamsScreen() {
   assert.match(doc.body.textContent, /HDY-12.*Fix double-charge on retry path/s);
   await runtime.click('[data-action="execute-work-transfer"]', 60);
   assert(doc.querySelector('[data-transfer-operation="OP-PHASE4"]'), 'durable operation readback did not render');
-  assert.match(doc.body.textContent, /2 of 2 transferred/);
+  assert.match(doc.querySelector('[data-transfer-operation="OP-PHASE4"]')?.textContent || '', new RegExp(escape(TEAM_TRANSFER(2, 2))), 'the transfer readback does not name what moved');
   assert(runtime.calls.some((call) => call.method === 'POST' && /\/transfers\/preview$/.test(call.path)), 'Desktop did not invoke preview through the plugin proxy');
   assert(runtime.calls.some((call) => call.method === 'POST' && /\/transfers\/execute$/.test(call.path)), 'Desktop did not invoke execute through the plugin proxy');
   assert(runtime.calls.some((call) => call.method === 'GET' && call.path === '/operations/OP-PHASE4'), 'Desktop did not perform durable operation readback');
@@ -1790,25 +1893,25 @@ async function testSavedViewsScreenAndCreator() {
   assert(doc.querySelector('[data-kanban-screen]'), 'the Kanban screen is missing');
   assert(runtime.calls.some((call) => call.path === '/projects/payments-relaunch/views'), 'the views bar did not load backend views');
   const tabs = [...doc.querySelectorAll('[data-view-tab]')].map((tab) => tab.getAttribute('data-view-tab'));
-  assert.deepEqual(tabs, ['All work', 'Release focus'], 'saved view did not render in the views bar');
+  assert.deepEqual(tabs, [ALL_WORK, 'Release focus'], 'saved view did not render in the views bar');
   const savedTab = doc.querySelector('[data-view-tab="Release focus"]');
-  assert.match(savedTab.getAttribute('title') || '', /^Board · Status in progress/, 'saved view exposes raw filter data instead of readable labels');
+  assert.equal((savedTab.getAttribute('title') || '').trim(), VIEW_TITLE, 'saved view exposes raw filter data instead of readable labels');
   assert(!(savedTab.getAttribute('title') || '').includes('{'), 'saved view exposes raw JSON');
   assert(!doc.querySelector('[data-workflow-visual]'), 'a fabricated executable workflow is still rendered');
-  assert(!/Saved workflows|Create workflow|LIVE DELIVERY PATH/.test(doc.body.textContent), 'misleading workflow copy remains visible');
+  assert(!doc.body.textContent.includes(LIBRARY_CREATE), 'misleading workflow copy remains visible');
 
   // Recall applies the stored filter to the board.
   await runtime.click('[data-view-tab="Release focus"]', 60);
   assert.equal(doc.querySelector('[data-kanban-screen]')?.getAttribute('data-view'), 'Release focus', 'the board does not name the recalled view');
-  assert.match(doc.querySelector('[data-kanban-status-filter]')?.textContent || '', /In progress/, 'the stored status filter is not shown');
+  assert.match(doc.querySelector('[data-kanban-status-filter]')?.textContent || '', new RegExp(escape(STATUS_FILTER('in_progress'))), 'the stored status filter is not shown');
   const cards = [...doc.querySelectorAll('[data-work-card]')].map((card) => card.getAttribute('data-work-card'));
   assert.deepEqual(cards, ['HDY-12'], 'recall did not apply the stored view filter');
 
   // The Manage views panel says what a view is, and what it never does.
   await runtime.click('[data-views-manage]', 60);
   const note = doc.querySelector('[data-views-panel] [data-views-note]')?.textContent || '';
-  assert.match(note, /only changes what this board shows/i);
-  assert.match(note, /never runs automations, assigns work or changes permissions/i);
+  assert.match(note, new RegExp(escape(VIEWS_NOTE_SCOPE)), 'the views panel no longer says a view only changes this board');
+  assert.match(note, new RegExp(escape(VIEWS_NOTE_NEVER)), 'the views panel no longer says what a view never does');
   await runtime.dispose();
 }
 
@@ -1850,7 +1953,7 @@ async function testOnboardingWizardAndToastSurface() {
     preflight_token: 'review-token-0',
   }, 'wizard did not submit the complete reviewed onboarding contract');
   assert(!doc.querySelector('[data-onboarding-wizard]'), 'wizard remained open after successful onboarding');
-  assert.match(doc.querySelector('[data-toast-region]')?.textContent || '', /Project checkout-ops onboarded/);
+  assert.match(doc.querySelector('[data-toast-region]')?.textContent || '', new RegExp(escape(ONBOARDED('checkout-ops'))));
   assert.equal(doc.querySelector('[role="tab"][aria-selected="true"]')?.getAttribute('data-tab'), 'project', 'successful onboarding did not open the new project');
   await runtime.dispose();
 
@@ -1867,8 +1970,8 @@ async function testOnboardingWizardAndToastSurface() {
   const alert = failedDoc.querySelector('[data-toast-region] [role="alert"]');
   assert(alert, 'failed mutation did not create an alert toast');
   assert.equal(failedPanel?.getAttribute('data-state'), 'failed', 'failed rejection did not show an unconfirmed state');
-  assert.match(failedPanel?.textContent || '', /could not be confirmed/i);
-  assert.match(alert.textContent, /Reject could not be confirmed/);
+  assert.match(failedPanel?.textContent || '', new RegExp(escape(FAILED_DECISION)), 'failed rejection did not show an unconfirmed state');
+  assert.match(alert.textContent, new RegExp(`${escape(REJECT_VERB)} ${escape(FAILED_DECISION)}`));
   assert(!alert.textContent.includes('Error invoking remote method'), 'raw host error leaked into the user status');
   await failed.dispose();
 }
@@ -1930,7 +2033,7 @@ async function testNotificationFlow() {
   assert(second.calls.some((call) => call.method === 'POST' && call.path === '/notifications/3/ack'), 'acknowledge POST was not sent');
   assert.equal(secondDoc.querySelectorAll('[data-notification-state="new"]').length, 0, 'acknowledged notification remains unread');
   assert.equal(secondDoc.querySelectorAll('[data-notification-state="seen"]').length, 2, 'acknowledged notification did not move to Seen');
-  assert.match(secondDoc.querySelector('[data-notification-id="3"]')?.textContent || '', /Seen/);
+  assert.match(secondDoc.querySelector('[data-notification-id="3"]')?.textContent || '', new RegExp(escape(NOTIFICATION_STATE.seen)));
   await second.dispose();
 }
 
@@ -1981,7 +2084,7 @@ async function testOnboardingPreflightAndDiscovery() {
   const preflightResult = doc.querySelector('[data-preflight-result]');
   assert(preflightResult, 'preflight result did not render');
   assert.equal(preflightResult.getAttribute('data-preflight-result'), 'create_new', 'preflight did not report the host mode');
-  assert.match(preflightResult.textContent, /Host validated the details/);
+  assert.match(preflightResult.textContent, new RegExp(escape(HOST_VALIDATED)));
   // R4: a successful preflight OPENS the commit gate for these exact fields.
   const submitBtn = doc.querySelector('[data-action="submit-onboarding"]');
   assert(submitBtn, 'submit button did not render on the review step');
@@ -1998,12 +2101,12 @@ async function testOnboardingPreflightAndDiscovery() {
   // P7.3: reviewable inert suggestions, including the unsupported one.
   const suggestions = doc.querySelectorAll('[data-onboarding-suggestions] [data-suggestion]');
   assert.equal(suggestions.length, 2, 'review step did not render both suggestions');
-  assert.match(suggestions[1].textContent, /unsupported/);
+  assert.match(suggestions[1].textContent, new RegExp(escape(UNSUPPORTED_NOTE)));
   // R4: editing a field after preflight RE-LOCKS the gate.
   await runtime.setValue('[data-field="mission"]', 'Ship payment recovery with auditable gates v2', 40);
   const wizardStep4 = doc.querySelector('[data-wizard-step="4"]');
   assert(wizardStep4, 'review step vanished');
-  assert.match(doc.querySelector('[data-action="submit-onboarding"]').textContent, /Validate before onboarding/, 'edited fields did not re-lock the commit gate');
+  assert.equal(doc.querySelector('[data-action="submit-onboarding"]').textContent.trim(), SUBMIT_LOCKED, 'edited fields did not re-lock the commit gate');
   assert.equal(doc.querySelector('[data-action="submit-onboarding"]').disabled, true, 'edited fields left the commit gate open');
   await runtime.dispose();
 }
@@ -2050,7 +2153,7 @@ async function testOnboardingDiscoverySuccessRefreshPreservesWizardInput() {
   const retiredMember = doc.querySelector('[data-member-option="retired"] input');
   assert(retiredLead?.disabled, 'historical unavailable lead remains selectable');
   assert(retiredMember?.disabled, 'historical unavailable member remains selectable');
-  assert.match(doc.querySelector('[data-member-option="retired"]')?.textContent || '', /unavailable/);
+  assert.match(doc.querySelector('[data-member-option="retired"]')?.textContent || '', new RegExp(escape(UNAVAILABLE_SUFFIX)));
   await runtime.dispose();
 }
 
@@ -2067,7 +2170,7 @@ async function testOnboardingDiscoveryRefreshPreservesWizardInput() {
   await runtime.click('[data-action="refresh-onboarding-discovery"]', 120);
   assert.equal(doc.querySelector('[data-field="project-id"]').value, 'preserve-me', 'refresh discarded project input');
   assert.equal(doc.querySelector('[data-field="repo-path"]').value, '/srv/preserve-me', 'refresh discarded repository input');
-  assert.match(doc.querySelector('[data-discovery-failed]')?.textContent || '', /profile manager/i, 'failure lacks external profile-manager guidance');
+  assert.match(doc.querySelector('[data-discovery-failed]')?.textContent || '', new RegExp(escape(DISCOVERY_FAILED)), 'failure lacks external profile-manager guidance');
   await runtime.dispose();
 }
 
@@ -2085,7 +2188,7 @@ async function testOnboardingDiscoveryFailureFailsClosed() {
   assert(wizard, 'wizard opened');
   const failed = wizard.querySelector('[data-discovery-failed]');
   assert(failed, 'discovery failure did not surface a fail-closed message');
-  assert.match(failed.textContent, /Host discovery failed/);
+  assert.match(failed.textContent, new RegExp(escape(DISCOVERY_FAILED)));
   // Lead step: no host profiles means no valid lead choice — Continue must
   // stay locked there (no invented 'octacon' fallback).
   await runtime.setValue('[data-field="project-id"]', 'checkout-ops', 30);
@@ -2144,8 +2247,8 @@ async function testFirstAssessmentCompletionAction() {
   await runtime.click('[data-action="run-first-assessment"]', 80);
   const result = doc.querySelector('[data-assessment-result]');
   assert(result, 'assessment result did not render');
-  assert.match(result.textContent, /Passed/);
-  assert.match(result.textContent, /disabled/);
+  assert.match(result.textContent, new RegExp(escape(ASSESSED_OK)));
+  assert.match(result.textContent, new RegExp(escape(AUTOMATION_OFF)));
   assert(runtime.calls.some((call) => call.method === 'POST' && /\/first-assessment$/.test(call.path)), 'assessment POST was not sent');
   assert(runtime.calls.filter((call) => call.method === 'POST' && /\/first-assessment$/.test(call.path)).length === 1, 'assessment ran more than once');
   await runtime.dispose();

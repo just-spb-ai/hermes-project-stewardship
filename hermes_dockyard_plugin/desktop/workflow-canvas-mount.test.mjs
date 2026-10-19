@@ -4,12 +4,13 @@ import { JSDOM } from '../dashboard/node_modules/jsdom/lib/api.js'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { test } from 'node:test'
 
 async function bundle() {
   const dir = await mkdtemp(join(tmpdir(), 'dockyard-canvas-'))
   const out = join(dir, 'mount.mjs')
-  await build({ entryPoints: [new URL('./workflow-canvas-mount.js', import.meta.url).pathname], bundle: true, format: 'esm', platform: 'browser', outfile: out, loader: { '.ts': 'ts' } })
+  await build({ entryPoints: [fileURLToPath(new URL('./workflow-canvas-mount.js', import.meta.url))], bundle: true, format: 'esm', platform: 'browser', outfile: out, loader: { '.ts': 'ts' } })
   return { dir, out }
 }
 function globals(dom) {
@@ -20,7 +21,7 @@ test('Desktop shared mount renders production canvas and disposes cleanly', asyn
   const { dir, out } = await bundle()
   try {
     const dom = new JSDOM('<main id="host"></main>', { pretendToBeVisual: true, url: 'http://localhost/' }); globals(dom)
-    const { mountDesktopWorkflowCanvas } = await import(`${out}?t=${Date.now()}`)
+    const { mountDesktopWorkflowCanvas } = await import(`${pathToFileURL(out).href}?t=${Date.now()}`)
     const host = document.querySelector('#host')
     const dispose = mountDesktopWorkflowCanvas(host, 'p1', 'release', { nodes: [{ id: 'step-1', title: 'Ship', depends_on: [], human_gate: false }] }, [{ run_key: 'r1', version: 1, status: 'running', nodes: [{ node_id: 'step-1', status: 'working', title: 'Ship' }] }])
     await new Promise((resolve) => setTimeout(resolve, 25))
@@ -34,7 +35,7 @@ test('Desktop canvas edit callback receives a canonical graph payload', async ()
   const { dir, out } = await bundle()
   try {
     const dom = new JSDOM('<main id="host"></main>', { pretendToBeVisual: true, url: 'http://localhost/' }); globals(dom)
-    const { mountDesktopWorkflowCanvas } = await import(`${out}?t=${Date.now()}`)
+    const { mountDesktopWorkflowCanvas } = await import(`${pathToFileURL(out).href}?t=${Date.now()}`)
     const host = document.querySelector('#host'); let payload
     const dispose = mountDesktopWorkflowCanvas(host, 'p1', 'release', { nodes: [{ id: 'a', title: 'Plan', depends_on: [], human_gate: false }, { id: 'b', title: 'Ship', depends_on: ['a'], human_gate: false }] }, [], { onEdit: (nodes) => { payload = nodes } })
     await new Promise((resolve) => setTimeout(resolve, 25))

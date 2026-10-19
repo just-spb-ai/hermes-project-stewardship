@@ -8,7 +8,35 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, readFileSync } from 'node:fs'
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// ---- the panel's words (i18n(ru), 19/10/2026) -------------------------------
+// Only the visible strings moved: roles, data-* hooks and wire values did not.
+// Every word is read from the module that publishes it - these modules import
+// React, so the same literal is read out of their own source (never out of a
+// built bundle).
+const sourceOf = (file) => readFileSync(new URL(`./${file}`, import.meta.url), 'utf8')
+const oneIn = (file, pattern, what) => {
+  const found = pattern.exec(sourceOf(file))
+  assert.ok(found, `${what} is published in ${file}`)
+  return found[1]
+}
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// The header's New project button and the onboarding wizard's copy
+// (src/lib/ui.js).
+const NEW_PROJECT = oneIn('src/lib/ui.js', /action: 'open-onboarding',[\s\S]{0,240}?ariaLabel: '([^']+)'/, 'the New project button')
+const STEPPER = oneIn('src/lib/ui.js', /'data-onboarding-wizard': true,[\s\S]{0,600}?jsx\('p', \{ children: '([^']+)' \}/, 'the onboarding stepper copy')
+const STEPPER_FIRST = STEPPER.split('.')[0]
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -24,9 +52,9 @@ test('Phase 7 rendered settings + onboarding journeys with real data', { timeout
   const project = 'payments-relaunch'
   try {
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', {name: 'Project context', exact: true}).click()
-    await page.getByRole('combobox', {name: 'Find project'}).fill(project)
-    await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: project, exact: true}).click()
+    await page.getByRole('button', {name: CONTEXT_LABEL, exact: true}).click()
+    await page.getByRole('combobox', {name: FIND_LABEL}).fill(project)
+    await page.getByRole('listbox', {name: PROJECTS_LABEL}).getByRole('option', {name: project, exact: true}).click()
     await page.waitForTimeout(1200)
 
     // --- Settings: grouped sections with real membership/work data.
@@ -56,11 +84,11 @@ test('Phase 7 rendered settings + onboarding journeys with real data', { timeout
 
     // --- Onboard: the wizard opens from the header action; stepper +
     // explicit per-field validation errors.
-    await page.locator('button[aria-label="New project"]').click()
+    await page.locator(`button[aria-label="${NEW_PROJECT}"]`).click()
     await page.waitForTimeout(800)
     const wizard = page.locator('[data-onboarding-wizard]')
     await wizard.waitFor({ timeout: 8000 })
-    assert.match(await wizard.innerText(), /Four bounded steps/, 'onboarding stepper renders')
+    assert.match(await wizard.innerText(), new RegExp(escapeRegex(STEPPER_FIRST)), 'onboarding stepper renders')
     await page.screenshot({ path: `${SHOTS}/onboarding-stepper.png`, fullPage: true })
 
     assert.deepEqual(errors, [], 'no browser page errors during the journeys')

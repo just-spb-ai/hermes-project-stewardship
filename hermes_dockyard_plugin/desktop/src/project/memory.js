@@ -32,12 +32,12 @@ const kindLabel = (kind) => (MEMORY_KINDS.find(([key]) => key === kind) ?? [kind
 
 // "Added by sahil · 8 Oct, 21:40 · from finished work t_1 · edited"
 export function memoryMeta(entry) {
-  const parts = [`Added by ${entry.created_by}`]
+  const parts = [`Добавлено: ${entry.created_by}`]
   const when = formatWhen(entry.created_at)
   if (when) parts.push(when)
-  if (String(entry.source ?? '').startsWith('work:')) parts.push(`from finished work ${entry.source.slice(5)}`)
-  if (entry.supersedes_id != null) parts.push('edited')
-  if (entry.archived_at) parts.push(`archived by ${entry.archived_by}`)
+  if (String(entry.source ?? '').startsWith('work:')) parts.push(`из завершённой работы ${entry.source.slice(5)}`)
+  if (entry.supersedes_id != null) parts.push('изменено')
+  if (entry.archived_at) parts.push(`архивировано: ${entry.archived_by}`)
   return parts.join(' · ')
 }
 
@@ -79,7 +79,7 @@ function MemoryEntry({ entry, canWrite, busy, onEdit, onArchive, onRestore }) {
     editing
       ? jsxs('div', { className: 'dockyard-inline-editor', 'data-memory-editor': entry.id, children: [
         jsx(KindSelect, { value: kind, onChange: setKind, label: 'Тип' }),
-        jsx(TextBox, { value: text, onChange: setText, label: 'Text', field: 'data-memory-edit-text' }),
+        jsx(TextBox, { value: text, onChange: setText, label: 'Текст', field: 'data-memory-edit-text' }),
         jsxs('div', { className: 'dy-mem-actions', children: [
           jsx(Button, { action: 'save-memory-entry', variant: 'primary', small: true, disabled: busy || !text.trim(), onClick: save, children: 'Сохранить' }),
           jsx(Button, { action: 'cancel-memory-edit', small: true, onClick: () => { setEditing(false); setText(entry.text); setKind(entry.kind) }, children: 'Отмена' }),
@@ -90,10 +90,10 @@ function MemoryEntry({ entry, canWrite, busy, onEdit, onArchive, onRestore }) {
         jsx('small', { className: 'dy-mem-meta', children: memoryMeta(entry) }),
       ]}),
     !editing ? jsxs('div', { className: 'dy-mem-actions', children: [
-      entry.supersedes_id != null ? jsx(Button, { action: 'memory-history', small: true, ariaLabel: `History of: ${entry.text}`, onClick: showHistory, children: history ? 'Скрыть историю' : 'История' }) : null,
-      canWrite && !entry.archived_at ? jsx(Button, { action: 'edit-memory-entry', small: true, ariaLabel: `Edit: ${entry.text}`, disabled: busy, onClick: () => setEditing(true), children: 'Изменить' }) : null,
-      canWrite && !entry.archived_at ? jsx(Button, { action: 'archive-memory-entry', small: true, ariaLabel: `Archive: ${entry.text}`, disabled: busy, onClick: () => onArchive(entry), children: 'В архив' }) : null,
-      canWrite && entry.archived_at ? jsx(Button, { action: 'restore-memory-entry', small: true, ariaLabel: `Restore: ${entry.text}`, disabled: busy, onClick: () => onRestore(entry), children: 'Восстановить' }) : null,
+      entry.supersedes_id != null ? jsx(Button, { action: 'memory-history', small: true, ariaLabel: `История: ${entry.text}`, onClick: showHistory, children: history ? 'Скрыть историю' : 'История' }) : null,
+      canWrite && !entry.archived_at ? jsx(Button, { action: 'edit-memory-entry', small: true, ariaLabel: `Изменить: ${entry.text}`, disabled: busy, onClick: () => setEditing(true), children: 'Изменить' }) : null,
+      canWrite && !entry.archived_at ? jsx(Button, { action: 'archive-memory-entry', small: true, ariaLabel: `В архив: ${entry.text}`, disabled: busy, onClick: () => onArchive(entry), children: 'В архив' }) : null,
+      canWrite && entry.archived_at ? jsx(Button, { action: 'restore-memory-entry', small: true, ariaLabel: `Восстановить: ${entry.text}`, disabled: busy, onClick: () => onRestore(entry), children: 'Восстановить' }) : null,
     ]}) : null,
     history ? jsx('ol', { className: 'dy-mem-history', 'data-memory-history': entry.id, children: history.map((version) => jsxs('li', { children: [
       jsx('span', { children: `${kindLabel(version.kind)}: ${version.text}` }),
@@ -167,16 +167,16 @@ export function ProjectMemoryPanel({ project }) {
       jsxs('div', { className: 'dockyard-section-head', children: [
         jsxs('div', { children: [
           jsx('h2', { children: 'Память проекта' }),
-          jsx('p', { children: "What this project's bots are told when they work on it: rules first, then decisions, then facts." }),
+          jsx('p', { children: 'Что боты этого проекта узнают, когда работают над ним: сначала правила, затем решения, затем факты.' }),
         ]}),
-        jsx(StatusTag, { tone: 'neutral', label: `${number(active.length)} ${plural(active.length, 'entry', 'entries')}` }),
+        jsx(StatusTag, { tone: 'neutral', label: `${number(active.length)} ${plural(active.length, 'запись', 'записей')}` }),
       ]}),
       state.status === 'loading' ? jsx('p', { className: 'dockyard-meta', children: 'Загрузка памяти…' }) : null,
       state.status === 'ready' && state.canWrite ? jsxs('div', { className: 'dockyard-inline-editor', 'data-memory-add': true, children: [
         jsx(KindSelect, { value: kind, onChange: setKind, label: 'Тип' }),
-        jsx(TextBox, { value: text, onChange: setText, label: 'Text', field: 'data-memory-text' }),
+        jsx(TextBox, { value: text, onChange: setText, label: 'Текст', field: 'data-memory-text' }),
         source !== 'human' ? jsxs('p', { className: 'dockyard-meta', 'data-memory-source': source, children: [
-          `Starting from finished work ${source.slice(5)}. `,
+          `Начало — завершённая работа ${source.slice(5)}. `,
           jsx(Button, { action: 'clear-memory-source', small: true, onClick: () => { setSource('human'); setText('') }, children: 'Очистить' }),
         ]}) : null,
         jsx('div', { className: 'dy-mem-actions', children: jsx(Button, { action: 'add-memory-entry', variant: 'primary', disabled: busy || !text.trim(), onClick: add, children: busy ? 'Сохранение...' : 'Добавить в память' }) }),
@@ -192,30 +192,30 @@ export function ProjectMemoryPanel({ project }) {
           ...group.map((entry) => jsx(MemoryEntry, { entry, ...entryProps }, `${entry.id}:${entry.archived_at ?? ''}`)),
         ]}, key)
       }),
-      archived.length > 0 ? jsx('div', { className: 'dy-mem-actions', children: jsx(Button, { action: 'toggle-archived-memory', small: true, onClick: () => setShowArchived(!showArchived), children: showArchived ? 'Скрыть архивные' : `Show archived (${number(archived.length)})` }) }) : null,
+      archived.length > 0 ? jsx('div', { className: 'dy-mem-actions', children: jsx(Button, { action: 'toggle-archived-memory', small: true, onClick: () => setShowArchived(!showArchived), children: showArchived ? 'Скрыть архивные' : `Показать архивные (${number(archived.length)})` }) }) : null,
       showArchived && archived.length > 0 ? jsxs('div', { className: 'dy-mem-group', 'data-memory-group': 'archived', children: [
         jsx('h3', { children: 'В архиве' }),
         ...archived.map((entry) => jsx(MemoryEntry, { entry, ...entryProps }, `${entry.id}:${entry.archived_at}`)),
       ]}) : null,
     ]}),
     jsxs('aside', { className: 'dockyard-feature-card', 'data-memory-preview-card': true, children: [
-      jsx('span', { className: 'dockyard-card-label', children: 'WHAT BOTS SEE' }),
+      jsx('span', { className: 'dockyard-card-label', children: 'ЧТО ВИДЯТ БОТЫ' }),
       state.context
         ? jsx('pre', { className: 'dockyard-content-preview', 'data-memory-preview': true, children: state.context })
         : jsx('p', { className: 'dockyard-meta', 'data-memory-preview': true, children: 'Пока пусто. Боты не получат память проекта, пока вы не добавите её.' }),
-      jsx('small', { className: 'dy-mem-count', children: `${number(state.context.length)} of ${number(state.cap)} characters. Bots get this when they work on this project's tasks, or in a chat opened from Project Stewardship.` }),
+      jsx('small', { className: 'dy-mem-count', children: `${number(state.context.length)} из ${number(state.cap)} символов. Боты получают это, когда работают над задачами проекта или в чате, открытом из Project Stewardship.` }),
       jsxs('div', { className: 'dy-mem-suggestions', 'data-memory-suggestions': suggestions.status, children: [
         jsx('h3', { children: 'Из завершённой работы' }),
         suggestions.status === 'loading' ? jsx('p', { className: 'dockyard-meta', children: 'Загрузка завершённой работы…' }) : null,
         suggestions.status === 'unavailable' ? jsx('p', { className: 'dockyard-meta', children: 'Завершённая работа сейчас недоступна.' }) : null,
-        suggestions.status === 'unlinked' ? jsx('p', { className: 'dockyard-meta', children: `${UNLINKED_TITLE}: finished work cannot be shown.` }) : null,
+        suggestions.status === 'unlinked' ? jsx('p', { className: 'dockyard-meta', children: `${UNLINKED_TITLE}: завершённую работу показать нельзя.` }) : null,
         suggestions.status === 'ready' && suggestions.items.length === 0 ? jsx('p', { className: 'dockyard-meta', children: 'Нет завершённой работы с результатом, от которого можно начать.' }) : null,
         ...suggestions.items.map((item) => jsxs('article', { className: 'dy-mem-entry', 'data-memory-suggestion': item.work_id, children: [
           jsxs('div', { className: 'dy-mem-body', children: [
             jsx('p', { className: 'dy-mem-text', children: item.text }),
             jsx('small', { className: 'dy-mem-meta', children: [item.title, item.work_id].filter(Boolean).join(' · ') }),
           ]}),
-          state.canWrite ? jsx('div', { className: 'dy-mem-actions', children: jsx(Button, { action: 'use-memory-suggestion', small: true, ariaLabel: `Start an entry from: ${item.title || item.work_id}`, onClick: () => useSuggestion(item), children: 'Использовать это' }) }) : null,
+          state.canWrite ? jsx('div', { className: 'dy-mem-actions', children: jsx(Button, { action: 'use-memory-suggestion', small: true, ariaLabel: `Начать запись от: ${item.title || item.work_id}`, onClick: () => useSuggestion(item), children: 'Использовать это' }) }) : null,
         ]}, item.work_id)),
       ]}),
     ]}),

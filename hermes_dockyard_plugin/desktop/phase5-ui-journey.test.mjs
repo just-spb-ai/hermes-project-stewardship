@@ -6,9 +6,36 @@
 // No mocks: every step goes through the plugin's fetchJSON proxy into the
 // canonical backend (store + vanilla kanban host), disposable data only.
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// ---- the panel's words (i18n(ru), 19/10/2026) -------------------------------
+// Only the visible strings moved: roles, data-* hooks and wire values did not.
+// Every word is read from the module that publishes it - these modules import
+// React, so the same literal is read out of their own source (never out of a
+// built bundle).
+const sourceOf = (file) => readFileSync(new URL(`./${file}`, import.meta.url), 'utf8')
+const oneIn = (file, pattern, what) => {
+  const found = pattern.exec(sourceOf(file))
+  assert.ok(found, `${what} is published in ${file}`)
+  return found[1]
+}
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// The workflow screen's run readout (src/project/workflows.js).
+const RUN_WORD_PENDING = oneIn('src/project/workflows.js', /RUN_WORDS = \{ pending: \['([^']+)'/, 'a run that is going')
+const LIVE_PREFIX = oneIn('src/project/workflows.js', /label: latest \? `([^`]+)\$\{runWord\(latest\.status\)\[0\]\}/, 'the live-run tag')
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -94,9 +121,9 @@ test('Phase 5 rendered UI journey: bind team, start run, live status, revision a
     await page.goto(BASE, { waitUntil: 'networkidle' })
     await page.locator('[data-tab="project"]').click()
     await page.waitForTimeout(800)
-    await page.getByRole('button', {name: 'Project context', exact: true}).click()
-    await page.getByRole('combobox', {name: 'Find project'}).fill(project)
-    await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: project, exact: true}).click()
+    await page.getByRole('button', {name: CONTEXT_LABEL, exact: true}).click()
+    await page.getByRole('combobox', {name: FIND_LABEL}).fill(project)
+    await page.getByRole('listbox', {name: PROJECTS_LABEL}).getByRole('option', {name: project, exact: true}).click()
     await page.waitForTimeout(1500)
     // Option A: project workflows live under Project > Workflows.
     await page.locator('[data-tab="project"]').click()
@@ -110,10 +137,10 @@ test('Phase 5 rendered UI journey: bind team, start run, live status, revision a
     await page.locator('[data-workflow-library-item]').first().click()
     await page.waitForTimeout(1500)
     // Live execution panel shows truthful pending state
-    await page.getByText('pending', { exact: false }).first().waitFor({ timeout: 10000 })
+    await page.getByText(RUN_WORD_PENDING, { exact: false }).first().waitFor({ timeout: 10000 })
     const bodyText = await page.locator('body').innerText()
     assert.match(bodyText, /UI e2e build/, 'canvas/live panel shows the workflow nodes')
-    assert.match(bodyText, /no runs yet|pending|Live:/, 'live status section renders')
+    assert.match(bodyText, new RegExp(`${escapeRegex(RUN_WORD_PENDING)}|${escapeRegex(LIVE_PREFIX.trim())}`), 'live status section renders')
 
     // --- 6. Advance canonical tasks through their real lifecycle and
     // watch the UI run status derive from canonical states (advance → refresh).

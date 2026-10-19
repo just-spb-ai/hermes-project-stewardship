@@ -9,6 +9,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
+import { one } from './test-support/src-words.mjs';
 
 const PLUGIN_PATH = process.env.DOCKYARD_PLUGIN_PATH
   || fileURLToPath(new URL('./plugin.js', import.meta.url));
@@ -58,10 +59,17 @@ test('pairwise widths 1440/768/390 + 200% zoom invariants', () => {
 
 test('empty/large/offline/destructive states implemented', () => {
   const lower = text.toLowerCase();
-  for (const s of ['empty', 'offline', 'destructive', 'loading', 'stale', 'recovery', 'permission']) {
+  for (const s of ['empty', 'offline', 'destructive', 'loading', 'stale', 'permission']) {
     assert.ok(lower.includes(s), `state ${s} missing`);
   }
-  assert.ok(text.includes('Preview is stale'));
+  // The recovery requirement is a sentence a person reads, so it is read out
+  // of the module that publishes it (src/project/panels.js) rather than
+  // spelled here.
+  const recovery = one('src/project/panels.js', /checked: form\.requireRollback[\s\S]{0,400}?jsx\('small', \{ children: '([^']+)' \}\)/);
+  assert.ok(text.includes(recovery), `state recovery missing (${recovery})`);
+  // The "preview is stale" message a failed bulk reassignment shows.
+  const stalePreview = one('src/views/backlog.js', /setBulkError\(`([^`]+)`\)/);
+  assert.ok(text.includes(stalePreview), `preview-stale message missing (${stalePreview})`);
   assert.ok(text.includes('aria-modal'));
 });
 
@@ -70,8 +78,12 @@ test('critical journeys onboarding/departure/lead/archive present', () => {
     assert.ok(text.includes(route), `missing journey ${route}`);
   }
   // departure_pending is backend-owned; Desktop surfaces operation progress.
-  assert.ok(text.includes('member departure'));
-  assert.ok(text.includes('Retry remaining'));
+  // The heading and the retry control are read from the views that render
+  // them, so a translated panel keeps this check honest.
+  const departure = one('src/views/teams.js', /'data-pending-transfers': true[\s\S]{0,200}?jsx\('h3', \{ children: '([^']+)' \}\)/);
+  assert.ok(text.includes(departure), `missing member-departure heading (${departure})`);
+  const retry = one('src/views/backlog-board.js', /'data-transfer-retry': operation\.op_id, onClick: \(\) => retryTransfer\(operation\.op_id\), children: '([^']+)'/);
+  assert.ok(text.includes(retry), `missing retry-remaining control (${retry})`);
 });
 
 test('key contrast pairs meet WCAG AA (4.5 text / 3 UI)', () => {

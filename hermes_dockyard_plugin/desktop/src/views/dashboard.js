@@ -6,7 +6,7 @@ import { jsx } from '../runtime/react.js'
 import { sortApprovals } from '../data/loaders.js'
 import { Icon } from '../lib/ui.js'
 import { number } from '../lib/ui.js'
-import { plural } from '../lib/ui.js'
+import { pluralRu } from '../lib/ui.js'
 import { Button } from '../lib/ui.js'
 import { riskDetails } from '../lib/ui.js'
 import { StatusTag } from '../lib/ui.js'
@@ -36,11 +36,11 @@ export function DiscoveredProfilePicker({ profiles = [], value = '', onChange, n
   const query = search.trim().toLowerCase()
   const visible = normalised.filter((profile) => !query || profile.label.toLowerCase().includes(query) || profile.value.toLowerCase().includes(query))
   return jsxs('div', { className: 'dockyard-field dockyard-profile-picker', 'data-profile-picker': name, children: [
-    jsx('label', { htmlFor: `dockyard-profile-search-${name}`, children: `${label} search` }),
+    jsx('label', { htmlFor: `dockyard-profile-search-${name}`, children: `Поиск: ${label}` }),
     jsx('input', { id: `dockyard-profile-search-${name}`, 'data-profile-search': true, value: search, placeholder: 'Поиск обнаруженных профилей', disabled, onInput: (event) => setSearch(event.target.value), onChange: (event) => setSearch(event.target.value) }),
     jsx('select', { value, disabled, 'aria-label': label, onChange: (event) => onChange?.(event.target.value), children: [
       jsx('option', { value: '', children: 'Выберите доступный профиль' }, 'none'),
-      ...visible.map((profile) => jsx('option', { value: profile.value, disabled: profile.available === false || profile.selectable === false, children: `${profile.label}${profile.available === false || profile.selectable === false ? ' (unavailable)' : ''}` }, profile.value)),
+      ...visible.map((profile) => jsx('option', { value: profile.value, disabled: profile.available === false || profile.selectable === false, children: `${profile.label}${profile.available === false || profile.selectable === false ? ' (недоступен)' : ''}` }, profile.value)),
     ] }),
   ] })
 }
@@ -62,7 +62,7 @@ export function AttentionPanel({ items, onReview }) {
     jsxs('div', { className: 'dockyard-attention-summary', children: [
       jsx('h2', { children: 'Ждёт твоего решения' }),
       jsx('strong', { className: 'dockyard-decision-count', children: number(owed) }),
-      jsx('p', { children: `${number(owed)} ${plural(owed, 'decision')} carry project context and a declared risk.` }),
+      jsx('p', { children: `${number(owed)} ${pluralRu(owed, 'решение несёт', 'решения несут', 'решений несут')} контекст проекта и заявленный риск.` }),
       jsx(Button, { variant: 'primary', onClick: onReview, children: 'Обзор решений' }),
     ]}),
     jsxs('div', { className: 'dockyard-attention-copy', children: [
@@ -74,7 +74,7 @@ export function AttentionPanel({ items, onReview }) {
             jsx(StatusTag, { tone, label }),
             jsxs('span', { children: [
               jsx('strong', { children: item.title }),
-              jsx('span', { className: 'dockyard-meta', children: `${item.project || 'Unknown project'} / ${item.ref}` }),
+              jsx('span', { className: 'dockyard-meta', children: `${item.project || 'Проект не назван'} / ${item.ref}` }),
             ]}),
             jsx(Button, { small: true, onClick: onReview, children: 'Открыть' }),
           ]}, item.ref)
@@ -92,7 +92,7 @@ export function WorkBar({ work, project = false, label = 'Распределен
   return jsxs('div', {
     className: `dockyard-work-visual${project ? ' compact' : ''}`,
     role: 'img',
-    'aria-label': `${label}: ${backlog} backlog, ${active} active, ${done} done`,
+    'aria-label': `${label}: ${backlog} в бэклоге, ${active} в работе, ${done} готово`,
     'data-work-visual': project ? true : undefined,
     children: [
       backlog > 0 ? jsx('span', { className: 'backlog', style: { width: `${(backlog / total) * 100}%` } }) : null,
@@ -116,9 +116,9 @@ export function PortfolioVisual({ projects }) {
     jsxs('div', { className: 'dockyard-portfolio-chart', children: [
       jsx(WorkBar, { work: totals, label: 'Распределение работ по портфелю' }),
       jsxs('div', { className: 'dockyard-work-legend', children: [
-        jsxs('span', { className: 'backlog', children: [jsx('i', {}), `${number(totals.backlog)} backlog`] }),
-        jsxs('span', { className: 'active', children: [jsx('i', {}), `${number(totals.active)} active`] }),
-        jsxs('span', { className: 'done', children: [jsx('i', {}), `${number(totals.done)} done`] }),
+        jsxs('span', { className: 'backlog', children: [jsx('i', {}), `${number(totals.backlog)} в бэклоге`] }),
+        jsxs('span', { className: 'active', children: [jsx('i', {}), `${number(totals.active)} в работе`] }),
+        jsxs('span', { className: 'done', children: [jsx('i', {}), `${number(totals.done)} готово`] }),
       ]}),
     ]}),
   ]})
@@ -128,7 +128,7 @@ export function ProjectRow({ project, context, botNames, onOpen }) {
   const [tone, label] = healthDetails(project.health)
   const work = project.work ?? {}
   const alerts = Number(project.unacked_notifications ?? 0)
-  const mission = context?.settings?.mission || (project.phase ? `Phase: ${project.phase}` : 'Миссия не задана')
+  const mission = context?.settings?.mission || (project.phase ? `Фаза: ${project.phase}` : 'Миссия не задана')
   const activeAssignees = [...new Set((context?.workItems ?? [])
     .filter((item) => !['done', 'backlog', 'cancelled'].includes(item.status))
     .map((item) => item.assignee)
@@ -151,16 +151,16 @@ export function ProjectRow({ project, context, botNames, onOpen }) {
     ]}),
     jsx('div', { className: 'dockyard-project-cell health', role: 'cell', children: jsx(StatusTag, { tone, label }) }),
     jsxs('div', { className: 'dockyard-project-cell work', role: 'cell', children: [
-      jsxs('div', { className: 'dockyard-work-stats', 'aria-label': `Work: ${work.active ?? 0} active, ${work.backlog ?? 0} backlog, ${work.done ?? 0} done`, children: [
-        jsxs('span', { children: [jsx('strong', { children: number(work.active) }), ' active'] }),
-        jsxs('span', { children: [jsx('strong', { children: number(work.backlog) }), ' backlog'] }),
-        jsxs('span', { children: [jsx('strong', { children: number(work.done) }), ' done'] }),
+      jsxs('div', { className: 'dockyard-work-stats', 'aria-label': `Работа: ${work.active ?? 0} в работе, ${work.backlog ?? 0} в бэклоге, ${work.done ?? 0} готово`, children: [
+        jsxs('span', { children: [jsx('strong', { children: number(work.active) }), ' в работе'] }),
+        jsxs('span', { children: [jsx('strong', { children: number(work.backlog) }), ' в бэклоге'] }),
+        jsxs('span', { children: [jsx('strong', { children: number(work.done) }), ' готово'] }),
       ]}),
-      jsx(WorkBar, { work, project: true, label: `${project.id} work distribution` }),
+      jsx(WorkBar, { work, project: true, label: `Распределение работ: ${project.id}` }),
     ]}),
     jsx('div', { className: 'dockyard-project-cell alerts', role: 'cell', children:
       jsxs('span', { className: `dockyard-alert-count${alerts > 0 ? ' has-alert' : ''}`, children: [
-        alerts > 0 ? `${number(alerts)} unread` : 'Непрочитанных нет',
+        alerts > 0 ? `${number(alerts)} непрочитанных` : 'Непрочитанных нет',
         typeof onOpen === 'function'
           ? jsx(Button, { action: 'open', small: true, onClick: () => onOpen(`s1:project/${project.id}`), children: 'Открыть' })
           : null,
@@ -177,7 +177,7 @@ export function FleetActivity({ notifications, onOpen }) {
         jsx('h2', { children: 'Активность флота' }),
         jsx('p', { children: 'Свежие атрибутированные сигналы проекта.' }),
       ]}),
-      jsx('span', { className: 'dockyard-section-count', children: `${number(items.length)} recent` }),
+      jsx('span', { className: 'dockyard-section-count', children: `${number(items.length)} свежих` }),
     ]}),
     items.length > 0 ? jsx('div', { className: 'dockyard-activity-list', children:
       items.map((note) => {
@@ -186,7 +186,7 @@ export function FleetActivity({ notifications, onOpen }) {
           jsx('span', { className: `dockyard-notification-marker ${tone}`, children: jsx(Icon, { name: tone === 'warning' || tone === 'danger' ? 'alert' : 'bell' }) }),
           jsxs('span', { children: [
             jsx('p', { children: note.title || 'Событие флота' }),
-            jsx('span', { className: 'dockyard-meta', children: `${note.project || 'Fleet'}${note.body ? ` / ${note.body}` : ''}` }),
+            jsx('span', { className: 'dockyard-meta', children: `${note.project || 'Флот'}${note.body ? ` / ${note.body}` : ''}` }),
             jsx('time', { children: formatWhen(note.created_at) }),
             typeof onOpen === 'function' && note.deep_link
               ? jsx(Button, { action: 'open', small: true, onClick: () => onOpen(note.deep_link), children: 'Открыть' })
@@ -214,21 +214,21 @@ export function FleetGroups({ groups, onOpen }) {
           jsx('h2', { children: def.label }),
           jsx('p', { children: def.description }),
         ]}),
-        jsx('span', { className: 'dockyard-section-count', children: `${number(items.length)} ${items.length === 1 ? 'item' : 'items'}` }),
+        jsx('span', { className: 'dockyard-section-count', children: `${number(items.length)} ${pluralRu(items.length, 'элемент', 'элемента', 'элементов')}` }),
       ]}),
       jsx('div', { className: 'dockyard-fleet-list', children:
         items.map((item, index) => jsxs('div', { className: 'dockyard-fleet-row', 'data-fleet-row': `${def.key}:${item.ref || item.title}`, children: [
           jsxs('span', { children: [
             jsx('strong', { children: item.title }),
-            jsx('span', { className: 'dockyard-meta', children: `${item.project || 'Fleet'}${item.ref && item.ref !== 'evidence' ? ` / ${item.ref}` : ''}` }),
+            jsx('span', { className: 'dockyard-meta', children: `${item.project || 'Флот'}${item.ref && item.ref !== 'evidence' ? ` / ${item.ref}` : ''}` }),
             def.key !== 'decisions' && item.detail ? jsx('span', { className: 'dockyard-meta', children: item.detail }) : null,
-            def.key === 'informational' && item.severity ? jsx('span', { className: 'dockyard-meta', children: `sev: ${item.severity}` }) : null,
+            def.key === 'informational' && item.severity ? jsx('span', { className: 'dockyard-meta', children: `важность: ${item.severity}` }) : null,
           ]}),
           jsx('span', { className: 'dockyard-meta', children: [
-            item.cause ? `cause: ${item.cause}` : null,
-            item.risk ? `risk: ${item.risk}` : null,
-            item.owner ? `owner: ${item.owner}` : null,
-            typeof item.age_days === 'number' ? `age: ${item.age_days}d` : null,
+            item.cause ? `причина: ${item.cause}` : null,
+            item.risk ? `риск: ${item.risk}` : null,
+            item.owner ? `владелец: ${item.owner}` : null,
+            typeof item.age_days === 'number' ? `ожидание: ${item.age_days} дн.` : null,
           ].filter(Boolean).join(' · ') }),
           typeof onOpen === 'function' && item.deep_link
             ? jsx(Button, { action: 'open', small: true, onClick: () => onOpen(item.deep_link, item), children: 'Открыть' })
@@ -259,10 +259,17 @@ const ISSUE_FILTERS = Object.freeze([['all', 'Все проблемы'], ['decis
   ...Object.entries(ISSUE_CAUSES).map(([cause, { tag }]) => [cause, tag])])
 // Portfolio statuses with a segment of their own in the fleet health bar.
 const HEALTH_STATES = Object.freeze(['on_track', 'at_risk', 'stalled', 'idle', 'unlinked'])
+// Stable metric hooks: each Dashboard metric card carries a data-metric value
+// that never moves. The displayed label is translated, so deriving the hook
+// from it collapsed every card to the same "-" and no test or user script
+// could address one metric. The ids keep the English slugs they always had.
+export const METRIC_IDS = Object.freeze({
+  projects: 'projects', review: 'needs-your-review', onTrack: 'on-track', evidence: 'evidence-files',
+})
 
 export function issueLabels(item) {
   if (item?.kind === 'initiative_approval') {
-    return { tag: 'Одобрение', tone: 'approval', impact: `Risk: ${readableLabel(item.risk)}`, open: 'Одобрение ревью' }
+    return { tag: 'Одобрение', tone: 'approval', impact: `Риск: ${readableLabel(item.risk)}`, open: 'Одобрение ревью' }
   }
   const known = ISSUE_CAUSES[item?.cause] ?? { tag: readableLabel(item?.cause, 'Проблема'), tone: 'notice', impact: 'Требует внимания' }
   // Open goes where the item's deep link goes: one work item, or the project.
@@ -319,9 +326,9 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
   const workActive = Number(view.totals?.active_work ?? 0)
   const waiting = Number(view.inbox?.count ?? 0)
   const statusName = { on_track: 'В графике', at_risk: 'Под угрозой', stalled: 'Застряло', idle: 'Простой', unlinked: UNLINKED_LABEL }
-  const metric = (label, value, detail, icon, tone, onClick) => jsxs(onClick ? 'button' : 'div', {
+  const metric = (label, metricId, value, detail, icon, tone, onClick) => jsxs(onClick ? 'button' : 'div', {
     type: onClick ? 'button' : undefined, onClick,
-    'data-metric': label.toLowerCase().replace(/[^a-z]+/g, '-'),
+    'data-metric': metricId,
     className: `dockyard-command-metric dockyard-command-metric-${tone}${onClick ? ' is-actionable' : ''}`, children: [
       jsxs('span', { className: 'dockyard-command-metric-label', children: [jsx(Icon, { name: icon }), label] }),
       jsx('strong', { children: value }), jsx('small', { children: detail }),
@@ -338,11 +345,11 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
         jsx('span', { role: 'cell', children: project.owner || 'Не назначен' }),
         jsx('span', { role: 'cell', className: `dockyard-command-health ${project.status}`, children: status }),
         jsxs('span', { role: 'cell', className: 'dockyard-command-progress', children: [
-          jsx('span', { children: unreadable ? 'Неизвестно (не связан)' : total ? `${number(done)} / ${number(total)} work items` : 'Рабочих элементов нет' }),
+          jsx('span', { children: unreadable ? 'Неизвестно (не связан)' : total ? `${number(done)} / ${number(total)} рабочих элементов` : 'Рабочих элементов нет' }),
           jsx('span', { className: 'dockyard-command-progress-track', children: jsx('span', { style: { width: `${total ? Math.round((done / total) * 100) : 0}%` } }) }),
         ] }),
-        jsx('span', { role: 'cell', children: project.next_milestone ? `${project.next_milestone.name} · ${project.next_milestone.due || 'No due date'}` : 'Не запланировано' }),
-        jsx('span', { role: 'cell', children: unreadable ? 'Неизвестно (не связан)' : (project.items?.blocked || project.items?.overdue) ? `${number(project.items.blocked || 0)} blocked · ${number(project.items.overdue || 0)} overdue` : 'Открытых блокеров нет' }),
+        jsx('span', { role: 'cell', children: project.next_milestone ? `${project.next_milestone.name} · ${project.next_milestone.due || 'Без срока'}` : 'Не запланировано' }),
+        jsx('span', { role: 'cell', children: unreadable ? 'Неизвестно (не связан)' : (project.items?.blocked || project.items?.overdue) ? `${number(project.items.blocked || 0)} заблокировано · ${number(project.items.overdue || 0)} просрочено` : 'Открытых блокеров нет' }),
       ]}, project.project_id)
   }
   const empty = projects.length === 0
@@ -351,11 +358,11 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
     const filtered = projects.filter((project) => !match ||
       [project.project_id, project.owner, project.status].some((field) => String(field || '').toLowerCase().includes(match)))
     return jsxs('div', { className: 'dockyard-command dockyard-command-directory', 'data-dashboard-subview': 'projects', children: [
-      jsx(Button, { small: true, onClick: () => setSubview('overview'), children: '← Back to Dashboard' }),
+      jsx(Button, { small: true, onClick: () => setSubview('overview'), children: '← Назад к панели' }),
       jsxs('div', { className: 'dockyard-command-head', children: [
-        jsxs('div', { children: [jsx('span', { className: 'dockyard-command-eyebrow', children: 'FLEET DIRECTORY' }),
+        jsxs('div', { children: [jsx('span', { className: 'dockyard-command-eyebrow', children: 'РЕЕСТР ФЛОТА' }),
           jsx('h1', { children: 'Все проекты' }),
-          jsx('p', { children: `${number(projects.length)} ${plural(projects.length, 'project')} under watch. Select one for its Overview.` })] }),
+          jsx('p', { children: `${number(projects.length)} ${pluralRu(projects.length, 'проект', 'проекта', 'проектов')} под наблюдением. Выберите проект, чтобы открыть обзор.` })] }),
         jsx('input', { type: 'search', className: 'dockyard-command-directory-search',
           value: directoryQuery, onChange: (event) => setDirectoryQuery(event.target.value),
           placeholder: 'Фильтр по проекту, владельцу или статусу', 'aria-label': 'Фильтровать проекты' }),
@@ -372,11 +379,11 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
     const filtered = rows.filter((item) => issueFilter === 'all' ||
       (issueFilter === 'decision' ? item.kind === 'initiative_approval' : item.cause === issueFilter))
     return jsxs('div', { className: 'dockyard-command dockyard-command-directory', 'data-dashboard-subview': 'issues', children: [
-      jsx(Button, { small: true, onClick: () => setSubview('overview'), children: '← Back to Dashboard' }),
+      jsx(Button, { small: true, onClick: () => setSubview('overview'), children: '← Назад к панели' }),
       jsxs('div', { className: 'dockyard-command-head', children: [
-        jsxs('div', { children: [jsx('span', { className: 'dockyard-command-eyebrow', children: 'FLEET ATTENTION' }),
+        jsxs('div', { children: [jsx('span', { className: 'dockyard-command-eyebrow', children: 'ВНИМАНИЕ ФЛОТА' }),
           jsx('h1', { children: 'Все проблемы' }),
-          jsx('p', { children: `${number(rows.length)} ${plural(rows.length, 'item')} need a decision or intervention across the fleet.` })] }),
+          jsx('p', { children: `${number(rows.length)} ${pluralRu(rows.length, 'элемент требует', 'элемента требуют', 'элементов требуют')} решения или вмешательства по всему флоту.` })] }),
         jsx(Button, { onClick: onInbox, children: 'Открыть «Входящие одобрения»' }),
       ] }),
       jsx('div', { className: 'dockyard-command-issue-filters', role: 'group', 'aria-label': 'Фильтр проблем', children:
@@ -397,34 +404,34 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
             jsxs('span', { className: 'dockyard-command-title', children: [jsx('strong', { children: item.title }),
               jsx('small', { children: item.ref || item.detail || '' })] }),
             jsx('span', { children: item.project }), jsx('span', { children: item.owner || readableLabel(item.risk, 'Не назначен') }),
-            jsx('span', { children: typeof item.age_days === 'number' ? `${number(item.age_days)}d` : 'Не записано' }),
+            jsx('span', { children: typeof item.age_days === 'number' ? `${number(item.age_days)} дн.` : 'Не записано' }),
           ], }, `${item.kind}:${item.ref || index}`)) : jsx('p', { className: 'dockyard-command-empty', children: 'Нет проблем по этому фильтру.' }),
       ] }),
     ] })
   }
   return jsxs('div', { className: 'dockyard-command', children: [
     jsxs('div', { className: 'dockyard-command-head', children: [
-      jsxs('div', { children: [jsx('span', { className: 'dockyard-command-eyebrow', children: 'FLEET OVERVIEW' }),
+      jsxs('div', { children: [jsx('span', { className: 'dockyard-command-eyebrow', children: 'ОБЗОР ФЛОТА' }),
         jsx('h1', { children: 'Командный центр' }),
         jsx('p', { children: 'Управление проектом с одного взгляда. Доказательства важнее предположений.' })] }),
       jsxs('div', { className: 'dockyard-command-head-actions', children: [
         jsx(Button, { action: 'refresh', onClick: onRefresh, children: 'Обновить' }),
         jsx(Button, { action: 'open-bot-teams', onClick: () => onOpen?.('s5:teams'), children: 'Команды ботов' }),
-        waiting > 0 ? jsx(Button, { variant: 'primary', onClick: onInbox, children: `Review ${number(waiting)} ${plural(waiting, 'decision')}` }) : null,
+        waiting > 0 ? jsx(Button, { variant: 'primary', onClick: onInbox, children: `Проверить ${number(waiting)} ${pluralRu(waiting, 'решение', 'решения', 'решений')}` }) : null,
       ]}),
     ]}),
     empty ? jsx(EmptyState, { title: 'Нет проектов под наблюдением', description: 'Используйте «Новый проект» или «Подключить существующий проект» выше, чтобы добавить первый проект.', icon: 'project' }) :
     jsxs(Fragment, { children: [
       jsxs('section', { className: 'dockyard-command-metrics', 'aria-label': 'Сводка флота', children: [
-        metric('PROJECTS', number(projects.length), `${number(projects.filter((p) => p.status === 'at_risk').length)} at risk`, 'folders', 'info', () => setSubview('projects')),
-        metric('NEEDS YOUR REVIEW', number(waiting), `${number(interventions.length)} other ${plural(interventions.length, 'intervention')}`, 'triangle-alert', 'warning', () => setSubview('issues')),
-        metric('ON TRACK', `${number(onTrack)} / ${number(projects.length)}`, 'Статус поставки проекта', 'activity', onTrack ? 'success' : 'neutral', () => setSubview('projects')),
-        metric('EVIDENCE FILES', evidenceFiles == null ? 'Недоступно' : number(evidenceFiles), 'Файлы, прикреплённые к отслеживаемым проектам', 'file-text', 'accent'),
+        metric('ПРОЕКТЫ', METRIC_IDS.projects, number(projects.length), `${number(projects.filter((p) => p.status === 'at_risk').length)} под угрозой`, 'folders', 'info', () => setSubview('projects')),
+        metric('ЖДЁТ ТВОЕГО РЕВЬЮ', METRIC_IDS.review, number(waiting), `${number(interventions.length)} ${pluralRu(interventions.length, 'другое вмешательство', 'других вмешательства', 'других вмешательств')}`, 'triangle-alert', 'warning', () => setSubview('issues')),
+        metric('В ГРАФИКЕ', METRIC_IDS.onTrack, `${number(onTrack)} / ${number(projects.length)}`, 'Статус поставки проекта', 'activity', onTrack ? 'success' : 'neutral', () => setSubview('projects')),
+        metric('ФАЙЛЫ ДОКАЗАТЕЛЬСТВ', METRIC_IDS.evidence, evidenceFiles == null ? 'Недоступно' : number(evidenceFiles), 'Файлы, прикреплённые к отслеживаемым проектам', 'file-text', 'accent'),
       ]}),
       jsxs('div', { className: 'dockyard-command-health-summary', children: [
-        jsx('span', { children: 'FLEET HEALTH' }),
+        jsx('span', { children: 'ЗДОРОВЬЕ ФЛОТА' }),
         jsx('div', { className: 'dockyard-command-health-track', role: 'img',
-          'aria-label': `${number(onTrack)} on track, ${number(projects.filter((p) => p.status === 'at_risk').length)} at risk, ${number(projects.filter((p) => p.status === 'stalled').length)} stalled, ${number(projects.filter((p) => p.status === 'idle').length)} idle, ${number(projects.filter((p) => p.status === 'unlinked').length)} not linked, ${number(projects.filter((p) => !HEALTH_STATES.includes(p.status)).length)} unverified`,
+          'aria-label': `${number(onTrack)} в графике, ${number(projects.filter((p) => p.status === 'at_risk').length)} под угрозой, ${number(projects.filter((p) => p.status === 'stalled').length)} застряло, ${number(projects.filter((p) => p.status === 'idle').length)} простой, ${number(projects.filter((p) => p.status === 'unlinked').length)} не связано, ${number(projects.filter((p) => !HEALTH_STATES.includes(p.status)).length)} не верифицировано`,
           children: [...HEALTH_STATES, 'unknown'].map((state) => {
             const count = projects.filter((p) => (HEALTH_STATES.includes(p.status) ? p.status : 'unknown') === state).length
             return count ? jsx('span', { className: `dockyard-health-segment ${state}`, style: { width: `${count / projects.length * 100}%` } }, state) : null
@@ -437,7 +444,7 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
       unassignedTotal ? jsxs('div', { className: 'dockyard-soft-alert', 'data-unassigned-alert': 'fleet', role: 'status', children: [
         jsx(Icon, { name: 'user' }),
         jsxs('div', { className: 'dockyard-soft-alert-body', children: [
-          jsx('strong', { children: `${number(unassignedTotal)} ${plural(unassignedTotal, 'work item')} ${unassignedTotal === 1 ? 'is' : 'are'} unassigned, so no bot will pick ${unassignedTotal === 1 ? 'it' : 'them'} up.` }),
+          jsx('strong', { children: `${number(unassignedTotal)} ${pluralRu(unassignedTotal, 'рабочий элемент не назначен', 'рабочих элемента не назначены', 'рабочих элементов не назначено')} — ни один бот их не подхватит.` }),
           jsx('span', { className: 'dockyard-soft-alert-items', children: unassigned.map(([projectId, count]) => jsx('button', { type: 'button', className: 'dockyard-soft-alert-item', 'data-unassigned-project': projectId,
             onClick: () => onOpen?.(`s3:unassigned/${projectId}`), children: `${projectId} (${number(count)})` }, projectId)) }),
         ] }),
@@ -453,12 +460,12 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
                     jsx(Icon, { name: 'triangle-alert' }),
                     jsx('span', { children: 'Нужно твоё решение' }),
                     jsx('span', { className: 'dockyard-section-count', 'data-section-count': 'needs-you-now', 'aria-hidden': true, children: number(rows.length) }),
-                    jsx('span', { className: 'dockyard-sr-only', children: `, ${number(rows.length)} ${plural(rows.length, 'item')}` }),
+                    jsx('span', { className: 'dockyard-sr-only', children: `, ${number(rows.length)} ${pluralRu(rows.length, 'элемент', 'элемента', 'элементов')}` }),
                   ] }) }),
                 needsFolded ? null : jsx('p', { children: 'Решения и заблокированная работа, отсортированные по времени ожидания.' })] }),
               jsxs('div', { className: 'dockyard-command-section-actions', children: [
                 jsx(Button, { small: true, onClick: () => setSubview('issues'), children: 'Все проблемы' }),
-                jsx(Button, { small: true, onClick: onInbox, children: `View approvals (${number(waiting)})` }),
+                jsx(Button, { small: true, onClick: onInbox, children: `Открыть одобрения (${number(waiting)})` }),
               ] }),
             ]}),
             jsxs('div', { className: 'dockyard-command-table-wrap', id: 'dy-needs-you-now', hidden: needsFolded, children: [
@@ -466,17 +473,17 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
                 jsx('span', { children: 'Тип' }), jsx('span', { children: 'Элемент' }), jsx('span', { children: 'Проект' }), jsx('span', { children: 'Влияние' }), jsx('span', { children: 'Ожидание' }),
               ]}),
               rows.length ? rows.map((item, index) => jsxs('button', { type: 'button', className: `dockyard-command-row dockyard-command-attention-row${focusItem === item ? ' is-selected' : ''}`,
-                onClick: () => setSelected(item), 'aria-label': `Inspect ${item.title}`, children: [
+                onClick: () => setSelected(item), 'aria-label': `Открыть элемент: ${item.title}`, children: [
                   jsx('span', { className: `dockyard-command-type ${issueLabels(item).tone}`, children: issueLabels(item).tag }),
                   jsxs('span', { className: 'dockyard-command-title', children: [jsx('strong', { children: item.title }), jsx('small', { children: item.ref || item.detail || '' })] }),
                   jsx('span', { children: item.project }), jsx('span', { children: issueLabels(item).impact }),
-                  jsx('span', { children: typeof item.age_days === 'number' ? `${number(item.age_days)}d` : 'Не записано' }),
+                  jsx('span', { children: typeof item.age_days === 'number' ? `${number(item.age_days)} дн.` : 'Не записано' }),
                 ]}, `${item.kind}:${item.ref || index}`)) : jsx('p', { className: 'dockyard-command-empty', children: 'Решения или заблокированные работы не требуют внимания.' }),
             ]}),
           ]}),
           jsxs('section', { className: 'dockyard-command-section', children: [
             jsxs('div', { className: 'dockyard-section-head', children: [
-              jsxs('div', { children: [jsxs('h2', { children: [jsx(Icon, { name: 'folder-kanban' }), 'Здоровье проекта'] }), jsx('p', { children: `Portfolio status across ${number(projects.length)} ${plural(projects.length, 'project')}.` })] }),
+              jsxs('div', { children: [jsxs('h2', { children: [jsx(Icon, { name: 'folder-kanban' }), 'Здоровье проекта'] }), jsx('p', { children: `Состояние портфеля по ${number(projects.length)} ${pluralRu(projects.length, 'проекту', 'проектам', 'проектам')}.` })] }),
               jsx(Button, { small: true, onClick: () => setSubview('projects'), children: 'Все проекты' }),
             ]}),
             jsxs('div', { className: 'dockyard-command-table-wrap', role: 'table', 'aria-label': 'Флот проекта', children: [
@@ -491,14 +498,14 @@ export function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
           jsxs('div', { className: 'dockyard-command-detail-head', children: [jsx('h2', { children: focusItem?.kind === 'initiative_approval' ? 'Одобрение' : 'Детали элемента' }), focusItem ? jsx(Button, { small: true, onClick: () => setSelected(false), children: 'Закрыть' }) : null] }),
           focusItem ? jsxs(Fragment, { children: [
             jsx('h3', { children: focusItem.title }),
-            jsx('p', { className: 'dockyard-meta', children: `${focusItem.project} · ${focusItem.ref || ''} · ${number(focusItem.age_days ?? 0)} ${plural(focusItem.age_days ?? 0, 'day')} waiting` }),
+            jsx('p', { className: 'dockyard-meta', children: `${focusItem.project} · ${focusItem.ref || ''} · ожидание ${number(focusItem.age_days ?? 0)} ${pluralRu(focusItem.age_days ?? 0, 'день', 'дня', 'дней')}` }),
             detailError ? jsx('p', { role: 'alert', children: detailError }) : null,
             focusItem.kind === 'initiative_approval' && decision ? jsxs(Fragment, { children: [
               jsx('h4', { children: 'Сводка' }), jsx('p', { children: decision.reason || 'Обоснование не предоставлено.' }),
               jsx('h4', { children: 'Ожидаемый результат' }), jsx('p', { children: decision.expected_outcome || 'Не задано.' }),
               jsx('h4', { children: 'Контекст решения' }),
               jsxs('dl', { children: [jsx('dt', { children: 'Риск' }), jsx('dd', { children: readableLabel(decision.risk) }),
-                jsx('dt', { children: 'Автор предложения' }), jsx('dd', { children: String(decision.proposer || 'Stewardship') }),
+                jsx('dt', { children: 'Автор предложения' }), jsx('dd', { children: String(decision.proposer || 'Управление проектами') }),
                 jsx('dt', { children: 'Контракт доказательств' }), jsx('dd', { children: validationSummary(decision.validation?.contract) })] }),
             ]}) : null,
             jsx('h4', { children: 'Недавняя активность' }),
@@ -542,19 +549,19 @@ export function InitiativeRevisionRow({ initiative, onResubmitted }) {
       // the authoritative source (never a client-side status rewrite).
       onResubmitted?.(initiative.ref)
     } catch (failure) {
-      setError(`Resubmission was not recorded. ${String(failure?.message ?? failure)}`)
+      setError(`Повторная отправка не записана. ${String(failure?.message ?? failure)}`)
     } finally { setBusy(false) }
   }
   return jsxs('article', { 'data-initiative-row': initiative.ref, 'data-initiative-status': initiative.status, children: [
     jsxs('span', { children: [jsx('strong', { children: initiative.title }), jsx('small', { children: initiative.expected_outcome || initiative.rationale || initiative.ref })] }),
     returned ? jsx(Button, { small: true, onClick: () => setOpen((v) => !v), children: open ? 'Скрыть ревизию' : 'Доработать и отправить' })
-      : jsx(StatusTag, { tone: initiative.status === 'pending_approval' ? 'warning' : 'info', label: String(initiative.status || 'unknown').replaceAll('_', ' ') }),
+      : jsx(StatusTag, { tone: initiative.status === 'pending_approval' ? 'warning' : 'info', label: String(initiative.status || 'неизвестно').replaceAll('_', ' ') }),
     returned && open ? jsxs('div', { className: 'dockyard-initiative-revision', 'data-resubmit-form': true, children: [
       feedback.length ? jsxs('div', { className: 'dockyard-comment-thread', children:
         feedback.map((row) => jsxs('p', { children: [
           jsx('strong', { children: row.actor }), jsx('span', { children: ` · ${row.reason}` }),
         ]}, row.id)),
-      }) : jsx('p', { className: 'dockyard-meta', children: 'Loading reviewer feedback…' }),
+      }) : jsx('p', { className: 'dockyard-meta', children: 'Загрузка отзыва ревьюера…' }),
       jsx('input', {
         value: rationale, onChange: (event) => setRationale(event.target.value),
         placeholder: 'Обновлённое обоснование (учтите отзыв)', 'aria-label': 'Обновлённое обоснование',
@@ -586,7 +593,7 @@ export function FirstAssessmentCard({ projectId }) {
     jsxs('div', { className: 'dockyard-section-head', children: [
       jsxs('div', { children: [
         jsx('h2', { children: 'Первая оценка (только чтение)' }),
-        jsx('p', { children: 'One manual cycle: verifies the repo, records health and objective evidence. Enables no schedules.' }),
+        jsx('p', { children: 'Один ручной цикл: проверяет репозиторий, фиксирует здоровье и объективные доказательства. По расписанию ничего не запускает.' }),
       ]}),
       jsx(Button, {
         action: 'run-first-assessment',
@@ -600,10 +607,10 @@ export function FirstAssessmentCard({ projectId }) {
     error ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: error }) : null,
     result ? jsxs('dl', { className: 'dockyard-onboarding-review', 'data-assessment-result': true, children: [
       jsx('dt', { children: 'Верификация' }), jsx('dd', { children: result.assessment?.verification_ok ? 'Пройдено' : 'Не пройдено' }),
-      jsx('dt', { children: 'Здоровье' }), jsx('dd', { children: result.assessment?.health_state ?? 'unknown' }),
+      jsx('dt', { children: 'Здоровье' }), jsx('dd', { children: result.assessment?.health_state ?? 'Неизвестно' }),
       jsx('dt', { children: 'Задачи-цели оценены' }), jsx('dd', { children: number((result.assessment?.objective_results ?? []).length) }),
       jsx('dt', { children: 'Инициативы созданы' }), jsx('dd', { children: number(result.assessment?.initiatives_created ?? 0) }),
-      jsx('dt', { children: 'Расписания' }), jsx('dd', { children: result.schedules_enabled ? 'enabled' : 'отключено (онбординг никогда не включает автоматизацию)' }),
+      jsx('dt', { children: 'Расписания' }), jsx('dd', { children: result.schedules_enabled ? 'включено' : 'отключено (онбординг никогда не включает автоматизацию)' }),
     ]}) : null,
   ]})
 }

@@ -62,7 +62,7 @@ export function buildBundle(realBackend = false) {
     "createRoot(document.getElementById('root')).render(page.render());",
   ].join('\n'));
   const nm = path.join(DASHBOARD, 'node_modules');
-  execFileSync(path.join(nm, '.bin', 'esbuild'), [
+  execFileSync(process.execPath, [path.join(nm, 'esbuild', 'bin', 'esbuild'), 
     entry, '--bundle', '--format=esm', `--outfile=${bundle}`, '--jsx=automatic',
     `--alias:@hermes/plugin-sdk=${sdk}`,
     `--alias:react=${path.join(nm, 'react')}`,

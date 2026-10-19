@@ -303,7 +303,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     try {
       await api(`/projects/${encodeURIComponent(project.id)}/work-items/${encodeURIComponent(ref)}`, { method: 'PATCH', body: patch })
       setCellError(null)
-      emitToast('success', okMessage || `${item.title} updated.`)
+      emitToast('success', okMessage || `${item.title} — обновлено.`)
       onRefresh()
     } catch (failure) {
       flashCell(ref, Object.keys(patch)[0], String(failure?.message ?? failure).replace(/^\d+:\s*/, '').slice(0, 120))
@@ -318,7 +318,7 @@ export function BacklogView({ view, onRefresh, preset }) {
   const commitRank = (entry, value) => {
     setEditing(null)
     const next = parseInt(value, 10)
-    if (!Number.isInteger(next) || next < 1 || next > entries.length) { flashCell(entry.item_ref, 'rank', `Rank must be between 1 and ${entries.length}.`); return }
+    if (!Number.isInteger(next) || next < 1 || next > entries.length) { flashCell(entry.item_ref, 'rank', `Ранг должен быть от 1 до ${entries.length}.`); return }
     if (next !== Number(entry.rank)) requestMove(entry, next)
   }
   const changeStatus = async (ref, nextStatus) => {
@@ -328,7 +328,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     try {
       await api(`/projects/${encodeURIComponent(project.id)}/work-items/${encodeURIComponent(ref)}/transition`, { method: 'POST', body: { status: nextStatus } })
       setCellError(null)
-      emitToast('success', `${item.title} → ${STATUS_LABELS[nextStatus] || nextStatus}`)
+      emitToast('success', `${item.title} → ${STATUS_LABELS[nextStatus] || readableLabel(nextStatus)}`)
       onRefresh()
     } catch (failure) {
       flashCell(ref, 'status', String(failure?.message ?? failure).replace(/^\d+:\s*/, '').slice(0, 130))
@@ -341,7 +341,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     try {
       await api(`/projects/${encodeURIComponent(project.id)}/work-items/${encodeURIComponent(ref)}/assign`, { method: 'POST', body: { assignee_id: bot || null } })
       setCellError(null)
-      emitToast('success', bot ? `${item.title} → ${bot}` : `${item.title} is now unassigned.`)
+      emitToast('success', bot ? `${item.title} → ${bot}` : `${item.title} — теперь без исполнителя.`)
       onRefresh()
     } catch (failure) {
       flashCell(ref, 'assignee', String(failure?.message ?? failure).replace(/^\d+:\s*/, '').slice(0, 130))
@@ -351,10 +351,10 @@ export function BacklogView({ view, onRefresh, preset }) {
     const item = workByRef[ref]
     if (!item || nextType === item.type) return
     if (!typeChoicesFor(ref).includes(nextType)) {
-      flashCell(ref, 'type', `Changing ${item.type} to ${nextType} is not valid for this item's parent and children.`)
+      flashCell(ref, 'type', `Смена типа с «${typeLabel(item.type)}» на «${typeLabel(nextType)}» недопустима для родителя и дочерних элементов этого пункта.`)
       return
     }
-    patchItem(ref, { type: nextType }, `${item.title} is now ${typeLabel(nextType)}.`)
+    patchItem(ref, { type: nextType }, `${item.title} — новый тип: ${typeLabel(nextType)}.`)
   }
   const requestReparent = (ref) => {
     setMenuRef(null)
@@ -374,7 +374,7 @@ export function BacklogView({ view, onRefresh, preset }) {
       const title = pendingMove.title
       setPendingMove(null)
       setReason('')
-      emitToast('success', `${title} ${parent ? 'moved under ' + (workByRef[parent]?.title || parent) : 'moved to top level'} (audit recorded).`)
+      emitToast('success', `${title} — ${parent ? 'новый родитель: «' + (workByRef[parent]?.title || parent) + '»' : 'перемещено на верхний уровень'} (запись аудита создана).`)
       onRefresh()
     } catch (failure) {
       setError(String(failure?.message ?? failure))
@@ -423,14 +423,14 @@ export function BacklogView({ view, onRefresh, preset }) {
       })
       if (!parsed.length) { setImportError('В этом вводе строки не найдены.'); setImportRows(null); return }
       if ((preview.errors ?? []).length && !parsed.some((row) => row.problems.length)) {
-        setImportError((preview.errors ?? []).map((problem) => `Row ${problem.row}: ${problem.error}`).join('; '))
+        setImportError((preview.errors ?? []).map((problem) => `Строка ${problem.row}: ${problem.error}`).join('; '))
       }
       setImportRows(parsed)
       setImportValid(preview.valid === true && parsed.every((row) => !row.errors.length))
       if (advance) setImportStep(2)
     }).catch((bad) => {
       setImportBusy(false)
-      setImportError(`Could not validate: ${String(bad?.message ?? bad).slice(0, 140)}`)
+      setImportError(`Не удалось проверить: ${String(bad?.message ?? bad).slice(0, 140)}`)
       setImportRows(null)
     })
   }
@@ -449,7 +449,7 @@ export function BacklogView({ view, onRefresh, preset }) {
       setImportResult({
         written: Number(result?.imported ?? 0),
         items: Array.isArray(result?.items) ? result.items : [],
-        failed: (result?.preview?.errors ?? []).map((problem) => `row ${problem.row}: ${problem.error}`),
+        failed: (result?.preview?.errors ?? []).map((problem) => `строка ${problem.row}: ${problem.error}`),
       })
       if (result?.preview?.valid === false) setImportError('Сервер отклонил импорт. Вернитесь к источнику и исправьте указанные строки.')
       setImportStep(3)
@@ -458,7 +458,7 @@ export function BacklogView({ view, onRefresh, preset }) {
       setImportBusy(false)
       // P6.9: partial failure stays visible; nothing is lost — preview state
       // is kept so the operator can fix rows and retry the same file.
-      setImportError(`Import failed before commit: ${String(bad?.message ?? bad).slice(0, 140)}`)
+      setImportError(`Импорт не удался до фиксации: ${String(bad?.message ?? bad).slice(0, 140)}`)
     }
   }
   const saveMove = async () => {
@@ -548,7 +548,7 @@ export function BacklogView({ view, onRefresh, preset }) {
       }
       const created = await api(`/projects/${encodeURIComponent(project.id)}/backlog/items`, { method: 'POST', body })
       setCreateOpen(false)
-      emitToast('success', `${created.ref || 'Work item'} created and added to the backlog.`)
+      emitToast('success', `${created.ref || 'Рабочий элемент'} создан и добавлен в бэклог.`)
       onRefresh()
     } catch (failure) {
       setCreateError(String(failure?.message ?? failure))
@@ -580,7 +580,7 @@ export function BacklogView({ view, onRefresh, preset }) {
       await onRefresh?.()
     } catch (failure) {
       setBulkPreview(null)
-      setBulkError(`Preview is stale or reassignment failed: ${String(failure?.message ?? failure)}. Refresh the preview and retry.`)
+      setBulkError(`Предпросмотр устарел или переназначение не удалось: ${String(failure?.message ?? failure)}. Обновите предпросмотр и повторите.`)
     }
     setBulkBusy(false)
   }
@@ -603,7 +603,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     pendingParentChoices.unshift(workByRef[pendingCurrentParent])
   }
   const pendingParentChanged = Boolean(pendingMove?.mode === 'parent' && pendingParentRef !== pendingCurrentParent)
-  const sortLabels = { rank: 'Rank', type: 'Тип', title: 'Рабочий элемент', status: 'Статус', initiative: 'Инициатива', assignee: 'Исполнитель', age: 'Давность', estimate: 'Оценка', due: 'Срок' }
+  const sortLabels = { rank: 'Ранг', type: 'Тип', title: 'Рабочий элемент', status: 'Статус', initiative: 'Инициатива', assignee: 'Исполнитель', age: 'Давность', estimate: 'Оценка', due: 'Срок' }
   const sortHeader = (key, label, className = '') => jsx('button', {
     type: 'button',
     className: `th-sort th-cell ${className}${sortKey === key ? ' active' : ''}`.trim(),

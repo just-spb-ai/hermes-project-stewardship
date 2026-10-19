@@ -3,11 +3,13 @@
 // on one project ask for one. Journeys written before then got a project
 // without asking (the app used to open on the project needing most
 // attention); they now pick it the way a person does, through the switcher.
+import { SWITCHER_WORDS } from '../src/lib/panel-words.js'
+
 export const ALL_PROJECTS = '*'
 
 export async function pickProject(page, id) {
-  await page.getByRole('button', { name: 'Project context', exact: true }).click()
-  if (id !== ALL_PROJECTS) await page.getByRole('combobox', { name: 'Find project' }).fill(id)
+  await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click()
+  if (id !== ALL_PROJECTS) await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(id)
   await page.locator(`[role="listbox"] [data-project-option="${id}"]`).click()
   await page.locator(`.dy-sw-trigger[data-scope="${id}"]`).waitFor()
 }

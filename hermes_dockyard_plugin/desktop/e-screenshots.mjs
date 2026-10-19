@@ -1,7 +1,6 @@
 // Batch E acceptance screenshots for Sahil's visual sign-off: the
 // Notifications screen with real (disposable) data, then with the detail
-// panel open (the settings panel sits beside the list in both), at
-// 1440 / 1024 / 390 x light / dark.
+// panel open, at 1440 / 1024 / 390 x light / dark.
 // Not a test of behaviour (e5-notifications.test.mjs covers that). Run only via
 // run-browser-suite.mjs so it uses the disposable backend, never real data:
 //   HPS_BROWSER_PORT=19697 node run-browser-suite.mjs $PWD/e-screenshots.mjs
@@ -12,6 +11,7 @@ import {mkdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {chromium} from './browser-harness.mjs';
+import {CONSOLE_TABS} from './src/lib/panel-words.js';
 
 const BASE = process.env.STEWARD_DESKTOP_URL;
 const API = process.env.STEWARD_API_URL;
@@ -58,12 +58,17 @@ test('Batch E notifications acceptance screenshots (3 widths x 2 themes)', {time
   try {
     await page.goto(BASE, {waitUntil: 'load'});
     await page.waitForSelector('[data-tab="dashboard"]', {timeout: 20000});
-    await page.getByRole('tab', {name: 'Notifications'}).click();
+    // The notification-settings surface lives on App settings now and the list
+    // links to it. It must exist, so it is checked where it lives, and the
+    // captures below still cover the Notifications screen only.
+    await page.getByRole('tab', {name: CONSOLE_TABS.settings}).click();
+    await page.locator('[data-notification-settings]').waitFor();
+    await page.getByRole('tab', {name: CONSOLE_TABS.notifications}).click();
     await page.locator('.dy-notif-filters').waitFor();
     const rows = page.locator('.dockyard-notification-row');
     await rows.first().waitFor();
-    // The settings panel sits beside the list, so it is in every capture.
-    await page.locator('[data-notification-settings]').waitFor();
+    // ...and this screen points at that surface.
+    await page.locator('[data-notification-settings-link]').waitFor();
     await shoot('notifications-list');
 
     await rows.first().locator('button').first().click();

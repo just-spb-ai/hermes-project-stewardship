@@ -7,7 +7,7 @@ import { api } from '../runtime/context.js'
 import { jsxs } from '../runtime/react.js'
 import { jsx } from '../runtime/react.js'
 import { PageHead } from '../lib/ui.js'
-import { number } from '../lib/ui.js'
+import { number, pluralRu } from '../lib/ui.js'
 import { StatusTag } from '../lib/ui.js'
 import { DiscoveredProfilePicker } from '../views/dashboard.js'
 import { Button } from '../lib/ui.js'
@@ -16,6 +16,9 @@ import { Icon } from '../lib/ui.js'
 import { formatWhen } from '../lib/ui.js'
 import { UnlinkedNotice } from '../lib/ui.js'
 import { isUnlinked } from '../data/unlinked.js'
+// Backend lifecycle words for bot, session, transfer and item rows.
+const STATUS_WORDS = { busy: 'Занят', idle: 'Свободен', stuck: 'Застрял', offline: 'Не в сети', active: 'Активна', completed: 'Завершён', failed: 'Ошибка', running: 'В работе' }
+
 export function TeamsView({ view, onRefresh }) {
   const bots = view.bots ?? []
   const workload = view.workload ?? { busy: [], idle: [], stuck: [], offline: [] }
@@ -80,7 +83,7 @@ export function TeamsView({ view, onRefresh }) {
       const result = await api(`/projects/${encodeURIComponent(projectId)}/transfers/execute`, { method: 'POST', body: { from_profile: transferFrom, to_profile: transferTo, fingerprint: preview.fingerprint, idempotency_key: `desktop-${preview.fingerprint}` } })
       setOperation(await api(`/operations/${encodeURIComponent(result.op_id)}`))
       await refreshTeam()
-    } catch (failure) { setPreview(null); setTeamError(`Preview is stale or transfer failed: ${String(failure?.message ?? failure)}`) }
+    } catch (failure) { setPreview(null); setTeamError(`Предпросмотр устарел или перенос не удался: ${String(failure?.message ?? failure)}`) }
   }
   const acceptTransfer = (result, scope) => {
     if (transferScope.current !== scope || result.project_id !== scope?.projectId) return false
@@ -136,18 +139,18 @@ export function TeamsView({ view, onRefresh }) {
     jsx(PageHead, {
       title: 'Команды ботов',
       description: 'Возможности, доступность, групповое владение и структурированные передачи.',
-      status: workload.stuck?.length > 0 ? `${number(workload.stuck.length)} stuck` : null,
+      status: workload.stuck?.length > 0 ? `Застряло: ${number(workload.stuck.length)}` : null,
       onRefresh,
     }),
     jsxs('section', { className: 'dockyard-feature-card', 'data-team-management': true, children: [
-      jsxs('header', { children: [jsx('h2', { children: 'Команда проекта' }), jsx('span', { children: team ? `Revision ${team.membership_revision}` : unlinked ? 'Не связан' : 'Loading canonical roster…' })] }),
+      jsxs('header', { children: [jsx('h2', { children: 'Команда проекта' }), jsx('span', { children: team ? `Ревизия ${team.membership_revision}` : unlinked ? 'Не связан' : 'Загрузка канонического состава…' })] }),
       // The roster lives in Hermes: an unlinked project has none (10/10/2026).
       unlinked ? jsx(UnlinkedNotice, { projectId }) : null,
       teamError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: teamError }) : null,
       jsx('div', { className: 'dockyard-bot-grid', children: (team?.members ?? []).map((member) => jsxs('article', { className: 'dockyard-bot-card', 'data-project-member': member.profile_slug, children: [
-        jsxs('strong', { children: [member.profile_slug, member.role === 'lead' ? ' · Lead' : ' · Member'] }),
+        jsxs('strong', { children: [member.profile_slug, member.role === 'lead' ? ' · Ведущий' : ' · Участник'] }),
         jsx(StatusTag, { tone: member.hermes_available ? 'success' : 'warning', label: member.hermes_available ? 'Hermes доступен' : 'Недоступно' }),
-        jsx('span', { children: `${number(member.workload?.total ?? 0)} canonical work items` }),
+        jsx('span', { children: `канонических рабочих элементов: ${number(member.workload?.total ?? 0)}` }),
         jsx('small', { children: member.state }),
       ] }, member.profile_slug)) }),
       jsx(DiscoveredProfilePicker, { profiles, name: 'team-member-lead', label: 'Обнаруженный профиль Hermes', value: chosenProfile, onChange: setChosenProfile }),
@@ -161,33 +164,33 @@ export function TeamsView({ view, onRefresh }) {
       ] }),
       jsx(Button, { action: 'preview-work-transfer', disabled: !transferFrom || !transferTo || transferFrom === transferTo, onClick: previewTransfer, children: 'Посмотреть точные последствия' }),
       preview ? jsxs('div', { 'data-transfer-preview': preview.fingerprint, children: [
-        jsx('strong', { children: `${number(preview.enumerated_count)} items enumerated · fingerprint ${preview.fingerprint}` }),
-        jsx('ul', { children: [...(preview.eligible_items ?? []), ...(preview.excluded_items ?? [])].map((item) => jsx('li', { children: `${item.id} · ${item.title || ''} · ${item.status} · ${item.reason || 'eligible'}` }, item.id)) }),
+        jsx('strong', { children: `Перечислено элементов: ${number(preview.enumerated_count)} · отпечаток ${preview.fingerprint}` }),
+        jsx('ul', { children: [...(preview.eligible_items ?? []), ...(preview.excluded_items ?? [])].map((item) => jsx('li', { children: `${item.id} · ${item.title || ''} · ${item.status} · ${item.reason || 'подходит'}` }, item.id)) }),
         jsx(Button, { action: 'execute-work-transfer', variant: 'primary', disabled: preview.complete !== true || (preview.excluded_items ?? []).length > 0, onClick: executeTransfer, children: 'Подтвердить точный перенос' }),
       ] }) : null,
       pendingOperations.length ? jsxs('section', { 'data-pending-transfers': true, children: [
-        jsx('h3', { children: 'Unfinished transfers · member departure' }),
+        jsx('h3', { children: 'Незавершённые передачи · уход участника' }),
         ...pendingOperations.map((pending) => jsx(Button, {
           onClick: () => resumeTransfer(pending.op_id),
-          children: `Resume ${pending.op_id}`,
+          children: `Продолжить ${pending.op_id}`,
         }, pending.op_id)),
       ] }) : null,
       operation?.project_id === projectId ? jsxs('div', { 'data-transfer-operation': operation.op_id, role: 'status', children: [
-        jsx('strong', { children: `${operation.op_id} · ${operation.state}` }),
-        jsx('span', { children: `${(operation.items ?? []).filter((item) => item.outcome === 'completed').length} of ${(operation.items ?? []).length} transferred` }),
-        jsx('ul', { children: (operation.items ?? []).map((item) => jsx('li', { children: `${item.item_id} · ${item.outcome}${item.detail ? ` · ${item.detail}` : ''}` }, item.item_id)) }),
+        jsx('strong', { children: `${operation.op_id} · ${STATUS_WORDS[operation.state] ?? operation.state}` }),
+        jsx('span', { children: `Перенесено ${(operation.items ?? []).filter((item) => item.outcome === 'completed').length} из ${(operation.items ?? []).length}` }),
+        jsx('ul', { children: (operation.items ?? []).map((item) => jsx('li', { children: `${item.item_id} · ${STATUS_WORDS[item.outcome] ?? item.outcome}${item.detail ? ` · ${item.detail}` : ''}` }, item.item_id)) }),
         operation.state !== 'completed' ? jsx(Button, { action: 'retry-work-transfer', onClick: retryTransfer, children: 'Повторить оставшиеся пункты' }) : null,
       ] }) : null,
     ]}),
     jsxs('section', { className: 'dockyard-workload-card', 'data-workload-visual': true, children: [
       jsxs('div', { children: [jsx('h2', { children: 'Нагрузка' }), jsx('p', { children: 'Текущая доступность флота по его работе.' })] }),
       jsxs('div', { className: 'dockyard-workload-chart', children: [
-        jsxs('div', { className: 'dockyard-work-visual', role: 'img', 'aria-label': `${workload.busy?.length ?? 0} busy, ${workload.idle?.length ?? 0} idle, ${workload.stuck?.length ?? 0} stuck, ${workload.offline?.length ?? 0} offline`, children: [
+        jsxs('div', { className: 'dockyard-work-visual', role: 'img', 'aria-label': `занято: ${workload.busy?.length ?? 0}, свободно: ${workload.idle?.length ?? 0}, застряло: ${workload.stuck?.length ?? 0}, не в сети: ${workload.offline?.length ?? 0}`, children: [
           workload.busy?.length > 0 ? jsx('span', { className: 'active', style: { width: `${(workload.busy.length / total) * 100}%` } }) : null,
           workload.idle?.length > 0 ? jsx('span', { className: 'done', style: { width: `${(workload.idle.length / total) * 100}%` } }) : null,
           workload.stuck?.length > 0 ? jsx('span', { className: 'danger', style: { width: `${(workload.stuck.length / total) * 100}%` } }) : null,
         ]}),
-        jsx('p', { children: `${number(workload.busy?.length ?? 0)} busy / ${number(workload.idle?.length ?? 0)} idle / ${number(workload.stuck?.length ?? 0)} stuck / ${number(workload.offline?.length ?? 0)} offline` }),
+        jsx('p', { children: `${number(workload.busy?.length ?? 0)} занято / ${number(workload.idle?.length ?? 0)} свободно / ${number(workload.stuck?.length ?? 0)} застряло / ${number(workload.offline?.length ?? 0)} не в сети` }),
       ]}),
     ]}),
     jsxs('div', { className: 'dockyard-teams-layout', children: [
@@ -199,7 +202,7 @@ export function TeamsView({ view, onRefresh }) {
             jsxs('header', { children: [
               jsx('span', { className: 'dockyard-avatar', children: initials(bot.name || bot.id) }),
               jsxs('span', { children: [jsx('strong', { children: bot.name || bot.id }), jsx('small', { children: bot.current_item || 'Нет активного элемента' })] }),
-              jsx(StatusTag, { tone: bot.status === 'busy' ? 'warning' : bot.status === 'idle' ? 'success' : 'neutral', label: bot.status || 'unknown' }),
+              jsx(StatusTag, { tone: bot.status === 'busy' ? 'warning' : bot.status === 'idle' ? 'success' : 'neutral', label: STATUS_WORDS[bot.status] ?? (bot.status || 'неизвестно') }),
             ]}),
             jsx('div', { className: 'dockyard-capabilities', children:
               (bot.capabilities ?? []).length > 0
@@ -224,14 +227,14 @@ export function TeamsView({ view, onRefresh }) {
         jsx('div', { className: 'dockyard-group-list', children:
           (view.groups ?? []).length > 0
             ? view.groups.map((group) => jsxs('article', { className: 'dockyard-group-card', 'data-bot-group': group.name, children: [
-                jsxs('header', { children: [jsx('strong', { children: group.name }), jsx('span', { children: `${number(group.members?.length ?? 0)} members` })] }),
+                jsxs('header', { children: [jsx('strong', { children: group.name }), jsx('span', { children: `${number(group.members?.length ?? 0)} ${pluralRu(group.members?.length ?? 0, 'участник', 'участника', 'участников')}` })] }),
                 jsx('p', { children: group.purpose || 'Назначение не указано' }),
                 jsx('div', { className: 'dockyard-group-members', children: (group.members ?? []).map((member) => jsx('span', { className: 'dockyard-avatar', title: member, children: initials(member) }, member)) }),
                 jsx('div', { className: 'dockyard-handoff-list', children:
                   (view.messages?.[group.name] ?? []).length > 0
                     ? view.messages[group.name].map((message, index) => jsxs('div', { children: [
                         jsx('strong', { children: message.payload?.summary || message.msg_type || 'Событие A2A' }),
-                        jsx('span', { children: `${message.from_actor || 'Unknown actor'} / ${formatWhen(message.created_at)}` }),
+                        jsx('span', { children: `${message.from_actor || 'Автор неизвестен'} / ${formatWhen(message.created_at)}` }),
                       ]}, String(message.id ?? index)))
                     : jsx('span', { className: 'dockyard-meta', children: 'Сообщения о передаче не записаны.' }),
                 }),
@@ -243,8 +246,8 @@ export function TeamsView({ view, onRefresh }) {
     selectedBot ? jsxs('section', { className: 'dockyard-feature-card dockyard-bot-session-panel', 'data-bot-session-panel': selectedBot, children: [
       jsxs('header', { className: 'dockyard-section-head', children: [
         jsxs('div', { children: [
-          jsx('span', { className: 'dockyard-card-label', children: 'SESSION EVIDENCE' }),
-          jsx('h2', { children: `${bots.find((bot) => bot.id === selectedBot)?.name || selectedBot} activity` }),
+          jsx('span', { className: 'dockyard-card-label', children: 'ДОКАЗАТЕЛЬСТВА СЕССИИ' }),
+          jsx('h2', { children: `Активность: ${bots.find((bot) => bot.id === selectedBot)?.name || selectedBot}` }),
           jsx('p', { children: sessionData?.scope_note || 'Системные промпты и приватные рассуждения исключены.' }),
         ]}),
         jsx(Button, { small: true, onClick: () => { setSelectedBot(null); setSessionData(null); setTranscript(null) }, children: 'Закрыть' }),
@@ -265,7 +268,7 @@ export function TeamsView({ view, onRefresh }) {
                       onClick: () => openTranscript(session.session_id),
                       children: [
                         jsxs('span', { children: [jsx('strong', { children: session.title }), jsx('small', { children: `${session.source} / ${formatWhen(session.last_activity_at)}` })] }),
-                        jsx(StatusTag, { tone: session.status === 'active' ? 'success' : 'neutral', label: session.status }),
+                        jsx(StatusTag, { tone: session.status === 'active' ? 'success' : 'neutral', label: STATUS_WORDS[session.status] ?? session.status }),
                       ],
                     }, session.session_id))
                   : jsx('p', { className: 'dockyard-meta', children: 'Сессии этого бота не записаны.' }),
@@ -273,13 +276,13 @@ export function TeamsView({ view, onRefresh }) {
             transcript
               ? jsxs('article', { className: 'dockyard-transcript', 'data-session-transcript': transcript.session?.session_id, children: [
                   jsxs('header', { children: [
-                    jsxs('div', { children: [jsx('h3', { children: transcript.session?.title || 'Транскрипт сессии' }), jsx('span', { children: `${transcript.session?.source || 'unknown'} / ${transcript.session?.model || 'model not recorded'}` })] }),
-                    jsx(StatusTag, { tone: 'info', label: `${number(transcript.messages?.length ?? 0)} messages` }),
+                    jsxs('div', { children: [jsx('h3', { children: transcript.session?.title || 'Транскрипт сессии' }), jsx('span', { children: `${transcript.session?.source || 'неизвестно'} / ${transcript.session?.model || 'модель не записана'}` })] }),
+                    jsx(StatusTag, { tone: 'info', label: `${number(transcript.messages?.length ?? 0)} ${pluralRu(transcript.messages?.length ?? 0, 'сообщение', 'сообщения', 'сообщений')}` }),
                   ]}),
                   jsx('div', { className: 'dockyard-transcript-messages', children:
                     (transcript.messages ?? []).map((message, index) => jsxs('div', { className: `dockyard-transcript-message ${message.role}`, 'data-transcript-message': message.role, children: [
                       jsxs('div', { children: [jsx('strong', { children: message.tool_name || message.role }), jsx('span', { children: formatWhen(message.timestamp) })] }),
-                      jsx('pre', { children: message.content || '(empty message)' }),
+                      jsx('pre', { children: message.content || '(пустое сообщение)' }),
                       message.truncated ? jsx('small', { children: 'Сообщение обрезано по лимиту безопасного показа.' }) : null,
                     ]}, String(message.message_id ?? index))),
                   }),

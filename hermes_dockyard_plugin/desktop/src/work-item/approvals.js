@@ -29,9 +29,9 @@ function RejectDialog({ item, busy, reason, onReason, onCancel, onConfirm }) {
     className: 'dockyard-modal-layer',
     'data-destructive-confirm': `reject-${item.ref}`,
     onClick: (event) => { if (event.target === event.currentTarget && !busy) onCancel() },
-    children: jsxs('div', { className: 'dockyard-modal', role: 'dialog', 'aria-modal': true, 'aria-label': `Reject ${item.title}`, children: [
+    children: jsxs('div', { className: 'dockyard-modal', role: 'dialog', 'aria-modal': true, 'aria-label': `Отклонить ${item.title}`, children: [
       jsx('h2', { children: 'Отклонить эту инициативу?' }),
-      jsx('p', { children: `${item.title} will leave the approval queue. Record the reason in this one confirmation step.` }),
+      jsx('p', { children: `${item.title} покинет очередь одобрения. Причину нужно записать на этом единственном шаге подтверждения.` }),
       jsxs('label', { children: ['Причина отклонения ', jsx('input', {
         value: reason,
         onChange: (event) => onReason(event.target.value),
@@ -95,7 +95,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
     const rows = ledger?.receipts ?? []
     const latest = rows[rows.length - 1]
     if (latest?.decision !== expected) {
-      throw new Error(`Decision receipt did not confirm ${expected}. Refresh before trying again.`)
+      throw new Error(`Квитанция решения не подтвердила ${expected}. Обновите данные и попробуйте снова.`)
     }
     setReceipts(rows)
   }
@@ -122,7 +122,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
     } catch (failure) {
       setState('failed')
       setRejectOpen(false)
-      const message = `${action === 'approve' ? 'Approve' : 'Reject'} could not be confirmed. ${String(failure?.message ?? failure)}`
+      const message = `${action === 'approve' ? 'Одобрение' : 'Отклонение'} не подтвердилось. ${String(failure?.message ?? failure)}`
       setError(message)
       emitToast('danger', message)
     }
@@ -142,7 +142,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
       finish('Возвращено автору предложения с вашим отзывом')
     } catch (failure) {
       setState('failed')
-      const message = `Request changes could not be confirmed. ${String(failure?.message ?? failure)}`
+      const message = `Запрос правок не подтвердился. ${String(failure?.message ?? failure)}`
       setError(message)
       emitToast('danger', message)
     }
@@ -158,7 +158,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
       setComments((rows) => [...rows, created])
       setCommentBody('')
     } catch (failure) {
-      emitToast('danger', `Comment was not recorded. ${String(failure?.message ?? failure)}`)
+      emitToast('danger', `Комментарий не записан. ${String(failure?.message ?? failure)}`)
     }
   }
 
@@ -189,19 +189,19 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
         jsxs('div', { children: [
           onBack ? jsx(Button, { variant: 'quiet', small: true, onClick: onBack, children: 'Назад' }) : null,
           jsx('h2', { children: scope.title }),
-          jsx('small', { children: `${item.project || scope.project_id || 'Unknown project'} · ${item.ref}` }),
+          jsx('small', { children: `${item.project || scope.project_id || 'Проект неизвестен'} · ${item.ref}` }),
         ]}),
         jsx(StatusTag, { tone: riskTone, label: riskLabel }),
       ]}),
       decisionError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: decisionError }) : null,
       jsx(Section, { title: 'Запрошено изменение', children: jsx('p', { children: decisionText(scope.reason) }) }),
-      jsx(Section, { title: 'Политический гейт', children: jsx('p', { className: 'dim', children: decision ? `Decision revision ${decision.revision}; the displayed fingerprint is required before mutation.` : 'Loading the decision gate…' }) }),
+      jsx(Section, { title: 'Политический гейт', children: jsx('p', { className: 'dim', children: decision ? `Ревизия решения ${decision.revision}; перед изменением требуется показанный отпечаток.` : 'Загрузка политического гейта…' }) }),
       jsx(Section, { title: 'Потенциальное влияние', children: jsx('p', { children: decisionText(scope.expected_outcome) }) }),
-      jsx(Section, { title: 'Граница возможностей', children: jsx('p', { children: scope.authority?.granted ? jsxs('span', { children: [jsx('code', { children: scope.authority.granted }), ` for ${decisionText(scope.authority.scope)}`] }) : 'Разрешения возможностей не предоставлены.' }) }),
+      jsx(Section, { title: 'Граница возможностей', children: jsx('p', { children: scope.authority?.granted ? jsxs('span', { children: [jsx('code', { children: scope.authority.granted }), ` для ${decisionText(scope.authority.scope)}`] }) : 'Разрешения возможностей не предоставлены.' }) }),
       jsx(Section, { title: 'Кто запросил', children: jsx('p', { children: decisionText(scope.proposer) }) }),
       jsx(Section, { title: 'Доказательства', children: jsxs('ul', { className: 'dockyard-inbox-evidence-list', children: [
-        ...steps.map((step, index) => jsx('li', { 'data-evidence-cell': true, children: `Step ${index + 1}: ${decisionText(step)}` }, `${item.ref}-step-${index}`)),
-        contract.tests ? jsx('li', { 'data-evidence-cell': true, children: `Tests: ${decisionText(contract.tests)}` }) : null,
+        ...steps.map((step, index) => jsx('li', { 'data-evidence-cell': true, children: `Шаг ${index + 1}: ${decisionText(step)}` }, `${item.ref}-step-${index}`)),
+        contract.tests ? jsx('li', { 'data-evidence-cell': true, children: `Тесты: ${decisionText(contract.tests)}` }) : null,
         steps.length === 0 && !contract.tests ? jsx('li', { 'data-evidence-cell': true, children: 'Доказательства проверки не предоставлены.' }) : null,
       ] }) }),
       jsx(Section, { title: 'Затронутые рабочие элементы', children: jsx('ul', { className: 'dockyard-inbox-workitems', children: affected.length
@@ -211,7 +211,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
         ? activity.map((entry, index) => jsx('p', { children: `${entry.actor || entry.kind} · ${formatWhen(entry.at)} · ${entry.body || entry.summary || entry.decision || entry.kind}` }, `${entry.kind}-${entry.at}-${index}`))
         : jsx('p', { children: 'Активность пока не записана.' }) }) }),
       jsx(Section, { title: "Комментарии не меняют решение", children: jsxs('div', { className: 'dockyard-approval-comments', 'data-approval-comments': true, children: [
-        jsx('p', { className: 'dim', children: 'Comments add audit context only. They do not approve, reject, or alter the decision fingerprint.' }),
+        jsx('p', { className: 'dim', children: 'Комментарии добавляют только контекст для аудита. Они не одобряют решение, не отклоняют его и не меняют отпечаток решения.' }),
         jsxs('div', { className: 'dockyard-comment-form', children: [
           jsx('input', { value: commentBody, onChange: (event) => setCommentBody(event.target.value), placeholder: 'Добавить контекст, не принимая решение', 'aria-label': 'Комментарий' }),
           jsx(Button, { small: true, variant: 'quiet', onClick: addComment, disabled: !commentBody.trim(), children: 'Комментарий' }),
@@ -224,7 +224,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
           jsx('textarea', { value: feedback, rows: 6, onChange: (event) => setFeedback(event.target.value), placeholder: 'Что должно измениться до одобрения' }),
         ] }),
         jsxs('div', { className: 'dockyard-request-changes-actions', children: [
-          jsx(Button, { variant: 'primary', action: 'confirm-request-changes', disabled: busy || !feedback.trim(), onClick: requestChanges, children: busy ? 'Returning…' : 'Вернуть автору' }),
+          jsx(Button, { variant: 'primary', action: 'confirm-request-changes', disabled: busy || !feedback.trim(), onClick: requestChanges, children: busy ? 'Возврат…' : 'Вернуть автору' }),
           jsx(Button, { variant: 'quiet', disabled: busy, onClick: () => setChangesOpen(false), children: 'Отмена' }),
         ]}),
       ]}) : null,
@@ -234,7 +234,7 @@ export function ApprovalDetail({ item, onResolved, onBack }) {
         jsx(Button, { action: 'reject', variant: 'danger', disabled: busy || !decision, onClick: () => setRejectOpen(true), children: 'Отклонить' }),
         jsx(Button, { action: 'request-changes', variant: 'quiet', disabled: busy || !decision, onClick: () => setChangesOpen((open) => !open), children: 'Запросить правки' }),
         jsx('span', { className: 'spacer' }),
-        jsx('span', { className: 'dockyard-inbox-status', children: decision ? 'Требуется квитанция' : 'Loading evidence…' }),
+        jsx('span', { className: 'dockyard-inbox-status', children: decision ? 'Требуется квитанция' : 'Загрузка доказательств…' }),
       ]}),
       rejectOpen ? jsx(RejectDialog, {
         item,

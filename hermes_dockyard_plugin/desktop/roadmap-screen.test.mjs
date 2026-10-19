@@ -10,7 +10,41 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { ALL_PROJECTS, pickProject } from './test-support/project-scope.mjs'
+import { ALL_PROJECTS, all, one, pickProject, switcherWords } from './test-support/src-words.mjs'
+import { CONSOLE_TABS, ROADMAP_WORDS } from './src/lib/panel-words.js'
+
+// The Roadmap's words come from the modules that render them: views/roadmap.js
+// for the toolbar, the tree head, the goal contract and the check editor;
+// views/roadmap-dialogs.js for the Place…/confirm/waive dialogs;
+// views/roadmap-words.js for the state vocabulary; lib/panel-words.js for the
+// tab and the Place…/Confirm-as-delivered actions. Read out of the source,
+// since all of them import React.
+const RM = 'src/views/roadmap.js'
+const RM_DIALOGS = 'src/views/roadmap-dialogs.js'
+const RM_WORDS = 'src/views/roadmap-words.js'
+const TAB = CONSOLE_TABS.roadmap
+const WORDS = switcherWords()
+const ALL_PROJECTS_HEAD = one(RM, /scope === 'all' \? '([^']+)'/)
+const NO_LINKED_WORK = one(RM, /no_linked_work'\) return chip\('([^']+)'\)/)
+const TOTAL_LINKED = one(RM, /\[\s*'([^']+)', number\(delivery\.total\)\]/)
+const VERIFICATION = one(RM, /\[\s*'([^']+)', text\(contract\.verification\)\]/)
+const COPIED_FROM_GOAL = one(RM, /className: 'dy-rm-copied', children: '([^']+)'/)
+const RESET = one(RM, /className: 'dy-rm-control dy-rm-reset'[\s\S]*?children: '([^']+)'/)
+const SEARCH = one(RM, /type: 'search', placeholder: '([^']+)'/)
+const ATTENTION_ONLY = one(RM, /type: 'checkbox', checked: attentionOnly[\s\S]*?jsx\('span', \{ children: '([^']+)' \}\)/)
+const CHECK_NONE = one(RM, /hasCheck \? state : '([^']+)'/)
+const SET_CHECK = one(RM, /hasCheck \? '[^']+' : '([^']+)'/)
+const EDIT_CHECK = one(RM, /hasCheck \? '([^']+)' : '/)
+const SAVE_CHECK = one(RM, /action: 'roadmap-check-save'[\s\S]*?children: busy \? '[^']+' : '([^']+)'/)
+const CLEAR_CHECK = one(RM, /action: 'roadmap-check-clear'[\s\S]*?children: '([^']+)'/)
+const CHECK_UNKNOWN = one(RM_WORDS, /unknown: '([^']+)'/)
+const READY_TO_CONFIRM = one(RM, /readyToConfirm \? chip\('([^']+)'/)
+const PROJECT_WORD = one(RM_DIALOGS, /children: `([^`$]+) \$\{projectLabel\}`/)
+const CONTINUE = one(RM_DIALOGS, /setStep\('confirm'\)[\s\S]*?children: '([^']+)'/)
+const PLACE_SUBMIT = one(RM_DIALOGS, /submit\(parent\)[\s\S]*?children: busy \? '[^']+' : '([^']+)'/)
+const WAIVE_ACTION = one(RM_DIALOGS, /onClick: submit, children: busy \? '[^']+' : '([^']+)'/)
+// The waived chip's own words, with the row's reason after them.
+const WAIVED_CHIP = one(RM_WORDS, /chip\(`([^`]+)\$\{row\.waived\.reason\}`/)
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -25,7 +59,7 @@ const firstOf = (page, prefix) => page.locator(`[data-rm-node^="${prefix}:"]`).f
 async function openRoadmap(page, { pickAll = true } = {}) {
   await page.goto(BASE)
   if (pickAll) await pickProject(page, ALL_PROJECTS)
-  await page.getByRole('tab', { name: 'Roadmap' }).click()
+  await page.getByRole('tab', { name: TAB }).click()
   await page.locator('[data-roadmap-screen]').waitFor()
   await page
     .waitForFunction(() => document.querySelectorAll('[data-rm-node^="project:"]').length >= 2)
@@ -43,7 +77,7 @@ test('Roadmap: all projects by default, drill-down, drawer, contract, Open, keyb
     // 1. Default with nothing remembered: the switcher is on All projects, so
     //    is the Roadmap; nothing expanded.
     assert.equal(await page.locator('.dy-sw-trigger').getAttribute('data-scope'), ALL_PROJECTS)
-    assert.equal(await page.locator('.dy-rm-tree-head strong').innerText(), 'All projects')
+    assert.equal(await page.locator('.dy-rm-tree-head strong').innerText(), ALL_PROJECTS_HEAD)
     assert.equal(await page.locator('[data-rm-node^="initiative:"]').count(), 0, 'nothing expanded on load')
 
     // 2. Open payments-relaunch: its initiative appears; the drawer shows the project.
@@ -58,17 +92,17 @@ test('Roadmap: all projects by default, drill-down, drawer, contract, Open, keyb
     await page.locator('[data-rm-drawer="milestone"]').waitFor()
     const drawerText = await drawer.innerText()
     assert.ok(!/(\d+\s*%|percent)/i.test(drawerText), 'no percentage in the drawer')
-    assert.match(drawerText, /No linked work|Total linked/)
+    assert.match(drawerText, new RegExp(`${NO_LINKED_WORK}|${TOTAL_LINKED}`))
 
     // 4. Objective -> Goal: the goal drawer shows the read-only contract,
     //    loaded from the goal's own project (All-projects scope).
     await firstOf(page, 'objective').click()
     await firstOf(page, 'goal').click()
     await page.locator('[data-rm-drawer="goal"]').waitFor()
-    await drawer.getByText('Verification').waitFor()
+    await drawer.getByText(VERIFICATION).waitFor()
     await drawer.getByText('suite green').waitFor()
     await drawer.getByText('no downtime').waitFor()
-    await drawer.getByText('Copied from the goal title').waitFor()
+    await drawer.getByText(COPIED_FROM_GOAL).waitFor()
     assert.equal(await drawer.getByRole('textbox').count(), 0, 'the contract is read-only')
 
     // 5. Keyboard: one roving tab stop; arrows move it; Left goes to the parent.
@@ -83,18 +117,18 @@ test('Roadmap: all projects by default, drill-down, drawer, contract, Open, keyb
     assert.equal(await page.locator('[data-rm-tree] [data-rm-row][tabindex="0"]').count(), 1, 'still one tab stop')
 
     // 6. Search reveals ancestors: a milestone name opens its project and initiative.
-    await page.getByRole('button', { name: 'Reset' }).click()
-    await page.getByRole('searchbox', { name: 'Search the roadmap' }).fill('pilot release')
+    await page.getByRole('button', { name: RESET }).click()
+    await page.getByRole('searchbox', { name: SEARCH }).fill('pilot release')
     await page
       .waitForFunction(() => document.querySelectorAll('[data-rm-node^="milestone:"]').length > 0)
       .catch(() => assert.fail('search did not reveal the milestone ancestors'))
 
     // 7. Attention filter and Reset.
-    await page.getByRole('searchbox', { name: 'Search the roadmap' }).fill('')
-    await page.getByRole('checkbox', { name: /Needs attention only/i }).check()
-    await page.getByRole('button', { name: 'Reset' }).click()
+    await page.getByRole('searchbox', { name: SEARCH }).fill('')
+    await page.getByRole('checkbox', { name: new RegExp(ATTENTION_ONLY, 'i') }).check()
+    await page.getByRole('button', { name: RESET }).click()
     assert.equal(await page.locator('[data-rm-node^="initiative:"]').count(), 0, 'reset collapses the tree')
-    assert.equal(await page.getByRole('checkbox', { name: /Needs attention only/i }).isChecked(), false)
+    assert.equal(await page.getByRole('checkbox', { name: new RegExp(ATTENTION_ONLY, 'i') }).isChecked(), false)
 
     // 8. Open jumps to the item's own screen: the initiative opens on the
     //    project's Vision screen with its details showing (design round f).
@@ -133,7 +167,7 @@ test('Roadmap: View in Roadmap opens that project; the global switcher re-scopes
     const current = 'payments-relaunch'
     await page.goto(BASE)
     await pickProject(page, current)
-    await page.getByRole('tab', { name: /^Project/ }).click()
+    await page.getByRole('tab', { name: CONSOLE_TABS.project }).click()
     await page.locator('[data-roadmap-link] a').click()
     await page.locator('[data-roadmap-screen]').waitFor()
     await scopedTo(current)
@@ -162,11 +196,11 @@ test('Roadmap: Place… asks for the parent, confirms, then places in the row’
     // always listed, so the unplaced objective's Place… is reachable directly.
     const item = page.locator('[data-rm-node^="not-placed-objectives:payments-relaunch:"]').first()
     await item.waitFor()
-    await item.getByRole('button', { name: 'Place…' }).click()
+    await item.getByRole('button', { name: ROADMAP_WORDS.place }).click()
     const dialog = page.locator('[data-rm-place-dialog]')
     await dialog.locator('select#dy-rm-place-choice').waitFor()
-    assert.match(await dialog.innerText(), /Project payments-relaunch/)
-    const create = dialog.getByRole('button', { name: 'Continue' })
+    assert.match(await dialog.innerText(), new RegExp(`${PROJECT_WORD} payments-relaunch`))
+    const create = dialog.getByRole('button', { name: CONTINUE })
     assert.equal(await create.isDisabled(), true, 'nothing is chosen for the human')
     await dialog.locator('select#dy-rm-place-choice').selectOption({ index: 1 })
     await create.click()
@@ -174,7 +208,7 @@ test('Roadmap: Place… asks for the parent, confirms, then places in the row’
     await dialog.locator('[data-rm-place-confirm]').waitFor()
     // Scope to the dialog's action row: the tree also has a "Place…" action, so
     // an unscoped match would resolve to two buttons.
-    await dialog.locator('.dy-rm-modal-actions').getByRole('button', { name: 'Place' }).click()
+    await dialog.locator('.dy-rm-modal-actions').getByRole('button', { name: PLACE_SUBMIT }).click()
     // Placed: the objective leaves the "Not placed yet" group.
     await page
       .waitForFunction(() => !document.querySelector('[data-rm-node^="not-placed-objectives:payments-relaunch:"]'))
@@ -196,7 +230,7 @@ test('Roadmap: narrow layout keeps one column and keeps Place… reachable', { t
     // "Not placed yet" item rows are always listed with their Place… action, so
     // the action is reachable at phone width (the narrow layout hides chips,
     // never actions). The milestones group is the first one, nearest the top.
-    const place = page.locator('[data-rm-node^="not-placed-milestones:payments-relaunch:"]').first().getByRole('button', { name: 'Place…' })
+    const place = page.locator('[data-rm-node^="not-placed-milestones:payments-relaunch:"]').first().getByRole('button', { name: ROADMAP_WORDS.place })
     await place.scrollIntoViewIfNeeded()
     assert.equal(await place.isVisible(), true, 'the narrow layout hides chips, never the Place… action')
   } finally {
@@ -262,7 +296,7 @@ test('Roadmap: filter controls are one consistent size, wide and on a phone', { 
           const { outlineStyle, outlineWidth } = getComputedStyle(document.querySelector(`.dy-rm-toolbar ${target}`))
           return `${outlineStyle} ${outlineWidth}`
         }, selector)
-        await page.getByRole('searchbox', { name: 'Search the roadmap' }).focus()
+        await page.getByRole('searchbox', { name: SEARCH }).focus()
         assert.equal(await ring('.dy-rm-search'), 'solid 3px', 'focus ring on the search box')
         await page.keyboard.press('Tab')
         assert.equal(await ring('.dy-rm-attention'), 'solid 3px', 'focus ring on Needs attention only')
@@ -344,9 +378,9 @@ const proxyCall = async (path, init = {}) => {
   return text ? JSON.parse(text) : {}
 }
 async function goToBoard(page, project) {
-  await page.getByRole('button', { name: 'Project context', exact: true }).click()
-  await page.getByRole('combobox', { name: 'Find project' }).fill(project)
-  await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: project, exact: true }).click()
+  await page.getByRole('button', { name: WORDS.context, exact: true }).click()
+  await page.getByRole('combobox', { name: WORDS.find }).fill(project)
+  await page.getByRole('listbox', { name: WORDS.list }).getByRole('option', { name: project, exact: true }).click()
   await page.locator('[data-tab="project"]').click()
   await page.locator('[data-project-view="board"]').click()
   await page.locator('[data-kanban-screen]').waitFor()
@@ -390,9 +424,9 @@ test('Roadmap journey (a): from NOT ready, the UI drives task done + check → r
     await page.locator('[data-rm-node^="goal:"]').first().click()
     const editor = page.locator('[data-rm-goal-check]')
     await editor.waitFor()
-    await editor.getByRole('button', { name: 'Set check' }).click()
+    await editor.getByRole('button', { name: SET_CHECK }).click()
     await editor.locator('[data-rm-check-target]').fill('>=1')
-    await editor.getByRole('button', { name: 'Save check' }).click()
+    await editor.getByRole('button', { name: SAVE_CHECK }).click()
     await page.waitForTimeout(600)
     // 3. Record the passing assessments. A goal check has no UI control (the
     // API carries it); the OBJECTIVE's manual assessment DOES have one (the
@@ -407,19 +441,19 @@ test('Roadmap journey (a): from NOT ready, the UI drives task done + check → r
     await projectRow(page, 'atlas-mobile').click()
     const ready = page.locator('[data-rm-node^="initiative:"]').filter({ hasText: 'Make setup effortless' }).first()
     await ready.waitFor()
-    assert.match(await ready.innerText(), /Ready to confirm/)
-    await ready.getByRole('button', { name: 'Confirm as delivered' }).click()
+    assert.match(await ready.innerText(), new RegExp(READY_TO_CONFIRM))
+    await ready.getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).click()
     const dialog = page.locator('[data-rm-confirm-dialog]')
     await dialog.waitFor()
-    await dialog.getByRole('button', { name: 'Confirm as delivered' }).click()
+    await dialog.getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).click()
     // 5. Completed after a reload, with the ready state gone.
     await page.reload({ waitUntil: 'networkidle' })
     await openRoadmap(page)
     await projectRow(page, 'atlas-mobile').click()
     const done = page.locator('[data-rm-node^="initiative:"]').filter({ hasText: 'Make setup effortless' }).first()
     await done.waitFor()
-    assert.equal(await done.getByRole('button', { name: 'Confirm as delivered' }).count(), 0, 'no confirm action after delivery')
-    assert.equal(await done.getByText('Ready to confirm').count(), 0, 'the ready chip clears')
+    assert.equal(await done.getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).count(), 0, 'no confirm action after delivery')
+    assert.equal(await done.getByText(READY_TO_CONFIRM).count(), 0, 'the ready chip clears')
     const after = await proxyCall('/roadmap?project_id=atlas-mobile')
     assert.equal(after.projects[0].initiatives.find((i) => i.title === 'Make setup effortless').governance, 'completed')
   } finally {
@@ -445,15 +479,15 @@ test('Roadmap journey (b): a stale state shows the 409 refusal in plain words an
     await projectRow(page, 'payments-relaunch').click()
     const row = page.locator('[data-rm-node^="initiative:"]').filter({ hasText: 'Confirm me when ready' }).first()
     await row.waitFor()
-    assert.match(await row.innerText(), /Ready to confirm/, 'ready when the screen loads')
-    await row.getByRole('button', { name: 'Confirm as delivered' }).click()
+    assert.match(await row.innerText(), new RegExp(READY_TO_CONFIRM), 'ready when the screen loads')
+    await row.getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).click()
     const dialog = page.locator('[data-rm-confirm-dialog]')
     await dialog.waitFor()
     // The state changes behind the screen: the objective fails its assessment.
     await proxyCall(`/projects/payments-relaunch/objectives/${objective.id}/assessment`, {
       method: 'POST', body: { passed: false, evidence: ['journey:stale'] } })
     // Press Confirm: the refusal is shown in plain words.
-    await dialog.getByRole('button', { name: 'Confirm as delivered' }).click()
+    await dialog.getByRole('button', { name: ROADMAP_WORDS.confirmDelivered }).click()
     await page.waitForFunction(() => /not ready to confirm|every milestone must be reached/i.test(document.querySelector('[data-rm-confirm-dialog]')?.textContent ?? ''))
     const shown = await dialog.innerText()
     assert.match(shown, /not ready to confirm|every milestone must be reached/i, 'the refusal is shown in plain words')
@@ -479,13 +513,13 @@ test('Roadmap journey (c): a Needs-placing item is placed by hand and gone', { t
     await projectRow(page, 'payments-relaunch').click()
     const item = page.locator('[data-rm-node^="not-placed-milestones:payments-relaunch:"]').first()
     await item.waitFor()
-    await item.getByRole('button', { name: 'Place…' }).click()
+    await item.getByRole('button', { name: ROADMAP_WORDS.place }).click()
     const dialog = page.locator('[data-rm-place-dialog]')
     await dialog.locator('select#dy-rm-place-choice').waitFor()
     await dialog.locator('select#dy-rm-place-choice').selectOption({ index: 1 })
-    await dialog.getByRole('button', { name: 'Continue' }).click()
+    await dialog.getByRole('button', { name: CONTINUE }).click()
     await dialog.locator('[data-rm-place-confirm]').waitFor()
-    await dialog.locator('.dy-rm-modal-actions').getByRole('button', { name: 'Place' }).click()
+    await dialog.locator('.dy-rm-modal-actions').getByRole('button', { name: PLACE_SUBMIT }).click()
     // Placed: the milestone is gone from the "Not placed yet" group.
     await page
       .waitForFunction(() => !document.querySelector('[data-rm-node^="not-placed-milestones:payments-relaunch:"]'))
@@ -523,27 +557,27 @@ test('Roadmap: a person sets a goal check through the rendered control, and clea
     const settled = (pattern) => page.waitForFunction((p) => new RegExp(p).test(document.querySelector('[data-rm-check-state]')?.textContent ?? ''), pattern)
     await openGoal()
     const editor = page.locator('[data-rm-goal-check]')
-    await settled('none')
-    assert.match(await editor.locator('[data-rm-check-state]').innerText(), /none/)
-    await editor.getByRole('button', { name: 'Set check' }).click()
+    await settled(CHECK_NONE)
+    assert.match(await editor.locator('[data-rm-check-state]').innerText(), new RegExp(CHECK_NONE))
+    await editor.getByRole('button', { name: SET_CHECK }).click()
     await editor.locator('[data-rm-check-target]').fill('>=1')
-    await editor.getByRole('button', { name: 'Save check' }).click()
+    await editor.getByRole('button', { name: SAVE_CHECK }).click()
     // After a reload the check is there, with the goal's state derived from it
     // (an unassessed manual check is honestly unknown, never met).
     await page.waitForTimeout(600)
     await openGoal()
     await settled('>=1')
     assert.match(await editor.locator('[data-rm-check-state]').innerText(), />=1/)
-    assert.match(await editor.locator('[data-rm-check-state]').innerText(), /unknown/i)
+    assert.match(await editor.locator('[data-rm-check-state]').innerText(), new RegExp(CHECK_UNKNOWN, 'i'))
     const stored = await call(`/projects/payments-relaunch/goals/${goal.goal_id}/check`)
     assert.equal(stored.check.target, '>=1')
     // Clearing it through the same control removes the check (state restored).
-    await editor.getByRole('button', { name: 'Edit check' }).click()
-    await editor.getByRole('button', { name: 'Clear check' }).click()
+    await editor.getByRole('button', { name: EDIT_CHECK }).click()
+    await editor.getByRole('button', { name: CLEAR_CHECK }).click()
     await page.waitForTimeout(600)
     await openGoal()
-    await settled('none')
-    assert.match(await editor.locator('[data-rm-check-state]').innerText(), /none/)
+    await settled(CHECK_NONE)
+    assert.match(await editor.locator('[data-rm-check-state]').innerText(), new RegExp(CHECK_NONE))
     assert.equal((await call(`/projects/payments-relaunch/goals/${goal.goal_id}/check`)).check, null)
   } finally {
     await browser.close()
@@ -573,24 +607,25 @@ test('Roadmap: mark a step no longer required through the row, then restore it',
     // The dialog asks WHY, and refuses to submit without a reason.
     const dialog = page.locator('[data-rm-waive-dialog]')
     await dialog.waitFor()
-    const submit = dialog.getByRole('button', { name: 'Mark as no longer required' })
+    const submit = dialog.getByRole('button', { name: WAIVE_ACTION })
     assert.equal(await submit.isDisabled(), true, 'no reason, no waiver')
     await dialog.locator('[data-rm-waive-reason]').fill('delivered under the old plan; out of scope now')
     await submit.click()
     await dialog.waitFor({ state: 'detached' })
 
     // The item stays, marked with the reason, and the chain is now deliverable.
+    const WAIVE_REASON = 'delivered under the old plan; out of scope now'
     const marked = page.locator('[data-rm-node^="objective:"]')
-      .filter({ hasText: 'No longer required — delivered under the old plan; out of scope now' })
+      .filter({ hasText: WAIVED_CHIP + WAIVE_REASON })
     await marked.waitFor()
     await page.locator('[data-rm-node^="initiative:"]', { hasText: 'Waive me to deliver' })
-      .getByText('Ready to confirm').waitFor()
+      .getByText(new RegExp(READY_TO_CONFIRM)).waitFor()
 
     // Restore puts it back in the chain: the mark goes and the block returns.
     await objective.locator('[data-action="roadmap-restore-requirement"]').click()
     await marked.waitFor({ state: 'detached' })
     await page.locator('[data-rm-node^="initiative:"]', { hasText: 'Waive me to deliver' })
-      .getByText('Ready to confirm').waitFor({ state: 'detached' })
+      .getByText(new RegExp(READY_TO_CONFIRM)).waitFor({ state: 'detached' })
     assert.deepEqual(errors, [])
   } finally {
     await browser.close()

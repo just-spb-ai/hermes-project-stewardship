@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
+import { switcherWords } from './test-support/src-words.mjs'
 const BASE = process.env.STEWARD_DESKTOP_URL || 'http://127.0.0.1:19500/desktop'
 const API = process.env.STEWARD_API_URL || 'http://127.0.0.1:19500/api/plugins/hermes-project-stewardship'
 const TOKEN = 'demo-session-token'
@@ -37,26 +38,28 @@ async function waitForRemembered(expected) {
   assert.fail(`backend remembered ${await remembered()}, expected ${expected}`)
 }
 
-const picker = (page) => page.getByRole('button', { name: 'Project context', exact: true })
+const WORDS = switcherWords()
+
+const picker = (page) => page.getByRole('button', { name: WORDS.context, exact: true })
 
 async function currentProject(page) {
   await page.locator('[data-tab="dashboard"]').waitFor()
   // The first pick lands once the dashboard and the remembered project load.
-  await page.waitForFunction(() => {
-    const button = [...document.querySelectorAll('button')].find((el) => el.getAttribute('aria-label') === 'Project context')
-    return button && !/Choose project/.test(button.innerText)
-  })
+  await page.waitForFunction((words) => {
+    const button = [...document.querySelectorAll('button')].find((el) => el.getAttribute('aria-label') === words.context)
+    return button && !button.innerText.includes(words.choose)
+  }, { context: WORDS.context, choose: WORDS.choose })
   return (await picker(page).innerText()).trim()
 }
 
 async function choose(page, id) {
   await picker(page).click()
-  await page.getByRole('combobox', { name: 'Find project' }).fill(id)
-  await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: id, exact: true }).click()
-  await page.waitForFunction((want) => {
-    const button = [...document.querySelectorAll('button')].find((el) => el.getAttribute('aria-label') === 'Project context')
-    return button?.innerText.includes(want)
-  }, id)
+  await page.getByRole('combobox', { name: WORDS.find }).fill(id)
+  await page.getByRole('listbox', { name: WORDS.list }).getByRole('option', { name: id, exact: true }).click()
+  await page.waitForFunction((words) => {
+    const button = [...document.querySelectorAll('button')].find((el) => el.getAttribute('aria-label') === words.context)
+    return button?.innerText.includes(words.want)
+  }, { context: WORDS.context, want: id })
 }
 
 test('the app reopens on the last project chosen, kept in the backend not the browser', { timeout: 90000 }, async () => {

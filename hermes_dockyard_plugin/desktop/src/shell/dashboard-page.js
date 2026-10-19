@@ -41,6 +41,7 @@ import { OnboardingWizard } from '../lib/ui.js'
 import { ALL_PROJECTS } from '../lib/project-switcher.js'
 import { ProjectChooser } from '../lib/project-switcher.js'
 import { ScopeNote } from '../lib/project-switcher.js'
+import { SCOPE_NOUNS } from '../lib/project-switcher.js'
 import { projectName } from '../lib/project-switcher.js'
 import { scopeDashboard } from '../data/scope.js'
 import { scopeInbox } from '../data/scope.js'
@@ -292,7 +293,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     setSelectedProject(ALL_PROJECTS)
     goTab('dashboard')
     refresh()
-    emitToast('success', `${projectId} is archived: hidden everywhere, nothing deleted. Restore it any time from ${RESTORE_FROM}.`)
+    emitToast('success', `${projectId}: проект архивирован — скрыт везде, ничего не удалено. Восстановить его можно в любое время из ${RESTORE_FROM}.`)
   }
   // Restored from the switcher's list: the lists refresh and the project opens.
   const projectRestored = (projectId) => {
@@ -374,7 +375,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     const objectKind = slash >= 0 ? rest.slice(0, slash) : ''
     const objectId = slash >= 0 ? rest.slice(slash + 1) : rest
     if (screen === 's4' || (screen === 's6' && objectKind === 'initiative')) {
-      setDeepLinkNotice(objectId ? `Approval inbox: focus ${objectId}` : null)
+      setDeepLinkNotice(objectId ? `Входящие одобрения: фокус ${objectId}` : null)
       setInboxFocusRef(objectId || null)
       setTab('inbox')
       return
@@ -384,7 +385,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
       const known = Object.entries(data?.payload?.projectContext ?? {})
       const ownerProject = known.find(([, context]) =>
         (context.workItems ?? []).some((item) => item.ref === objectId))
-      setDeepLinkNotice(ownerProject ? null : `Work item ${objectId} is not in the current board data.`)
+      setDeepLinkNotice(ownerProject ? null : `Рабочего элемента ${objectId} нет в данных текущей доски.`)
       setSelectedProject(ownerProject ? ownerProject[0] : (selectedProject ?? data?.payload?.projects?.[0]?.id ?? null))
       setProjectEntryView('overview')
       setTab('project')
@@ -450,7 +451,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     content = jsx(LoadingState, {})
   } else if (tab === 'dashboard') {
     content = jsxs(Fragment, { children: [
-      scopeNote(scoped?.hidden ?? 0, 'items that need you'),
+      scopeNote(scoped?.hidden ?? 0, SCOPE_NOUNS.needsYou),
       jsx(DashboardView, { view: scoped?.view ?? payload, onInbox: () => setTab('inbox'), onRefresh: refresh, onOpen: openDeepLink, resetView: dashboardHomeVersion }, 'dashboard'),
     ] })
   } else if (tab === 'project') {
@@ -507,7 +508,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     // own picker is gone.
     const roadmapScope = isAll || !selectedProject ? 'all' : selectedProject
     content = jsxs(Fragment, { children: [
-      scopeNote(0, 'items'),
+      scopeNote(0, SCOPE_NOUNS.items),
       jsx(RoadmapView, {
         initialScope: roadmapScope,
         onRefresh: refresh,
@@ -523,12 +524,12 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     content = jsx(TeamsView, { view: payload, onRefresh: refresh })
   } else if (tab === 'inbox') {
     content = jsxs(Fragment, { children: [
-      scopeNote(scoped?.hidden ?? 0, 'approvals'),
+      scopeNote(scoped?.hidden ?? 0, SCOPE_NOUNS.approvals),
       jsx(InboxView, { view: scoped?.view ?? payload, onRefresh: refresh, focusRef: inboxFocusRef, onOpenProject: openDeepLink }, 'inbox'),
     ] })
   } else {
     content = jsxs(Fragment, { children: [
-      scopeNote(hiddenNotifications(payload, selectedProject), 'notifications'),
+      scopeNote(hiddenNotifications(payload, selectedProject), SCOPE_NOUNS.notifications),
       jsx(NotificationsView, { view: payload, scopeProjectId: isAll ? null : selectedProject, onRefresh: refresh, onAcknowledged: acknowledge, onOpen: openDeepLink, onOpenSettings: () => requestTab('settings') }, 'notifications'),
     ] })
   }
@@ -557,7 +558,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
       jsxs('div', { className: 'dockyard-modal', role: 'alertdialog', 'aria-modal': true, 'aria-label': 'Несохранённые изменения',
         onKeyDown: (event) => { if (event.key === 'Escape' && !navSaving) { event.stopPropagation(); cancelNav() } }, children: [
         jsx('h2', { children: 'Несохранённые изменения' }),
-        jsx('p', { children: `This project has unsaved changes. ${dirtySaver.current ? 'Save them and continue, discard them, or cancel to keep editing.' : 'Discard them to continue, or cancel to keep editing.'}` }),
+        jsx('p', { children: `В этом проекте есть несохранённые изменения. ${dirtySaver.current ? 'Сохраните их и продолжите, отмените их или вернитесь к редактированию.' : 'Отмените их, чтобы продолжить, или вернитесь к редактированию.'}` }),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
           jsx(Button, { action: 'nav-cancel', disabled: navSaving, onClick: cancelNav, children: 'Отмена' }),
           jsx(Button, { variant: 'danger', action: 'nav-discard', disabled: navSaving, onClick: discardProjectChange, children: 'Отменить правки' }),

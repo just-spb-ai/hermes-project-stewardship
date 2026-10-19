@@ -66,20 +66,30 @@ const TASK_MOVES = Object.freeze({ backlog: ['active', 'done'], active: ['review
 // workflow step uses this same path (08/10/2026, WORKFLOWS-R1.md engine round, bug 12).
 const EPIC_MOVES = Object.freeze({ backlog: ['active'], active: [], review: [], blocked: [], done: [] })
 
+// Every sentence this module puts in front of a person, in one place (the same
+// pattern as project/attention.js ATTENTION_WORDS): a translation is one edit
+// here, and the tests read the same words instead of spelling them a second time.
+export const MOVE_WORDS = Object.freeze({
+  notOnBoard: 'Элемент не находится в колонке доски.',
+  doneStays: 'Завершённая работа остаётся в «Готово».',
+  epicStays: 'Hermes не переносит эпик из этой колонки.',
+  blockedWaiting: (count) => `Ещё нельзя начать: ждём закрытия ${count} ${count === 1 ? 'открытого блокера' : 'открытых блокеров'}.`,
+})
+
 // { targets: [{ key, label, status }], reason } for one card. `openBlockers` is
 // the number of Blocked by items that are not done: Hermes parks a task with
 // open blockers in Backlog until they finish, and refuses to close it.
 export function movesFor(item, openBlockers = 0) {
   const from = stageKeyOf(item)
-  if (!from) return { targets: [], reason: 'Элемент не находится в колонке доски.' }
+  if (!from) return { targets: [], reason: MOVE_WORDS.notOnBoard }
   const epic = (item.type || 'task') === 'epic'
   let keys = (epic ? EPIC_MOVES : TASK_MOVES)[from] ?? []
   let reason = null
   if (!epic && from === 'backlog' && openBlockers > 0) {
     keys = []
-    reason = `Can't start yet: waiting on ${openBlockers} open ${openBlockers === 1 ? 'blocker' : 'blockers'}.`
+    reason = MOVE_WORDS.blockedWaiting(openBlockers)
   } else if (keys.length === 0) {
-    reason = from === 'done' ? 'Завершённая работа остаётся в «Готово».' : epic ? 'Hermes не переносит эпик из этой колонки.' : null
+    reason = from === 'done' ? MOVE_WORDS.doneStays : epic ? MOVE_WORDS.epicStays : null
   }
   return { targets: keys.map((key) => ({ key, label: STAGE_BY_KEY[key].label, status: dropStatusOf(key) })), reason }
 }
@@ -110,8 +120,10 @@ export function isOverdue(item, today) {
   return due < today
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-// "2099-06-30" -> "30 Jun 2099"; the year is dropped when it is this year.
+// The month words a card's date is written with. Published so the unit test
+// (kanban-model.test.mjs) reads them instead of spelling English months.
+export const MONTHS = Object.freeze(['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'])
+// "2099-06-30" -> "30 июн 2099"; the year is dropped when it is this year.
 export function shortDate(iso, today) {
   const [year, month, day] = String(iso ?? '').slice(0, 10).split('-').map(Number)
   if (!year || !month || !day) return String(iso ?? '')
@@ -178,15 +190,25 @@ export const defaultFields = () => ({ assignee: true, links: true, due: true, la
 export const DENSITIES = Object.freeze(['compact', 'detailed'])
 export const LABEL_LIMIT = 2
 
+// Every word a card's summary line shows, in one place: a translation is one
+// edit here, and the unit test (kanban-model.test.mjs) reads CARD_WORDS
+// instead of spelling the signals out a second time.
+export const CARD_WORDS = Object.freeze({
+  blockedBy: (count) => `Заблокировано: ${count}`,
+  blocks: (count) => `Блокирует: ${count}`,
+  overdue: (date) => `Просрочено · ${date}`,
+  due: (date) => `Срок ${date}`,
+})
+
 // The one-line signals on a compact card, in reading order. Only what applies.
 export function cardSignals(facts, fields, today) {
   const out = []
-  if (fields.links && facts.openBlockers > 0) out.push({ kind: 'blocked_by', icon: 'hand', text: `Blocked by ${facts.openBlockers}` })
-  if (fields.links && facts.openBlocks > 0) out.push({ kind: 'blocks', icon: 'link', text: `Blocks ${facts.openBlocks}` })
+  if (fields.links && facts.openBlockers > 0) out.push({ kind: 'blocked_by', icon: 'hand', text: CARD_WORDS.blockedBy(facts.openBlockers) })
+  if (fields.links && facts.openBlocks > 0) out.push({ kind: 'blocks', icon: 'link', text: CARD_WORDS.blocks(facts.openBlocks) })
   if (fields.due && facts.due) {
     out.push(facts.overdue
-      ? { kind: 'overdue', icon: 'clock-3', text: `Overdue · ${shortDate(facts.due, today)}` }
-      : { kind: 'due', icon: 'calendar', text: `Due ${shortDate(facts.due, today)}` })
+      ? { kind: 'overdue', icon: 'clock-3', text: CARD_WORDS.overdue(shortDate(facts.due, today)) }
+      : { kind: 'due', icon: 'calendar', text: CARD_WORDS.due(shortDate(facts.due, today)) })
   }
   return out
 }
@@ -286,12 +308,17 @@ export function describeFilters(filters) {
   return parts.join(' · ')
 }
 
+// Every word the views panel puts in front of a person, in one place: the two
+// layouts and the note for expanded cards. A translation is one edit here and
+// the tests read VIEW_WORDS instead of spelling the words a second time.
+export const VIEW_WORDS = Object.freeze({ board: 'Доска', list: 'Список', allCardsOpen: 'Все карточки открыты' })
+
 // "Board · Assignee Ada Lovelace · Label mobile" for the views panel; "All cards open" when they are.
 export function describeDefinition(definition) {
-  const parts = [definition.layout === 'list' ? 'List' : 'Доска']
+  const parts = [definition.layout === 'list' ? VIEW_WORDS.list : VIEW_WORDS.board]
   const filters = describeFilters(definition.filters)
   if (filters) parts.push(filters)
-  if (definition.layout !== 'list' && definition.density === 'detailed') parts.push('Все карточки открыты')
+  if (definition.layout !== 'list' && definition.density === 'detailed') parts.push(VIEW_WORDS.allCardsOpen)
   return parts.join(' · ')
 }
 

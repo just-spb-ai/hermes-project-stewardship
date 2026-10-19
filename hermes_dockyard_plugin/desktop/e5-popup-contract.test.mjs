@@ -20,6 +20,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { evaluatePlugin } from './test-support/load-plugin.mjs'
+import { POPUP_WORDS } from './src/data/popup-words.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { JSDOM } = require('jsdom')
@@ -138,13 +139,14 @@ test('E5 pop-ups use only fields the Desktop host renders, with text and an acti
 test('E5 "and N more" pop-up is a valid host notification too', { timeout: 15000 }, async () => {
   const rows = [popupRow(1), popupRow(2), popupRow(3)]
   const { calls } = await runPoller({ popups: rows, more: 2 })
-  const moreItem = calls.find((item) => /more notification/.test(String(item.title)))
+  const moreItem = calls.find((item) => item.id === 'dockyard-notification-more')
   assert.ok(moreItem, 'the "and N more" pop-up was shown')
   const unknown = Object.keys(moreItem).filter((key) => !HOST_NOTIFY_FIELDS.has(key))
   assert.deepEqual(unknown, [], `fields the Desktop host silently drops: ${unknown.join(', ')}`)
   assert.equal(typeof moreItem.message, 'string', 'message is required by the host')
   assert.ok(moreItem.message.trim().length > 0)
-  assert.equal(moreItem.title, 'and 2 more notifications', 'the count comes from the backend')
+  assert.equal(moreItem.title, POPUP_WORDS.moreTitle(2), 'the count comes from the backend, in the module\'s own words')
+  assert.match(moreItem.title, /2/, 'the count is named')
 })
 
 test('E5 pop-ups never use browser storage; the backend shown-mark stops repeats', { timeout: 15000 }, async () => {

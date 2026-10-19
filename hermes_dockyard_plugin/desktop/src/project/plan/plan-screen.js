@@ -65,13 +65,13 @@ export function parsePlanFocus(entry) {
   return match ? { kind: match[1], id: match[2] } : null
 }
 
-const plural = (n, word) => `${number(n)} ${word}${n === 1 ? '' : 's'}`
+const plural = (n, word) => `${word}: ${number(n)}`
 function summaryOf(item) {
-  const linked = item.initiatives?.length ? plural(item.initiatives.length, 'initiative') : 'no initiative'
-  if (item.kind === 'initiative') return [`${item.risk} risk`, plural(item.milestones.length, 'milestone'), plural(item.objectives.length, 'objective')].join(' · ')
-  if (item.kind === 'milestone') return [item.due ? `due ${item.due}` : 'no due date', `${number(item.done)}/${number(item.total)} done`, linked].join(' · ')
-  if (item.kind === 'objective') return [`target ${item.target}`, `${item.severity} severity`, linked].join(' · ')
-  return [plural(item.objectiveIds.length, 'objective'), item.objectivesPassed !== null ? `${number(item.objectivesPassed)} passing` : null].filter(Boolean).join(' · ')
+  const linked = item.initiatives?.length ? plural(item.initiatives.length, 'инициативы') : 'без инициативы'
+  if (item.kind === 'initiative') return [`риск: ${item.risk}`, plural(item.milestones.length, 'вехи'), plural(item.objectives.length, 'задачи-цели')].join(' · ')
+  if (item.kind === 'milestone') return [item.due ? `срок ${item.due}` : 'без срока', `${number(item.done)}/${number(item.total)} готово`, linked].join(' · ')
+  if (item.kind === 'objective') return [`цель ${item.target}`, `важность: ${item.severity}`, linked].join(' · ')
+  return [plural(item.objectiveIds.length, 'задачи-цели'), item.objectivesPassed !== null ? `прошло: ${number(item.objectivesPassed)}` : null].filter(Boolean).join(' · ')
 }
 
 function rowMenu(item, ui) {
@@ -79,21 +79,21 @@ function rowMenu(item, ui) {
   const entry = (id, label, onSelect, danger) => ({ id, label, onSelect, danger })
   const items = [entry('open', 'Открыть детали', () => ui.open(item))]
   if (item.kind === 'initiative') {
-    if (item.status === 'pending_approval') items.push(entry('review', 'Review…', () => ui.review(item)))
+    if (item.status === 'pending_approval') items.push(entry('review', 'Обзор…', () => ui.review(item)))
     if (item.status === 'changes_requested') items.push(entry('revise', 'Доработать и отправить заново…', () => ui.edit(item)))
-    if (isLinkable(item)) items.push(entry('link-milestone', 'Link a milestone…', () => ui.link(item, 'milestone')), entry('link-objective', 'Link an objective…', () => ui.link(item, 'objective')))
+    if (isLinkable(item)) items.push(entry('link-milestone', 'Разместить под вехой…', () => ui.link(item, 'milestone')), entry('link-objective', 'Разместить под задачей-целью…', () => ui.link(item, 'objective')))
     if (COMPLETABLE_STATUSES.includes(item.status)) items.push(entry('complete', 'Отметить завершённым…', () => ui.complete(item)))
     if (WITHDRAWABLE_STATUSES.includes(item.status)) items.push(entry('withdraw', 'Отозвать…', () => ui.withdraw(item), true))
   } else if (item.archived) {
     // An archived objective has no restore route; milestones and goals do.
-    if (item.kind !== 'objective') items.push(entry('restore', 'Restore…', () => ui.restore(item)))
-    items.push(entry('delete', 'Delete for good…', () => ui.remove(item), true))
+    if (item.kind !== 'objective') items.push(entry('restore', 'Восстановить…', () => ui.restore(item)))
+    items.push(entry('delete', 'Удалить навсегда…', () => ui.remove(item), true))
   } else {
     items.push(entry('edit', 'Изменить…', () => ui.edit(item)))
-    items.push(item.kind === 'goal' ? entry('link-objective', 'Add an objective…', () => ui.link(item, 'objective')) : entry('link-initiative', 'Link to an initiative…', () => ui.link(item, 'initiative')))
-    items.push(entry('archive', 'Archive…', () => ui.archive(item), true))
+    items.push(item.kind === 'goal' ? entry('link-objective', 'Разместить под задачей-целью…', () => ui.link(item, 'objective')) : entry('link-initiative', 'Разместить под инициативой…', () => ui.link(item, 'initiative')))
+    items.push(entry('archive', 'В архив…', () => ui.archive(item), true))
   }
-  return jsx(Menu, { label: `Actions for ${item.title}`, trigger: '⋯', action: `row-${item.kind}`, items })
+  return jsx(Menu, { label: `Действия для «${item.title}»`, trigger: '⋯', action: `row-${item.kind}`, items })
 }
 
 function Row({ item, ui, selected }) {
@@ -120,7 +120,7 @@ function SectionHead({ kind, count, ui, note }) {
   return jsxs('header', { className: 'dy-plan-section-head', children: [
     jsxs('h3', { children: [jsx(KindGlyph, { kind }), PLURAL[kind], jsx('span', { className: 'dy-plan-count', children: number(count) })] }),
     note ? jsx('span', { className: 'dy-plan-section-note', children: note }) : null,
-    ui.readOnly ? null : jsx(Button, { small: true, action: `plan-new-${kind}`, onClick: () => ui.create(kind), children: kind === 'initiative' ? '+ Propose' : '+ New' }),
+    ui.readOnly ? null : jsx(Button, { small: true, action: `plan-new-${kind}`, onClick: () => ui.create(kind), children: kind === 'initiative' ? '+ Предложить' : '+ Создать' }),
   ] })
 }
 
@@ -139,7 +139,7 @@ function Outline({ lists, ui, selected, openNote }) {
 function ReviewDialog({ initiative, projectId, onClose, onResolved }) {
   const item = { ref: initiative.ref, title: initiative.title, risk: initiative.risk, project: projectId, detail: initiative.record }
   return jsx(PlanDialog, {
-    dialogKey: 'review', eyebrow: `Review · ${projectId}`, title: initiative.title, wide: true, onClose,
+    dialogKey: 'review', eyebrow: `Обзор · ${projectId}`, title: initiative.title, wide: true, onClose,
     actions: [jsx(Button, { onClick: onClose, children: 'Закрыть' }, 'close')],
     children: jsx(ApprovalDetail, { item, onResolved: () => { onResolved(); onClose() } }),
   })
@@ -177,13 +177,13 @@ export function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
   }, [selected])
   if (!plan) {
     return jsxs('section', { className: 'dockyard-feature-card', 'data-plan-screen': failure ? 'error' : 'loading', 'aria-busy': !failure, children: failure ? [
-      jsx('h2', { children: 'Видение' }), jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Vision could not be loaded: ${failure}` }),
+      jsx('h2', { children: 'Видение' }), jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Не удалось загрузить «Видение»: ${failure}` }),
       jsx(Button, { action: 'plan-retry', onClick: reload, children: 'Попробовать снова' }),
-    ] : [jsx('p', { className: 'dockyard-meta', children: 'Loading Vision…' })] })
+    ] : [jsx('p', { className: 'dockyard-meta', children: 'Загрузка «Видения»…' })] })
   }
 
   const noun = (item) => KIND_LABEL[item.kind].toLowerCase()
-  const eyebrow = (item) => `Initiative · ${item.ref}`
+  const eyebrow = (item) => `Инициатива · ${item.ref}`
   const ui = {
     readOnly: !plan.canWrite,
     open: (item) => setSelected({ kind: item.kind, id: item.id }),
@@ -194,48 +194,48 @@ export function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
     confirm: setConfirm,
     // Before approval only (the backend refuses later states). The record stays.
     withdraw: (item) => setAction({
-      key: 'withdraw', eyebrow: eyebrow(item), title: `Withdraw “${item.title}”?`, label: 'Отозвать', variant: 'danger',
+      key: 'withdraw', eyebrow: eyebrow(item), title: `Отозвать «${item.title}»?`, label: 'Отозвать', variant: 'danger',
       lines: [
         'Перестаёт ждать одобрения и освобождает свой открытый слот.',
-        `It is not deleted: it keeps its record and stays under ${TUCKED}.`,
+        `Она не удаляется: запись сохраняется, а сама инициатива переходит в «${TUCKED}».`,
         'Это нельзя отменить. Чтобы попробовать позже, предложите заново.',
       ],
-      reasonLabel: 'Reason', done: `Withdrew “${item.title}”.`,
+      reasonLabel: 'Причина', done: `Инициатива «${item.title}» отозвана.`,
       run: (reason) => actions.withdrawInitiative(item.ref, reason),
     }),
     // Approved or in progress only. Same call as the browser dashboard's Complete.
     complete: (item) => {
       const open = unfinishedWork(item.delivery)
       setAction({
-        key: 'complete', eyebrow: eyebrow(item), title: `Mark “${item.title}” complete?`, label: 'Отметить завершённым', variant: 'primary',
+        key: 'complete', eyebrow: eyebrow(item), title: `Отметить «${item.title}» завершённой?`, label: 'Отметить завершённым', variant: 'primary',
         lines: [
           'Используйте это, когда работа выполнена.',
-          open ? `${plural(open, 'linked work item')} ${open === 1 ? 'is' : 'are'} not finished yet.` : null,
+          open ? `Ещё не завершено связанных рабочих элементов: ${number(open)}.` : null,
           'Его собственные незакрытые задачи доски помечаются выполненными.',
-          `It frees its open slot and moves under ${TUCKED}. Its objectives keep measuring whether it worked.`,
+          `Освобождает свой открытый слот и переходит в «${TUCKED}». Её задачи-цели продолжают измерять, сработало ли это.`,
         ],
-        done: `Marked “${item.title}” complete.`,
+        done: `«${item.title}» отмечена завершённой.`,
         run: () => actions.completeInitiative(item.ref),
       })
     },
     archive: (item) => setConfirm({
-      key: 'plan-archive', title: `Archive this ${noun(item)}?`, label: 'В архив', done: `${KIND_LABEL[item.kind]} archived.`,
-      description: item.kind === 'objective' ? `“${item.title}” stops being evaluated and leaves Vision. It can then be deleted for good.`
-        : `“${item.title}” is hidden from Vision${item.kind === 'milestone' ? ' and the Roadmap' : ''}. Restore it, or delete it for good, from ${TUCKED}.`,
+      key: 'plan-archive', title: `В архив: ${noun(item)}?`, label: 'В архив', done: `${KIND_LABEL[item.kind]} в архиве.`,
+      description: item.kind === 'objective' ? `«${item.title}» перестаёт оцениваться и покидает «Видение». После этого её можно удалить навсегда.`
+        : `«${item.title}» скрывается из «Видения»${item.kind === 'milestone' ? ' и с дорожной карты' : ''}. Восстановить или удалить навсегда можно из «${TUCKED}».`,
       run: () => ({ milestone: () => actions.archiveMilestone(item.name), objective: () => actions.archiveObjective(item.id), goal: () => actions.archiveGoal(item.id) })[item.kind](),
     }),
     restore: (item) => setConfirm({
-      key: 'plan-restore', title: `Restore this ${noun(item)}?`, label: 'Восстановить', done: `${KIND_LABEL[item.kind]} restored.`,
-      description: `“${item.title}” returns to Vision.`,
+      key: 'plan-restore', title: `Восстановить: ${noun(item)}?`, label: 'Восстановить', done: `${KIND_LABEL[item.kind]} восстановлена.`,
+      description: `«${item.title}» возвращается в «Видение».`,
       run: () => (item.kind === 'milestone' ? actions.restoreMilestone(item.name) : actions.restoreGoal(item.id)),
     }),
     // Archived items only (the backend refuses anything else).
     remove: (item) => setConfirm({
-      key: 'plan-delete', title: `Delete this ${noun(item)} for good?`, label: 'Удалить', done: `${KIND_LABEL[item.kind]} deleted.`,
+      key: 'plan-delete', title: `Удалить навсегда: ${noun(item)}?`, label: 'Удалить', done: `${KIND_LABEL[item.kind]} удалена.`,
       description: {
-        objective: `“${item.title}” and its links to goals and initiatives are removed. This cannot be undone.`,
-        milestone: `“${item.title}” and its links to initiatives are removed. Its work items stay, no longer grouped under it, and the name is free to use again. This cannot be undone.`,
-        goal: `“${item.title}” is removed. Its objectives stay and can join another goal. This cannot be undone.`,
+        objective: `«${item.title}» и её связи с целями и инициативами удаляются. Это нельзя отменить.`,
+        milestone: `«${item.title}» и её связи с инициативами удаляются. Её рабочие элементы остаются, но больше не сгруппированы под ней, а имя можно использовать снова. Это нельзя отменить.`,
+        goal: `«${item.title}» удаляется. Её задачи-цели остаются и могут войти в другую цель. Это нельзя отменить.`,
       }[item.kind],
       run: () => ({ objective: () => actions.removeObjective(item.id), milestone: () => actions.deleteMilestone(item.name), goal: () => actions.deleteGoal(item.id) })[item.kind](),
       after: () => setSelected(null),
@@ -244,7 +244,7 @@ export function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
   const needle = query.trim().toLowerCase()
   const lists = Object.fromEntries(KINDS.map((kind) => [kind, listOf(plan, kind).filter((item) => (showTucked || !isTucked(item)) && item.title.toLowerCase().includes(needle))]))
   const openCount = plan.initiatives.filter((row) => OPEN_STATUSES.includes(row.status)).length
-  const openNote = `${number(openCount)} of ${number(plan.maxOpenInitiatives)} open allowed`
+  const openNote = `Открыто ${number(openCount)} из ${number(plan.maxOpenInitiatives)}`
   const reviewCount = plan.initiatives.filter(needsReview).length
   const tuckedCount = KINDS.reduce((sum, kind) => sum + listOf(plan, kind).filter(isTucked).length, 0)
   const selectedItem = findItem(plan, selected)
@@ -254,21 +254,21 @@ export function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
     jsxs('header', { className: 'dy-plan-head', children: [
       jsxs('div', { children: [
         jsx('h2', { children: 'Видение' }),
-        jsx('p', { className: 'dockyard-meta', children: `Initiatives, milestones, objectives and goals for ${plan.label}. The Roadmap shows them across all projects.` }),
+        jsx('p', { className: 'dockyard-meta', children: `Инициативы, вехи, задачи-цели и цели проекта «${plan.label}». Дорожная карта показывает их по всем проектам.` }),
       ] }),
       jsxs('div', { className: 'dy-plan-toolbar', children: [
-        reviewCount ? jsx(Tag, { tone: 'warning', data: { 'data-plan-review-count': reviewCount }, children: `${number(reviewCount)} to review` }) : null,
+        reviewCount ? jsx(Tag, { tone: 'warning', data: { 'data-plan-review-count': reviewCount }, children: `На проверку: ${number(reviewCount)}` }) : null,
         jsx('input', { type: 'search', className: 'dy-plan-search', placeholder: 'Найти в «Видении»', 'aria-label': 'Найти в «Видении»', 'data-plan-search': true, value: query, onChange: (event) => setQuery(event.target.value) }),
         jsxs('label', { className: 'dy-plan-check', children: [
           jsx('input', { type: 'checkbox', 'data-plan-show-archived': true, checked: showTucked, onChange: (event) => setShowTucked(event.target.checked) }),
           `${TUCKED}${tuckedCount ? ` (${number(tuckedCount)})` : ''}`,
         ] }),
-        ui.readOnly ? null : jsx(Menu, { label: 'Create', trigger: '+ New', action: 'new', variant: 'primary', items: KINDS.map((kind) => ({
-          id: kind, label: kind === 'initiative' ? 'Предложить инициативу…' : `New ${KIND_LABEL[kind].toLowerCase()}…`, onSelect: () => ui.create(kind),
+        ui.readOnly ? null : jsx(Menu, { label: 'Создать', trigger: '+ Создать', action: 'new', variant: 'primary', items: KINDS.map((kind) => ({
+          id: kind, label: kind === 'initiative' ? 'Предложить инициативу…' : `Новая ${KIND_LABEL[kind].toLowerCase()}…`, onSelect: () => ui.create(kind),
         })) }),
         jsx(Menu, { label: 'Другие действия «Видения»', trigger: '⋯', action: 'plan-more', items: [
           onOpenRoadmap ? { id: 'roadmap', label: 'Открыть дорожную карту (все проекты)', onSelect: onOpenRoadmap } : null,
-          ui.readOnly ? null : { id: 'freeze', label: 'Freeze project…', danger: true, onSelect: () => setConfirm({
+          ui.readOnly ? null : { id: 'freeze', label: 'Заморозить проект…', danger: true, onSelect: () => setConfirm({
             key: 'freeze-project', title: 'Заморозить этот проект?', description: 'Заморозка останавливает новое исполнение, пока проект явно не разморозят.',
             label: 'Заморозить проект', done: 'Проект заморожен. Новое исполнение остановлено до разморозки.', run: actions.freeze,
           }) },
@@ -276,7 +276,7 @@ export function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
       ] }),
     ] }),
     ui.readOnly ? jsx('p', { className: 'dy-plan-note', role: 'status', children: 'Только чтение: эта сессия может смотреть «Видение», но не менять его.' }) : null,
-    failure ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Last refresh failed: ${failure}` }) : null,
+    failure ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Не удалось обновить: ${failure}` }) : null,
     jsx(MissionStrip, { plan, actions, onChanged: reload, onConfirm: setConfirm }, `${project.id}:${plan.mission}`),
     jsxs('div', { className: 'dy-plan-main', children: [
       jsx(Outline, { lists, ui, selected, openNote }),

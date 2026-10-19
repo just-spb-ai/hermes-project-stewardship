@@ -10,7 +10,9 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { ALL_PROJECTS, pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { CONSOLE_TABS } from './src/lib/panel-words.js'
+import { ALL_PROJECTS, all, one, pickProject } from './test-support/src-words.mjs'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -18,6 +20,29 @@ const BASE = process.env.STEWARD_DESKTOP_URL || 'http://127.0.0.1:19500/desktop'
 const API = process.env.STEWARD_API_URL || 'http://127.0.0.1:19500/api/plugins/hermes-project-stewardship'
 const V = API
 const TOKEN = 'demo-session-token'
+
+// The words of the Notifications screen and the Approval Inbox come from the
+// modules that render them: views/notifications.js (filters, day groups, detail
+// actions), views/inbox.js (its heading) and lib/panel-words.js (the tab). Read
+// out of their source, since both views import React.
+const NOTIF = 'src/views/notifications.js'
+const INBOX = 'src/views/inbox.js'
+const filterLabel = (which) => one(NOTIF, new RegExp(`'aria-label': '([^']+)', value: ${which}Filter`))
+const FILTER_STATE = filterLabel('state')
+const FILTER_TYPE = filterLabel('type')
+const FILTER_SEVERITY = filterLabel('severity')
+const ALL_FILTERS = [FILTER_STATE, FILTER_TYPE, FILTER_SEVERITY]
+const NOTHING_MATCHES = one(NOTIF, /filterEmpty\s*\?\s*jsx\(EmptyState, \{ title: '([^']+)'/)
+const TODAY = one(NOTIF, /if \(diff <= 0\) return '([^']+)'/)
+const MARK_ALL_SEEN = one(NOTIF, /busyId === 'all' \? '[^']+' : '([^']+)'/)
+const MARK_SEEN = one(NOTIF, /action: 'detail-seen'[\s\S]*?children: busy \? '[^']+' : '([^']+)'/)
+const REVIEW_IN_INBOX = one(NOTIF, /action: 'detail-approval'[\s\S]*?children: '([^']+)'/)
+const RESOLVE = one(NOTIF, /action: 'detail-resolve',[\s\S]*?children: '([^']+)'/)
+const RESOLUTION_NOTE = one(NOTIF, /'aria-label': '([^']+)',\s*placeholder:/)
+const CONFIRM_RESOLVE = one(NOTIF, /action: 'detail-resolve-confirm'[\s\S]*?children: busy \? '[^']+' : '([^']+)'/)
+const SEEN_BY = one(NOTIF, /children: `([^`$]+): \$\{seenBy\}/)
+const RESOLVED_BY = one(NOTIF, /`([^`$]+): \$\{resolvedBy\}/)
+const INBOX_HEADING = all(INBOX, /title: '([^']+)'/)[0]
 
 async function api(path, method = 'GET', body) {
   const res = await fetch(`${V}${path}`, {
@@ -54,7 +79,7 @@ async function seed() {
 
 async function openNotifications(page) {
   await page.goto(BASE)
-  await page.getByRole('tab', { name: 'Notifications' }).click()
+  await page.getByRole('tab', { name: CONSOLE_TABS.notifications }).click()
   await page.locator('.dy-notif-filters').waitFor()
 }
 
@@ -83,7 +108,10 @@ test('E5: filters, day groups, detail actions, badge, settings, poller, keyboard
     // 1a. The screen's own project filter is gone (Sahil 04/10, design d): the
     //     global switcher narrows Notifications and says so. The remembered
     //     project is put back, so later steps and suites open as before.
-    assert.equal(await page.getByLabel('Filter by project').count(), 0, 'no project filter on the screen')
+    assert.deepEqual(
+      await page.locator('.dy-notif-filters select').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('aria-label'))),
+      ALL_FILTERS, 'the screen offers its own filters and no project filter',
+    )
     const headers = { 'x-hermes-session-token': TOKEN }
     const remembered = await rememberedProject(API, headers)
     await pickProject(page, 'payments-relaunch')
@@ -98,21 +126,21 @@ test('E5: filters, day groups, detail actions, badge, settings, poller, keyboard
       .catch(() => assert.fail('All projects lists every row again'))
     assert.equal(await page.locator('[data-scope-note]').count(), 0, 'no scope note on All projects')
 
-    await page.getByLabel('Filter by type').selectOption('approval_required')
+    await page.getByLabel(FILTER_TYPE).selectOption('approval_required')
     const approvalCount = await rows.count()
     assert.ok(approvalCount >= 2 && approvalCount <= allCount)
-    await page.getByLabel('Filter by severity').selectOption('high')
-    await page.getByLabel('Filter by state').selectOption('new')
+    await page.getByLabel(FILTER_SEVERITY).selectOption('high')
+    await page.getByLabel(FILTER_STATE).selectOption('new')
     // Filtered-empty state.
-    await page.getByLabel('Filter by state').selectOption('resolved')
+    await page.getByLabel(FILTER_STATE).selectOption('resolved')
     if ((await rows.count()) === 0) {
-      await page.getByText('Nothing matches these filters').waitFor()
+      await page.getByText(NOTHING_MATCHES).waitFor()
     }
-    await page.getByLabel('Filter by state').selectOption('all')
-    await page.getByLabel('Filter by severity').selectOption('all')
+    await page.getByLabel(FILTER_STATE).selectOption('all')
+    await page.getByLabel(FILTER_SEVERITY).selectOption('all')
 
     // 2. Day grouping: seeded rows are today; the group heading exists.
-    assert.ok(await page.getByText('Today', { exact: true }).count() > 0, 'Today group present')
+    assert.ok(await page.getByText(TODAY, { exact: true }).count() > 0, 'Today group present')
 
     // 3. Detail panel: select the first row, mark seen from the detail.
     await rows.first().locator('button').first().click()
@@ -121,37 +149,37 @@ test('E5: filters, day groups, detail actions, badge, settings, poller, keyboard
 
     // 3a. "Review in Approval Inbox" (approval rows) must land on the Approval
     // Inbox. Then come back to the same row for the remaining steps.
-    const reviewButton = detail.getByRole('button', { name: 'Review in Approval Inbox' })
-    assert.equal(await reviewButton.count(), 1, 'approval detail offers Review in Approval Inbox')
+    const reviewButton = detail.getByRole('button', { name: REVIEW_IN_INBOX })
+    assert.equal(await reviewButton.count(), 1, 'approval detail offers its way into the Approval Inbox')
     await reviewButton.click()
     await page
       .waitForFunction(() => document.querySelector('[data-tab="inbox"]')?.getAttribute('aria-selected') === 'true')
       .catch(async () => {
         const active = await page.locator('[role="tab"][aria-selected="true"]').innerText().catch(() => 'n/a')
-        assert.fail(`Review in Approval Inbox opens the Approval Inbox; active tab is still: ${active}`)
+        assert.fail(`the approval detail opens the Approval Inbox; active tab is still: ${active}`)
       })
-    await page.getByRole('heading', { name: 'Approval Inbox' }).first().waitFor()
-    await page.getByRole('tab', { name: 'Notifications' }).click()
+    await page.getByRole('heading', { name: INBOX_HEADING }).first().waitFor()
+    await page.getByRole('tab', { name: CONSOLE_TABS.notifications }).click()
     await page.locator('.dy-notif-filters').waitFor()
-    await page.getByLabel('Filter by type').selectOption('approval_required')
+    await page.getByLabel(FILTER_TYPE).selectOption('approval_required')
     await rows.first().locator('button').first().click()
     await page.locator('[data-notification-detail]').waitFor()
 
-    await detail.getByRole('button', { name: 'Mark seen' }).click()
+    await detail.getByRole('button', { name: MARK_SEEN }).click()
     await page
-      .waitForFunction(() => document.querySelector('[data-notification-detail]')?.innerText.includes('Seen by'))
+      .waitForFunction((word) => document.querySelector('[data-notification-detail]')?.innerText.includes(word), SEEN_BY)
       .catch(() => assert.fail('detail shows who saw it'))
 
     // 4. Resolve with a note from the detail panel.
-    await detail.getByRole('button', { name: 'Resolve', exact: true }).click()
-    await detail.getByLabel('Resolution note').fill('E5 browser resolve')
-    await detail.getByRole('button', { name: 'Confirm resolve' }).click()
+    await detail.getByRole('button', { name: RESOLVE, exact: true }).click()
+    await detail.getByLabel(RESOLUTION_NOTE).fill('E5 browser resolve')
+    await detail.getByRole('button', { name: CONFIRM_RESOLVE }).click()
     await page
-      .waitForFunction(() => document.querySelector('[data-notification-detail]')?.innerText.includes('Resolved by'))
+      .waitForFunction((word) => document.querySelector('[data-notification-detail]')?.innerText.includes(word), RESOLVED_BY)
       .catch(() => assert.fail('detail shows who resolved it'))
 
     // 5. Mark all as seen: every remaining new row leaves the New state.
-    await page.getByRole('button', { name: 'Mark all as seen' }).click()
+    await page.getByRole('button', { name: MARK_ALL_SEEN }).click()
     await page
       .waitForFunction(() => {
         const states = [...document.querySelectorAll('.dockyard-notification-row')]
@@ -160,7 +188,7 @@ test('E5: filters, day groups, detail actions, badge, settings, poller, keyboard
       .catch(() => assert.fail('mark all as seen clears every new row'))
 
     // 6. Badge counts New only: the tab shows no count after the sweep.
-    await page.getByRole('tab', { name: 'Notifications' }).waitFor()
+    await page.getByRole('tab', { name: CONSOLE_TABS.notifications }).waitFor()
     const badge = await page.locator('[data-tab="notifications"] .dockyard-tab-count').count()
     assert.equal(badge, 0, 'no New badge after everything is seen')
 
@@ -208,7 +236,7 @@ test('E5: filters, day groups, detail actions, badge, settings, poller, keyboard
     assert.equal(refCalls.length, 1, 'the same pop-up never shows twice')
 
     // 9. Keyboard path: the toolbar is reachable; the row button is a real button.
-    await page.getByLabel('Filter by state').focus()
+    await page.getByLabel(FILTER_STATE).focus()
     await page.keyboard.press('Tab')
     assert.equal(await page.evaluate(() => document.activeElement?.tagName), 'SELECT', 'filters stay in the tab order')
 

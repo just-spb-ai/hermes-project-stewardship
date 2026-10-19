@@ -22,6 +22,12 @@ import { createRequire } from 'node:module'
 import { makeTestStateRoot, stateEnv } from './test-state-guard.mjs'
 import { evaluatePlugin as evaluatePluginBundle } from './test-support/load-plugin.mjs'
 import { freePort } from './test-support/free-port.mjs'
+// The screen's words are published in the Desktop source modules (the tab in
+// lib/panel-words.js, the states in lib/plan-vocab.js, the rest in the two
+// plan modules); a test never spells them out a second time.
+import { one, fill, escape } from './test-support/src-words.mjs'
+import { PROJECT_VIEWS } from './src/lib/panel-words.js'
+import { STATUS_LABEL } from './src/lib/plan-vocab.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { JSDOM, VirtualConsole } = require('jsdom')
@@ -32,6 +38,25 @@ const PLUGIN_PATH = fileURLToPath(new URL('./plugin.js', import.meta.url))
 const PYTHON = process.env.STEWARD_TEST_PYTHON || fileURLToPath(new URL('../../.venv/bin/python', import.meta.url))
 const TEST_ENV = stateEnv(makeTestStateRoot('hps-vision-screen-'))
 const PROJECT = 'vision-project'
+
+// The words this journey reads off the screen, each taken from the module
+// that publishes it. The two plan modules import React, so their words are
+// read out of their source with the anchors below; the rest are constants a
+// node test imports directly.
+const PLAN_SCREEN = 'src/project/plan/plan-screen.js'
+const PLAN_DRAWER = 'src/project/plan/plan-drawer.js'
+const VISION = PROJECT_VIEWS.plan
+const TUCKED = one(PLAN_SCREEN, /const TUCKED = '([^']+)'/)
+const WITHDRAW_FIRST_LINE = one(PLAN_SCREEN, /key: 'withdraw'[\s\S]*?lines: \[\s*'([^']+)'/)
+const COMPLETE_BOARD_TASKS = one(PLAN_SCREEN, /key: 'complete'[\s\S]*?lines: \[\s*'[^']+',\s*open \?[^\n]*\n\s*'([^']+)'/)
+const MILESTONE_DELETE_TAIL = one(PLAN_SCREEN, /milestone: `([^`]+)`/).split('${item.title}')[1]
+const GOAL_DELETE_TAIL = one(PLAN_SCREEN, /goal: `([^`]+)`/).split('${item.title}')[1]
+const APPROVAL_STAGE = one(PLAN_DRAWER, /\['approval', '([^']+)'/)
+const STOPPED_CANCELLED = one(PLAN_DRAWER, /cancelled: '([^']+)'/)
+const CHECKS_LABEL = one(PLAN_DRAWER, /\['([^']+)', checks \?\?/)
+// The section note `openNote` counts against the project's limit.
+const openNote = (open, max) => fill(PLAN_SCREEN, /const openNote = `([^`]+)`/, open, max)
+const literal = (text) => new RegExp(escape(text))
 
 // One project with a cap of 3 open initiatives:
 //   "Pending idea"   waiting for approval (to withdraw)
@@ -228,12 +253,12 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     await click('[data-tab="project"]')
     await click(`[data-choose-project="${PROJECT}"]`)
     const tab = await waitFor('[data-project-view="plan"]')
-    assert.equal(tab.textContent.trim(), 'Vision', 'the tab is called Vision')
+    assert.equal(tab.textContent.trim(), VISION, 'the tab is called Vision')
     await click('[data-project-view="plan"]')
     await waitFor(`[data-plan-screen="${PROJECT}"] .dy-plan-outline`)
-    assert.equal(text('.dy-plan-head h2'), 'Vision')
+    assert.equal(text('.dy-plan-head h2'), VISION)
     assert.equal(doc.querySelectorAll('[data-design-review], [data-plan-layout-choice]').length, 0, 'the layout switcher is gone')
-    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), /2 of 3 open allowed/)
+    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), literal(openNote(2, 3)))
 
     // 2. Propose with checks: they land in the validation contract as `tests`.
     await click('[data-plan-menu="new"]')
@@ -247,11 +272,11 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     assert.equal(cached?.status, 'pending_approval')
     assert.deepEqual(cached.validation_contract, { tests: 'Basket p95 under 300 ms in the load test' })
     await waitFor(row('initiative', cached.ref))
-    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), /3 of 3 open allowed/)
+    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), literal(openNote(3, 3)))
     await click(`${row('initiative', cached.ref)} .dy-plan-row-open`)
     await waitFor(`[data-plan-drawer="initiative"][data-plan-drawer-id="${cached.ref}"]`)
-    assert.match(text('[data-plan-drawer="initiative"] .dy-plan-facts'), /Checks\s*Basket p95 under 300 ms in the load test/)
-    assert.match(text('[data-plan-drawer="initiative"] .dy-plan-loop li.current'), /Human approval/)
+    assert.match(text('[data-plan-drawer="initiative"] .dy-plan-facts'), new RegExp(`${escape(CHECKS_LABEL)}\\s*Basket p95 under 300 ms in the load test`))
+    assert.match(text('[data-plan-drawer="initiative"] .dy-plan-loop li.current'), literal(APPROVAL_STAGE))
     assert($('[data-plan-drawer="initiative"] [data-action="plan-withdraw"]'), 'a proposal can be withdrawn')
     assert.equal($('[data-plan-drawer="initiative"] [data-action="plan-complete"]'), null, 'a proposal cannot be marked complete')
 
@@ -261,24 +286,24 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     await click(`${row('initiative', pending.ref)} [data-plan-menu="row-initiative"]`)
     await click('[data-plan-menu-item="withdraw"]')
     await waitFor('[data-plan-dialog="withdraw"]')
-    assert.match(text('[data-plan-dialog="withdraw"]'), /frees its open slot/)
+    assert.match(text('[data-plan-dialog="withdraw"]'), literal(WITHDRAW_FIRST_LINE))
     await setValue('[data-plan-dialog="withdraw"] [data-plan-field="reason"]', 'Covered by the basket work')
     await click('[data-action="plan-withdraw-confirm"]', 200)
     await waitGone('[data-plan-dialog]')
     assert.equal((await byTitle('Pending idea')).status, 'cancelled')
     await waitGone(row('initiative', pending.ref))
-    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), /2 of 3 open allowed/, 'the slot is free again')
+    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), literal(openNote(2, 3)), 'the slot is free again')
     assert.equal(await inInbox(pending.ref), false, 'it left the Approval Inbox')
 
     // 4. Show finished and archived: it is there, as Withdrawn, stopped at approval.
     const tucked = await waitFor('[data-plan-show-archived]')
-    assert.match(tucked.parentElement.textContent, /Show finished and archived \(1\)/)
+    assert.match(tucked.parentElement.textContent, new RegExp(`${escape(TUCKED)} \\(1\\)`))
     await click('[data-plan-show-archived]')
     await waitFor(row('initiative', pending.ref))
-    assert.match(text(`${row('initiative', pending.ref)} .dy-plan-row-status`), /Withdrawn/)
+    assert.match(text(`${row('initiative', pending.ref)} .dy-plan-row-status`), literal(STATUS_LABEL.cancelled))
     await click(`${row('initiative', pending.ref)} .dy-plan-row-open`)
     await waitFor(`[data-plan-drawer-id="${pending.ref}"]`)
-    assert.match(text('[data-plan-drawer="initiative"] .dy-plan-loop li.stopped'), /Human approval\s*Withdrawn before approval\./)
+    assert.match(text('[data-plan-drawer="initiative"] .dy-plan-loop li.stopped'), new RegExp(`${escape(APPROVAL_STAGE)}\\s*${escape(STOPPED_CANCELLED)}`))
     assert.equal(doc.querySelectorAll('[data-plan-drawer="initiative"] [data-action="plan-withdraw"], [data-plan-drawer="initiative"] [data-action="plan-complete"], [data-plan-drawer="initiative"] [data-action="plan-link-milestone"]').length, 0,
       'nothing more can be done to a withdrawn initiative')
 
@@ -290,7 +315,7 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     assert.equal($('[data-plan-drawer="initiative"] [data-action="plan-withdraw"]'), null, 'approved work cannot be withdrawn')
     await click('[data-plan-drawer="initiative"] [data-action="plan-complete"]')
     await waitFor('[data-plan-dialog="complete"]')
-    assert.match(text('[data-plan-dialog="complete"]'), /Its own board tasks that are still open are marked done\./)
+    assert.match(text('[data-plan-dialog="complete"]'), literal(COMPLETE_BOARD_TASKS))
     await click('[data-action="plan-complete-confirm"]', 300)
     await waitGone('[data-plan-dialog]')
     assert.equal((await byTitle('Running change')).status, 'completed')
@@ -299,11 +324,11 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     // can still show the old status for a moment, so wait for the new one; a
     // single read failed once at load average ~30 (07/10/2026).
     const runningStatus = `${row('initiative', running.ref)} .dy-plan-row-status`
-    for (const start = Date.now(); !/Complete/.test(text(runningStatus)) && Date.now() - start < 8000;) {
+    for (const start = Date.now(); !literal(STATUS_LABEL.completed).test(text(runningStatus)) && Date.now() - start < 8000;) {
       await act(async () => { await wait(50) })
     }
-    assert.match(text(runningStatus), /Complete/)
-    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), /1 of 3 open allowed/)
+    assert.match(text(runningStatus), literal(STATUS_LABEL.completed))
+    assert.match(text('[data-plan-section="initiative"] .dy-plan-section-note'), literal(openNote(1, 3)))
 
     // 6. Milestone "Beta": no Delete while active; archive, then delete for good.
     const beta = (await check(`/projects/${PROJECT}/milestones`)).milestones.find((m) => m.name === 'Beta')
@@ -314,7 +339,7 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     await waitGone('[data-destructive-confirm]')
     await click(`${row('milestone', beta.id)} .dy-plan-row-open`)
     await click('[data-plan-drawer="milestone"] [data-action="plan-delete-milestone"]')
-    assert.match(text('[data-destructive-confirm]'), /Its work items stay/)
+    assert.match(text('[data-destructive-confirm]'), literal(MILESTONE_DELETE_TAIL))
     await click('[data-destructive-confirm] [data-action="confirm-destructive-action"]', 200)
     await waitGone('[data-destructive-confirm]')
     await waitGone(row('milestone', beta.id))
@@ -332,7 +357,7 @@ test('Vision: propose with checks, withdraw, mark complete, delete archived mile
     await waitGone('[data-destructive-confirm]')
     await click(`${row('goal', goal.goal_id)} [data-plan-menu="row-goal"]`)
     await click('[data-plan-menu-item="delete"]')
-    assert.match(text('[data-destructive-confirm]'), /Its objectives stay and can join another goal/)
+    assert.match(text('[data-destructive-confirm]'), literal(GOAL_DELETE_TAIL))
     await click('[data-destructive-confirm] [data-action="confirm-destructive-action"]', 200)
     await waitGone('[data-destructive-confirm]')
     await waitGone(row('goal', goal.goal_id))

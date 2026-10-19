@@ -11,7 +11,36 @@
 import { after, before, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
-import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// The step panel's field labels and its Save button come from the same hooks
+// the canvas builds (step-settings.js is React-free, so a node test imports it
+// rather than spelling the words out).
+import { canvasDesignHooks } from './src/project/workflow-design/step-settings.js'
+const STEP = canvasDesignHooks({ draft: false, members: [], storedNode: (id) => ({ id, title: id }), settingsKey: (id) => ['canvas-fixes', id], onEditFrame: () => {} })
+const STEP_NAME = STEP.labels.title
+const STEP_DEPS = STEP.labels.deps
+const SAVE_VERSION = STEP.labels.save
+
+// test-support/project-scope.mjs is shared with other suites and still spells
+// the switcher's English labels, so this file drives the switcher itself: the
+// same roles, the same data-project-option hook, and the same wait that the
+// chosen scope shows up on the trigger. '*' is the wire value for All projects.
+async function pickProject(page, id) {
+  await page.getByRole('button', { name: CONTEXT_LABEL, exact: true }).click()
+  if (id !== '*') await page.getByRole('combobox', { name: FIND_LABEL }).fill(id)
+  await page.locator(`[role="listbox"] [data-project-option="${id}"]`).click()
+  await page.locator(`.dy-sw-trigger[data-scope="${id}"]`).waitFor()
+}
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
@@ -149,8 +178,8 @@ test('Workflows: Refresh and saving keep the open step panel and the zoom', { ti
     if ((await zoomOf(page, name)) < 1.2) await zoomIn(page, name, 2)
     const zoomBeforeSave = await zoomOf(page, name)
     const before = (await versionsOf(name)).length
-    await page.getByLabel('Step name').fill('Test it well')
-    await page.getByRole('button', { name: 'Save version', exact: true }).click()
+    await page.getByLabel(STEP_NAME).fill('Test it well')
+    await page.getByRole('button', { name: SAVE_VERSION, exact: true }).click()
     await until(async () => (await versionsOf(name)).length > before, 'the step editor did not save')
     await page.waitForTimeout(1000)
     if (!await panelOpen(page, name)) problems.push('saving closed the step panel')
@@ -311,9 +340,9 @@ test('Workflows: Fit brings every step into view after zooming in', { timeout: 9
 test('Workflows: a failed save says why in the step panel', { timeout: 90000 }, async () => {
   await withWorkflow('error', LINEAR, {}, async (page, name) => {
     await nodeIn(page, name, 'test').dblclick()
-    await page.getByLabel('Comes after (step IDs)').fill('build, no-such-step')
+    await page.getByLabel(STEP_DEPS).fill('build, no-such-step')
     const before = (await versionsOf(name)).length
-    await page.getByRole('button', { name: 'Save version', exact: true }).click()
+    await page.getByRole('button', { name: SAVE_VERSION, exact: true }).click()
     await until(async () => /fail|couldn/i.test(await panel(page, name).innerText()), 'the save never reported a result')
     const text = (await panel(page, name).innerText()).replace(/\s+/g, ' ')
     const elsewhere = /reference existing nodes/i.test(await page.locator('body').innerText())

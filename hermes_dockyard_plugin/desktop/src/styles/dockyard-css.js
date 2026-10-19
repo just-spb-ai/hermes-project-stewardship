@@ -1482,7 +1482,13 @@ export const DOCKYARD_CSS = `
 .dockyard-root .dockyard-wf3-lib-list small { display: block; margin-top: 2px; color: var(--dy-text-3); font-size: 11px; }
 .dockyard-root .dockyard-wf3-lib .dockyard-inline-editor { margin: 8px; }
 .dockyard-root .dockyard-wf3-stage { display: flex; flex-direction: column; min-width: 0; }
-.dockyard-root .dockyard-wf3-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--dy-border); background: var(--dy-surface-subtle); }
+.dockyard-root .dockyard-wf3-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 10px 6px; border-bottom: 1px solid var(--dy-border); background: var(--dy-surface-subtle); }
+/* Russian labels are wider than the English ones they replaced, so the run
+   controls wrapped onto a second row at 1440x900 and the toolbar stopped being
+   one row (workflow-builder.test.mjs measures its height). Tighten only this
+   toolbar's buttons and separators; every other screen keeps its own spacing. */
+.dockyard-root .dockyard-wf3-toolbar .dockyard-button.small { padding-inline: 6px; }
+.dockyard-root .dockyard-wf3-toolbar .dockyard-wf3-sep { margin: 0 1px; }
 .dockyard-root .dockyard-wf3-sep { width: 1px; height: 18px; background: var(--dy-border); margin: 0 4px; }
 .dockyard-root .dockyard-wf3-validation { margin: 0; padding: 8px 14px; border-bottom: 1px solid var(--dy-border); background: var(--dy-warning-bg); color: var(--dy-warning); font-size: 12px; }
 .dockyard-root .dockyard-wf3-stage .dockyard-workflow-graph { min-width: 0; }
@@ -1731,7 +1737,9 @@ export const DOCKYARD_CSS = `
 .dockyard-root [data-backlog-board] .th-status, .dockyard-root [data-backlog-board] .tree-status { width: 95px; }
 .dockyard-root [data-backlog-board] .th-initiative, .dockyard-root [data-backlog-board] .tree-initiative { width: 125px; }
 .dockyard-root [data-backlog-board] .th-who, .dockyard-root [data-backlog-board] .tree-who { width: 110px; }
-.dockyard-root [data-backlog-board] .th-age, .dockyard-root [data-backlog-board] .tree-age { width: 42px; flex: none; font-size: 11px; color: var(--dy-text-2); font-variant-numeric: tabular-nums; }
+/* 42px fitted the English 'Age' header; the Russian word needs 66px of content,
+   and a clipped sort button is what the layout specs catch. */
+.dockyard-root [data-backlog-board] .th-age, .dockyard-root [data-backlog-board] .tree-age { width: 72px; flex: none; font-size: 11px; color: var(--dy-text-2); font-variant-numeric: tabular-nums; }
 .dockyard-root [data-backlog-board] .th-reason, .dockyard-root [data-backlog-board] .tree-priority-reason { min-width: 110px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--dy-text-2); }
 .dockyard-root [data-backlog-board] .tree-title-stack { gap: 3px; }
 .dockyard-root [data-backlog-board] .cell-title { font-size: 12.5px; font-weight: 650; }

@@ -74,7 +74,7 @@ export function WorkflowLibraryView({ projectId, projectLabel = null, highlight 
       })
     } catch (failure) {
       setDialog(null)
-      setError(`Couldn't open New workflow: ${String(failure?.message ?? failure)}`)
+      setError(`Не удалось открыть «Новый процесс»: ${String(failure?.message ?? failure)}`)
     }
   }
   const createNew = async ({ scope: where, name, nodes, checks, conversation }) => {
@@ -83,7 +83,7 @@ export function WorkflowLibraryView({ projectId, projectLabel = null, highlight 
       setDialog(null); setJustMade(name); setSearch('')
       if (scope === 'project') setScope('all')
       else await load()
-      emitToast('success', `${name} is saved for every project.`)
+      emitToast('success', `Процесс «${name}» сохранён для всех проектов.`)
       return
     }
     await api(`/projects/${encodeURIComponent(projectId)}/workflows`, { method: 'POST', body: { name, nodes }, quiet: true })
@@ -113,7 +113,7 @@ export function WorkflowLibraryView({ projectId, projectLabel = null, highlight 
       const next = !(enablement[key] ?? rowScope === 'project')
       await api(`/projects/${encodeURIComponent(projectId)}/workflows/${rowScope}/${encodeURIComponent(rowName)}/enablement`, { method: 'PUT', body: { enabled: next } })
       setEnablement((current) => ({ ...current, [key]: next }))
-      emitToast('success', `Workflow turned ${next ? 'on' : 'off'} for ${projectId}.`)
+      emitToast('success', `Процесс ${next ? 'включён' : 'отключён'} для проекта ${projectId}.`)
     } catch (failure) { setError(String(failure?.message ?? failure)) }
     finally { setBusy(false) }
   }
@@ -124,18 +124,18 @@ export function WorkflowLibraryView({ projectId, projectLabel = null, highlight 
     try {
       await api(`/projects/${encodeURIComponent(projectId)}/workflows/${rowScope}/${encodeURIComponent(rowName)}/start`, { method: 'POST', body: { run_key: `${rowName}-${Date.now()}` } })
       setRefusals((current) => ({ ...current, [key]: null }))
-      emitToast('success', `Run of ${rowName} started for ${projectId}.`)
+      emitToast('success', `Прогон процесса «${rowName}» запущен для проекта ${projectId}.`)
     } catch (failure) {
-      setRefusals((current) => ({ ...current, [key]: `Run refused: ${String(failure?.message ?? failure)}` }))
+      setRefusals((current) => ({ ...current, [key]: `Прогон отклонён: ${String(failure?.message ?? failure)}` }))
     } finally { setBusy(false) }
   }
   return jsxs('section', { 'data-workflow-library-screen': true, children: [
-    jsx(PageHead, { title: 'Процессы', description: 'Every workflow available to project teams. Global workflows are shared by all projects; dedicated ones belong to a single project.' }),
+    jsx(PageHead, { title: 'Процессы', description: 'Все процессы, доступные командам проектов. Общие процессы используются всеми проектами, выделенные принадлежат одному проекту.' }),
     error ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', 'data-library-error': true, children: error }) : null,
     jsxs('div', { className: 'dockyard-wf-library-toolbar', children: [
       jsxs('div', { className: 'dockyard-wf-library-scope', role: 'group', 'aria-label': 'Фильтр охвата', children: [
         jsx(Button, { small: true, action: 'library-scope-all', variant: scope === 'all' ? 'primary' : '', onClick: () => setScope('all'), children: 'Все' }),
-        jsx(Button, { small: true, action: 'library-scope-global', variant: scope === 'global' ? 'primary' : '', onClick: () => setScope('global'), children: 'Global' }),
+        jsx(Button, { small: true, action: 'library-scope-global', variant: scope === 'global' ? 'primary' : '', onClick: () => setScope('global'), children: 'Общие' }),
         jsx(Button, { small: true, action: 'library-scope-project', variant: scope === 'project' ? 'primary' : '', onClick: () => setScope('project'), children: 'Проект' }),
       ]}),
       jsx('input', { 'data-library-search': true, 'aria-label': 'Поиск процессов', placeholder: 'Поиск процессов', value: search, onChange: (event) => setSearch(event.target.value) }),
@@ -154,10 +154,10 @@ export function WorkflowLibraryView({ projectId, projectLabel = null, highlight 
               jsxs('header', { children: [
                 jsx('h3', { children: row.name }),
                 made ? jsx(StatusTag, { tone: 'success', label: 'Только что' }) : null,
-                jsx(StatusTag, { tone: row.scope === 'global' ? 'info' : 'neutral', label: row.scope === 'global' ? 'Global' : 'Проект' }),
+                jsx(StatusTag, { tone: row.scope === 'global' ? 'info' : 'neutral', label: row.scope === 'global' ? 'Общий' : 'Проект' }),
               ]}),
-              jsx('p', { className: 'dockyard-meta', children: row.owner_project_id ? `Dedicated to ${row.owner_project_id} · v${row.version}` : `Available to every project · v${row.version}` }),
-              jsx('p', { className: 'dockyard-meta', children: `${number(row.definition?.nodes?.length ?? 0)} nodes` }),
+              jsx('p', { className: 'dockyard-meta', children: row.owner_project_id ? `Выделен проекту ${row.owner_project_id} · v${row.version}` : `Доступен всем проектам · v${row.version}` }),
+              jsx('p', { className: 'dockyard-meta', children: `Узлов: ${number(row.definition?.nodes?.length ?? 0)}` }),
               row.archived_at
                 ? jsx(Button, { small: true, action: 'library-restore', disabled: busy, onClick: () => act(`/workflow-library/${row.scope}/${encodeURIComponent(row.name)}/restore${row.owner_project_id ? `?owner_project_id=${encodeURIComponent(row.owner_project_id)}` : ''}`), children: 'Восстановить' })
                 : jsxs('div', { className: 'dockyard-form-actions', children: [
@@ -166,14 +166,14 @@ export function WorkflowLibraryView({ projectId, projectLabel = null, highlight 
                     jsx(Button, { small: true, action: 'library-delete', variant: 'danger', disabled: busy, onClick: () => remove(row.scope, row.name, row.owner_project_id), children: 'Удалить' }),
                   ] }),
               !projectId || (row.scope === 'project' && row.owner_project_id !== projectId)
-                ? jsx('p', { className: 'dockyard-meta', 'data-wf-enablement-na': `${row.scope}:${row.name}`, children: projectId ? `Only ${row.owner_project_id} can run this workflow.` : 'Выберите проект, чтобы включать или отключать процессы.' })
+                ? jsx('p', { className: 'dockyard-meta', 'data-wf-enablement-na': `${row.scope}:${row.name}`, children: projectId ? `Запускать этот процесс может только ${row.owner_project_id}.` : 'Выберите проект, чтобы включать или отключать процессы.' })
                 : jsxs('div', { className: 'dockyard-wf-enablement', children: [
                 jsxs('label', { className: 'dockyard-switch', children: [
-                  jsx('input', { type: 'checkbox', role: 'switch', 'data-wf-enablement': `${row.scope}:${row.name}`, 'aria-label': `Turn ${row.name} on for ${projectId}`, checked: Boolean(enablement[`${row.scope}:${row.name}`] ?? row.scope === 'project'), 'aria-checked': String(Boolean(enablement[`${row.scope}:${row.name}`] ?? row.scope === 'project')), disabled: busy, onChange: () => toggle(row.scope, row.name) }),
+                  jsx('input', { type: 'checkbox', role: 'switch', 'data-wf-enablement': `${row.scope}:${row.name}`, 'aria-label': `Включить процесс ${row.name} для проекта ${projectId}`, checked: Boolean(enablement[`${row.scope}:${row.name}`] ?? row.scope === 'project'), 'aria-checked': String(Boolean(enablement[`${row.scope}:${row.name}`] ?? row.scope === 'project')), disabled: busy, onChange: () => toggle(row.scope, row.name) }),
                   jsx('span', { className: 'dockyard-switch-track', 'aria-hidden': true }),
                   jsx('span', { className: 'dockyard-switch-thumb', 'aria-hidden': true }),
                 ]}),
-                jsx('span', { className: 'dockyard-wf-enablement-label', children: row.scope === 'global' ? `On for ${projectId} (off by default)` : `On for ${projectId}` }),
+                jsx('span', { className: 'dockyard-wf-enablement-label', children: row.scope === 'global' ? `Включён для проекта ${projectId} (по умолчанию выключен)` : `Включён для проекта ${projectId}` }),
                 jsx(Button, { small: true, action: 'library-run', data: { 'data-wf-run-start': `${row.scope}:${row.name}` }, disabled: busy, onClick: () => start(row.scope, row.name), children: 'Запустить прогон' }),
               ]}),
               refusals[`${row.scope}:${row.name}`]

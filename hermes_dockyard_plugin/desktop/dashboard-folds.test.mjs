@@ -9,10 +9,14 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { one, escape } from './test-support/src-words.mjs'
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
 const TOKEN = { 'x-hermes-session-token': 'demo-session-token' }
+// The panel title, read out of the view that renders it (after the button's
+// aria-controls that points at this section).
+const TITLE = one('src/views/dashboard.js', /'aria-controls': 'dy-needs-you-now'[\s\S]*?jsx\('span', \{ children: '([^']+)' \}\)/)
 
 async function api(path, method = 'GET', body) {
   const res = await fetch(`${API}${path}`, { method, headers: { ...TOKEN, 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) })
@@ -47,7 +51,7 @@ test('Needs you now folds, stays folded after a reload, and opens again; the cho
     assert.ok(await list.isVisible(), 'open by default')
     const rows = await page.locator('#dy-needs-you-now .dockyard-command-attention-row').count()
     assert.equal(await page.locator('[data-section-count="needs-you-now"]').innerText(), String(rows), 'the count matches the list')
-    assert.match(await fold.evaluate((button) => button.textContent), /Needs you now/)
+    assert.match(await fold.evaluate((button) => button.textContent), new RegExp(escape(TITLE)))
 
     await fold.click()
     assert.equal(await fold.getAttribute('aria-expanded'), 'false')

@@ -15,9 +15,12 @@ const TODAY = '2026-10-04'
 // ---- stages ----------------------------------------------------------------
 
 test('five stages with the same keys, labels and status mapping as before; no catch-all column', () => {
-  assert.deepEqual(m.STAGES.map((s) => [s.key, s.label]), [
-    ['backlog', 'Backlog'], ['active', 'In progress'], ['review', 'Review'], ['blocked', 'Blocked'], ['done', 'Done'],
-  ])
+  // The column words are the module's own (STAGES.label) and get translated
+  // with the rest of the UI; what must not drift is which columns exist, in
+  // what order, each with a word of its own.
+  assert.deepEqual(m.STAGES.map((s) => s.key), ['backlog', 'active', 'review', 'blocked', 'done'])
+  assert.ok(m.STAGES.every((s) => typeof s.label === 'string' && s.label.length > 0), 'every column reads as a word')
+  assert.equal(new Set(m.STAGES.map((s) => s.label)).size, m.STAGES.length, 'no two columns read the same')
   assert.deepEqual(m.STAGES.find((s) => s.key === 'active').statuses, ['in_progress', 'executing', 'active'])
   assert.deepEqual(m.STAGES.find((s) => s.key === 'review').statuses, ['in_review', 'review'])
   assert.deepEqual(m.STAGES.find((s) => s.key === 'done').statuses, ['done', 'complete', 'completed'])
@@ -53,13 +56,19 @@ test('the moves offered are exactly what real Hermes accepted (move-matrix probe
   assert.deepEqual(offered('blocked'), ['active', 'done'])
   assert.deepEqual(offered('done'), [])
   assert.deepEqual(offered('backlog', 2), [], 'Hermes keeps a task with open blockers in Backlog')
-  assert.match(m.movesFor(item(), 2).reason, /waiting on 2 open blockers\./)
-  assert.match(m.movesFor(item(), 1).reason, /waiting on 1 open blocker\./)
+  const blockedTwo = m.movesFor(item(), 2).reason
+  const blockedOne = m.movesFor(item(), 1).reason
+  assert.equal(blockedTwo, m.MOVE_WORDS.blockedWaiting(2), "the reason is the module's own sentence for two open blockers")
+  assert.ok(blockedTwo.includes('2'), 'the reason names how many blockers are open')
+  assert.equal(blockedOne, m.MOVE_WORDS.blockedWaiting(1), "and its own sentence for one")
+  assert.notEqual(blockedOne, blockedTwo, 'one open blocker never reads like two')
   assert.deepEqual(offered('backlog', 0, 'epic'), ['active'])
   assert.deepEqual(offered('in_progress', 0, 'epic'), [])
   assert.deepEqual(offered('weird_state'), [])
-  assert.match(m.movesFor(item({ status: 'done' })).reason, /stays in Done/)
-  assert.deepEqual(m.movesFor(item({ status: 'in_progress' })).targets[0], { key: 'review', label: 'Review', status: 'in_review' })
+  const doneReason = m.movesFor(item({ status: 'done' })).reason
+  assert.ok(typeof doneReason === 'string' && doneReason.includes(m.stageLabel('done')),
+    'a done card offers no move and says it stays in the Done column')
+  assert.deepEqual(m.movesFor(item({ status: 'in_progress' })).targets[0], { key: 'review', label: m.stageLabel('review'), status: 'in_review' })
 })
 
 // ---- small helpers -----------------------------------------------------------
@@ -90,8 +99,8 @@ test('type words are capitalised from the real type', () => {
 test('profile ids read as names; dates read as words', () => {
   assert.equal(m.displayName('ada-lovelace'), 'Ada Lovelace')
   assert.equal(m.displayName(''), '')
-  assert.equal(m.shortDate('2099-06-30', TODAY), '30 Jun 2099')
-  assert.equal(m.shortDate('2026-03-01', TODAY), '1 Mar', 'the year is dropped when it is this year')
+  assert.equal(m.shortDate('2099-06-30', TODAY), `30 ${m.MONTHS[5]} 2099`)
+  assert.equal(m.shortDate('2026-03-01', TODAY), `1 ${m.MONTHS[2]}`, 'the year is dropped when it is this year')
 })
 
 // ---- links and planning (what C's chips showed) --------------------------------
@@ -154,9 +163,10 @@ test('missing data never invents links, planning or dates', () => {
 test('summary signals, in reading order: Blocked by, Blocks, then due or overdue', () => {
   const deps = { 'HDY-10': { blocked_by: [card('HDY-1', 'task', 'backlog'), card('HDY-2', 'task', 'done')], blocks: [card('HDY-9', 'task', 'backlog')] } }
   const late = m.cardFacts(item({ due: '2000-01-15' }), { deps }, TODAY)
-  assert.deepEqual(m.cardSignals(late, m.defaultFields(), TODAY).map((s) => s.text), ['Blocked by 1', 'Blocks 1', 'Overdue · 15 Jan 2000'])
+  assert.deepEqual(m.cardSignals(late, m.defaultFields(), TODAY).map((s) => s.text),
+    [m.CARD_WORDS.blockedBy(1), m.CARD_WORDS.blocks(1), m.CARD_WORDS.overdue(`15 ${m.MONTHS[0]} 2000`)])
   const soon = m.cardFacts(item({ due: '2099-06-30' }), {}, TODAY)
-  assert.deepEqual(m.cardSignals(soon, m.defaultFields(), TODAY).map((s) => [s.kind, s.text]), [['due', 'Due 30 Jun 2099']])
+  assert.deepEqual(m.cardSignals(soon, m.defaultFields(), TODAY).map((s) => [s.kind, s.text]), [['due', m.CARD_WORDS.due(`30 ${m.MONTHS[5]} 2099`)]])
   assert.deepEqual(m.cardSignals(m.cardFacts(item(), {}), m.defaultFields(), TODAY), [], 'nothing to say, nothing shown')
 })
 
@@ -208,8 +218,10 @@ test('searching a ref also finds every item that links to it', () => {
 
 // ---- views: what you see, saved -------------------------------------------------
 
-test('All work is built in: everything, on the board, summary cards', () => {
-  assert.equal(m.ALL_WORK, 'All work')
+test('the built-in view has a name of its own: everything, on the board, summary cards', () => {
+  // The name is the module's own word (ALL_WORK) and is translated with the
+  // rest of the UI; the test checks that it exists, not how it is spelled.
+  assert.ok(typeof m.ALL_WORK === 'string' && m.ALL_WORK.trim().length > 0, 'the built-in view reads as a word')
   assert.deepEqual(m.defaultDefinition(), { layout: 'board', filters: m.emptyFilters(), density: 'compact', fields: m.defaultFields() })
   assert.deepEqual(m.definitionOf(null), m.defaultDefinition())
 })
@@ -228,10 +240,12 @@ test('a saved view round-trips; views saved before r6 still open', () => {
 })
 
 test('views read as words, and new names never clash', () => {
-  assert.equal(m.describeDefinition(m.defaultDefinition()), 'Board')
-  assert.equal(m.describeDefinition({ ...m.defaultDefinition(), density: 'detailed' }), 'Board · All cards open')
+  // The layout words and the expanded-cards note are the module's own
+  // (VIEW_WORDS); the test fixes how they compose, not how they are spelled.
+  assert.equal(m.describeDefinition(m.defaultDefinition()), m.VIEW_WORDS.board)
+  assert.equal(m.describeDefinition({ ...m.defaultDefinition(), density: 'detailed' }), `${m.VIEW_WORDS.board} · ${m.VIEW_WORDS.allCardsOpen}`)
   assert.equal(m.describeDefinition({ ...m.defaultDefinition(), layout: 'list', filters: { ...m.emptyFilters(), assignee: 'ada-lovelace', label: 'mobile' } }),
-    'List · Assignee Ada Lovelace · Label mobile')
+    `${m.VIEW_WORDS.list} · Assignee Ada Lovelace · Label mobile`)
   assert.equal(m.freeName('Mine', ['Mine', 'Mine (2)']), 'Mine (3)')
   assert.equal(m.freeName('Fresh', ['Mine']), 'Fresh')
 })

@@ -35,6 +35,32 @@ const { chromium } = require('playwright')
 const BASE = process.env.STEWARD_DESKTOP_URL || 'http://127.0.0.1:19500/desktop'
 const API = process.env.STEWARD_API_URL || 'http://127.0.0.1:19500/api/plugins/hermes-project-stewardship'
 const TOKEN = 'demo-session-token'
+import { readFileSync } from 'node:fs'
+import { TAB_LABELS } from './src/inbox/model.js'
+// The words a person reads are read from the source module that renders them,
+// never spelled out here: the panel stays translatable without touching this test.
+const sourceText = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8')
+const rendered = (text, pattern, what) => {
+  const found = text.match(pattern)
+  if (!found) throw new Error(`src no longer renders ${what}`)
+  return found[1]
+}
+const wordRe = (word) => new RegExp(String(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+const UI_SRC = sourceText('./src/lib/ui.js')
+const APPROVALS_SRC = sourceText('./src/work-item/approvals.js')
+const COMMENT_LABEL = rendered(APPROVALS_SRC, /placeholder: '[^']*', 'aria-label': '([^']+)' \}\)/, 'the comment input label')
+const COMMENT_BUTTON = rendered(APPROVALS_SRC, /onClick: addComment, disabled: !commentBody\.trim\(\), children: '([^']+)'/, 'the comment control')
+const BACK = rendered(APPROVALS_SRC, /onClick: onBack, children: '([^']+)'/, 'the back control')
+const SECTIONS = [...APPROVALS_SRC.matchAll(/jsx\(Section, \{ title: (["'])(.+?)\1/g)].map((found) => found[2])
+const REQUEST_CHANGES = rendered(APPROVALS_SRC, /onClick: \(\) => setChangesOpen\(\(open\) => !open\), children: '([^']+)'/, 'the request-changes control')
+const RETURN_TO_PROPOSER = rendered(APPROVALS_SRC, /onClick: requestChanges, children: busy \? '[^']*' : '([^']+)'/, 'the return-to-proposer control')
+const FEEDBACK_LABEL = rendered(APPROVALS_SRC, /jsx\('span', \{ children: '([^']+)' \}\),\s*jsx\('textarea', \{ value: feedback/, 'the feedback field label')
+const RETURNED_TOAST = rendered(APPROVALS_SRC, /await confirmReceipt\('changes_requested'\)\s*finish\('([^']+)'\)/, 'the returned-to-proposer toast')
+const REJECT = rendered(APPROVALS_SRC, /action: 'reject', variant: 'danger'[^}]*children: '([^']+)'/, 'the reject control')
+const REJECT_INITIATIVE = rendered(APPROVALS_SRC, /action: 'confirm-destructive-action',[\s\S]*?children: busy \? '[^']*' : '([^']+)'/, 'the confirm-reject control')
+const REJECTED_HEAD = rendered(APPROVALS_SRC, /finish\(action === 'approve' \? '[^']*' : '([^']+)'\)/, 'the rejected toast').split(';')[0]
+const ATTENTION_SUFFIX = rendered(sourceText('./src/views/inbox.js'), /children: `\$\{item\.project \|\| item\.title\}: ([^`]+)`/, 'the attention row title')
+const SEARCH_LABEL = rendered(UI_SRC, /'aria-label': '([^']+)',\s*'aria-expanded': active && query\.trim\(\)\.length >= 2/, 'the command-palette search label')
 
 const api = async (path, method = 'GET', body) => {
   const res = await fetch(`${API}${path}`, {
@@ -95,9 +121,9 @@ test('R4: a comment never changes the decision', { timeout: 300000 }, async () =
   await openInbox()
   const ref = await openRow('Ship saved views')
   const before = await api(`/initiatives/${ref}/decision`)
-  const composer = page.locator('[data-approval-comments] input[aria-label="Comment"]')
+  const composer = page.locator(`[data-approval-comments] input[aria-label="${COMMENT_LABEL}"]`)
   await composer.fill('Which metric backs this?')
-  await page.locator('[data-approval-comments]').getByRole('button', { name: 'Comment', exact: true }).click()
+  await page.locator('[data-approval-comments]').getByRole('button', { name: COMMENT_BUTTON, exact: true }).click()
   await page.locator('[data-inbox-panel="true"] .dockyard-comment-thread')
     .getByText('Which metric backs this?', { exact: false }).first().waitFor()
   const after = await api(`/initiatives/${ref}/decision`)
@@ -119,7 +145,7 @@ test('tabs and counts: All, Urgent, Today, Earlier filter the list', { timeout: 
   await openInbox()
   const tabs = page.locator('[data-inbox-tab]')
   const names = (await tabs.allInnerTexts()).join(' | ')
-  for (const name of ['All', 'Urgent', 'Today', 'Earlier']) {
+  for (const name of [TAB_LABELS.all, TAB_LABELS.urgent, TAB_LABELS.today, TAB_LABELS.earlier]) {
     assert.ok(names.includes(name), `missing tab "${name}": ${names}`)
   }
   const countsAll = await page.locator('[data-inbox-row]').count()
@@ -136,7 +162,7 @@ test('attention rows are listed with an honest panel, a project link, and no dec
   const attention = page.locator('[data-attention-row]').first()
   await attention.waitFor()
   const text = await attention.innerText()
-  assert.match(text, /needs attention/i, 'attention rows say what they are')
+  assert.match(text, wordRe(ATTENTION_SUFFIX), 'attention rows say what they are')
   const decisionButtons = attention.locator('[data-action="approve"], [data-action="reject"], [data-action="request-changes"]')
   assert.equal(await decisionButtons.count(), 0, 'attention rows never offer decisions')
   const link = attention.locator('a, button')
@@ -154,7 +180,7 @@ test('deep link s6:initiative/<ref> selects that row via focusRef', { timeout: 3
   // The real deep-link surface: the command palette opens s6:initiative/<ref>
   // (catalog review, PR #136752 — the synthetic test event is gone).
   await page.keyboard.press('Control+k')
-  const search = page.locator('input[aria-label="Search projects, work and initiatives"]')
+  const search = page.locator(`input[aria-label="${SEARCH_LABEL}"]`)
   await search.fill(ref)
   await page.locator('#dockyard-search-results button').first().click()
   await page.locator('[data-inbox-screen="true"]').waitFor()
@@ -182,7 +208,7 @@ test('390px: the detail opens full width with Back, and nothing scrolls sideways
   const panel = page.locator('[data-inbox-panel="true"]')
   await panel.waitFor()
   assert.ok(await panel.isVisible(), 'the detail opens on narrow screens')
-  await page.getByRole('button', { name: 'Back' }).click()
+  await page.getByRole('button', { name: BACK }).click()
   await page.waitForTimeout(250)
   const scroll = await page.evaluate(() => ({ x: document.documentElement.scrollWidth, inner: window.innerWidth }))
   assert.ok(scroll.x <= scroll.inner, `no sideways scroll at 390px (${scroll.x} > ${scroll.inner})`)
@@ -212,10 +238,7 @@ test('R6+R2+R1: panel carries the full decision context; request changes require
   await panel.getByText(/approve_and_start_execution/).waitFor({ timeout: 20000 })
   const text = await panel.innerText()
   const lowerText = text.toLowerCase()
-  for (const section of [
-    'Requested change', 'Policy gate', 'Potential impact', 'Capability boundary',
-    'Who asked', 'Evidence', 'Affected work items', 'Activity', "Comments don't change the decision",
-  ]) {
+  for (const section of SECTIONS) {
     // The section headers render uppercased (CSS text-transform), so compare
     // case-insensitively: the semantic content is what R6 carries, not casing.
     assert.ok(lowerText.includes(section.toLowerCase()), `detail panel is missing "${section}"; panel shows:\n${text.slice(0, 500)}`)
@@ -224,21 +247,21 @@ test('R6+R2+R1: panel carries the full decision context; request changes require
   assert.match(text, /approve_and_start_execution/, 'capability boundary must show the exact grant')
   // Request changes UI gate (R2): feedback required, then the item leaves.
   const feedback = 'Split the refund rollout into two slices'
-  await panel.getByRole('button', { name: 'Request changes', exact: true }).click()
+  await panel.getByRole('button', { name: REQUEST_CHANGES, exact: true }).click()
   const form = page.locator('[data-request-changes-form="true"]')
   await form.waitFor()
-  const submit = form.getByRole('button', { name: /Return to proposer/ })
+  const submit = form.getByRole('button', { name: wordRe(RETURN_TO_PROPOSER) })
   assert.equal(await submit.isDisabled(), true, 'request changes must require feedback')
   // Sahil 05/10: the box sits under its label, spans the form, and is big enough to write in.
-  const box = form.getByRole('textbox', { name: 'Feedback for the proposer' })
+  const box = form.getByRole('textbox', { name: FEEDBACK_LABEL })
   const [labelBox, fieldBox, formBox] = [
-    await form.getByText('Feedback for the proposer', { exact: true }).boundingBox(), await box.boundingBox(), await form.boundingBox()]
+    await form.getByText(FEEDBACK_LABEL, { exact: true }).boundingBox(), await box.boundingBox(), await form.boundingBox()]
   assert.ok(fieldBox.y >= labelBox.y + labelBox.height - 1, 'the box is under its label, not beside it')
   assert.ok(fieldBox.height >= 120, `the box is big enough to write in (height ${fieldBox.height})`)
   assert.ok(fieldBox.width >= formBox.width - 40, `the box spans the form (${fieldBox.width} of ${formBox.width})`)
   await box.fill(feedback)
   await submit.click()
-  await page.locator('[data-toast-region]').getByText(/Returned to the proposer/).first().waitFor()
+  await page.locator('[data-toast-region]').getByText(wordRe(RETURNED_TOAST)).first().waitFor()
   // R2 + focus contract: the item leaves the list; focus lands on a row.
   await page.waitForFunction((title) => !document.body.textContent.includes(title), 'Ship saved views')
   const focused = await page.evaluate(() => document.activeElement?.getAttribute('data-inbox-ref') ?? '')
@@ -248,15 +271,15 @@ test('R6+R2+R1: panel carries the full decision context; request changes require
 test('R1: reject happens in ONE dialog with a required reason', { timeout: 300000 }, async () => {
   await openInbox()
   const ref = await openRow('Retire legacy webhook listener')
-  await page.locator('[data-inbox-panel="true"]').getByRole('button', { name: 'Reject', exact: true }).click()
+  await page.locator('[data-inbox-panel="true"]').getByRole('button', { name: REJECT, exact: true }).click()
   const dialog = page.locator('[data-destructive-confirm^="reject-"]')
   await dialog.waitFor()
   // One dialog carries the reason; nothing was sent before it is filled.
   const preReceipts = await api(`/initiatives/${ref}/decision/receipts`)
   assert.equal((preReceipts.body?.receipts ?? []).length, 0, 'no receipt before the confirm click')
-  const confirm = dialog.getByRole('button', { name: /Reject initiative/ })
+  const confirm = dialog.getByRole('button', { name: wordRe(REJECT_INITIATIVE) })
   assert.equal(await confirm.isDisabled(), true, 'reject must stay disabled without a reason')
   await dialog.locator('input').first().fill('Rollback risk not acceptable')
   await confirm.click()
-  await page.locator('[data-toast-region]').getByText(/Rejected/).first().waitFor()
+  await page.locator('[data-toast-region]').getByText(wordRe(REJECTED_HEAD)).first().waitFor()
 })

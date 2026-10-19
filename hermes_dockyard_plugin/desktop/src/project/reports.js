@@ -24,13 +24,14 @@ import { Icon } from '../lib/ui.js'
 import { reportDownloadFilename } from '../../download.js'
 import { downloadTextFile } from '../../download.js'
 import { REPORT_TYPES } from '../lib/report-vocab.js'
+import { REPORT_META } from '../lib/report-vocab.js'
 import { parseReport } from '../lib/report-vocab.js'
 import { reportHint } from '../lib/report-vocab.js'
 import { reportTypeLabel } from '../lib/report-vocab.js'
 import { reportWhen } from '../lib/report-vocab.js'
 import { takesActivity } from '../lib/report-vocab.js'
 
-const byline = (report) => [reportWhen(report.generated_at), report.generated_by ? `by ${report.generated_by}` : ''].filter(Boolean).join(' · ')
+const byline = (report) => [reportWhen(report.generated_at), report.generated_by ? `автор: ${report.generated_by}` : ''].filter(Boolean).join(' · ')
 
 function ReportControls({ type, onType, includeActivity, onActivity, generating, onGenerate, error }) {
   const allowed = takesActivity(type)
@@ -85,7 +86,7 @@ function ReportPage({ report, onCopy, onDownload }) {
     jsxs('header', { className: 'dy-rep-doc-head', children: [
       jsxs('div', { children: [
         jsx('h2', { id: 'dy-rep-doc-title', children: doc.title || report.title }),
-        jsx('p', { className: 'dy-rep-meta', 'data-report-meta': true, children: `${reportTypeLabel(report.report_type)} · Generated ${when}${by ? ` by ${by}` : ''}` }),
+        jsx('p', { className: 'dy-rep-meta', 'data-report-meta': true, children: `${reportTypeLabel(report.report_type)} · ${REPORT_META.generated} ${when}${by ? ` · ${REPORT_META.by} ${by}` : ''}` }),
       ]}),
       jsxs('div', { className: 'dy-rep-actions', children: [
         jsx(Button, { action: 'copy-report', small: true, onClick: onCopy, children: 'Скопировать Markdown' }),
@@ -101,7 +102,7 @@ function ReportPage({ report, onCopy, onDownload }) {
 function ReportBody({ state, history, onRetry, onCopy, onDownload }) {
   if (state.openError) {
     return jsxs('div', { className: 'dy-rep-state', role: 'alert', children: [
-      jsx('p', { children: `This report could not be opened: ${state.openError}` }),
+      jsx('p', { children: `Не удалось открыть отчёт: ${state.openError}` }),
       jsx(Button, { action: 'retry-report', small: true, onClick: onRetry, children: 'Попробовать снова' }),
     ]})
   }
@@ -111,7 +112,7 @@ function ReportBody({ state, history, onRetry, onCopy, onDownload }) {
     jsx(Icon, { name: 'project' }),
     jsx('p', { children: history.length > 0
       ? 'Выберите отчёт из списка, чтобы прочитать его здесь.'
-      : 'No reports yet. Pick a type above and press Generate report. Reports are saved here, so you can read, copy or download them later.' }),
+      : 'Отчётов пока нет. Выберите тип выше и нажмите «Создать отчёт». Отчёты сохраняются здесь, поэтому их можно будет прочитать, скопировать или скачать позже.' }),
   ]})
 }
 
@@ -198,7 +199,7 @@ export function ProjectReportsPanel({ project, reports, onRefresh }) {
     if (!shown?.content) return
     const filename = reportDownloadFilename(project.id, shown)
     const started = downloadTextFile(shown.content, filename)
-    emitToast(started ? 'success' : 'danger', started ? `Downloading ${filename}` : 'Загрузка не удалась в этой среде')
+    emitToast(started ? 'success' : 'danger', started ? `Скачивание ${filename}` : 'Загрузка не удалась в этой среде')
   }
   const body = jsx(ReportBody, {
     state: { report: shown, opening, openError }, history,

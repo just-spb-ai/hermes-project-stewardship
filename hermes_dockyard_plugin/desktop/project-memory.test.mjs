@@ -14,7 +14,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { one, pickProject } from './test-support/src-words.mjs'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -23,6 +24,13 @@ const API = process.env.STEWARD_API_URL || 'http://127.0.0.1:19500/api/plugins/h
 const HEADERS = { 'x-hermes-session-token': 'demo-session-token' }
 const MARKER = { timeout: 20000 }
 const RUN = `m${Date.now().toString(36)}`
+
+// The words a person reads come from the module that renders them
+// (project/memory.js): the toast one change shows, and the note an edited entry
+// carries. Read out of its source, since that module imports React.
+const MEMORY = 'src/project/memory.js'
+const ADDED_TO_MEMORY = one(MEMORY, /body: \{ kind, text, source \} \}, '([^']+)'\)/)
+const EDITED_WORD = one(MEMORY, /entry\.supersedes_id != null\) parts\.push\('([^']+)'\)/)
 
 async function call(path, method = 'GET', body) {
   const response = await fetch(`${API}${path}`, {
@@ -87,7 +95,7 @@ test('Memory: add, edit with history, archive and restore; bots see exactly the 
     await openMemory(page, projectId)
     await addEntry(page, 'rule', rule)
     // One toast per change, not the generic "Change saved" as well.
-    await page.locator('.dockyard-toast', { hasText: 'Added to the project memory.' }).waitFor(MARKER)
+    await page.locator('.dockyard-toast', { hasText: ADDED_TO_MEMORY }).waitFor(MARKER)
     assert.equal(await page.locator('.dockyard-toast').count(), 1, 'exactly one toast for the first change')
     await addEntry(page, 'fact', fact)
     assert.equal(await page.locator('[data-memory-group="rule"]').locator('[data-memory-entry]', { hasText: rule }).count(), 1, 'the rule is under Rules')
@@ -105,7 +113,7 @@ test('Memory: add, edit with history, archive and restore; bots see exactly the 
     await page.locator('[data-action="save-memory-entry"]').click()
     await entryWith(page, edited).waitFor(MARKER)
     assert.equal(await entryWith(page, fact).count(), 0, 'the old wording left the list')
-    assert.match(await entryWith(page, edited).locator('.dy-mem-meta').innerText(), /edited/)
+    assert.match(await entryWith(page, edited).locator('.dy-mem-meta').innerText(), new RegExp(EDITED_WORD))
     await entryWith(page, edited).locator('[data-action="memory-history"]').click()
     // The history loads after the click: wait for both versions before reading.
     await entryWith(page, edited).locator('[data-memory-history] li').nth(1).waitFor(MARKER)

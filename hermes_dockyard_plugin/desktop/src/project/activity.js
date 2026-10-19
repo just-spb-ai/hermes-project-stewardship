@@ -33,7 +33,7 @@ const fullTime = (ts) => {
   const at = Date.parse(ts ?? '')
   return Number.isNaN(at) ? 'Время не записано' : new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' }).format(at)
 }
-const plural = (count, word) => `${number(count)} ${word}${count === 1 ? '' : 's'}`
+const plural = (count, one, many) => `${number(count)} ${Number(count) === 1 ? one : many}`
 
 function Impact({ row }) {
   return row.effect ? jsx(StatusTag, { tone: row.tone, label: row.effect.label }) : jsx('span', { className: 'dy-act-none', children: '—' })
@@ -102,18 +102,18 @@ export function ProjectActivityPanel({ project, view, onOpenItem }) {
     }
   }
   const total = eventCount(rows)
-  let footnote = `All ${plural(total, 'event')} recorded for this project.`
-  if (full && next) footnote = `The latest ${plural(total, 'event')}.`
-  else if (full) footnote = `The latest ${plural(total, 'event')}, the most the app can read.`
+  let footnote = `Все ${plural(total, 'событие', 'событий')}, записанные для этого проекта.`
+  if (full && next) footnote = `Последние ${plural(total, 'событие', 'событий')}.`
+  else if (full) footnote = `Последние ${plural(total, 'событие', 'событий')} — больше приложение прочитать не может.`
 
   return jsxs('section', { className: 'dockyard-feature-card dy-act', 'data-activity': project.id, children: [
     jsxs('header', { className: 'dy-act-head', children: [
       jsx('h2', { children: 'Активность проекта' }),
-      jsx('span', { className: 'dy-act-count', 'data-activity-count': true, children: filtered ? `${number(eventCount(shown))} of ${plural(total, 'event')}` : plural(total, 'event') }),
+      jsx('span', { className: 'dy-act-count', 'data-activity-count': true, children: filtered ? `${number(eventCount(shown))} из ${plural(total, 'событие', 'событий')}` : plural(total, 'событие', 'событий') }),
     ]}),
     rows.length === 0 ? jsxs('div', { className: 'dy-act-empty', 'data-activity-empty': 'none', children: [
       jsx('p', { children: jsx('strong', { children: 'События пока не записаны.' }) }),
-      jsx('p', { children: 'Events appear here when someone proposes, approves or rejects an initiative, assigns work, or when a stewardship check runs.' }),
+      jsx('p', { children: 'События появляются здесь, когда кто-то предлагает, одобряет или отклоняет инициативу, назначает работу, либо когда проходит проверка сопровождения.' }),
     ]}) : jsxs('div', { className: 'dy-act-tools', children: [
       jsx('div', { className: 'dy-act-chips', role: 'group', 'aria-label': 'Показать', children: EVENT_FILTERS.map(([key, label]) => {
         const count = key === 'all' ? total : eventCount(rows.filter((row) => row.kind === key))
@@ -160,7 +160,7 @@ export function RecentActivityCard({ view, onViewAll }) {
       return jsxs('article', { 'data-activity-row': row.key, children: [
         jsxs('span', { children: [
           jsx('strong', { title: words, children: words }),
-          jsx('small', { title: fullTime(row.ts), children: [row.by, timeAgo(row.ts) ?? 'time not recorded'].join(' · ') }),
+          jsx('small', { title: fullTime(row.ts), children: [row.by, timeAgo(row.ts) ?? 'время не записано'].join(' · ') }),
         ]}),
         // A small card: no placeholder dash when the event has no impact.
         row.effect ? jsx(Impact, { row }) : null,

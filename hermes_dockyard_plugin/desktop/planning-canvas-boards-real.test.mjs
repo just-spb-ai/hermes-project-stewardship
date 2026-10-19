@@ -8,6 +8,8 @@
 // Project: atlas-mobile (no other browser journey touches its canvas).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+// The switcher's words come from the module that renders them (never spelled out here).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
 
 const { chromium } = await import('./browser-harness.mjs')
 const BASE = process.env.STEWARD_DESKTOP_URL
@@ -48,9 +50,9 @@ test('Planning boards (real backend): theme, save, chat, plan steps and board li
     page.on('console', (msg) => { if (msg.type() === 'error' && !/Failed to load resource/.test(msg.text())) errors.push(`console: ${msg.text()}`) })
     await page.goto(BASE, { waitUntil: 'load' })
     await page.waitForSelector('[data-tab="dashboard"]', { timeout: 20000 })
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+    await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click()
+    await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(PROJECT)
+    await page.getByRole('listbox', { name: SWITCHER_WORDS.list }).getByRole('option', { name: PROJECT, exact: true }).click()
     await page.locator('[data-tab="project"]').click()
     await page.waitForSelector('[data-project-view="planning"]', { timeout: 20000 })
     await page.locator('[data-project-view="planning"]').click()
@@ -205,9 +207,9 @@ test('Planning boards (real backend): theme, save, chat, plan steps and board li
     // A fresh page does not inherit the pre-reload global context; re-pick
     // this project explicitly (another suite file may have seeded attention
     // rows elsewhere, changing the default landing project).
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+    await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click()
+    await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(PROJECT)
+    await page.getByRole('listbox', { name: SWITCHER_WORDS.list }).getByRole('option', { name: PROJECT, exact: true }).click()
     await page.locator('[data-tab="project"]').click()
     await page.locator('[data-project-view="planning"]').click()
     await canvas.waitFor()
@@ -253,9 +255,9 @@ test('Planning boards (real backend): theme, save, chat, plan steps and board li
     // A fresh page does not inherit the pre-reload global context (another
     // suite file may have seeded attention rows on other projects, changing
     // the default); re-pick this project explicitly before waiting.
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+    await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click()
+    await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(PROJECT)
+    await page.getByRole('listbox', { name: SWITCHER_WORDS.list }).getByRole('option', { name: PROJECT, exact: true }).click()
     await page.locator('[data-tab="project"]').click()
     await page.locator('[data-project-view="planning"]').click()
     await canvas.waitFor()

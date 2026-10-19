@@ -3,9 +3,44 @@
 // nothing written) -> fix -> valid commit -> canonical tree readback ->
 // template download matches the shared validator.
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// ---- the panel's words (i18n(ru), 19/10/2026) -------------------------------
+// Only the visible strings moved: roles, data-* hooks and wire values did not.
+// Every word is read from the module that publishes it - these modules import
+// React, so the same literal is read out of their own source (never out of a
+// built bundle).
+const sourceOf = (file) => readFileSync(new URL(`./${file}`, import.meta.url), 'utf8')
+const oneIn = (file, pattern, what) => {
+  const found = pattern.exec(sourceOf(file))
+  assert.ok(found, `${what} is published in ${file}`)
+  return found[1]
+}
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+// The Backlog screen's Import button (src/views/backlog-board.js) and the
+// import wizard's own labels (src/views/backlog-import-wizard.js).
+const IMPORT_BUTTON = oneIn('src/views/backlog-board.js', /action: 'open-bulk-import'[\s\S]{0,240}?children: '([^']+)'/, 'the Import button on the Backlog screen')
+const WIZARD_SRC = 'src/views/backlog-import-wizard.js'
+const BACK_TO_SOURCE = oneIn(WIZARD_SRC, /setImportStep\(1\), children: '([^']+)'/, 'the back-to-source button')
+const IMPORT_BLOCKED = oneIn(WIZARD_SRC, /'data-import-blocked': true, children: '([^']+)'/, 'the blocked-import label')
+const IMPORT_COMMIT = oneIn(WIZARD_SRC, /'confirm-bulk-import'[\s\S]{0,300}?children: importBusy \? '[^']+' : `([^`]+)`/, 'the commit button')
+const IMPORTED = oneIn(WIZARD_SRC, /importResult\.written \? '[^']+' : '[^']+' \}\),\s*jsxs\('p', \{ role: 'status', children: \[\s*`([^`]+)`/, 'the imported-items line')
+const sentence = (template, ...values) => new RegExp(template.split(/\$\{[^}]*\}/)
+  .map((part, index) => escapeRegex(part) + (index < values.length ? (values[index] === null ? '[\\s\\S]*' : escapeRegex(String(values[index]))) : ''))
+  .join(''))
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
@@ -39,15 +74,15 @@ test('Phase 6 rendered import journey: invalid preview writes nothing, valid com
     const beforeCount = (before.backlog ?? []).length
 
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', {name: 'Project context', exact: true}).click()
-    await page.getByRole('combobox', {name: 'Find project'}).fill(project)
-    await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: project, exact: true}).click()
+    await page.getByRole('button', {name: CONTEXT_LABEL, exact: true}).click()
+    await page.getByRole('combobox', {name: FIND_LABEL}).fill(project)
+    await page.getByRole('listbox', {name: PROJECTS_LABEL}).getByRole('option', {name: project, exact: true}).click()
     await page.waitForTimeout(1200)
     await page.locator('[data-tab="backlog"]').click()
     await page.waitForTimeout(1500)
 
     // Open the import wizard
-    await page.locator('button:has-text("Import")').first().click()
+    await page.locator(`button:has-text("${IMPORT_BUTTON}")`).first().click()
     await page.waitForTimeout(600)
     const layer = page.locator('[data-bulk-import-layer]')
     await layer.waitFor({ timeout: 5000 })
@@ -77,14 +112,14 @@ test('Phase 6 rendered import journey: invalid preview writes nothing, valid com
     // disabled with an explicit blocked label (approved contract).
     const blockedButton = page.locator('[data-bulk-import-layer] [data-import-blocked]')
     await blockedButton.waitFor({ timeout: 5000 })
-    assert.match(await blockedButton.textContent(), /Import blocked/, 'error rows block the commit action')
+    assert.match(await blockedButton.textContent(), new RegExp(escapeRegex(IMPORT_BLOCKED)), 'error rows block the commit action')
 
     // Nothing written: count unchanged (preview is non-destructive).
     const afterInvalid = await api(`/projects/${project}/backlog`)
     assert.equal((afterInvalid.backlog ?? []).length, beforeCount, 'invalid preview writes zero rows')
 
     // --- 2. Back to step 1, fix the rows, then a valid commit.
-    await page.locator('[data-bulk-import-layer] button:has-text("Back to source")').click()
+    await page.locator(`[data-bulk-import-layer] button:has-text("${BACK_TO_SOURCE}")`).click()
     await page.waitForTimeout(500)
     // Canonical-header file: exercises the validator vocabulary directly and
     // links the task under the epic via parent_key.
@@ -98,12 +133,12 @@ test('Phase 6 rendered import journey: invalid preview writes nothing, valid com
     await page.locator('[data-import-preview]').waitFor({ timeout: 8000 })
     const preview2 = await page.locator('[data-import-preview]').innerText()
     assert.match(preview2, new RegExp(epicTitle))
-    const commitButton2 = page.locator('[data-bulk-import-layer] button', { hasText: /^Import \d+ item/ })
+    const commitButton2 = page.locator('[data-bulk-import-layer] button', { hasText: sentence(IMPORT_COMMIT, 2, null) })
     await commitButton2.waitFor({ timeout: 5000 })
     await commitButton2.click()
     await page.locator('[data-import-step="3"]').waitFor({ timeout: 8000 })
     const done = await page.locator('[data-import-step="3"]').innerText()
-    assert.match(done, /Imported 2 items?/, 'commit reports the canonical write count')
+    assert.match(done, sentence(IMPORTED, 2, null), 'commit reports the canonical write count')
 
     // Canonical tree readback: parent-first ids persisted on the Kanban
     // bridge (the store the Backlog tree renders).

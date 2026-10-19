@@ -30,7 +30,8 @@ import { Icon } from '../lib/ui.js'
 import { LoadingState } from '../lib/ui.js'
 import { PageHead } from '../lib/ui.js'
 import { number } from '../lib/ui.js'
-import { plural } from '../lib/ui.js'
+import { pluralRu } from '../lib/ui.js'
+import { ROADMAP_WORDS } from '../lib/panel-words.js'
 import { useDialogFocusManager } from '../lib/ui.js'
 import { loadRoadmapData } from '../data/loaders.js'
 import { ConfirmDeliveredDialog, PlaceDialog, WaiveDialog } from './roadmap-dialogs.js'
@@ -40,7 +41,8 @@ import {
   STATE_LABEL, chip, goalStateWords, milestoneStateWords, objectiveStateWords, waivedChip, words,
 } from './roadmap-words.js'
 
-const CONTRACT_STATUS = { active: 'Активно', paused: 'На паузе', done: 'Готово', cleared: 'Cleared' }
+const CONTRACT_STATUS = { active: 'Активно', paused: 'На паузе', done: 'Готово', cleared: 'Снято' }
+const EVALUATOR_LABELS = { manual: 'вручную', command: 'команда', integration: 'интеграция' }
 
 // W3C APG tree pattern with one roving tab stop (the row holding tabIndex 0).
 // Down/Up move between visible rows; Right opens a closed node or moves to the
@@ -80,9 +82,9 @@ function deliveryChips(delivery) {
       : null)
     .filter(Boolean)
   if (Number(delivery.blocked ?? 0) > 0) {
-    chips.push(jsx('span', { className: 'dy-rm-chip blocked', children: `Blocked ${number(delivery.blocked)}` }, 'blocked'))
+    chips.push(jsx('span', { className: 'dy-rm-chip blocked', children: `Заблокировано ${number(delivery.blocked)}` }, 'blocked'))
   }
-  chips.push(jsx('span', { className: 'dy-rm-chip', children: `${number(delivery.total)} total` }, 'total'))
+  chips.push(jsx('span', { className: 'dy-rm-chip', children: `всего ${number(delivery.total)}` }, 'total'))
   return chips
 }
 
@@ -122,7 +124,7 @@ function Row({ node, type, depth, label, detail, open, expandable, selected, tab
       jsx('button', {
         type: 'button', className: `dy-rm-disclosure${expandable ? '' : ' blank'}`,
         'data-rm-disclosure': true, tabIndex: -1, 'aria-hidden': !expandable,
-        'aria-label': `${open ? 'Collapse' : 'Expand'} ${label}`,
+        'aria-label': `${open ? 'Свернуть' : 'Развернуть'} ${label}`,
         onClick: (event) => { event.stopPropagation(); if (expandable) onToggle() },
         children: open ? '−' : '+',
       }),
@@ -152,21 +154,21 @@ function MilestoneItems({ projectId, milestoneId, onOpen }) {
   useEffect(() => {
     let current = true
     api(`/roadmap/projects/${encodeURIComponent(projectId)}/milestones/${milestoneId}/items`)
-      .then((result) => { if (current) { setItems(result.items ?? []); setError(result.state !== 'unavailable' ? null : result.reason === 'unlinked' ? `${UNLINKED_TITLE}: its work items cannot be shown.` : 'Рабочие элементы недоступны (хост работы не ответил).') } })
+      .then((result) => { if (current) { setItems(result.items ?? []); setError(result.state !== 'unavailable' ? null : result.reason === 'unlinked' ? `${UNLINKED_TITLE}: его рабочие элементы показать нельзя.` : 'Рабочие элементы недоступны (хост работы не ответил).') } })
       .catch((failure) => { if (current) setError(String(failure?.message ?? failure)) })
     return () => { current = false }
   }, [projectId, milestoneId])
   if (error) return jsx('p', { role: 'status', children: error })
-  if (!items) return jsx('p', { role: 'status', children: 'Loading work items…' })
+  if (!items) return jsx('p', { role: 'status', children: 'Загрузка рабочих элементов…' })
   if (!items.length) return jsx('p', { role: 'status', children: 'К этой вехе рабочие элементы не прикреплены.' })
   return jsx('ul', { className: 'dy-rm-items', children: items.map((item) => jsxs('li', { children: [
     jsx('strong', { children: item.title }),
     jsx('small', { children: words(item.bucket) }),
     Array.isArray(item.blockers) && item.blockers.length
-      ? jsx('small', { children: `waiting on ${item.blockers.join(', ')}` })
+      ? jsx('small', { children: `ждёт: ${item.blockers.join(', ')}` })
       : null,
     jsx(Button, {
-      small: true, action: 'roadmap-open-work', ariaLabel: `Open ${item.title} on the project board`,
+      small: true, action: 'roadmap-open-work', ariaLabel: `Открыть «${item.title}» на доске проекта`,
       onClick: (event) => { event.stopPropagation(); onOpen({ project: projectId, entryView: 'board', workRef: item.ref }) },
       children: 'Открыть',
     }),
@@ -223,14 +225,14 @@ function GoalCheckEditor({ projectId, goal, onChanged }) {
   }
   return jsxs('div', { className: 'dy-rm-check-editor', 'data-rm-goal-check': goal.id, children: [
     jsxs('p', { children: ['Проверка: ', jsx('strong', { 'data-rm-check-state': true, children: detail
-      ? `${detail.evaluator_type} · ${detail.target} · ${state}`
-      : hasCheck ? state : 'none' })] }),
+      ? `${EVALUATOR_LABELS[detail.evaluator_type] ?? detail.evaluator_type} · ${detail.target} · ${state}`
+      : hasCheck ? state : 'не задана' })] }),
     open
       ? jsxs('div', { className: 'dy-rm-check-form', children: [
-          jsxs('label', { children: ['Тип ', jsx('select', { 'data-rm-check-evaluator': true, value: evaluator, onChange: (event) => setEvaluator(event.target.value), children: ['manual', 'command', 'integration'].map((value) => jsx('option', { value, children: value }, value)) })] }),
-          jsxs('label', { children: ['Цель ', jsx('input', { 'data-rm-check-target': true, value: target, placeholder: 'e.g. >=1', onChange: (event) => setTarget(event.target.value) })] }),
-          jsx(Button, { small: true, variant: 'primary', action: 'roadmap-check-save', disabled: busy || !target.trim(), onClick: () => run({ evaluator_type: evaluator, target: target.trim() }, `Check set on “${goal.title}”.`), children: busy ? 'Сохранение…' : 'Сохранить проверку' }),
-          hasCheck ? jsx(Button, { small: true, action: 'roadmap-check-clear', disabled: busy, onClick: () => run({ clear: true }, `Check cleared on “${goal.title}”.`), children: 'Убрать проверку' }) : null,
+          jsxs('label', { children: ['Тип ', jsx('select', { 'data-rm-check-evaluator': true, value: evaluator, onChange: (event) => setEvaluator(event.target.value), children: ['manual', 'command', 'integration'].map((value) => jsx('option', { value, children: EVALUATOR_LABELS[value] ?? value }, value)) })] }),
+          jsxs('label', { children: ['Цель ', jsx('input', { 'data-rm-check-target': true, value: target, placeholder: 'напр. >=1', onChange: (event) => setTarget(event.target.value) })] }),
+          jsx(Button, { small: true, variant: 'primary', action: 'roadmap-check-save', disabled: busy || !target.trim(), onClick: () => run({ evaluator_type: evaluator, target: target.trim() }, `Проверка установлена для «${goal.title}».`), children: busy ? 'Сохранение…' : 'Сохранить проверку' }),
+          hasCheck ? jsx(Button, { small: true, action: 'roadmap-check-clear', disabled: busy, onClick: () => run({ clear: true }, `Проверка снята для «${goal.title}».`), children: 'Убрать проверку' }) : null,
           jsx(Button, { small: true, action: 'roadmap-check-cancel', disabled: busy, onClick: () => setOpen(false), children: 'Отмена' }),
         ] })
       : jsx(Button, { small: true, action: 'roadmap-check-edit', onClick: () => setOpen(true), children: hasCheck ? 'Изменить проверку' : 'Задать проверку' }),
@@ -242,7 +244,7 @@ function GoalCheckEditor({ projectId, goal, onChanged }) {
 // goal title is labelled as copied, never presented as a separate statement.
 function contractFacts(entry, goalTitle) {
   if (!entry || entry.loading) return [['Контракт цели', 'Загрузка…']]
-  if (entry.error) return [['Контракт цели', `Unavailable: ${entry.error}`]]
+  if (entry.error) return [['Контракт цели', `Недоступно: ${entry.error}`]]
   const contract = entry.contract
   const text = (value) => (value === null || value === undefined || String(value).trim() === '' ? '—' : String(value))
   const outcome = String(contract.outcome ?? '').trim()
@@ -284,7 +286,7 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
     const initiative = initiativeOf(sel.id)
     if (!initiative) return null
     return {
-      title: initiative.title, subtitle: `Governance: ${words(initiative.governance)}`, open,
+      title: initiative.title, subtitle: `Управление: ${words(initiative.governance)}`, open,
       facts: [
         ...deliveryDetail(initiative.delivery),
         ['Вехи', number((initiative.milestones ?? []).length)],
@@ -298,11 +300,11 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
     if (!milestone) return null
     return {
       title: milestone.name, open,
-      subtitle: `${STATE_LABEL[milestone.state] ?? words(milestone.state)}${milestone.initiative_ref ? ` · under ${milestone.initiative_ref}` : ' · not placed yet'}`,
+      subtitle: `${STATE_LABEL[milestone.state] ?? words(milestone.state)}${milestone.initiative_ref ? ` · под ${milestone.initiative_ref}` : ' · не размещено'}`,
       facts: [
         ...deliveryDetail(milestone.delivery),
         ['Срок', milestone.due ?? 'Без срока'],
-        ['Closed', milestone.closed ? 'Да' : 'Нет'],
+        ['Закрыто', milestone.closed ? 'Да' : 'Нет'],
         ...(milestone.overdue ? [['Просрочено', 'Да — просрочено и не закрыто']] : []),
         ['Задачи-цели', number((milestone.objectives ?? []).length)],
       ],
@@ -315,7 +317,7 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
     const check = objective.check ?? {}
     return {
       title: objective.name, open,
-      subtitle: `${STATE_LABEL[objective.state] ?? words(objective.state)}${objective.milestone_id ? ` · under milestone ${objective.milestone_id}` : ' · not placed yet'}`,
+      subtitle: `${STATE_LABEL[objective.state] ?? words(objective.state)}${objective.milestone_id ? ` · под вехой ${objective.milestone_id}` : ' · не размещено'}`,
       facts: [
         ['Состояние', STATE_LABEL[objective.state] ?? words(objective.state)],
         ['Проверка', check.state === 'no_check' || !check.state ? 'Без проверки' : STATE_LABEL[check.state] ?? words(check.state)],
@@ -331,12 +333,12 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
     const entry = contract?.key === `${project.id}/${goal.id}` ? contract : null
     const check = goal.check ?? {}
     return {
-      title: goal.title, subtitle: 'Goal · its contract is read-only here', open,
+      title: goal.title, subtitle: 'Цель · её контракт здесь только для чтения', open,
       facts: [
         ['Состояние', STATE_LABEL[goal.state] ?? words(goal.state)],
         ['Задачи', number(goal.task_count ?? 0)],
         ['Проверка', check.state === 'no_check' || !check.state ? 'Без проверки' : STATE_LABEL[check.state] ?? words(check.state)],
-        ['Размещено под', goal.objective_id ? `Objective ${goal.objective_id}` : 'Ещё не размещено'],
+        ['Размещено под', goal.objective_id ? `Задача-цель ${goal.objective_id}` : 'Ещё не размещено'],
         ...contractFacts(entry, goal.title),
       ],
       // R2 fix 2: a person sets or clears the check here.
@@ -360,7 +362,7 @@ function Drawer({ type, body, onClose, onOpen }) {
       ] }, label)) }),
       body.extra ?? null,
       jsxs('div', { className: 'dy-rm-actions', children: [
-        jsx(Button, { variant: 'primary', action: 'roadmap-open', ariaLabel: `Open ${body.title} on its project screen`, onClick: () => onOpen(body.open), children: 'Открыть' }),
+        jsx(Button, { variant: 'primary', action: 'roadmap-open', ariaLabel: `Открыть «${body.title}» на экране проекта`, onClick: () => onOpen(body.open), children: 'Открыть' }),
         jsx(Button, { onClick: onClose, children: 'Закрыть' }),
       ]}),
     ]}),
@@ -409,7 +411,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
       await api(
         `/projects/${encodeURIComponent(projectId)}/waivers/${encodeURIComponent(kind)}/${encodeURIComponent(itemId)}`,
         { method: 'DELETE' })
-      emitToast('success', `“${itemLabel}” is back in the chain.`)
+      emitToast('success', `«${itemLabel}» снова в цепочке.`)
       void load()
     } catch (failure) {
       emitToast('error', String(failure?.message ?? failure))
@@ -421,7 +423,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
       return jsx(Button, {
         small: true, action: 'roadmap-restore-requirement',
         onClick: (event) => { event.stopPropagation(); void restoreRequirement(projectId, kind, itemId, itemLabel) },
-        children: 'Требование восстановления',
+        children: 'Вернуть требование',
       })
     }
     return jsx(Button, {
@@ -508,7 +510,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
       event.stopPropagation()
       setPlaceDialog({ kind, itemId, projectId: project.id, projectLabel: project.label ?? project.id })
     },
-    children: 'Разместить…',
+    children: ROADMAP_WORDS.place,
   })
 
   // Rows are collected as (node, render) pairs so exactly one row holds the
@@ -525,7 +527,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
     add(projectNode, (tabStop) => jsx(Row, {
       ...base(projectNode), tabStop, type: 'project', depth: 0,
       label: project.label ?? pid,
-      detail: `${number(initiativeCount)} ${plural(initiativeCount, 'initiative')}${project.mission ? ` · ${project.mission}` : ''}`,
+      detail: `${number(initiativeCount)} ${pluralRu(initiativeCount, 'инициатива', 'инициативы', 'инициатив')}${project.mission ? ` · ${project.mission}` : ''}`,
       expandable: true, open: projectOpen,
       chips: project.attention ? chip('Требует внимания', 'attention') : null,
       onToggle: () => toggle(projectNode),
@@ -549,7 +551,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
         label: initiative.title,
         detail: initiative.attention_reasons?.length
           ? initiative.attention_reasons.map(words).join(' · ')
-          : (initiative.delivery?.state === 'ok' ? `${number(initiative.delivery.total)} linked work items` : 'Связанной работы нет'),
+          : (initiative.delivery?.state === 'ok' ? `связанных рабочих элементов: ${number(initiative.delivery.total)}` : 'Связанной работы нет'),
         expandable: true, open: initiativeOpen,
         chips: jsxs(Fragment, { children: [
           deliveryChips(initiative.delivery),
@@ -669,7 +671,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
       add(groupNode, (tabStop) => jsx(Row, {
         ...base(groupNode), tabStop, type: placeKind, depth: 1,
         label: groupLabel,
-        detail: `${rowsFor.length} ${rowsFor.length === 1 ? 'item' : 'items'}`,
+        detail: `${rowsFor.length} ${pluralRu(rowsFor.length, 'элемент', 'элемента', 'элементов')}`,
         // The group header is a label, not a disclosure: its item rows are
         // always listed, so a "Not placed yet" item is never hidden behind a
         // second click and its Place… action is always reachable.
@@ -702,7 +704,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
       const node = `needs-placing:${pid}`
       add(node, (tabStop) => jsx(Row, {
         ...base(node), tabStop, type: 'milestone', depth: 1,
-        label: `Needs placing (${project.needs_placing.length})`,
+        label: `Требуют размещения (${project.needs_placing.length})`,
         detail: project.needs_placing.map((row) => `${row.kind} ${row.item_id} — ${row.reason}`).join(', '),
         expandable: false, open: false,
         actions: canWrite ? jsx(Button, {
@@ -731,7 +733,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
             jsxs('section', { className: 'dy-rm-tree', role: 'tree', 'aria-label': 'Дерево дорожной карты проекта', onKeyDown: treeKeydown, 'data-rm-tree': true, children: [
               jsxs('header', { className: 'dy-rm-tree-head', children: [
                 jsx('strong', { children: scope === 'all' ? 'Все проекты' : (projects[0]?.label ?? scope) }),
-                jsx('span', { children: `${number(visibleProjects.length)} shown` }),
+                jsx('span', { children: `показано ${number(visibleProjects.length)}` }),
               ]}),
               ...rows.map((row) => row.render(row.node === tabStop)),
             ]}),
@@ -741,7 +743,7 @@ export function RoadmapView({ initialScope = 'all', onOpen, onRefresh }) {
   return jsxs('div', { className: 'dy-rm-page', 'data-roadmap-screen': true, children: [
     jsx(PageHead, {
       title: 'Дорожная карта',
-      description: 'Projects first: initiatives, milestones, objectives and goals — linked by hand, never inferred.',
+      description: 'Сначала проекты: инициативы, вехи, задачи-цели и цели — связываются вручную, никогда не выводятся автоматически.',
       onRefresh: () => { void load(); onRefresh?.() },
       status: error ? 'Не удалось загрузить' : null,
     }),

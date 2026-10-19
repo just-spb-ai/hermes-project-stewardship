@@ -34,14 +34,14 @@ import { PreviewTag } from './shared.js'
 export const WAYS = Object.freeze([
   { way: 'blank', title: 'Начать с пустого', text: 'Пустой процесс с одним шагом.' },
   { way: 'template', title: 'Использовать шаблон', text: 'Начните с одного из 30 встроенных шаблонов или сохранённого в вашей библиотеке.' },
-  { way: 'import', title: 'Import', text: 'Вставьте процесс или выберите файл.' },
+  { way: 'import', title: 'Импорт', text: 'Вставьте процесс или выберите файл.' },
   { way: 'ai', title: 'Описать ИИ', text: 'Скажите, что нужно. ИИ объяснит свой план и набросает шаги.' },
 ])
 // Where a new workflow lives. A global one is kept in the library (the
 // Workflows tab); each project turns it on before it runs there.
 export const SCOPES = Object.freeze([
   { scope: 'project', title: 'Этот проект', text: 'Используется только этим проектом. Открывается на холсте, готовый к сборке.' },
-  { scope: 'global', title: 'Global', text: 'Любой проект может его использовать, как только включит. Он хранится на вкладке «Процессы».' },
+  { scope: 'global', title: 'Глобально', text: 'Любой проект может его использовать, как только включит. Он хранится на вкладке «Процессы».' },
 ])
 export const AI_EXAMPLES = Object.freeze(['Исправить баг, пока тесты не пройдут', 'Подготовить недельный релиз', 'Исследовать тему и написать сводку'])
 
@@ -86,20 +86,20 @@ function TemplateDetail({ pick, members, whoWorks, whoChecks, onWorks, onChecks 
   return jsxs('div', { className: 'dy-wfd-tpl-detail', 'data-wfd-template-detail': t.name, children: [
     jsxs('div', { className: 'dy-wfd-tpl-detail-head', children: [jsx('strong', { children: t.title }), jsx('span', { children: t.summary })] }),
     jsx(StepsPreview, { nodes: t.nodes, roleOf }),
-    jsx('span', { className: 'dy-wfd-based-on', 'data-wfd-based-on': true, children: `Based on ${t.based_on}.` }),
+    jsx('span', { className: 'dy-wfd-based-on', 'data-wfd-based-on': true, children: `На основе: ${t.based_on}.` }),
     jsxs('div', { className: 'dy-wfd-row', children: [
       choose('Кто выполняет работу?', whoWorks, onWorks, 'data-wfd-who-works'),
       checks.size ? choose('Кто проверяет?', whoChecks, onChecks, 'data-wfd-who-checks') : null,
     ] }),
-    same ? jsx('span', { className: 'dy-wfd-warning', role: 'status', 'data-wfd-same-bot': true, children: `${whoWorks} checks its own work here. A different checker catches more, so pick another bot if you can.` }) : null,
+    same ? jsx('span', { className: 'dy-wfd-warning', role: 'status', 'data-wfd-same-bot': true, children: `${whoWorks} проверяет здесь собственную работу. Другой проверяющий замечает больше — выберите другого бота, если можете.` }) : null,
   ] })
 }
 
 function ScopeLine({ scope, project, disabled, onChange }) {
   return jsxs('div', { className: 'dy-wfd-scope-line', 'data-wfd-scope-chosen': scope, children: [
     jsx('span', { children: 'Сохранение в' }),
-    jsx('strong', { children: scope === 'global' ? 'Глобально: доступен всем проектам' : `This project: ${project?.name ?? project?.id ?? ''}` }),
-    jsx(Button, { small: true, action: 'wfd-scope-change', disabled, onClick: onChange, children: 'Change' }),
+    jsx('strong', { children: scope === 'global' ? 'Глобально: доступен всем проектам' : `Этот проект: ${project?.name ?? project?.id ?? ''}` }),
+    jsx(Button, { small: true, action: 'wfd-scope-change', disabled, onClick: onChange, children: 'Изменить' }),
   ] })
 }
 
@@ -140,7 +140,7 @@ export function NewWorkflowDialog({ project, taken, templates, members, onCreate
   const pickScope = (next) => { setScope(next); go('choose') }
   const checkName = () => {
     const clean = name.trim()
-    const problem = !clean ? 'Дайте процессу имя.' : takenNames.includes(clean) ? `"${clean}" already exists. Pick another name.` : null
+    const problem = !clean ? 'Дайте процессу имя.' : takenNames.includes(clean) ? `"${clean}" уже существует. Выберите другое имя.` : null
     setNameError(problem)
     return problem ? null : clean
   }
@@ -169,7 +169,7 @@ export function NewWorkflowDialog({ project, taken, templates, members, onCreate
     try {
       await onCreate({ scope, name: clean, nodes, checks: way === 'ai' ? aiDraft.checks : null, conversation: way === 'ai' ? { describe: describe.trim(), plan: aiDraft } : null })
     } catch (failure) {
-      setServerError(`Couldn't create it: ${String(failure?.message ?? failure).replace(/^\d{3}:\s*/, '')}`)
+      setServerError(`Не удалось создать: ${String(failure?.message ?? failure).replace(/^\d{3}:\s*/, '')}`)
       setBusy(false)
     }
   }
@@ -206,7 +206,7 @@ export function NewWorkflowDialog({ project, taken, templates, members, onCreate
     ] })
     if (way === 'template') return template && !browsing
       ? jsxs('div', { className: 'dy-wfd-way-body', children: [
-        jsx('div', { children: jsx(Button, { small: true, action: 'wfd-template-change', onClick: () => setBrowsing(true), children: '← All templates' }) }),
+        jsx('div', { children: jsx(Button, { small: true, action: 'wfd-template-change', onClick: () => setBrowsing(true), children: '← Все шаблоны' }) }),
         jsx(TemplateDetail, { pick: template, members, whoWorks, whoChecks, onWorks: setWhoWorks, onChecks: setWhoChecks }),
         jsx(NameField, { value: name, onChange: setName, error: nameError }),
       ] }, 'picked')
@@ -217,7 +217,7 @@ export function NewWorkflowDialog({ project, taken, templates, members, onCreate
         jsx('textarea', { rows: 5, value: importText, 'data-wfd-import-text': true, placeholder: 'Экспорт Project Stewardship (JSON). Другие форматы — через ИИ.', onChange: (e) => { setImportText(e.target.value); setImported(null) } }),
       ] }),
       jsxs('div', { className: 'dy-wfd-row', children: [
-        jsxs('label', { className: 'dy-wfd-file', children: [jsx('span', { children: 'or choose a file' }), jsx('input', { type: 'file', accept: '.json,.yaml,.yml,.txt', 'data-wfd-import-file': true, onChange: async (e) => { const text = await readFileText(e.target.files?.[0]); setImportText(text); check(text) } })] }),
+        jsxs('label', { className: 'dy-wfd-file', children: [jsx('span', { children: 'или выберите файл' }), jsx('input', { type: 'file', accept: '.json,.yaml,.yml,.txt', 'data-wfd-import-file': true, onChange: async (e) => { const text = await readFileText(e.target.files?.[0]); setImportText(text); check(text) } })] }),
         jsx(Button, { small: true, action: 'wfd-import-check', onClick: () => check(importText), children: 'Проверить' }),
       ] }),
       jsx(ImportResult, { result: imported }),
@@ -228,7 +228,7 @@ export function NewWorkflowDialog({ project, taken, templates, members, onCreate
       jsx(PracticeAiNote, {}),
       aiDraft ? null : jsxs('label', { className: 'dy-wfd-field', children: [
         jsx('span', { children: 'Что должен делать этот процесс?' }),
-        jsx('textarea', { rows: 3, value: describe, 'data-wfd-ai-describe': true, 'aria-invalid': aiError ? 'true' : 'false', placeholder: 'e.g. When a test fails, find the bug, fix it until the tests pass, and ask me before merging.', onChange: (e) => setDescribe(e.target.value) }),
+        jsx('textarea', { rows: 3, value: describe, 'data-wfd-ai-describe': true, 'aria-invalid': aiError ? 'true' : 'false', placeholder: 'напр. Когда тест падает, найди баг, исправляй его, пока тесты не пройдут, и спроси меня перед вливанием.', onChange: (e) => setDescribe(e.target.value) }),
         aiError ? jsx('span', { className: 'dy-wfd-error', 'data-wfd-ai-error': true, children: aiError }) : null,
       ] }),
       aiDraft ? null : jsx('div', { className: 'dy-wfd-chips', role: 'group', 'aria-label': 'Примеры', children: AI_EXAMPLES.map((text) => jsx('button', { type: 'button', 'data-wfd-ai-example': text, onClick: () => setDescribe(text), children: text }, text)) }),
@@ -252,8 +252,8 @@ export function NewWorkflowDialog({ project, taken, templates, members, onCreate
       wayError ? jsx('p', { className: 'dy-wfd-error', role: 'alert', 'data-wfd-way-error': true, children: wayError }) : null,
       atStart ? null : jsx('p', { className: 'dockyard-meta', children: 'Ничего не сохранится, пока вы не нажмёте «Создать процесс».' }),
       jsxs('div', { className: 'dockyard-modal-actions', children: [
-        atStart ? jsx(Button, { action: 'wfd-new-cancel', onClick: onClose, children: 'Отмена' }) : jsx(Button, { action: 'wfd-new-back', disabled: busy, onClick: () => go('choose'), children: '← All ways in' }),
-        atStart ? null : jsx(Button, { action: 'wfd-create', variant: 'primary', disabled: busy, onClick: create, children: busy ? 'Creating…' : 'Создать процесс' }),
+        atStart ? jsx(Button, { action: 'wfd-new-cancel', onClick: onClose, children: 'Отмена' }) : jsx(Button, { action: 'wfd-new-back', disabled: busy, onClick: () => go('choose'), children: '← Все способы' }),
+        atStart ? null : jsx(Button, { action: 'wfd-create', variant: 'primary', disabled: busy, onClick: create, children: busy ? 'Создание…' : 'Создать процесс' }),
       ] }),
     ] }) })
 }

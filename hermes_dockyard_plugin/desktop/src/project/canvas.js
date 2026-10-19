@@ -15,11 +15,12 @@ import { Button, Icon } from '../lib/ui.js'
 import { fileAsBase64 } from '../lib/ui.js'
 import { RichTextEditor } from './rich-text.js'
 import { useDialogFocusManager } from '../lib/ui.js'
+import { CANVAS_WORDS } from '../lib/canvas-words.js'
 export const CANVAS_OBJECT_KINDS = Object.freeze(['evidence', 'claim', 'question', 'decision', 'plan_block', 'risk', 'assumption', 'note', 'link', 'media'])
 export const CANVAS_CONNECTOR_MEANINGS = Object.freeze(['supports', 'contradicts', 'derived_from', 'clarifies', 'depends_on', 'implements', 'raises_question'])
-export const CANVAS_KIND_LABELS = Object.freeze({ evidence: 'Доказательства', claim: 'Claim', question: 'Вопрос', decision: 'Решение', plan_block: 'Блок плана', risk: 'Риск', assumption: 'Допущение', note: 'Заметка', link: 'Связать', media: 'Медиа' })
+export const CANVAS_KIND_LABELS = Object.freeze({ evidence: 'Доказательства', claim: 'Утверждение', question: 'Вопрос', decision: 'Решение', plan_block: 'Блок плана', risk: 'Риск', assumption: 'Допущение', note: 'Заметка', link: 'Связать', media: 'Медиа' })
 export const CANVAS_STICKER_COLOURS = Object.freeze(['yellow', 'orange', 'coral', 'pink', 'purple', 'indigo', 'blue', 'teal', 'green', 'lime', 'clay', 'slate'])
-export const CANVAS_STICKER_LABELS = Object.freeze({ yellow: 'Sun', green: 'Mint', blue: 'Sky', pink: 'Rose', purple: 'Violet', orange: 'Amber', coral: 'Coral', teal: 'Teal', lime: 'Lime', clay: 'Clay', slate: 'Slate', indigo: 'Indigo' })
+export const CANVAS_STICKER_LABELS = Object.freeze({ yellow: 'Солнце', green: 'Мята', blue: 'Небо', pink: 'Роза', purple: 'Фиолет', orange: 'Янтарь', coral: 'Коралл', teal: 'Бирюза', lime: 'Лайм', clay: 'Глина', slate: 'Грифель', indigo: 'Индиго' })
 // D-P1 a11y: each kind carries its own Lucide icon so it is never identified
 // by colour alone. Names must exist in the generated lucide-icons.js subset.
 export const CANVAS_KIND_ICONS = Object.freeze({
@@ -32,7 +33,7 @@ export const CANVAS_KIND_ICONS = Object.freeze({
 // [field, input, label, choices?, maxLength?]
 const LEVELS = ['low', 'medium', 'high']
 export const CANVAS_KIND_FIELDS = Object.freeze({
-  evidence: [['source', 'text', 'Source', null, 300], ['observed_on', 'date', 'Дата наблюдения'], ['confidence', 'choice', 'Уверенность', LEVELS], ['quote', 'area', 'Цитата', null, 5000]],
+  evidence: [['source', 'text', 'Источник', null, 300], ['observed_on', 'date', 'Дата наблюдения'], ['confidence', 'choice', 'Уверенность', LEVELS], ['quote', 'area', 'Цитата', null, 5000]],
   claim: [['claim_status', 'choice', 'Статус', ['unverified', 'supported', 'disputed', 'refuted']], ['confidence', 'choice', 'Уверенность', LEVELS]],
   question: [['question_status', 'choice', 'Статус', ['open', 'answered']], ['owner', 'member', 'Владелец'], ['answer', 'area', 'Ответ', null, 5000]],
   decision: [['decision_status', 'choice', 'Статус', ['proposed', 'accepted', 'rejected', 'superseded']], ['decided_by', 'member', 'Кто решил'], ['decided_on', 'date', 'Когда решено'], ['rationale', 'area', 'Обоснование', null, 5000], ['alternatives', 'list', 'Рассмотренные альтернативы']],
@@ -42,7 +43,7 @@ export const CANVAS_KIND_FIELDS = Object.freeze({
   media: [['content_id', 'image', 'Изображение'], ['alt', 'text', 'Альт-текст (описание изображения)', null, 300], ['caption', 'text', 'Подпись', null, 500]],
   link: [], note: [],
 })
-export const canvasChoiceLabel = (value) => ({ todo: 'Сделать', in_progress: 'В работе' }[value] ?? (value ? value.charAt(0).toUpperCase() + value.slice(1) : ''))
+export const canvasChoiceLabel = (value) => ({ todo: 'Сделать', in_progress: 'В работе', done: 'Готово', blocked: 'Заблокировано', open: 'Открыто', answered: 'Отвечено', unverified: 'Не проверено', supported: 'Подтверждено', disputed: 'Оспаривается', refuted: 'Опровергнуто', proposed: 'Предложено', accepted: 'Принято', rejected: 'Отклонено', superseded: 'Заменено', mitigating: 'Снижается', closed: 'Закрыто', untested: 'Не проверено', validated: 'Подтверждено', invalidated: 'Опровергнуто', low: 'Низкий', medium: 'Средний', high: 'Высокий' }[value] ?? (value ? value.charAt(0).toUpperCase() + value.slice(1) : ''))
 export const CANVAS_IMAGE_TYPES = Object.freeze({ 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' })
 export const CANVAS_IMAGE_MAX = 5 * 1024 * 1024
 // Same rule as the server (_WEB_URL): scheme, a dotted host, no spaces.
@@ -56,9 +57,9 @@ export const canvasSummary = (item) => {
   if (status && c[status[0]]) parts.push(canvasChoiceLabel(c[status[0]]))
   const who = c.owner ?? c.decided_by
   if (who && (CANVAS_KIND_FIELDS[item?.kind] ?? []).some(([f]) => f === 'owner' || f === 'decided_by')) parts.push(who)
-  if (item?.kind === 'plan_block' && Array.isArray(c.checklist) && c.checklist.length) parts.push(`${c.checklist.filter((x) => x.done).length}/${c.checklist.length} done`)
+  if (item?.kind === 'plan_block' && Array.isArray(c.checklist) && c.checklist.length) parts.push(`${c.checklist.filter((x) => x.done).length}/${c.checklist.length} готово`)
   const links = linksOf(c).length
-  if (links) parts.push(`${links} link${links === 1 ? '' : 's'}`)
+  if (links) parts.push(`${links} ${links === 1 ? CANVAS_WORDS.linkOne : CANVAS_WORDS.linkMany}`)
   return parts.join(' · ')
 }
 // Verified image bytes come back as base64 from the server (PNG/JPEG/WebP
@@ -90,7 +91,7 @@ export function CanvasImage({ projectId, contentId, alt, className }) {
     return () => { live = false }
   }, [key])
   if (failed) return jsx('span', { className: 'dy-pc-img-note', 'data-canvas-image-missing': contentId, children: 'Изображение недоступно' })
-  if (!src) return jsx('span', { className: 'dy-pc-img-note', children: 'Loading image…' })
+  if (!src) return jsx('span', { className: 'dy-pc-img-note', children: 'Загрузка изображения…' })
   return jsx('img', { className, src, alt: alt || '', draggable: false, 'data-canvas-image': contentId })
 }
 // D14: board lifecycle. Mirrors canvas_service._MOVES; the server stays the
@@ -98,7 +99,7 @@ export function CanvasImage({ projectId, contentId, alt, className }) {
 export const CANVAS_BOARD_STATUS_LABELS = Object.freeze({ draft: 'Черновик', submitted: 'Отправлено', planned: 'План составлен', completed: 'Завершено', archived: 'В архиве' })
 export const CANVAS_BOARD_MOVES = Object.freeze({ draft: ['submitted'], submitted: ['draft', 'planned'], planned: ['submitted', 'completed'], completed: ['planned'] })
 export const CANVAS_READ_ONLY = Object.freeze(['completed', 'archived'])
-export const CANVAS_MEANING_LABELS = Object.freeze({ supports: 'supports', contradicts: 'contradicts', derived_from: 'derived from', clarifies: 'clarifies', depends_on: 'depends on', implements: 'implements', raises_question: 'raises a question' })
+export const CANVAS_MEANING_LABELS = Object.freeze({ supports: 'поддерживает', contradicts: 'противоречит', derived_from: 'следует из', clarifies: 'уточняет', depends_on: 'зависит от', implements: 'реализует', raises_question: 'ставит вопрос' })
 export const CANVAS_WORLD = Object.freeze({ width: 2000, height: 1400 })
 export const CANVAS_CARD = Object.freeze({ width: 240, height: 140 })
 export const CANVAS_ZOOM = Object.freeze({ min: 0.5, max: 1.5, step: 0.1 })
@@ -370,13 +371,13 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     try {
       const fresh = await api(boardPath(board.canvas_id))
       loadBoard(fresh)
-      setNotice({ tone: 'ok', text: `Opened ${fresh.name} at revision ${fresh.revision}.` })
-    } catch (failure) { setNotice({ tone: 'danger', text: `Board could not be opened: ${failureText(failure)}` }) }
+      setNotice({ tone: 'ok', text: `Доска ${fresh.name} открыта, ревизия ${fresh.revision}.` })
+    } catch (failure) { setNotice({ tone: 'danger', text: `Не удалось открыть доску: ${failureText(failure)}` }) }
     setBoardBusy(false)
   }
   const selectBoard = (board) => {
     if (!board?.canvas_id || board.canvas_id === canvas?.canvas_id) return null
-    return guardUnsaved(`open ${board.name ?? 'that board'}`, () => openBoard(board))
+    return guardUnsaved(`открыть ${board.name ?? 'эту доску'}`, () => openBoard(board))
   }
   const submitBoardForm = async () => {
     const name = String(boardForm?.name ?? '').trim()
@@ -388,7 +389,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
         const fresh = await api(boardPath(at), { method: 'PATCH', body: { name } })
         if (boardRef.current === at) {
           mergeMeta(fresh)
-          setNotice({ tone: 'ok', text: `Board renamed to ${fresh.name}.` })
+          setNotice({ tone: 'ok', text: `Доска переименована в ${fresh.name}.` })
         }
       } else {
         const created = await api(`/projects/${encoded}/canvases`, { method: 'POST', body: { name } })
@@ -396,12 +397,12 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
         await refreshBoards()
         setBoardBusy(false)
         // Opening the new board leaves this one: unsaved edits ask first.
-        guardUnsaved(`open the new board ${created.name} (it has been created)`, () => openBoard(created))
+        guardUnsaved(`открыть новую доску ${created.name} (она уже создана)`, () => openBoard(created))
         return
       }
       setBoardForm(null)
       await refreshBoards()
-    } catch (failure) { setNotice({ tone: 'danger', text: `Board could not be saved: ${failureText(failure)}` }) }
+    } catch (failure) { setNotice({ tone: 'danger', text: `Не удалось сохранить доску: ${failureText(failure)}` }) }
     setBoardBusy(false)
   }
   const moveBoardStatus = async (status) => {
@@ -412,9 +413,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       if (boardRef.current !== at) return
       mergeMeta(fresh)
       await refreshBoards()
-      setNotice({ tone: 'ok', text: `Board is now ${CANVAS_BOARD_STATUS_LABELS[fresh.status] ?? fresh.status}.` })
+      setNotice({ tone: 'ok', text: `Доска теперь: ${CANVAS_BOARD_STATUS_LABELS[fresh.status] ?? fresh.status}.` })
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Status could not change: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось изменить статус: ${failureText(failure)}` })
     } finally { setBoardBusy(false) }
   }
   const changeBoardStatus = (status) => {
@@ -428,11 +429,11 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     if (!status || status === boardStatus) return null
     // Only a move INTO a read-only status would strand unsaved edits; a
     // reopen (e.g. Completed -> Plan made) keeps them so they can be saved.
-    if (CANVAS_READ_ONLY.includes(status)) return guardUnsaved(`move this board to ${CANVAS_BOARD_STATUS_LABELS[status] ?? status}`, () => moveBoardStatus(status))
+    if (CANVAS_READ_ONLY.includes(status)) return guardUnsaved(`перевести эту доску в «${CANVAS_BOARD_STATUS_LABELS[status] ?? status}»`, () => moveBoardStatus(status))
     return moveBoardStatus(status)
   }
   const archiveBoard = (board) => {
-    if (board.canvas_id === canvas?.canvas_id) return guardUnsaved(`archive ${board.name}`, () => archiveNow(board))
+    if (board.canvas_id === canvas?.canvas_id) return guardUnsaved(`архивировать ${board.name}`, () => archiveNow(board))
     return archiveNow(board)
   }
   const archiveNow = async (board) => {
@@ -449,8 +450,8 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
         loadBoard(fresh)
         if (!next) await refreshBoards()
       }
-      setNotice({ tone: 'ok', text: `Board ${board.name} archived — restore it from Show archived.` })
-    } catch (failure) { setNotice({ tone: 'danger', text: `Board could not be archived: ${failureText(failure)}` }) }
+      setNotice({ tone: 'ok', text: `Доска ${board.name} в архиве — восстановить её можно через «Показать архивные».` })
+    } catch (failure) { setNotice({ tone: 'danger', text: `Не удалось архивировать доску: ${failureText(failure)}` }) }
     setBoardBusy(false)
   }
   const restoreBoard = async (board) => {
@@ -459,8 +460,8 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       const fresh = await api(boardPath(board.canvas_id), { method: 'PATCH', body: { status: board.archived_from ?? 'draft' } })
       await refreshBoards()
       // Restoring the open board's twin never swaps what is open.
-      setNotice({ tone: 'ok', text: `Board ${fresh.name} restored as ${CANVAS_BOARD_STATUS_LABELS[fresh.status] ?? fresh.status}.` })
-    } catch (failure) { setNotice({ tone: 'danger', text: `Board could not be restored: ${failureText(failure)}` }) }
+      setNotice({ tone: 'ok', text: `Доска ${fresh.name} восстановлена как «${CANVAS_BOARD_STATUS_LABELS[fresh.status] ?? fresh.status}».` })
+    } catch (failure) { setNotice({ tone: 'danger', text: `Не удалось восстановить доску: ${failureText(failure)}` }) }
     setBoardBusy(false)
   }
   const toggleArchived = async () => {
@@ -482,7 +483,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     } catch (failure) {
       if (boardRef.current !== at) return
       setTheme(previous)
-      setNotice({ tone: 'danger', text: `Theme could not be saved: ${failureText(failure)}` })
+      setNotice({ tone: 'danger', text: `Не удалось сохранить тему: ${failureText(failure)}` })
     }
   }
   // D16: per-board model. '' means the Hermes main model.
@@ -497,9 +498,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       const fresh = await api(boardPath(at), { method: 'PATCH', body: { model } })
       if (boardRef.current !== at) return
       mergeMeta(fresh)
-      setNotice({ tone: 'ok', text: model ? `This board now asks ${model.model}.` : 'Доска теперь использует основную модель Hermes.' })
+      setNotice({ tone: 'ok', text: model ? `Эта доска теперь использует модель ${model.model}.` : 'Доска теперь использует основную модель Hermes.' })
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Model could not be set: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось задать модель: ${failureText(failure)}` })
     } finally { setBoardBusy(false) }
   }
   const selectedColour = selected?.colour ?? null
@@ -623,7 +624,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     })
     setHistory((current) => [...current.slice(-49), before]); setFuture([])
     setDirty(true)
-    setNotice({ tone: 'ok', text: `Duplicated ${ids.length} object(s) — Save canvas to persist the copies.` })
+    setNotice({ tone: 'ok', text: `Дублировано объектов: ${ids.length} — «Сохранить холст», чтобы закрепить копии.` })
   }
   const persistableObjects = () => objects.map((item) => ({
     id: item.id, kind: item.kind, content: item.content ?? { text: canvasText(item) },
@@ -649,13 +650,13 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       setCanvas(fresh); setObjects(fresh.objects ?? []); setConnectors(fresh.connectors ?? [])
       setDirty(false); setSelectedId(null); setHistory([]); setFuture([]); setSelectedIds([])
       setNotice(discarded
-        ? { tone: 'danger', text: `Canvas reloaded at revision ${fresh.revision} — unsaved edits were discarded, not applied.` }
-        : { tone: 'ok', text: `Canvas reloaded at revision ${fresh.revision}.` })
-    } catch (failure) { if (boardRef.current === at) setNotice({ tone: 'danger', text: `Reload failed: ${failureText(failure)}` }) }
+        ? { tone: 'danger', text: `Холст перечитан на ревизии ${fresh.revision} — несохранённые правки отброшены, не применены.` }
+        : { tone: 'ok', text: `Холст перечитан на ревизии ${fresh.revision}.` })
+    } catch (failure) { if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось перечитать: ${failureText(failure)}` }) }
     setBusy(false)
   }
   const save = async () => {
-    if (readOnly) { setNotice({ tone: 'danger', text: `This board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} and read-only — move it back to Plan made to edit.` }); return false }
+    if (readOnly) { setNotice({ tone: 'danger', text: `Эта доска в состоянии «${CANVAS_BOARD_STATUS_LABELS[boardStatus]}» и доступна только для чтения — чтобы править, верните её в «План составлен».` }); return false }
     const at = boardRef.current
     setBusy(true)
     try {
@@ -666,7 +667,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       dirtyRef.current = false
       setCanvas(saved); setObjects(saved.objects ?? []); setConnectors(saved.connectors ?? []); setDirty(false)
       refreshBoards()
-      setNotice({ tone: 'ok', text: `Canvas saved — revision ${saved.revision} with ${(saved.objects ?? []).length} object(s) and ${(saved.connectors ?? []).length} connector(s).` })
+      setNotice({ tone: 'ok', text: `${CANVAS_WORDS.canvasSaved} — ревизия ${saved.revision}, объектов: ${(saved.objects ?? []).length}, связей: ${(saved.connectors ?? []).length}.` })
       onRefresh?.()
       return true
     } catch (failure) {
@@ -681,17 +682,17 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
             // conflict: keep the edits on screen and say how to save them.
             mergeMeta(fresh)
             refreshBoards()
-            setNotice({ tone: 'danger', text: `Not saved — this board is now ${CANVAS_BOARD_STATUS_LABELS[fresh.status] ?? fresh.status} and read-only. Your edits are still here: move the board back to Plan made (or restore it), then Save.` })
+            setNotice({ tone: 'danger', text: `Не сохранено — эта доска теперь «${CANVAS_BOARD_STATUS_LABELS[fresh.status] ?? fresh.status}» и только для чтения. Правки остались здесь: верните доску в «План составлен» (или восстановите её), затем сохраните.` })
           } else {
             // Stale revision: never overwrite silently. Re-read the canonical
             // canvas, state the conflict, and keep the unsaved edit out of it.
             dirtyRef.current = false
             setCanvas(fresh); setObjects(fresh.objects ?? []); setConnectors(fresh.connectors ?? []); setDirty(false)
-            setNotice({ tone: 'danger', text: `Revision conflict — this canvas changed elsewhere and was reloaded at revision ${fresh.revision}. Your unsaved edit was not applied.` })
+            setNotice({ tone: 'danger', text: `Конфликт ревизий — холст изменился в другом месте и был перечитан на ревизии ${fresh.revision}. Несохранённая правка не применена.` })
           }
-        } catch (reloadFailure) { setNotice({ tone: 'danger', text: `Canvas save failed: ${message}` }) }
+        } catch (reloadFailure) { setNotice({ tone: 'danger', text: `Не удалось сохранить холст: ${message}` }) }
       } else {
-        setNotice({ tone: 'danger', text: `Canvas save failed: ${message}` })
+        setNotice({ tone: 'danger', text: `Не удалось сохранить холст: ${message}` })
       }
       return false
     } finally {
@@ -714,7 +715,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     setObjects((current) => [...current, item])
     setHistory((current) => [...current.slice(-49), before]); setFuture([])
     setDirty(true)
-    setNotice({ tone: 'ok', text: `${CANVAS_KIND_LABELS[objectKind] ?? objectKind} added as scratch — Save canvas to persist it.` })
+    setNotice({ tone: 'ok', text: `${CANVAS_KIND_LABELS[objectKind] ?? objectKind} добавлено как черновик — «Сохранить холст», чтобы закрепить.` })
     return item
   }
   const addFromDraft = () => {
@@ -742,7 +743,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       setDrawerFields((current) => (current.alt ? current : { ...current, alt: guess }))
       setNotice({ tone: 'ok', text: 'Изображение загружено — нажмите «Применить», затем «Сохранить холст», чтобы разместить его на карточке.' })
     } catch (failure) {
-      setNotice({ tone: 'danger', text: `Image could not be uploaded: ${failureText(failure)}` })
+      setNotice({ tone: 'danger', text: `Не удалось загрузить изображение: ${failureText(failure)}` })
     } finally { setImageBusy(false) }
   }
   const applyDrawer = () => {
@@ -753,7 +754,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     if (richProblem) { setNotice({ tone: 'danger', text: richProblem }); return }
     const links = (drawerFields.links ?? []).map((link) => ({ url: String(link.url ?? '').trim(), label: String(link.label ?? '').trim() })).filter((link) => link.url)
     const bad = links.find((link) => !canvasSafeUrl(link.url))
-    if (bad) { setNotice({ tone: 'danger', text: `"${bad.url.slice(0, 60)}" is not a web link. Links must start with http:// or https://.` }); return }
+    if (bad) { setNotice({ tone: 'danger', text: `«${bad.url.slice(0, 60)}» — ${CANVAS_WORDS.notWebLink}. Ссылки должны начинаться с http:// или https://.` }); return }
     if (links.length > 20) { setNotice({ tone: 'danger', text: 'Карточка вмещает не более 20 связей.' }); return }
     const fields = {
       ...drawerFields,
@@ -793,10 +794,10 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       const saved = await api(`${canvasRoute}/objects/${encodeURIComponent(selected.id)}?expected_revision=${revision}`, { method: 'DELETE' })
       if (boardRef.current !== at) return
       setCanvas(saved); setObjects(saved.objects ?? []); setConnectors(saved.connectors ?? []); setDirty(false); setSelectedId(null)
-      setNotice({ tone: 'ok', text: `Object removed — revision ${saved.revision} with ${(saved.objects ?? []).length} object(s).` })
+      setNotice({ tone: 'ok', text: `Объект удалён — ревизия ${saved.revision}, объектов: ${(saved.objects ?? []).length}.` })
       onRefresh?.()
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Remove failed: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось удалить: ${failureText(failure)}` })
     } finally { if (boardRef.current === at) setBusy(false) }
   }
   const addConnector = (source, target, meaning) => {
@@ -805,7 +806,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       return
     }
     if (connectors.some((edge) => edge.source === source && edge.target === target && edge.meaning === meaning)) {
-      setNotice({ tone: 'danger', text: `Already linked: these two objects already carry a "${meaning}" connector.` })
+      setNotice({ tone: 'danger', text: `Уже связано: эти два объекта уже соединены связью «${meaning}».` })
       return
     }
     const before = snapshot(objects, connectors)
@@ -813,7 +814,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     setConnectors((current) => [...current, { id: `canvas-edge-${Date.now()}-${canvasEdgeSeq}`, source, target, meaning }])
     setHistory((current) => [...current.slice(-49), before]); setFuture([])
     setDirty(true)
-    setNotice({ tone: 'ok', text: `Connector added (${CANVAS_MEANING_LABELS[meaning] ?? meaning}) — Save canvas to persist it.` })
+    setNotice({ tone: 'ok', text: `Связь добавлена (${CANVAS_MEANING_LABELS[meaning] ?? meaning}) — «Сохранить холст», чтобы закрепить.` })
   }
   const connectFromEditor = () => addConnector(linkSource, linkTarget, linkMeaning)
   const beginObjectDrag = (event, item) => {
@@ -920,7 +921,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
           if (rect.x < x2 && rect.x + rect.width > x1 && rect.y < y2 && rect.y + rect.height > y1) hits.push(row.id)
         })
         setSelectedIds(hits)
-        if (hits.length) setNotice({ tone: 'ok', text: `Marquee selected ${hits.length} object(s).` })
+        if (hits.length) setNotice({ tone: 'ok', text: `Рамкой выбрано объектов: ${hits.length}.` })
       }
       document.addEventListener('pointermove', marqueeMove)
       document.addEventListener('pointerup', marqueeFinish)
@@ -1078,11 +1079,11 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       setConnectors((current) => current.filter((edge) => !ids.includes(edge.source) && !ids.includes(edge.target)))
       setHistory((current) => [...current.slice(-49), before]); setFuture([])
       setDirty(true); setSelectedId(null); setSelectedIds([])
-      setNotice({ tone: 'ok', text: `Removed ${ids.length} object(s) locally — Save canvas to persist.` })
+      setNotice({ tone: 'ok', text: `Удалено локально объектов: ${ids.length} — «Сохранить холст», чтобы закрепить.` })
     }
   }
   const curate = async (message = null) => {
-    if (readOnly) { setNotice({ tone: 'danger', text: `This board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} — reopen it to ask the steward.` }); return }
+    if (readOnly) { setNotice({ tone: 'danger', text: `Эта доска «${CANVAS_BOARD_STATUS_LABELS[boardStatus]}» — откройте её заново, чтобы спросить стюарда.` }); return }
     const at = boardRef.current
     const token = ++chatToken.current
     setSelectedId(null); setSelectedIds([])
@@ -1096,11 +1097,11 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       refreshMeta(at)
       const proposals = (result.proposals ?? []).length
       setNotice(result.status === 'active' && result.current_question
-        ? { tone: 'ok', text: `Question: ${result.current_question.question}` }
-        : { tone: 'ok', text: `${number(proposals)} proposal(s) ready for review — nothing is applied automatically.` })
+        ? { tone: 'ok', text: `Вопрос: ${result.current_question.question}` }
+        : { tone: 'ok', text: `Предложений к рассмотрению: ${number(proposals)} — ничего не применяется автоматически.` })
     } catch (failure) {
       if (token !== chatToken.current || boardRef.current !== at) return
-      setNotice({ tone: 'danger', text: `Curation failed: ${failureText(failure)}` })
+      setNotice({ tone: 'danger', text: `Не удалось собрать предложения: ${failureText(failure)}` })
     }
     if (token === chatToken.current && boardRef.current === at) { setBusy(false); setChatBusy(false) }
   }
@@ -1113,8 +1114,8 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       setReview(result)
       const summary = result.summary ?? {}
       const questions = (result.clarifying_questions ?? []).length
-      setNotice({ tone: 'ok', text: `Review: ${number(summary.evidence_count)} evidence, ${number(summary.claim_count)} claim, ${number(summary.question_count)} question, ${number(summary.plan_block_count)} plan block — ${questions ? `${number(questions)} question(s) outstanding` : 'no questions outstanding'}.` })
-    } catch (failure) { if (boardRef.current === at) setNotice({ tone: 'danger', text: `Review failed: ${failureText(failure)}` }) }
+      setNotice({ tone: 'ok', text: `Обзор: доказательств ${number(summary.evidence_count)}, утверждений ${number(summary.claim_count)}, вопросов ${number(summary.question_count)}, блоков плана ${number(summary.plan_block_count)} — ${questions ? `без ответа вопросов: ${number(questions)}` : 'открытых вопросов нет'}.` })
+    } catch (failure) { if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось провести обзор: ${failureText(failure)}` }) }
     if (boardRef.current === at) setBusy(false)
   }
   const answerQuestion = async (outcome) => {
@@ -1126,10 +1127,10 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       if (boardRef.current !== at) return
       setSession(result); setAnswer('')
       const proposals = (result.proposals ?? []).length
-      if (result.status === 'active' && result.current_question) setNotice({ tone: 'ok', text: `Question: ${result.current_question.question}` })
-      else if (outcome === 'stop') setNotice({ tone: 'ok', text: `Session stopped — ${number(proposals)} proposal(s) kept as scratch.` })
-      else setNotice({ tone: 'ok', text: `${number(proposals)} proposal(s) ready for review — approve or reject each one.` })
-    } catch (failure) { if (boardRef.current === at) setNotice({ tone: 'danger', text: `Answer failed: ${failureText(failure)}` }) }
+      if (result.status === 'active' && result.current_question) setNotice({ tone: 'ok', text: `Вопрос: ${result.current_question.question}` })
+      else if (outcome === 'stop') setNotice({ tone: 'ok', text: `Сессия остановлена — предложений сохранено как черновик: ${number(proposals)}.` })
+      else setNotice({ tone: 'ok', text: `Предложений к рассмотрению: ${number(proposals)} — одобрите или отклоните каждое.` })
+    } catch (failure) { if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось отправить ответ: ${failureText(failure)}` }) }
     if (boardRef.current === at) setBusy(false)
   }
   // The docked assistant chat: Enter sends, Shift+Enter newline, Stop
@@ -1146,7 +1147,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     chatToken.current += 1
     setChatBusy(false)
     setBusy(false)
-    setNotice({ tone: 'ok', text: 'Stopped — this answer will be ignored here. The steward may still finish and record it; nothing is ever applied to the board without your approval.' })
+    setNotice({ tone: 'ok', text: 'Остановлено — этот ответ здесь будет проигнорирован. Стюард может всё же завершить и записать его; без твоего одобрения на доску ничего не применяется.' })
   }
   const decideProposal = async (proposal, approve) => {
     const at = boardRef.current
@@ -1165,9 +1166,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
           setSession((current) => current ? { ...current, proposals: (current.proposals ?? []).map((row) => row.proposal_id === result.proposal_id ? { ...row, status: result.status } : row) } : current)
         }
       }
-      setNotice({ tone: 'ok', text: `Proposal ${result.status} — recorded only; the canvas is unchanged until you save an edit.` })
+      setNotice({ tone: 'ok', text: `Предложение ${result.status === 'approved' ? 'одобрено' : 'отклонено'} — только записано; холст не меняется, пока вы не сохраните правку.` })
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Decision failed: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось принять решение: ${failureText(failure)}` })
     } finally { if (boardRef.current === at) setBusy(false) }
   }
   // Plan synthesis (NEW-3): from an APPROVED technical_plan proposal only.
@@ -1181,12 +1182,12 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       refreshMeta(at)
       const edited = plan.edited_by || (plan.status ?? 'draft') !== 'draft'
       setNotice({ tone: 'ok', text: edited
-        ? `This proposal already has a plan (${plan.status ?? 'draft'}) — showing it unchanged, your edits are kept.`
-        : `Plan drafted from the approved proposal — ${number((plan.steps ?? []).length)} step(s), nothing applied to the board.` })
+        ? `У этого предложения уже есть план (статус: ${plan.status ?? 'черновик'}) — он показан без изменений, ваши правки сохранены.`
+        : `План составлен по одобренному предложению — шагов: ${number((plan.steps ?? []).length)}, на доску ничего не применено.` })
     } catch (failure) {
       if (boardRef.current !== at) return
       setPlanPanel(null)
-      setNotice({ tone: 'danger', text: `Plan synthesis failed: ${failureText(failure)}` })
+      setNotice({ tone: 'danger', text: `Не удалось составить план: ${failureText(failure)}` })
     } finally { if (boardRef.current === at) setPlanBusy(false) }
   }
   const savePlanDocument = async () => {
@@ -1197,10 +1198,10 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       const saved = await api(`/projects/${encoded}/plans/${encodeURIComponent(planPanel.plan_id)}/document/save`, { method: 'POST', body: {} })
       if (boardRef.current !== at) return
       setPlanPanel((current) => ({ ...(current ?? {}), ...saved }))
-      setNotice({ tone: 'ok', text: 'Документ реализации сохранён на вкладке «Материалы» в формате Markdown.' })
+      setNotice({ tone: 'ok', text: `${CANVAS_WORDS.documentSavedNotice} на вкладке «Материалы» в формате Markdown.` })
       onRefresh?.()
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Document save failed: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось сохранить документ: ${failureText(failure)}` })
     } finally { if (boardRef.current === at) setPlanBusy(false) }
   }
   const planEditable = Boolean(planPanel?.plan_id) && (planPanel?.status ?? 'draft') === 'draft' && !readOnly
@@ -1233,9 +1234,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       if (boardRef.current !== at) return
       setPlanPanel((current) => ({ ...(current ?? {}), ...saved }))
       setStepsDraft(null)
-      setNotice({ tone: 'ok', text: `Plan steps saved — ${number((saved.steps ?? []).length)} step(s).` })
+      setNotice({ tone: 'ok', text: `Шаги плана сохранены — шагов: ${number((saved.steps ?? []).length)}.` })
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Plan steps could not be saved: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось сохранить шаги плана: ${failureText(failure)}` })
     } finally { if (boardRef.current === at) setPlanBusy(false) }
   }
   const planDocSaved = planPanel?.status === 'documented'
@@ -1249,12 +1250,12 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       const result = await api(`/projects/${encoded}/plans/${encodeURIComponent(planPanel.plan_id)}/backlog`, { method: 'POST', body: { step_orders: backlogConfirm, goal_id: backlogGoal === '' ? null : backlogGoal } })
       if (boardRef.current !== at) return
       setPlanPanel((current) => ({ ...(current ?? {}), backlog_created: result.backlog_created ?? [] }))
-      setNotice({ tone: 'ok', text: `${number((result.created ?? []).length)} backlog item(s) created: ${(result.created ?? []).map((row) => row.ref).join(', ')}.` })
+      setNotice({ tone: 'ok', text: `${CANVAS_WORDS.backlogCreatedNotice}: ${number((result.created ?? []).length)}: ${(result.created ?? []).map((row) => row.ref).join(', ')}.` })
       setBacklogConfirm(null)
       setBacklogGoal('')
       onRefresh?.()
     } catch (failure) {
-      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Backlog creation failed: ${failureText(failure)}` })
+      if (boardRef.current === at) setNotice({ tone: 'danger', text: `Не удалось создать элементы бэклога: ${failureText(failure)}` })
     } finally { if (boardRef.current === at) setPlanBusy(false) }
   }
   // Batch L: load the project's goals for the optional backlog goal picker.
@@ -1301,12 +1302,12 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     out.push(jsx(RichTextEditor, { value: f.description_doc, fallbackText: f.description, readOnly: off, onChange: (doc, plain) => { setField('description_doc', plain ? doc : undefined); setField('description', plain || undefined) }, onProblem: setRichProblem, rest: { ...f, text: drawerText } }, `rt-${selected?.id}`))
     const links = f.links ?? []
     out.push(jsxs('fieldset', { className: 'dy-pc-fieldset', 'data-canvas-links': true, children: [
-      jsx('legend', { children: `Links${links.length ? ` (${links.length})` : ''}` }),
+      jsx('legend', { children: `Связи${links.length ? ` (${links.length})` : ''}` }),
       ...links.map((link, index) => jsxs('div', { className: 'dy-pc-row', 'data-canvas-link-row': index, children: [
-        jsx('input', { 'data-canvas-link-url': index, type: 'url', inputMode: 'url', placeholder: 'https://…', maxLength: 2048, value: link.url, disabled: off, 'aria-label': `Link ${index + 1} address`, 'aria-invalid': link.url && !canvasSafeUrl(link.url) ? 'true' : undefined, onChange: (event) => setField('links', links.map((l, i) => (i === index ? { ...l, url: event.target.value } : l))) }),
-        jsx('input', { 'data-canvas-link-label': index, placeholder: 'Метка (необязательно)', maxLength: 200, value: link.label, disabled: off, 'aria-label': `Link ${index + 1} label`, onChange: (event) => setField('links', links.map((l, i) => (i === index ? { ...l, label: event.target.value } : l))) }),
-        canvasSafeUrl(link.url) ? jsx('a', { className: 'dy-pc-open', href: link.url.trim(), target: '_blank', rel: 'noopener noreferrer nofollow', title: 'Открыть связь', 'aria-label': `Open link ${index + 1}`, children: jsx(Icon, { name: 'arrow-up-right' }) }) : null,
-        off ? null : jsx(Button, { small: true, action: 'pc-link-remove', ariaLabel: `Remove link ${index + 1}`, onClick: () => setField('links', links.filter((_, i) => i !== index)), children: jsx(Icon, { name: 'x' }) }),
+        jsx('input', { 'data-canvas-link-url': index, type: 'url', inputMode: 'url', placeholder: 'https://…', maxLength: 2048, value: link.url, disabled: off, 'aria-label': `Адрес связи ${index + 1}`, 'aria-invalid': link.url && !canvasSafeUrl(link.url) ? 'true' : undefined, onChange: (event) => setField('links', links.map((l, i) => (i === index ? { ...l, url: event.target.value } : l))) }),
+        jsx('input', { 'data-canvas-link-label': index, placeholder: 'Метка (необязательно)', maxLength: 200, value: link.label, disabled: off, 'aria-label': `Метка связи ${index + 1}`, onChange: (event) => setField('links', links.map((l, i) => (i === index ? { ...l, label: event.target.value } : l))) }),
+        canvasSafeUrl(link.url) ? jsx('a', { className: 'dy-pc-open', href: link.url.trim(), target: '_blank', rel: 'noopener noreferrer nofollow', title: 'Открыть связь', 'aria-label': `Открыть связь ${index + 1}`, children: jsx(Icon, { name: 'arrow-up-right' }) }) : null,
+        off ? null : jsx(Button, { small: true, action: 'pc-link-remove', ariaLabel: `Удалить связь ${index + 1}`, onClick: () => setField('links', links.filter((_, i) => i !== index)), children: jsx(Icon, { name: 'x' }) }),
       ]}, `link-${index}`)),
       off ? null : jsx(Button, { small: true, action: 'pc-link-add', disabled: links.length >= 20, onClick: () => setField('links', [...links, { url: '', label: '' }]), children: [jsx(Icon, { name: 'plus' }, 'i'), 'Добавить связь'] }),
     ]}))
@@ -1317,9 +1318,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       else if (input === 'member') {
         const known = members.includes(value)
         control = jsx('select', { 'data-canvas-field': field, value: value ?? '', disabled: off, onChange: (event) => setField(field, event.target.value), children: [
-          jsx('option', { value: '', children: 'Не назначен' }, ''),
+          jsx('option', { value: '', children: CANVAS_WORDS.unassigned }, ''),
           ...members.map((m) => jsx('option', { value: m, children: m }, m)),
-          value && !known ? jsx('option', { value, children: `${value} (no longer a member)` }, 'former') : null,
+          value && !known ? jsx('option', { value, children: `${value} (больше не участник)` }, 'former') : null,
         ] })
       } else if (input === 'date') control = jsx('input', { type: 'date', 'data-canvas-field': field, value: value ?? '', disabled: off, onChange: (event) => setField(field, event.target.value) })
       else if (input === 'area') control = jsx('textarea', { 'data-canvas-field': field, rows: 3, maxLength: max, value: value ?? '', readOnly: off, disabled: off, onChange: (event) => setField(field, event.target.value) })
@@ -1330,9 +1331,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
           jsx('legend', { children: label }),
           ...rows.map((row, index) => jsxs('div', { className: 'dy-pc-row', children: [
             jsx('input', { maxLength: 500, value: row, disabled: off, 'aria-label': `${label} ${index + 1}`, onChange: (event) => setField(field, rows.map((r, i) => (i === index ? event.target.value : r))) }),
-            off ? null : jsx(Button, { small: true, ariaLabel: `Remove ${label} ${index + 1}`, onClick: () => setField(field, rows.filter((_, i) => i !== index)), children: jsx(Icon, { name: 'x' }) }),
+            off ? null : jsx(Button, { small: true, ariaLabel: `Удалить ${label} ${index + 1}`, onClick: () => setField(field, rows.filter((_, i) => i !== index)), children: jsx(Icon, { name: 'x' }) }),
           ]}, index)),
-          off ? null : jsx(Button, { small: true, action: `pc-${field}-add`, disabled: rows.length >= 50, onClick: () => setField(field, [...rows, '']), children: [jsx(Icon, { name: 'plus' }, 'i'), 'Add'] }),
+          off ? null : jsx(Button, { small: true, action: `pc-${field}-add`, disabled: rows.length >= 50, onClick: () => setField(field, [...rows, '']), children: [jsx(Icon, { name: 'plus' }, 'i'), 'Добавить'] }),
         ]}))
         continue
       } else if (input === 'checklist') {
@@ -1340,9 +1341,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
         out.push(jsxs('fieldset', { className: 'dy-pc-fieldset', 'data-canvas-field': field, children: [
           jsx('legend', { children: `${label}${rows.length ? ` (${rows.filter((r) => r.done).length}/${rows.length})` : ''}` }),
           ...rows.map((row, index) => jsxs('div', { className: 'dy-pc-row', children: [
-            jsx('input', { type: 'checkbox', checked: Boolean(row.done), disabled: off, 'aria-label': `Done: ${row.text || `item ${index + 1}`}`, onChange: (event) => setField(field, rows.map((r, i) => (i === index ? { ...r, done: event.target.checked } : r))) }),
-            jsx('input', { maxLength: 300, value: row.text ?? '', disabled: off, 'aria-label': `Checklist item ${index + 1}`, onChange: (event) => setField(field, rows.map((r, i) => (i === index ? { ...r, text: event.target.value } : r))) }),
-            off ? null : jsx(Button, { small: true, ariaLabel: `Remove checklist item ${index + 1}`, onClick: () => setField(field, rows.filter((_, i) => i !== index)), children: jsx(Icon, { name: 'x' }) }),
+            jsx('input', { type: 'checkbox', checked: Boolean(row.done), disabled: off, 'aria-label': `Готово: ${row.text || `элемент ${index + 1}`}`, onChange: (event) => setField(field, rows.map((r, i) => (i === index ? { ...r, done: event.target.checked } : r))) }),
+            jsx('input', { maxLength: 300, value: row.text ?? '', disabled: off, 'aria-label': `Пункт чек-листа ${index + 1}`, onChange: (event) => setField(field, rows.map((r, i) => (i === index ? { ...r, text: event.target.value } : r))) }),
+            off ? null : jsx(Button, { small: true, ariaLabel: `Удалить пункт чек-листа ${index + 1}`, onClick: () => setField(field, rows.filter((_, i) => i !== index)), children: jsx(Icon, { name: 'x' }) }),
           ]}, index)),
           off ? null : jsx(Button, { small: true, action: 'pc-checklist-add', disabled: rows.length >= 50, onClick: () => setField(field, [...rows, { text: '', done: false }]), children: [jsx(Icon, { name: 'plus' }, 'i'), 'Добавить элемент'] }),
         ]}))
@@ -1352,7 +1353,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
           jsx('span', { className: 'dy-pc-field-label', children: label }),
           value ? jsx('span', { className: 'dy-pc-drawer-thumb', children: jsx(CanvasImage, { projectId: project.id, contentId: value, alt: f.alt }) }) : jsx('p', { className: 'dy-pc-drawer-meta', children: 'Изображения пока нет.' }),
           off ? null : jsxs('label', { className: 'dy-pc-upload', children: [
-            jsx('span', { children: imageBusy ? 'Uploading…' : (value ? 'Заменить изображение' : 'Загрузить изображение (PNG, JPEG или WebP, до 5 МБ)') }),
+            jsx('span', { children: imageBusy ? 'Загрузка…' : (value ? 'Заменить изображение' : 'Загрузить изображение (PNG, JPEG или WebP, до 5 МБ)') }),
             jsx('input', { type: 'file', 'data-canvas-image-upload': true, accept: 'image/png,image/jpeg,image/webp', disabled: imageBusy, onChange: (event) => { const file = event.target.files?.[0]; event.target.value = ''; uploadImage(file) } }),
           ]}),
           off || !value ? null : jsx(Button, { small: true, action: 'pc-image-clear', onClick: () => setField('content_id', ''), children: 'Убрать изображение с карточки' }),
@@ -1378,7 +1379,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       'data-canvas-y': String(Math.round(rect.y)),
       style: { left: `${rect.x}px`, top: `${rect.y}px`, width: `${rect.width}px`, height: `${rect.height}px` },
       'data-canvas-height': String(Math.round(rect.height)),
-      'aria-label': `${label}: ${canvasText(item) || 'untitled'}`,
+      'aria-label': `${label}: ${canvasText(item) || 'без названия'}`,
       onPointerDown: (event) => beginObjectDrag(event, item),
       children: [
         jsx('small', { children: `${label}${tag ? ` · ${tag}` : ''}` }),
@@ -1387,7 +1388,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
         item.kind === 'media' && item.content?.content_id ? jsx('span', { className: 'dy-pc-obj-thumb', children: jsx(CanvasImage, { projectId: project.id, contentId: item.content.content_id, alt: item.content.alt }) }) : null,
         canvasSummary(item) ? jsx('span', { className: 'dy-pc-obj-sub', 'data-canvas-summary': true, children: canvasSummary(item) }) : null,
         item.content?.description ? jsx('span', { className: 'dy-pc-obj-desc', children: item.content.description }) : null,
-        jsx('span', { className: 'dy-pc-obj-meta', children: `${item.evidence_ref ? `evidence ${item.evidence_ref}` : 'no evidence reference'}${item.work_ref ? ` · work ${item.work_ref}` : ''}` }),
+        jsx('span', { className: 'dy-pc-obj-meta', children: `${item.evidence_ref ? `доказательство ${item.evidence_ref}` : 'без ссылки на доказательства'}${item.work_ref ? ` · работа ${item.work_ref}` : ''}` }),
       ],
     }, item.id)
   }
@@ -1395,30 +1396,30 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
   const assistantSummary = session?.current_question
     ? 'Прежде чем что-либо предложить, мне нужно одно уточнение. Ничего не применяется автоматически.'
     : (session?.proposals ?? []).length
-      ? `${number((session.proposals ?? []).length)} proposal(s) drafted as scratch — approve or dismiss each one. Nothing is applied to the canvas.`
-      : 'No curation session yet. Run Curate to review this canvas; every proposal lands as scratch and needs your decision.'
+      ? `Черновиков предложений: ${number((session.proposals ?? []).length)} — одобрите или отклоните каждое. На холст ничего не применяется.`
+      : 'Сессии пока не было. Запустите «Собрать предложения», чтобы разобрать этот холст; каждое предложение попадает в черновик и ждёт вашего решения.'
   const questionBlock = session?.current_question ? jsxs('div', { className: 'dy-pc-proposal', 'data-canvas-question': session.current_question.id ?? 'question', children: [
-    jsx('strong', { children: `Question: ${session.current_question.question}` }),
+    jsx('strong', { children: `Вопрос: ${session.current_question.question}` }),
     jsx('textarea', { 'data-canvas-answer': true, rows: 2, value: answer, placeholder: 'Ответьте — или пропустите, отложите либо остановите это уточнение…', onChange: (event) => setAnswer(event.target.value) }),
     jsxs('div', { className: 'dockyard-form-actions', children: [
       jsx(Button, { small: true, action: 'skip-canvas-question', disabled: busy, onClick: () => answerQuestion('skip'), children: 'Пропустить' }),
       jsx(Button, { small: true, action: 'defer-canvas-question', disabled: busy, onClick: () => answerQuestion('defer'), children: 'Отложить' }),
-      jsx(Button, { small: true, action: 'stop-canvas-session', disabled: busy, onClick: () => answerQuestion('stop'), children: 'Stop' }),
-      jsx(Button, { small: true, variant: 'primary', action: 'answer-canvas-question', disabled: busy || !answer.trim(), onClick: () => answerQuestion('answer'), children: 'Ответ' }),
+      jsx(Button, { small: true, action: 'stop-canvas-session', disabled: busy, onClick: () => answerQuestion('stop'), children: 'Остановить' }),
+      jsx(Button, { small: true, variant: 'primary', action: 'answer-canvas-question', disabled: busy || !answer.trim(), onClick: () => answerQuestion('answer'), children: CANVAS_WORDS.answer }),
     ]}),
   ]}) : null
   const proposalCards = (session?.proposals ?? []).map((proposal) => {
     const status = proposal.status ?? 'pending'
     return jsxs('article', { className: 'dy-pc-proposal', 'data-canvas-proposal': proposal.proposal_id, 'data-canvas-proposal-status': status, children: [
       jsx('strong', { children: proposal.title ?? CANVAS_KIND_LABELS[proposal.kind] ?? proposal.kind ?? 'Предложение' }),
-      jsx('small', { children: `${proposal.kind ?? 'proposal'} · ${status} · scratch + suggested · ${number((proposal.source_object_ids ?? []).length)} source object(s)` }),
+      jsx('small', { children: `${CANVAS_KIND_LABELS[proposal.kind] ?? 'предложение'} · ${status === 'pending' ? 'ждёт решения' : status === 'approved' ? 'одобрено' : 'отклонено'} · черновик + предложение · объектов-источников: ${number((proposal.source_object_ids ?? []).length)}` }),
       status === 'pending'
         ? jsxs('div', { className: 'dockyard-form-actions', children: [
             jsx(Button, { small: true, action: 'dismiss-canvas-proposal', disabled: busy, onClick: () => decideProposal(proposal, false), children: 'Отклонить' }),
-            jsx(Button, { small: true, variant: 'primary', action: 'approve-canvas-proposal', disabled: busy, onClick: () => decideProposal(proposal, true), children: 'Одобрить' }),
+            jsx(Button, { small: true, variant: 'primary', action: 'approve-canvas-proposal', disabled: busy, onClick: () => decideProposal(proposal, true), children: CANVAS_WORDS.approve }),
           ]})
         : status === 'approved' && proposal.kind === 'technical_plan'
-          ? jsx(Button, { small: true, action: 'plan-from-proposal', disabled: planBusy, onClick: () => synthesizePlan(proposal), children: 'План из предложения' })
+          ? jsx(Button, { small: true, action: 'plan-from-proposal', disabled: planBusy, onClick: () => synthesizePlan(proposal), children: CANVAS_WORDS.planFromProposal })
           : jsx('small', { children: 'Решение записано — повторно по этому предложению решить нельзя.' }),
     ]}, proposal.proposal_id)
   })
@@ -1426,25 +1427,25 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
     jsx('div', { className: 'dy-pc-msg bot', children: assistantSummary }, 'summary'),
     jsx('div', { 'data-canvas-chat-log': true, ref: (node) => { if (node) node.lastElementChild?.scrollIntoView?.({ block: 'nearest' }) }, children: (chatLog ?? []).map((message, index) => jsx('div', { className: `dy-pc-msg ${message.role}`, children: message.text }, `chat-${index}`)) }, 'log'),
     questionBlock ? jsx('div', { children: questionBlock }, 'question') : null,
-    review ? jsx('p', { className: 'dy-pc-drawer-meta', 'data-canvas-review': true, children: `Review: ${number(review.summary?.evidence_count)} evidence, ${number(review.summary?.claim_count)} claim, ${number(review.summary?.question_count)} question, ${number(review.summary?.plan_block_count)} plan block(s).` }, 'review') : null,
+    review ? jsx('p', { className: 'dy-pc-drawer-meta', 'data-canvas-review': true, children: `Обзор: доказательств ${number(review.summary?.evidence_count)}, ${CANVAS_WORDS.reviewClaims} ${number(review.summary?.claim_count)}, вопросов ${number(review.summary?.question_count)}, блоков плана ${number(review.summary?.plan_block_count)}.` }, 'review') : null,
     proposalCards.length ? jsx('div', { 'data-canvas-proposals': true, children: proposalCards }, 'proposals') : null,
-    session?.answers?.length ? jsx('div', { className: 'dy-pc-msg me', children: `${number(session.answers.length)} clarification answer(s) recorded.` }, 'answers') : null,
+    session?.answers?.length ? jsx('div', { className: 'dy-pc-msg me', children: `Записано уточняющих ответов: ${number(session.answers.length)}.` }, 'answers') : null,
     planPanel ? jsxs('div', { className: 'dy-pc-proposal', 'data-canvas-plan': planPanel.plan_id, children: [
-      jsx('strong', { children: 'План готов к проверке' }),
-      jsx('small', { children: `${number((planPanel.steps ?? []).length)} step(s) · from proposal ${planPanel.proposal_id} · nothing applied to the board.` }),
+      jsx('strong', { children: CANVAS_WORDS.planReady }),
+      jsx('small', { children: `шагов: ${number((planPanel.steps ?? []).length)} · из предложения ${planPanel.proposal_id} · на доску ничего не применено.` }),
       jsx('pre', { className: 'dy-pc-plan-steps', children: (planPanel.steps ?? []).map((step) => `${step.order}. ${step.title}`).join('\n') }),
       jsxs('div', { className: 'dockyard-form-actions', children: [
         planEditable ? jsx(Button, { small: true, action: 'pc-steps-edit', disabled: planBusy, onClick: startStepEdit, children: 'Изменить шаги' }) : null,
-        jsx(Button, { small: true, variant: planDocSaved ? '' : 'primary', action: 'save-plan-document', disabled: planBusy || planDocSaved, onClick: savePlanDocument, children: planDocSaved ? 'Документ сохранён в «Контент»' : 'Сохранить документ в «Контент»' }),
-        jsx(Button, { small: true, variant: planDocSaved && pendingSteps.length ? 'primary' : '', action: 'backlog-from-plan', disabled: planBusy || !planDocSaved || !pendingSteps.length || Boolean(backlogConfirm?.length), onClick: () => setBacklogConfirm(pendingSteps), children: planDocSaved && !pendingSteps.length ? 'Созданные пункты бэклога' : 'Создать элементы бэклога' }),
+        jsx(Button, { small: true, variant: planDocSaved ? '' : 'primary', action: 'save-plan-document', disabled: planBusy || planDocSaved, onClick: savePlanDocument, children: planDocSaved ? CANVAS_WORDS.docSavedToContent : CANVAS_WORDS.saveDocToContent }),
+        jsx(Button, { small: true, variant: planDocSaved && pendingSteps.length ? 'primary' : '', action: 'backlog-from-plan', disabled: planBusy || !planDocSaved || !pendingSteps.length || Boolean(backlogConfirm?.length), onClick: () => setBacklogConfirm(pendingSteps), children: planDocSaved && !pendingSteps.length ? CANVAS_WORDS.backlogItemsCreated : CANVAS_WORDS.createBacklogItems }),
       ]}),
       backlogConfirm?.length ? jsxs('div', { className: 'dy-pc-proposal', 'data-canvas-backlog-confirm': true, children: [
-        jsx('small', { children: `Create ${number(backlogConfirm.length)} backlog item(s)? One confirm per batch, nothing auto-runs.` }),
+        jsx('small', { children: `Создать элементов бэклога: ${number(backlogConfirm.length)}? Одно подтверждение на партию, ничего не запускается само.` }),
         jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Цель (необязательно)' }), jsx('select', { 'aria-label': 'Цель', value: backlogGoal, onChange: (event) => setBacklogGoal(event.target.value), children: [
           jsx('option', { value: '', children: 'Ещё не размещено' }, 'none'),
           ...backlogGoals.map((goal) => jsx('option', { value: String(goal.id), children: goal.title }, String(goal.id))),
         ] })] }),
-        jsx(Button, { small: true, variant: 'primary', action: 'confirm-backlog-from-plan', disabled: planBusy, onClick: createBacklogItems, children: 'Подтвердить создание' }),
+        jsx(Button, { small: true, variant: 'primary', action: 'confirm-backlog-from-plan', disabled: planBusy, onClick: createBacklogItems, children: CANVAS_WORDS.confirmCreate }),
         jsx(Button, { small: true, action: 'cancel-backlog-from-plan', disabled: planBusy, onClick: () => { setBacklogConfirm(null); setBacklogGoal('') }, children: 'Отмена' }),
       ]}) : null,
     ]}, 'plan') : null,
@@ -1458,7 +1459,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
   ]}, action)
   // Stage 3 ribbon: each group is a column with its name in the shared title
   // strip on top and its tools on the row beneath.
-  const group = (label, children) => jsxs('div', { className: 'dy-pc-group', role: 'group', 'aria-label': label, 'data-pc-group': label.toLowerCase(), children: [
+  const group = (id, label, children) => jsxs('div', { className: 'dy-pc-group', role: 'group', 'aria-label': label, 'data-pc-group': id, children: [
     jsx('span', { className: 'dy-pc-group-label', 'aria-hidden': true, children: label }, 'label'),
     jsxs('div', { className: 'dy-pc-group-tools', children }, 'tools'),
   ] })
@@ -1470,8 +1471,8 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
   const modelChoices = (modelOptions?.providers ?? []).flatMap((provider) => (provider.models ?? []).map((model) => ({ value: `${provider.slug}::${model}`, label: `${provider.name ?? provider.slug} · ${model}` })))
   // A board can keep a model Hermes no longer lists; show it rather than
   // silently displaying "default".
-  if (modelValue && !modelChoices.some((choice) => choice.value === modelValue)) modelChoices.unshift({ value: modelValue, label: `${canvas.model.provider} · ${canvas.model.model} (not configured)` })
-  const defaultModelLabel = modelOptions?.default?.model ? `Hermes main model (${modelOptions.default.model})` : 'Основная модель Hermes'
+  if (modelValue && !modelChoices.some((choice) => choice.value === modelValue)) modelChoices.unshift({ value: modelValue, label: `${canvas.model.provider} · ${canvas.model.model} (не настроена)` })
+  const defaultModelLabel = modelOptions?.default?.model ? `Основная модель Hermes (${modelOptions.default.model})` : 'Основная модель Hermes'
   const effectiveTheme = theme ?? hostTheme
   const chatState = chatPill ? 'pill' : (chatOpen ? 'open' : 'closed')
   const chatStyle = chatPos ? { left: `${chatPos.x}px`, top: `${chatPos.y}px`, right: 'auto', bottom: 'auto' } : undefined
@@ -1501,16 +1502,16 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
       jsxs('div', { className: `dy-pc-board-bar${boardListOpen ? ' open' : ' collapsed'}`, children: [
         jsx(Button, { small: true, action: 'pc-board-toggle', ariaLabel: boardListOpen ? 'Скрыть список досок' : 'Показать список досок', data: { title: boardListOpen ? 'Скрыть список досок' : 'Показать список досок', 'aria-expanded': boardListOpen ? 'true' : 'false', 'data-canvas-board-toggle': boardListOpen ? 'open' : 'closed' }, onClick: () => setBoardListOpen((value) => !value), children: jsx(Icon, { name: boardListOpen ? 'chevron-up' : 'chevron-down' }) }),
         jsxs('div', { className: 'dy-pc-board-title', children: [
-          jsx('span', { className: 'dockyard-card-label', children: 'OPEN BOARD' }),
+          jsx('span', { className: 'dockyard-card-label', children: 'ОТКРЫТАЯ ДОСКА' }),
           jsx('strong', { 'data-canvas-board-name': true, children: canvas?.name ?? 'Доска планирования' }),
-          jsxs('span', { className: 'dy-pc-board-chip', 'data-canvas-board-chip': boardStatus, children: [jsx('span', { className: 'dy-pc-board-dot', 'data-status': boardStatus }, 'd'), CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus, readOnly ? ' · read-only' : ''] }),
-          jsx('span', { className: 'dy-pc-board-count', children: `${listed.length || 1} board${(listed.length || 1) === 1 ? '' : 's'}` }),
+          jsxs('span', { className: 'dy-pc-board-chip', 'data-canvas-board-chip': boardStatus, children: [jsx('span', { className: 'dy-pc-board-dot', 'data-status': boardStatus }, 'd'), CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus, readOnly ? ' · только чтение' : ''] }),
+          jsx('span', { className: 'dy-pc-board-count', children: `досок: ${listed.length || 1}` }),
         ]}),
         boardScoped ? jsxs('label', { className: 'dy-pc-board-status', children: [
           jsx('span', { className: 'dy-pc-board-dot', 'data-status': boardStatus }),
           jsxs('select', { 'data-canvas-board-status': true, 'aria-label': 'Статус доски', value: boardStatus, disabled: boardBusy || boardStatus === 'archived', onChange: (event) => changeBoardStatus(event.target.value), children: [
             jsx('option', { value: boardStatus, children: CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus }, boardStatus),
-            ...statusMoves.map((status) => jsx('option', { value: status, children: `Move to ${CANVAS_BOARD_STATUS_LABELS[status]}` }, status)),
+            ...statusMoves.map((status) => jsx('option', { value: status, children: `Перевести в «${CANVAS_BOARD_STATUS_LABELS[status]}»` }, status)),
           ]}),
         ]}) : null,
       ]}),
@@ -1529,57 +1530,57 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
           ...listed.map((board) => {
             const active = board.canvas_id === canvas?.canvas_id
             return jsxs('div', { className: `dy-pc-board-item${active ? ' active' : ''}`, 'data-canvas-board-row': board.canvas_id ?? 'legacy', 'data-canvas-board-active': active ? 'true' : 'false', children: [
-              jsxs('button', { type: 'button', className: `dy-pc-board-row${active ? ' active' : ''}`, 'aria-current': active ? 'true' : undefined, 'aria-label': active ? `${board.name ?? 'Main board'} (open)` : `Open ${board.name ?? 'board'}`, disabled: boardBusy, onClick: () => selectBoard(board), children: [
+              jsxs('button', { type: 'button', className: `dy-pc-board-row${active ? ' active' : ''}`, 'aria-current': active ? 'true' : undefined, 'aria-label': active ? `${board.name ?? 'Основная доска'} (открыта)` : `Открыть ${board.name ?? 'доску'}`, disabled: boardBusy, onClick: () => selectBoard(board), children: [
                 jsx('span', { className: 'dy-pc-board-dot', 'data-status': board.status ?? 'draft' }),
-                jsxs('span', { className: 'dy-pc-board-row-copy', children: [jsx('strong', { children: board.name ?? 'Основная доска' }), jsx('small', { children: `${CANVAS_BOARD_STATUS_LABELS[board.status ?? 'draft'] ?? board.status} · ${number(board.object_count ?? board.objects?.length ?? 0)} objects` })] }),
+                jsxs('span', { className: 'dy-pc-board-row-copy', children: [jsx('strong', { children: board.name ?? 'Основная доска' }), jsx('small', { children: `${CANVAS_BOARD_STATUS_LABELS[board.status ?? 'draft'] ?? board.status} · объектов: ${number(board.object_count ?? board.objects?.length ?? 0)}` })] }),
                 active ? jsx('span', { className: 'dy-pc-board-open', 'data-canvas-board-open': true, children: 'Открыть' }) : null,
                 board.changed_since_plan ? jsx('span', { className: 'dy-pc-board-warning', title: 'Доска изменилась после составления плана', 'aria-label': 'Изменено с момента плана', children: '!' }) : null,
               ]}),
-              boardsApi && board.canvas_id ? jsx(Button, { small: true, action: 'pc-board-archive', ariaLabel: `Archive ${board.name}`, data: { title: liveBoards.length > 1 ? `Archive ${board.name}` : 'Последнюю живую доску нельзя архивировать — сначала создайте другую' }, disabled: boardBusy || liveBoards.length <= 1, onClick: () => archiveBoard(board), children: jsx(Icon, { name: 'archive' }) }) : null,
+              boardsApi && board.canvas_id ? jsx(Button, { small: true, action: 'pc-board-archive', ariaLabel: `Архивировать ${board.name}`, data: { title: liveBoards.length > 1 ? `Архивировать ${board.name}` : 'Последнюю живую доску нельзя архивировать — сначала создайте другую' }, disabled: boardBusy || liveBoards.length <= 1, onClick: () => archiveBoard(board), children: jsx(Icon, { name: 'archive' }) }) : null,
             ]}, board.canvas_id ?? 'legacy')
           }),
           boardsApi && showArchived ? (archivedBoards.length
             ? archivedBoards.map((board) => jsxs('div', { className: 'dy-pc-board-item archived', 'data-canvas-board-row': board.canvas_id, 'data-canvas-board-archived': true, children: [
-                jsxs('span', { className: 'dy-pc-board-row', children: [jsx('span', { className: 'dy-pc-board-dot', 'data-status': 'archived' }), jsxs('span', { className: 'dy-pc-board-row-copy', children: [jsx('strong', { children: board.name }), jsx('small', { children: `Archived · was ${CANVAS_BOARD_STATUS_LABELS[board.archived_from] ?? 'Draft'}` })] })] }),
-                jsx(Button, { small: true, action: 'pc-board-restore', ariaLabel: `Restore ${board.name}`, data: { title: `Restore ${board.name}` }, disabled: boardBusy, onClick: () => restoreBoard(board), children: jsx(Icon, { name: 'archive-restore' }) }),
+                jsxs('span', { className: 'dy-pc-board-row', children: [jsx('span', { className: 'dy-pc-board-dot', 'data-status': 'archived' }), jsxs('span', { className: 'dy-pc-board-row-copy', children: [jsx('strong', { children: board.name }), jsx('small', { children: `В архиве · был статус «${CANVAS_BOARD_STATUS_LABELS[board.archived_from] ?? 'Черновик'}»` })] })] }),
+                jsx(Button, { small: true, action: 'pc-board-restore', ariaLabel: `Восстановить ${board.name}`, data: { title: `Восстановить ${board.name}` }, disabled: boardBusy, onClick: () => restoreBoard(board), children: jsx(Icon, { name: 'archive-restore' }) }),
               ]}, board.canvas_id))
             : [jsx('p', { className: 'dy-pc-board-archived', children: 'Нет архивных досок.' }, 'none')]) : null,
         ]}),
       ]}) : null,
       jsxs('div', { className: 'dockyard-section-head', children: [
         jsxs('div', { children: [
-          jsx('span', { className: 'dockyard-card-label', children: 'PLANNING CANVAS' }),
+          jsx('span', { className: 'dockyard-card-label', children: 'ХОЛСТ ПЛАНИРОВАНИЯ' }),
           jsx('h2', { children: 'От доказательств к плану' }),
-          jsx('p', { children: `${number(objects.length)} object(s), ${number(connectors.length)} connector(s), revision ${number(revision)}${dirty ? ' · unsaved edits' : ' · saved'}${readOnly ? ` · ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} (read-only)` : ''}. The steward only proposes; nothing is applied automatically.` }),
-          content.length ? jsx('p', { className: 'dockyard-meta', children: `${number(content.length)} project content item(s) available to reference.` }) : null,
+          jsx('p', { children: `Объектов: ${number(objects.length)}, связей: ${number(connectors.length)}, ревизия ${number(revision)}${dirty ? ' · есть несохранённые правки' : ' · сохранено'}${readOnly ? ` · ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} (только чтение)` : ''}. Стюард только предлагает; ничего не применяется автоматически.` }),
+          content.length ? jsx('p', { className: 'dockyard-meta', children: `Доступно материалов проекта для ссылок: ${number(content.length)}.` }) : null,
         ]}),
       ]}),
       jsxs('div', { className: `dy-pc${fullscreen ? ' dy-pc-full' : ''}`, 'data-canvas-theme': theme ?? undefined, 'data-canvas-fullscreen': fullscreen ? 'true' : 'false', children: [
         jsxs('div', { className: 'dy-pc-toolbar dy-pc-ribbon', role: 'toolbar', 'aria-label': 'Инструменты канваса', children: [
-          group('Изменить', [
-            tool({ action: 'pc-mode-select', icon: 'mouse-pointer-2', name: 'Select', tip: 'Click to edit, drag a sticker to move it. Drag empty space or scroll to move around; Shift+drag to multi-select; Ctrl+scroll zooms.', variant: mode === 'select' ? 'primary' : '', onClick: () => { setMode('select'); setPendingConnect(null) } }),
-            tool({ action: 'pc-mode-connect', icon: 'spline', name: 'Соединить', tip: 'Нажмите два стикера, чтобы связать их выбранным значением.', variant: mode === 'connect' ? 'primary' : '', disabled: readOnly, onClick: () => { setMode('connect'); setPendingConnect(null); setNotice({ tone: 'ok', text: 'Connect mode: click a sticker, then the sticker to link it to. Dragging is off while connecting; scroll to move around, Esc cancels.' }) } }),
-            tool({ action: 'pc-undo', icon: 'undo-2', name: 'Отменить', tip: 'Отменить одно изменение доски (Ctrl+Z).', disabled: !history.length || readOnly, onClick: undo }),
-            tool({ action: 'pc-redo', icon: 'redo-2', name: 'Повторить', tip: 'Повторно применить отменённую правку (Ctrl+Shift+Z).', disabled: !future.length || readOnly, onClick: redo }),
-            tool({ action: 'pc-duplicate', icon: 'copy-plus', name: 'Дублировать', tip: 'Копировать выбранные стикеры (Ctrl+D).', disabled: !(selectedIds.length || selectedId) || readOnly, onClick: duplicateSelection }),
+          group('edit', CANVAS_WORDS.ribbonEdit, [
+            tool({ action: 'pc-mode-select', icon: 'mouse-pointer-2', name: 'Выбрать', tip: 'Нажмите, чтобы править; перетащите стикер, чтобы переместить. Тяните пустое место или прокручивайте, чтобы двигаться; Shift+перетаскивание — выбор нескольких; Ctrl+прокрутка — масштаб.', variant: mode === 'select' ? 'primary' : '', onClick: () => { setMode('select'); setPendingConnect(null) } }),
+            tool({ action: 'pc-mode-connect', icon: 'spline', name: 'Соединить', tip: 'Нажмите два стикера, чтобы связать их выбранным значением.', variant: mode === 'connect' ? 'primary' : '', disabled: readOnly, onClick: () => { setMode('connect'); setPendingConnect(null); setNotice({ tone: 'ok', text: 'Режим связи: нажмите стикер, затем стикер, с которым связать. Пока идёт связывание, перетаскивание выключено; прокрутка двигает холст, Esc отменяет.' }) } }),
+            tool({ action: 'pc-undo', icon: 'undo-2', name: CANVAS_WORDS.undo, tip: 'Отменить одно изменение доски (Ctrl+Z).', disabled: !history.length || readOnly, onClick: undo }),
+            tool({ action: 'pc-redo', icon: 'redo-2', name: CANVAS_WORDS.redo, tip: 'Повторно применить отменённую правку (Ctrl+Shift+Z).', disabled: !future.length || readOnly, onClick: redo }),
+            tool({ action: 'pc-duplicate', icon: 'copy-plus', name: CANVAS_WORDS.duplicate, tip: 'Копировать выбранные стикеры (Ctrl+D).', disabled: !(selectedIds.length || selectedId) || readOnly, onClick: duplicateSelection }),
             tool({ action: 'pc-tidy', icon: 'layout-dashboard', name: 'Аккуратно', tip: 'Выровнять все стикеры по сетке.', disabled: !objects.length || readOnly, onClick: tidy }),
           ]),
-          group('Add', [
+          group('add', CANVAS_WORDS.ribbonAdd, [
             jsxs('div', { className: 'dy-pc-add', children: [
               jsx('select', { 'data-canvas-kind-picker': true, 'aria-label': 'Тип объекта', value: kind, disabled: readOnly, onChange: (event) => setKind(event.target.value), children: CANVAS_OBJECT_KINDS.map((value) => jsx('option', { value, children: CANVAS_KIND_LABELS[value] }, value)) }),
-              jsx('input', { 'data-canvas-draft': true, 'aria-label': 'Текст нового объекта', value: draft, disabled: readOnly, maxLength: 4000, placeholder: 'Type a note, question or link…', onChange: (event) => setDraft(event.target.value), onKeyDown: (event) => { if (event.key === 'Enter') { event.preventDefault(); addFromDraft() } } }),
-              tool({ action: 'add-canvas-object', icon: 'plus', name: 'Добавить объект', tip: 'Добавить текст выше как стикер выбранного типа.', variant: 'primary', disabled: !draft.trim() || readOnly, onClick: addFromDraft }),
+              jsx('input', { 'data-canvas-draft': true, 'aria-label': 'Текст нового объекта', value: draft, disabled: readOnly, maxLength: 4000, placeholder: 'Заметка, вопрос или ссылка…', onChange: (event) => setDraft(event.target.value), onKeyDown: (event) => { if (event.key === 'Enter') { event.preventDefault(); addFromDraft() } } }),
+              tool({ action: 'add-canvas-object', icon: 'plus', name: CANVAS_WORDS.addObject, tip: 'Добавить текст выше как стикер выбранного типа.', variant: 'primary', disabled: !draft.trim() || readOnly, onClick: addFromDraft }),
             ]}),
             jsxs('div', { className: 'dy-pc-tool', ref: addMenuRef, children: [
               jsx(Button, { small: true, action: 'pc-add-menu', ariaLabel: 'Добавить стикер', disabled: readOnly, data: { title: 'Добавить стикер — выберите тип, чтобы создать пустой стикер', 'aria-haspopup': 'menu', 'aria-expanded': addMenuOpen ? 'true' : 'false' }, onClick: () => setAddMenuOpen((value) => !value), children: [jsx(Icon, { name: 'sticky-note' }, 'i'), jsx(Icon, { name: 'chevron-down' }, 'c')] }),
               jsx('div', { className: 'dy-pc-addmenu', role: 'menu', 'aria-label': 'Добавить стикер', hidden: !addMenuOpen, children: CANVAS_OBJECT_KINDS.map((value) => jsxs('button', {
                 type: 'button', role: 'menuitem', 'data-action': `add-canvas-${value}`, 'data-canvas-add-kind': value,
-                onClick: () => { addObject(value, `New ${CANVAS_KIND_LABELS[value]}`); setAddMenuOpen(false) },
+                onClick: () => { addObject(value, `Новое: ${CANVAS_KIND_LABELS[value]}`); setAddMenuOpen(false) },
                 children: [jsx('span', { className: 'swatch', style: { background: `var(--dy-pc-fill-${value})`, borderLeft: `3px solid var(--dy-pc-kind-${value})` } }, 's'), jsx(Icon, { name: CANVAS_KIND_ICONS[value] }, 'i'), CANVAS_KIND_LABELS[value]],
               }, `add-${value}`)) }),
             ]}),
           ]),
-          group('Вид', [
+          group('view', CANVAS_WORDS.ribbonView, [
             tool({ action: 'pc-zoom-out', icon: 'zoom-out', name: 'Отдалить', tip: 'Уменьшить вид доски.', onClick: () => zoomBy(-CANVAS_ZOOM.step) }),
             jsx('span', { className: 'dy-pc-readout', 'data-canvas-zoom-readout': String(Math.round(zoom * 100)), children: `${Math.round(zoom * 100)}%` }, 'zoom'),
             tool({ action: 'pc-zoom-in', icon: 'zoom-in', name: 'Приблизить', tip: 'Увеличить вид доски.', onClick: () => zoomBy(CANVAS_ZOOM.step) }),
@@ -1588,20 +1589,20 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
             tool({ action: 'pc-theme-light', icon: 'sun', name: 'Светлый канвас', tip: 'Светлый холст только для этой доски. Нажмите ещё раз, чтобы следовать за приложением.', variant: theme === 'light' ? 'primary' : '', onClick: () => setBoardTheme('light'), data: { 'aria-pressed': theme === 'light' ? 'true' : 'false' } }),
             tool({ action: 'pc-theme-dark', icon: 'moon', name: 'Тёмный канвас', tip: 'Тёмный светящийся холст только для этой доски. Нажмите ещё раз, чтобы следовать за приложением.', variant: theme === 'dark' ? 'primary' : '', onClick: () => setBoardTheme('dark'), data: { 'aria-pressed': theme === 'dark' ? 'true' : 'false' } }),
           ]),
-          group('AI', [
-            tool({ action: 'pc-curate', icon: 'sparkles', name: 'Curate', tip: 'Попросить стюарда превратить эту доску в предложения.', disabled: busy || readOnly, onClick: () => curate() }),
+          group('ai', CANVAS_WORDS.ribbonAi, [
+            tool({ action: 'pc-curate', icon: 'sparkles', name: CANVAS_WORDS.curate, tip: 'Попросить стюарда превратить эту доску в предложения.', disabled: busy || readOnly, onClick: () => curate() }),
             tool({ action: 'pc-review', icon: 'list-checks', name: 'Обзор', tip: 'Подсчёт того, что есть на этой доске; ничего не отправляется ИИ.', disabled: busy, onClick: reviewCanvas }),
           ]),
           jsx('div', { className: 'dy-pc-ribbon-fill', 'aria-hidden': true }, 'fill'),
-          group('Сохранить', [
+          group('save', CANVAS_WORDS.ribbonSave, [
             tool({ action: 'pc-reload', icon: 'refresh-cw', name: 'Перезагрузить', tip: 'Перечитать сохранённую доску; несохранённые правки отбрасываются.', disabled: busy, onClick: reload }),
-            tool({ action: 'pc-save', icon: 'save', name: 'Сохранить канвас', tip: 'Сохранить эту доску как новую ревизию.', variant: 'primary', label: busy ? 'Работаем…' : 'Сохранить', disabled: busy || readOnly, onClick: save }),
+            tool({ action: 'pc-save', icon: 'save', name: CANVAS_WORDS.saveCanvas, tip: 'Сохранить эту доску как новую ревизию.', variant: 'primary', label: busy ? 'Работаем…' : 'Сохранить', disabled: busy || readOnly, onClick: save }),
           ]),
         ]}),
         objects.length >= 2 && !readOnly ? jsxs('div', { className: 'dy-pc-linkbar', 'data-canvas-connector-editor': true, children: [
-          jsxs('label', { children: [jsx('span', { children: 'From' }), jsx('select', { value: linkSource, onChange: (event) => setLinkSource(event.target.value), children: [jsx('option', { value: '', children: 'Выбрать источник' }, 'none'), ...objects.map((item) => jsx('option', { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
-          jsxs('label', { children: [jsx('span', { children: 'Связь' }), jsx('select', { value: linkMeaning, onChange: (event) => setLinkMeaning(event.target.value), children: CANVAS_CONNECTOR_MEANINGS.map((value) => jsx('option', { value, children: value }, value)) })] }),
-          jsxs('label', { children: [jsx('span', { children: 'To' }), jsx('select', { value: linkTarget, onChange: (event) => setLinkTarget(event.target.value), children: [jsx('option', { value: '', children: 'Выбрать назначение' }, 'none'), ...objects.map((item) => jsx('option', { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
+          jsxs('label', { children: [jsx('span', { children: 'От' }), jsx('select', { value: linkSource, onChange: (event) => setLinkSource(event.target.value), children: [jsx('option', { value: '', children: 'Выбрать источник' }, 'none'), ...objects.map((item) => jsx('option', { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
+          jsxs('label', { children: [jsx('span', { children: 'Связь' }), jsx('select', { value: linkMeaning, onChange: (event) => setLinkMeaning(event.target.value), children: CANVAS_CONNECTOR_MEANINGS.map((value) => jsx('option', { value, children: CANVAS_MEANING_LABELS[value] ?? value }, value)) })] }),
+          jsxs('label', { children: [jsx('span', { children: 'К' }), jsx('select', { value: linkTarget, onChange: (event) => setLinkTarget(event.target.value), children: [jsx('option', { value: '', children: 'Выбрать назначение' }, 'none'), ...objects.map((item) => jsx('option', { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
           jsx(Button, { small: true, action: 'connect-canvas-objects', disabled: !linkSource || !linkTarget || linkSource === linkTarget, onClick: connectFromEditor, children: 'Соединить объекты' }),
         ]}) : null,
         jsxs('div', {
@@ -1638,12 +1639,12 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
             jsx('div', { className: `dy-pc-backdrop${selected ? ' open' : ''}`, 'data-pc-backdrop': true, onClick: () => setSelectedId(null) }),
             jsxs('aside', { ref: chatRef, className: `dy-pc-chat ${chatState}${chatDragging ? ' dragging' : ''}${selected ? ' behind-drawer' : ''}`, 'data-canvas-assistant': true, 'data-canvas-chat-state': chatState, style: chatStyle, 'aria-label': 'Чат со стюардом', children: [
               jsxs('div', { className: 'dy-pc-chat-bar', children: [
-                jsx('span', { className: 'dy-pc-chat-grip', 'data-canvas-chat-grip': true, role: 'button', tabIndex: 0, 'aria-label': 'Переместить окно чата (стрелки; Home — сброс)', title: 'Drag to move · arrow keys move · Home resets', onPointerDown: beginChatDrag, onKeyDown: nudgeChat, children: jsx(Icon, { name: 'grip-horizontal' }) }),
+                jsx('span', { className: 'dy-pc-chat-grip', 'data-canvas-chat-grip': true, role: 'button', tabIndex: 0, 'aria-label': 'Переместить окно чата (стрелки; Home — сброс)', title: 'Перетащите, чтобы сдвинуть · стрелки двигают · Home сбрасывает', onPointerDown: beginChatDrag, onKeyDown: nudgeChat, children: jsx(Icon, { name: 'grip-horizontal' }) }),
                 jsxs('button', { type: 'button', className: 'dy-pc-chat-h', 'data-action': 'pc-chat-toggle', 'aria-expanded': chatOpen && !chatPill ? 'true' : 'false', onClick: toggleChat, children: [
                   jsx('span', { className: 'av', 'aria-hidden': true, children: jsx(Icon, { name: 'bot' }) }),
                   jsxs('span', { style: { flex: '1 1 auto', minWidth: 0 }, children: [
                     jsx('strong', { children: 'Steward' }),
-                    chatPill ? null : jsx('span', { className: 'sub', children: session?.current_question ? 'clarification in progress · nothing applied' : `${number(pendingProposals)} proposal(s) waiting · nothing applied` }),
+                    chatPill ? null : jsx('span', { className: 'sub', children: session?.current_question ? 'идёт уточнение · ничего не применено' : `предложений ждёт: ${number(pendingProposals)} · ничего не применено` }),
                   ]}),
                   chatPill ? null : jsx('span', { className: 'tog', 'aria-hidden': true, children: chatOpen ? '▼' : '▲' }),
                 ]}),
@@ -1659,10 +1660,10 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
               ]}) : null,
               jsxs('div', { className: 'dy-pc-chat-b', children: chatBody() }),
               jsxs('div', { className: 'dy-pc-chat-f', children: [
-                jsx('span', { className: 'dy-pc-readout', children: readOnly ? `Board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} — reopen it to chat.` : 'Контракт одобрения: только черновик + предложение.' }),
+                jsx('span', { className: 'dy-pc-readout', children: readOnly ? `Доска «${CANVAS_BOARD_STATUS_LABELS[boardStatus]}» — откройте её заново, чтобы общаться в чате.` : 'Контракт одобрения: только черновик + предложение.' }),
                 jsx('input', { 'data-canvas-chat-input': true, 'aria-label': 'Написать стюарду', value: chatDraft, maxLength: 4000, disabled: readOnly, placeholder: 'Спросить стюарда об этой доске…', onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat() } } }),
                 jsx(Button, { small: true, action: 'pc-chat-send', ariaLabel: 'Отправить', disabled: chatBusy || !chatDraft.trim() || readOnly, onClick: sendChat, children: [jsx(Icon, { name: 'send' }, 'i'), 'Отправить'] }),
-                jsx(Button, { small: true, action: 'pc-chat-stop', ariaLabel: 'Stop', disabled: !chatBusy, onClick: stopChat, children: [jsx(Icon, { name: 'square' }, 'i'), 'Stop'] }),
+                jsx(Button, { small: true, action: 'pc-chat-stop', ariaLabel: 'Остановить', disabled: !chatBusy, onClick: stopChat, children: [jsx(Icon, { name: 'square' }, 'i'), 'Остановить'] }),
               ]}),
             ]}),
             expanded ? jsx('div', { className: 'dy-pc-overlay', 'data-canvas-expanded': stepsDraft ? 'steps' : 'chat', onPointerDown: (event) => { if (event.target === event.currentTarget) setExpanded(false) }, onKeyDown: (event) => { if (event.key === 'Escape') { event.stopPropagation(); setExpanded(false) } }, children: jsxs('div', { className: `dy-pc-overlay-card${stepsDraft ? ' steps' : ' chat'}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': stepsDraft ? 'Шаги плана' : 'Чат со стюардом — большой вид', children: [
@@ -1670,7 +1671,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
                 jsx('span', { className: 'dy-pc-overlay-av', 'aria-hidden': true, children: jsx(Icon, { name: 'bot' }) }),
                 jsxs('div', { className: 'dy-pc-overlay-title', children: [
                   jsx('strong', { children: stepsDraft ? 'Шаги плана' : 'Steward' }),
-                  jsx('span', { children: `${canvas?.name ?? 'Planning board'} · ${CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus}` }),
+                  jsx('span', { children: `${canvas?.name ?? 'Доска планирования'} · ${CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus}` }),
                 ]}),
                 jsx(Button, { small: true, action: 'pc-expanded-close', ariaLabel: 'Закрыть большой вид', data: { title: 'Назад к канвасу (Esc)' }, onClick: () => setExpanded(false), children: jsx(Icon, { name: 'minimize-2' }) }),
               ]}),
@@ -1684,13 +1685,13 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
               jsxs('div', { className: 'dy-pc-overlay-b', 'data-canvas-expanded-body': true, children: [
                 ...(stepsDraft ? [] : chatBody()),
                 stepsDraft ? jsxs('div', { 'data-canvas-steps-editor': planPanel?.plan_id ?? true, children: [
-                  jsx('p', { className: 'dy-pc-drawer-meta', children: 'Edit, reorder, add or remove steps. Steps you keep keep their sources; new steps start with none.' }),
+                  jsx('p', { className: 'dy-pc-drawer-meta', children: 'Правьте, меняйте порядок, добавляйте и удаляйте шаги. У сохранённых шагов источники остаются; новые шаги начинаются без них.' }),
                   jsx('ol', { children: stepsDraft.map((row, index) => jsxs('li', { children: [
                     jsx('span', { children: `${index + 1}.` }),
-                    jsx('input', { 'data-canvas-step-title': index, 'aria-label': `Step ${index + 1} title`, maxLength: 400, value: row.title, onChange: (event) => editStep(index, { title: event.target.value }) }),
-                    jsx(Button, { small: true, action: 'pc-step-up', ariaLabel: `Move step ${index + 1} up`, disabled: index === 0, onClick: () => moveStep(index, -1), children: '↑' }),
-                    jsx(Button, { small: true, action: 'pc-step-down', ariaLabel: `Move step ${index + 1} down`, disabled: index === stepsDraft.length - 1, onClick: () => moveStep(index, 1), children: '↓' }),
-                    jsx(Button, { small: true, action: 'pc-step-remove', ariaLabel: `Remove step ${index + 1}`, disabled: stepsDraft.length === 1, onClick: () => removeStep(index), children: jsx(Icon, { name: 'trash-2' }) }),
+                    jsx('input', { 'data-canvas-step-title': index, 'aria-label': `Заголовок шага ${index + 1}`, maxLength: 400, value: row.title, onChange: (event) => editStep(index, { title: event.target.value }) }),
+                    jsx(Button, { small: true, action: 'pc-step-up', ariaLabel: `Поднять шаг ${index + 1}`, disabled: index === 0, onClick: () => moveStep(index, -1), children: '↑' }),
+                    jsx(Button, { small: true, action: 'pc-step-down', ariaLabel: `Опустить шаг ${index + 1}`, disabled: index === stepsDraft.length - 1, onClick: () => moveStep(index, 1), children: '↓' }),
+                    jsx(Button, { small: true, action: 'pc-step-remove', ariaLabel: `Удалить шаг ${index + 1}`, disabled: stepsDraft.length === 1, onClick: () => removeStep(index), children: jsx(Icon, { name: 'trash-2' }) }),
                   ]}, row.key)) }),
                 ]}) : null,
               ]}),
@@ -1699,9 +1700,9 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
                 jsx(Button, { small: true, action: 'pc-steps-cancel', onClick: () => setStepsDraft(null), children: 'Отмена' }),
                 jsx(Button, { small: true, variant: 'primary', action: 'pc-steps-save', disabled: planBusy, onClick: saveSteps, children: 'Сохранить шаги' }),
               ]}) : jsxs('div', { className: 'dy-pc-overlay-f dy-pc-overlay-composer', children: [
-                jsx('textarea', { 'data-canvas-chat-input-large': true, 'aria-label': 'Написать стюарду (большое окно)', value: chatDraft, maxLength: 4000, rows: 3, disabled: readOnly, placeholder: readOnly ? `Board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} — reopen it to chat.` : 'Спросить стюарда об этой доске… (Enter — отправить, Shift+Enter — новая строка)', onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat() } } }),
+                jsx('textarea', { 'data-canvas-chat-input-large': true, 'aria-label': 'Написать стюарду (большое окно)', value: chatDraft, maxLength: 4000, rows: 3, disabled: readOnly, placeholder: readOnly ? `Доска «${CANVAS_BOARD_STATUS_LABELS[boardStatus]}» — откройте её заново, чтобы общаться в чате.` : 'Спросить стюарда об этой доске… (Enter — отправить, Shift+Enter — новая строка)', onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat() } } }),
                 jsxs('div', { className: 'dy-pc-overlay-actions', children: [
-                  jsx(Button, { small: true, action: 'pc-chat-stop-large', ariaLabel: 'Stop', disabled: !chatBusy, onClick: stopChat, children: [jsx(Icon, { name: 'square' }, 'i'), 'Stop'] }),
+                  jsx(Button, { small: true, action: 'pc-chat-stop-large', ariaLabel: 'Остановить', disabled: !chatBusy, onClick: stopChat, children: [jsx(Icon, { name: 'square' }, 'i'), 'Остановить'] }),
                   jsx(Button, { small: true, variant: 'primary', action: 'pc-chat-send-large', ariaLabel: 'Отправить', disabled: chatBusy || !chatDraft.trim() || readOnly, onClick: sendChat, children: [jsx(Icon, { name: 'send' }, 'i'), 'Отправить'] }),
                 ]}),
               ]}),
@@ -1711,10 +1712,10 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
                 jsx('span', { className: 'dy-pc-overlay-av', 'aria-hidden': true, children: jsx(Icon, { name: 'list-checks' }) }),
                 jsx('strong', { id: 'dy-pc-status-title', children: 'Изменить статус доски?' }),
               ]}),
-              jsx('p', { className: 'dy-pc-leave-body', id: 'dy-pc-status-body', children: `Move ${canvas?.name ?? 'this board'} from ${CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus} to ${CANVAS_BOARD_STATUS_LABELS[pendingStatus] ?? pendingStatus}?${CANVAS_READ_ONLY.includes(pendingStatus) ? ' The board becomes read-only until you move it back.' : ''}` }),
+              jsx('p', { className: 'dy-pc-leave-body', id: 'dy-pc-status-body', children: `Перевести «${canvas?.name ?? 'эту доску'}» из «${CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus}» в «${CANVAS_BOARD_STATUS_LABELS[pendingStatus] ?? pendingStatus}»?${CANVAS_READ_ONLY.includes(pendingStatus) ? ' Доска станет доступной только для чтения, пока вы не вернёте её назад.' : ''}` }),
               jsxs('div', { className: 'dy-pc-overlay-f', children: [
                 jsx(Button, { small: true, action: 'pc-status-cancel', onClick: () => setPendingStatus(null), children: 'Отмена' }),
-                jsx(Button, { small: true, variant: 'primary', action: 'pc-status-confirm', disabled: boardBusy, onClick: confirmBoardStatus, children: `Move to ${CANVAS_BOARD_STATUS_LABELS[pendingStatus] ?? pendingStatus}` }),
+                jsx(Button, { small: true, variant: 'primary', action: 'pc-status-confirm', disabled: boardBusy, onClick: confirmBoardStatus, children: `Перевести в «${CANVAS_BOARD_STATUS_LABELS[pendingStatus] ?? pendingStatus}»` }),
               ]}),
             ]}) }) : null,
             pendingLeave ? jsx('div', { className: 'dy-pc-overlay dy-pc-leave', 'data-canvas-unsaved-prompt': true, children: jsxs('div', { className: 'dy-pc-overlay-card dy-pc-leave-card', role: 'alertdialog', 'aria-modal': 'true', 'aria-labelledby': 'dy-pc-leave-title', 'aria-describedby': 'dy-pc-leave-body', onKeyDown: (event) => { if (event.key === 'Escape') { event.stopPropagation(); setPendingLeave(null) } }, children: [
@@ -1722,7 +1723,7 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
                 jsx('span', { className: 'dy-pc-overlay-av warn', 'aria-hidden': true, children: jsx(Icon, { name: 'save' }) }),
                 jsx('strong', { id: 'dy-pc-leave-title', children: 'Несохранённые изменения' }),
               ]}),
-              jsx('p', { className: 'dy-pc-leave-body', id: 'dy-pc-leave-body', children: `${canvas?.name ?? 'This board'} has unsaved edits. Save them before you ${pendingLeave.label}?` }),
+              jsx('p', { className: 'dy-pc-leave-body', id: 'dy-pc-leave-body', children: `На доске «${canvas?.name ?? 'эта доска'}» есть несохранённые правки. Сохранить их, прежде чем ${pendingLeave.label}?` }),
               jsxs('div', { className: 'dy-pc-overlay-f', children: [
                 jsx(Button, { small: true, action: 'pc-leave-cancel', autoFocus: true, onClick: () => setPendingLeave(null), children: 'Отмена' }),
                 jsx(Button, { small: true, variant: 'danger', action: 'pc-leave-discard', disabled: busy, onClick: leaveDiscarding, children: 'Отменить изменения' }),
@@ -1732,17 +1733,17 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
             jsxs('aside', { className: `dy-pc-drawer${selected ? ' open' : ''}`, 'data-canvas-drawer': selected?.id ?? 'none', 'aria-hidden': selected ? undefined : 'true', onKeyDown: (event) => { if (event.key === 'Escape') { event.stopPropagation(); setSelectedId(null); setSelectedIds([]) } }, children: [
               jsxs('div', { className: 'dy-pc-drawer-h', children: [
                 jsxs('div', { children: [
-                  jsx('strong', { children: selected ? `${CANVAS_KIND_LABELS[selected.kind] ?? selected.kind} · selected` : 'Выбранный объект' }),
+                  jsx('strong', { children: selected ? `${CANVAS_KIND_LABELS[selected.kind] ?? selected.kind} · выбрано` : 'Выбранный объект' }),
                   jsx('span', { className: 'dy-pc-drawer-meta', children: selected ? `x ${Math.round(canvasNumber(selected.x))} · y ${Math.round(canvasNumber(selected.y))}` : 'Ничего не выбрано' }),
                 ]}),
                 jsx(Button, { small: true, action: 'pc-close-drawer', ariaLabel: 'Закрыть панель выбора', onClick: () => setSelectedId(null), children: '✕' }),
               ]}),
               selected ? jsxs('div', { className: 'dy-pc-drawer-b', children: [
-                readOnly ? jsx('p', { className: 'dy-pc-drawer-meta', 'data-canvas-drawer-readonly': true, children: `This board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} — details are view-only.` }) : null,
+                readOnly ? jsx('p', { className: 'dy-pc-drawer-meta', 'data-canvas-drawer-readonly': true, children: `Эта доска «${CANVAS_BOARD_STATUS_LABELS[boardStatus]}» — только просмотр.` }) : null,
                 jsxs('label', { children: [jsx('span', { children: 'Заголовок' }), jsx('input', { 'data-canvas-object-title': true, maxLength: 4000, value: drawerText, readOnly, disabled: readOnly, onChange: (event) => setDrawerText(event.target.value) })] }),
                 jsxs('label', { children: [jsx('span', { children: 'Тип' }), jsx('select', { 'data-canvas-object-kind': true, value: drawerKind, disabled: readOnly, onChange: (event) => setDrawerKind(event.target.value), children: CANVAS_OBJECT_KINDS.map((value) => jsx('option', { value, children: CANVAS_KIND_LABELS[value] }, value)) })] }),
                 jsxs('div', { className: 'dy-pc-colours-field', children: [
-                  jsx('span', { className: 'dy-pc-field-label', id: 'dy-pc-colour-label', children: `Sticker colour · ${selectedColour ? CANVAS_STICKER_LABELS[selectedColour] : 'Default for kind'}` }),
+                  jsx('span', { className: 'dy-pc-field-label', id: 'dy-pc-colour-label', children: `Цвет стикера · ${selectedColour ? CANVAS_STICKER_LABELS[selectedColour] : 'По умолчанию для типа'}` }),
                   // Owner 01/10: a coloured dot per choice so the colour is visible before
                   // picking. Dots read the live theme tokens, so a dark board shows dark fills.
                   jsx('div', { className: 'dy-pc-colours', role: 'group', 'aria-labelledby': 'dy-pc-colour-label', 'data-canvas-object-colour': selectedColour ?? '', children: [null, ...CANVAS_STICKER_COLOURS].map((value) => jsx('button', {
@@ -1753,10 +1754,10 @@ export function PlanningCanvasPanel({ project, canvas: initialCanvas, content = 
                   }, value ?? 'default')) }),
                 ] }),
                 ...renderFieldEditors(),
-                jsx('p', { className: 'dy-pc-drawer-meta', children: selected.evidence_ref ? `Evidence reference: ${selected.evidence_ref}` : 'У объекта нет ссылки на доказательства.' }),
+                jsx('p', { className: 'dy-pc-drawer-meta', children: selected.evidence_ref ? `Ссылка на доказательство: ${selected.evidence_ref}` : 'У объекта нет ссылки на доказательства.' }),
                 readOnly ? null : jsxs('div', { className: 'dockyard-form-actions', children: [
                   jsx(Button, { small: true, variant: 'danger', action: 'remove-canvas-object', disabled: busy, onClick: removeSelected, children: 'Удалить объект' }),
-                  jsx(Button, { small: true, variant: 'primary', action: 'apply-canvas-object', disabled: busy || !drawerText.trim() || Boolean(richProblem), onClick: applyDrawer, children: 'Apply' }),
+                  jsx(Button, { small: true, variant: 'primary', action: 'apply-canvas-object', disabled: busy || !drawerText.trim() || Boolean(richProblem), onClick: applyDrawer, children: 'Применить' }),
                 ]}),
               ]}) : jsx('p', { className: 'dy-pc-drawer-meta', children: 'Выберите объект на холсте, чтобы изменить заголовок, тип или удалить его.' }),
             ]}),

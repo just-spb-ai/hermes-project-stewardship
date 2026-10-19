@@ -19,9 +19,32 @@
 // every editor save is a round trip (a workflow with every optional field set; untouched fields
 // must come back unchanged). Preview settings and the practice AI are in-memory stand-ins.
 import { after, before, test } from 'node:test'
+import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
-import { ALL_PROJECTS, pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { ALL_PROJECTS, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { canvasDesignHooks, roundsWords } from './src/project/workflow-design/step-settings.js'
+import { CHECK_WORDS, answerQuestion, loopRounds, practiceDraft, practiceExplain, practiceRevise, readImport } from './src/project/workflow-design/standins.js'
+
+// The switcher's three labels come from the module the panel itself imports
+// (src/lib/panel-words.js - pure data, no imports, so a node test reads it
+// directly). The Russian panel moved only the words: roles, hooks and wire
+// values are unchanged (i18n(ru), 19/10/2026).
+import { SWITCHER_WORDS } from './src/lib/panel-words.js'
+const CONTEXT_LABEL = SWITCHER_WORDS.context
+const FIND_LABEL = SWITCHER_WORDS.find
+const PROJECTS_LABEL = SWITCHER_WORDS.list
+
+// test-support/project-scope.mjs is shared with other suites and still spells
+// the switcher's English labels, so this file drives the switcher itself: the
+// same roles, the same data-project-option hook, and the same wait that the
+// chosen scope shows up on the trigger. '*' is the wire value for All projects.
+async function pickProject(page, id) {
+  await page.getByRole('button', { name: CONTEXT_LABEL, exact: true }).click()
+  if (id !== '*') await page.getByRole('combobox', { name: FIND_LABEL }).fill(id)
+  await page.locator(`[role="listbox"] [data-project-option="${id}"]`).click()
+  await page.locator(`.dy-sw-trigger[data-scope="${id}"]`).waitFor()
+}
 import { seedWorkflowDesign } from './test-support/workflow-design-seed.mjs'
 
 const BASE = process.env.STEWARD_DESKTOP_URL
@@ -71,6 +94,118 @@ async function newWorkflow(page, scope = 'project') {
 }
 const tabsOf = (page) => page.locator('[role="tablist"] [data-wfd-template-tab]').evaluateAll((els) => els.map((el) => [el.getAttribute('data-wfd-template-tab'), el.getAttribute('aria-selected')]))
 const builtinsShown = (page) => page.locator('[data-wfd-template-panel] [data-wfd-builtin]').evaluateAll((els) => els.map((e) => e.getAttribute('data-wfd-builtin')))
+
+// ---- the panel's words (i18n(ru), 19/10/2026) -------------------------------
+// Only the visible strings moved: roles, data-* hooks and wire values did not.
+// Each word is read from the module that publishes it - the React-free modules
+// are imported, and for the ones that import React the same literal is read out
+// of that module's own source (never out of a built bundle).
+const sourceOf = (file) => readFileSync(new URL(`./${file}`, import.meta.url), 'utf8')
+const oneIn = (file, pattern, what) => {
+  const found = pattern.exec(sourceOf(file))
+  assert.ok(found, `${what} is published in ${file}`)
+  return found[1]
+}
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// A line a module builds: its literal parts are kept and each ${...} hole is the
+// value the test knows, or a wildcard when the test passes null.
+function sentence(template, values = []) {
+  const parts = []
+  let depth = 0
+  let start = 0
+  for (let i = 0; i < template.length; i += 1) {
+    if (template[i] === '$' && template[i + 1] === '{') {
+      if (!depth) { parts.push(template.slice(start, i)); start = i }
+      depth += 1; i += 1
+    } else if (template[i] === '}' && depth) {
+      depth -= 1
+      if (!depth) start = i + 1
+    }
+  }
+  parts.push(template.slice(start))
+  return new RegExp(parts.map((part, i) => {
+    if (i === parts.length - 1) return escapeRegex(part)
+    const value = i < values.length ? values[i] : null
+    return escapeRegex(part) + (value === null ? '[\\s\\S]*' : escapeRegex(String(value)))
+  }).join(''))
+}
+
+// The step panel and the card notes (src/project/workflow-design/step-settings.js).
+const STEP = canvasDesignHooks({ draft: false, members: [], storedNode: (id) => FULL().find((node) => node.id === id) ?? { id, title: id }, settingsKey: (id) => ['wfb', id], onEditFrame: () => {} })
+const STEP_NAME = STEP.labels.title
+const NOTE_LOOP = STEP.cardNote({ node_id: 'fix', loop: FULL()[1].loop })
+const NOTE_SIGN = STEP.cardNote({ node_id: 'review', human_gate: true })
+const NOTE_STUCK = STEP.cardNote({ node_id: 'stuck', when: FULL()[3].when })
+const ROUNDS_5 = roundsWords(5)
+const SETTINGS_SRC = 'src/project/workflow-design/step-settings.js'
+const REPEAT_HELP = oneIn(SETTINGS_SRC, /repeat\.appendChild\(el\('p', 'dy-wfx-help', `([^`]+)`\)\)/, 'the repeat help')
+const NO_REPEAT = oneIn(SETTINGS_SRC, /const why = el\('p', 'dy-wfx-help', "([^"]+)"\)/, 'the first-step note')
+const PREVIEW_TAG = oneIn(SETTINGS_SRC, /previewTag = \(\) => el\('span', 'dy-wfd-preview-tag', '([^']+)'\)/, 'the preview tag')
+// The panel's sections in the order it draws them (the sign-off branch above
+// them names its own "who does it" section first, so start at the last).
+const SETTINGS_SOURCE = sourceOf(SETTINGS_SRC)
+const SECTION_TITLES = [...SETTINGS_SOURCE.slice(SETTINGS_SOURCE.lastIndexOf("const who = section('")).matchAll(/section\('([^']+)'/g)].map((match) => match[1])
+// The New workflow dialog (src/project/workflow-design/start-dialog.js).
+const START_SRC = 'src/project/workflow-design/start-dialog.js'
+const SCOPE_PROJECT_TITLE = oneIn(START_SRC, /\{ scope: 'project', title: '([^']+)'/, 'the project scope title')
+const SCOPE_PROJECT_TEXT = oneIn(START_SRC, /\{ scope: 'project', title: '[^']+', text: '([^']+)'/, 'the project scope text')
+const SCOPE_GLOBAL_TITLE = oneIn(START_SRC, /\{ scope: 'global', title: '([^']+)'/, 'the global scope title')
+const SCOPE_GLOBAL_TEXT = oneIn(START_SRC, /\{ scope: 'global', title: '[^']+', text: '([^']+)'/, 'the global scope text')
+const SCOPE_PROJECT_LINE = oneIn(START_SRC, /scope === 'global' \? '[^']+' : `([^`]+)`/, 'the project scope line')
+const SCOPE_GLOBAL_LINE = oneIn(START_SRC, /scope === 'global' \? '([^']+)' : `/, 'the global scope line')
+const SCOPE_OFF = oneIn(START_SRC, /off \? '([^']+)' : s\.text/, 'the note for a scope out of reach')
+const AI_EXAMPLE = oneIn(START_SRC, /AI_EXAMPLES = Object\.freeze\(\['([^']+)'/, 'the first AI example')
+// The practice AI is canned and publishes its own trigger words (standins.js).
+// An example chip only fills the dialog's description box (start-dialog.js
+// setDescribe), so the test drives the AI with a description its first recipe
+// answers to, and measures the plan the module itself produces for it.
+// The recipe's matcher now carries Russian alternatives after the English group
+// (19/10/2026: Russian example chips used to fall through to the fallback plan),
+// so read the English alternation out of the first `\b(...)\b` group wherever it
+// sits in the line.
+const RECIPE_TEXT = oneIn('src/project/workflow-design/standins.js', /match: \/\\b\(([^)]+)\)\\b/, 'the words a practice-AI recipe answers to').split('|')[0]
+const RECIPE_PLAN = practiceDraft(RECIPE_TEXT)
+const ANSWERED_PLAN = answerQuestion(answerQuestion(RECIPE_PLAN, 'rounds', 3), 'signoff', false)
+const ANSWERED_IDS = ANSWERED_PLAN.nodes.map((node) => node.id)
+const WORK_NODE = ANSWERED_PLAN.nodes.find((node) => loopRounds(node) > 0)
+const NAME_REQUIRED = oneIn(START_SRC, /!clean \? '([^']+)'/, 'the missing-name error')
+const NAME_TAKEN = oneIn(START_SRC, /takenNames\.includes\(clean\) \? `([^`]+)`/, 'the name-taken error')
+const STEP_REQUIRED = oneIn(START_SRC, /setStepError\('([^']+)'\)/, 'the missing-first-step error')
+const WAY_REQUIRED = oneIn(START_SRC, /&& !template \? '([^']+)'/, 'the missing-way error')
+const SAME_BOT = oneIn(START_SRC, /'data-wfd-same-bot': true, children: `([^`]+)`/, 'the same-bot warning')
+// The step previews, the import result and the settings dialog
+// (src/project/workflow-design/shared.js).
+const SHARED_SRC = 'src/project/workflow-design/shared.js'
+const NOTE_LOOP_TEXT = oneIn(SHARED_SRC, /if \(node\.loop\) notes\.push\(`([^`]+)`\)/, 'a repeat step in a step preview')
+const IMPORT_LINES = (() => {
+  const source = sourceOf(SHARED_SRC)
+  const body = source.slice(source.indexOf('export function ImportResult('))
+  const lines = body.slice(0, body.indexOf('\nexport function')).split('\n').filter((line) => line.includes('children: `') && !line.includes('children: ['))
+  return lines.map((line) => line.slice(line.indexOf('`') + 1, line.lastIndexOf('`')))
+})()
+const IMPORT_DOCKYARD = IMPORT_LINES[0]
+const IMPORT_NOT_CARRIED = IMPORT_LINES[2]
+const TIME_ERROR = oneIn(SHARED_SRC, /test\(trigger\.time\)\) \{ setError\('([^']+)'\)/, 'the 24-hour time error')
+const RUNS_ERROR = oneIn(SHARED_SRC, /runs <= 50\)\) \{ setError\('([^']+)'\)/, 'the every-N-runs error')
+const ROUNDS_ERROR = oneIn(SHARED_SRC, /n >= 1 && n <= 10\)\) \{ setError\('([^']+)'\)/, 'the rounds error')
+// The AI sidebar (src/project/workflow-design/ai-panel.js) and the run readout
+// (src/project/workflows.js).
+const AI_SRC = 'src/project/workflow-design/ai-panel.js'
+const STALE_WORDS = oneIn(AI_SRC, /stale: '([^']+)'/, 'the stale-suggestion note')
+const AI_CREATED = oneIn(AI_SRC, /createdConversation[\s\S]*?reply: \[`([^`]+)`\]/, 'the reply that starts a created workflow')
+const WORKFLOWS_SRC = 'src/project/workflows.js'
+const RUN_WORD_PENDING = oneIn(WORKFLOWS_SRC, /RUN_WORDS = \{ pending: \['([^']+)'/, 'a run that is going')
+const RUN_WORD_ESCALATED = oneIn(WORKFLOWS_SRC, /escalated: \['([^']+)'/, 'a run that needs a person')
+const TIMER_OFF = oneIn(WORKFLOWS_SRC, /if \(!timer\.moving\) return '([^']+)'/, 'the timer-off note')
+const NEEDS_ATTENTION = oneIn(WORKFLOWS_SRC, /needsAttention\(node\) \? ' · ([^']+)'/, 'the attention tag')
+// The practice AI and the importer publish their own words (standins.js).
+const JUDGE = CHECK_WORDS.judge
+const DRAFT_EMPTY = practiceDraft('').error
+const ADDED_TITLE = practiceRevise(FULL(), 'add a step to tell the team').nodes.at(-1).title
+const SIGN_OFF_TITLE = practiceRevise(FULL(), 'add a sign-off at the end').nodes.at(-1).title
+const SIGN_OFF_DID = practiceRevise(FULL(), 'add a sign-off at the end').did
+const ROUNDS_DID = practiceRevise(FULL(), 'repeat up to 3 times').did
+const IMPORT_REASON = readImport('hello').reason
 
 async function withPage(query, body, { viewport = { width: 1440, height: 900 }, open = null } = {}) {
   assert.ok(BASE && API, 'Run via run-browser-suite.mjs')
@@ -127,7 +262,7 @@ test('Builder: at 1440x900 every step is on the first screen; cards say what the
   // The camera eases into place (0.45s transition): measure once it has stopped.
   const measureOnce = (page) => page.evaluate((sel) => {
     const nodes = [...document.querySelectorAll(`${sel} g.dy-wf-node`)].map((g) => g.getBoundingClientRect())
-    return { bottoms: nodes.map((b) => Math.round(b.bottom)), onScreen: nodes.filter((b) => b.top >= 0 && b.bottom <= innerHeight).length, total: nodes.length, toolbar: document.querySelector('.dockyard-wf3-toolbar').getBoundingClientRect().height }
+    return { bottoms: nodes.map((b) => Math.round(b.bottom)), onScreen: nodes.filter((b) => b.top >= 0 && b.bottom <= innerHeight).length, total: nodes.length, toolbar: document.querySelector('.dockyard-wf3-toolbar').getBoundingClientRect().height, }
   }, canvas(name))
   await withPage('', async (page) => {
     let last = null
@@ -139,14 +274,14 @@ test('Builder: at 1440x900 every step is on the first screen; cards say what the
     }
     assert.equal(last.onScreen, last.total, `every step on the first screen (${last.onScreen}/${last.total}): ${JSON.stringify(last)}`)
     assert.ok(last.toolbar < 60, `toolbar is one row (${last.toolbar}px)`)
-    assert.equal(await noteOf(page, name, 'fix'), '↻ Repeats')
-    assert.equal(await noteOf(page, name, 'review'), 'Sign-off')
-    assert.equal(await noteOf(page, name, 'stuck'), 'If fix gets stuck')
+    assert.equal(await noteOf(page, name, 'fix'), NOTE_LOOP)
+    assert.equal(await noteOf(page, name, 'review'), NOTE_SIGN)
+    assert.equal(await noteOf(page, name, 'stuck'), NOTE_STUCK)
     // Notes are plain words in sentence case (the canvas stylesheet is generated: a stale copy
     // left them upper-case and dim).
     assert.equal(await nodeIn(page, name, 'fix').locator('.dy-wf-sub').evaluate((t) => getComputedStyle(t).textTransform), 'none')
     assert.notEqual(await page.locator(`${canvas(name)} .dy-wf-frame-box`).evaluate((r) => getComputedStyle(r).strokeDasharray), 'none', 'the frame is drawn dashed')
-    assert.match(await page.locator(`${canvas(name)} [data-wf-frame-open="fix"]`).getAttribute('aria-label'), /Up to 5 rounds, then asks you/)
+    assert.match(await page.locator(`${canvas(name)} [data-wf-frame-open="fix"]`).getAttribute('aria-label'), new RegExp(escapeRegex(ROUNDS_5)))
   }, { open: name })
 })
 
@@ -203,26 +338,26 @@ test('Builder: New workflow first asks where it lives (this project or global), 
     await page.locator('[data-wfd-new-dialog="scope"]').waitFor()
     assert.deepEqual(await page.locator('[data-wfd-scope]').evaluateAll((els) => els.map((e) => e.dataset.wfdScope)), ['project', 'global'])
     assert.equal(await page.locator('[data-wfd-way]').count(), 0, 'no ways in before the scope is picked')
-    assert.match(await page.locator('[data-wfd-scope="project"]').textContent(), /Only this project/)
-    assert.match(await page.locator('[data-wfd-scope="global"]').textContent(), /Every project/)
+    assert.match(await page.locator('[data-wfd-scope="project"]').textContent(), new RegExp(escapeRegex(SCOPE_PROJECT_TEXT)))
+    assert.match(await page.locator('[data-wfd-scope="global"]').textContent(), new RegExp(escapeRegex(SCOPE_GLOBAL_TEXT)))
     await page.locator('[data-wfd-scope="project"]').click()
     assert.deepEqual(await page.locator('[data-wfd-new-dialog="choose"] [data-wfd-way]').evaluateAll((els) => els.map((e) => e.dataset.wfdWay)), ['blank', 'template', 'import', 'ai'])
-    assert.match(await page.locator('[data-wfd-scope-chosen="project"]').textContent(), /This project/, 'the dialog says where it will be saved')
+    assert.match(await page.locator('[data-wfd-scope-chosen="project"]').textContent(), sentence(SCOPE_PROJECT_LINE), 'the dialog says where it will be saved')
     // Change goes back to step one.
     await page.locator('[data-action="wfd-scope-change"]').click()
     await page.locator('[data-wfd-new-dialog="scope"]').waitFor()
     await page.locator('[data-wfd-scope="project"]').click()
     await page.locator('[data-wfd-way="blank"]').click()
     await page.locator('[data-action="wfd-create"]').click()
-    assert.equal(await page.locator('[data-wfd-name-error]').textContent(), 'Give the workflow a name.')
+    assert.equal(await page.locator('[data-wfd-name-error]').textContent(), NAME_REQUIRED)
     assert.equal(await page.locator('[data-wfd-name]').getAttribute('aria-invalid'), 'true')
     await page.locator('[data-wfd-name]').fill(taken)
     await page.locator('[data-action="wfd-create"]').click()
-    assert.match(await page.locator('[data-wfd-name-error]').textContent(), /already exists/)
+    assert.match(await page.locator('[data-wfd-name-error]').textContent(), sentence(NAME_TAKEN))
     await page.locator('[data-wfd-first-step]').fill('')
     await page.locator('[data-wfd-name]').fill(name)
     await page.locator('[data-action="wfd-create"]').click()
-    assert.equal(await page.locator('[data-wfd-step-error]').textContent(), 'Name the first step.')
+    assert.equal(await page.locator('[data-wfd-step-error]').textContent(), STEP_REQUIRED)
     assert.equal((await api(`/projects/${PROJECT}/workflows`)).workflows.length, before, 'nothing saved while the dialog shows errors')
     await page.locator('[data-wfd-first-step]').fill('Plan the launch')
     await page.locator('[data-action="wfd-create"]').click()
@@ -253,7 +388,7 @@ test('Builder: a template, a Project Stewardship import and an n8n import each c
     }
     const tpl = await create('template', fromTemplate, async () => {
       await page.locator('[data-action="wfd-create"]').click()
-      assert.equal(await page.locator('[data-wfd-way-error]').textContent(), 'Pick a template first.')
+      assert.equal(await page.locator('[data-wfd-way-error]').textContent(), WAY_REQUIRED)
       await page.locator('[data-wfd-template-tab="library"]').click()
       await page.locator('[data-wfd-template="fix-until-green"]').click()
       assert.match(await page.locator('[data-wfd-name]').inputValue(), /^fix-until-green/)
@@ -263,10 +398,10 @@ test('Builder: a template, a Project Stewardship import and an n8n import each c
     const dock = await create('import', fromDockyard, async () => {
       await page.locator('[data-wfd-import-text]').fill('hello')
       await page.locator('[data-action="wfd-import-check"]').click()
-      assert.match(await page.locator('[data-wfd-import-error]').textContent(), /isn't a workflow Project Stewardship can read/)
+      assert.match(await page.locator('[data-wfd-import-error]').textContent(), new RegExp(escapeRegex(IMPORT_REASON)))
       await page.locator('[data-wfd-import-text]').fill(JSON.stringify(exported))
       await page.locator('[data-action="wfd-import-check"]').click()
-      assert.match(await page.locator('[data-wfd-import="dockyard"]').textContent(), /5 steps\. It imports exactly/)
+      assert.match(await page.locator('[data-wfd-import="dockyard"]').textContent(), sentence(IMPORT_DOCKYARD, [null, FULL().length]))
     })
     for (const node of FULL()) {
       for (const key of ['title', 'depends_on', 'body', 'phase_team']) assert.deepEqual(dock[node.id][key] ?? null, node[key] ?? null, `${node.id}.${key} imported exactly`)
@@ -278,8 +413,8 @@ test('Builder: a template, a Project Stewardship import and an n8n import each c
       await page.locator('[data-wfd-import-text]').fill(JSON.stringify(n8n))
       await page.locator('[data-action="wfd-import-check"]').click()
       const shown = await page.locator('[data-wfd-import="other"]').textContent()
-      assert.match(shown, /an n8n workflow/)
-      assert.match(shown, /could not carry over/)
+      assert.match(shown, new RegExp(escapeRegex(readImport(JSON.stringify(n8n)).format)))
+      assert.match(shown, sentence(IMPORT_NOT_CARRIED))
       assert.ok(await page.locator('[data-wfd-import="other"] [data-wfd-practice-ai]').isVisible(), 'marked as the practice AI')
     })
     assert.deepEqual(Object.values(other).map((n) => [n.title, n.depends_on]), [['Webhook', []], ['Send Email', ['webhook']]])
@@ -294,43 +429,45 @@ test('Builder: the AI way explains, asks and saves only on Create; the AI sideba
     await page.locator('[data-wfd-way="ai"]').click()
     assert.ok(await page.locator('[data-wfd-practice-ai]').isVisible(), 'the practice AI is labelled')
     await page.locator('[data-action="wfd-ai-draft"]').click()
-    assert.equal(await page.locator('[data-wfd-ai-error]').textContent(), 'Say what the workflow should do first.')
-    await page.locator('[data-wfd-ai-example="Fix a bug until the tests pass"]').click()
+    assert.equal(await page.locator('[data-wfd-ai-error]').textContent(), DRAFT_EMPTY)
+    await page.locator(`[data-wfd-ai-example="${AI_EXAMPLE}"]`).click()
+    assert.equal(await page.locator('[data-wfd-ai-describe]').inputValue(), AI_EXAMPLE, 'an example chip fills the description box')
+    await page.locator('[data-wfd-ai-describe]').fill(RECIPE_TEXT)
     await page.locator('[data-action="wfd-ai-draft"]').click()
     await page.locator('[data-wfd-ai-plan]').waitFor()
-    assert.equal(await page.locator('[data-wfd-ai-plan] .dy-wfd-ai-explain li').count(), 4)
-    assert.equal(await page.locator('[data-wfd-ai-plan] [data-wfd-steps]').getAttribute('data-wfd-steps'), '4')
+    assert.equal(await page.locator('[data-wfd-ai-plan] .dy-wfd-ai-explain li').count(), RECIPE_PLAN.explain.length)
+    assert.equal(await page.locator('[data-wfd-ai-plan] [data-wfd-steps]').getAttribute('data-wfd-steps'), String(RECIPE_PLAN.nodes.length))
     await page.locator('[data-wfd-answer="rounds:3"]').click()
     await page.locator('[data-wfd-answer="signoff:false"]').click()
-    assert.equal(await page.locator('[data-wfd-ai-plan] [data-wfd-steps]').getAttribute('data-wfd-steps'), '3')
-    assert.match(await page.locator('[data-wfd-ai-plan] [data-wfd-steps]').textContent(), /repeats, up to 3 rounds/)
+    assert.equal(await page.locator('[data-wfd-ai-plan] [data-wfd-steps]').getAttribute('data-wfd-steps'), String(ANSWERED_IDS.length))
+    assert.match(await page.locator('[data-wfd-ai-plan] [data-wfd-steps]').textContent(), sentence(NOTE_LOOP_TEXT, [loopRounds(WORK_NODE)]))
     assert.equal((await api(`/projects/${PROJECT}/workflows`)).workflows.length, before, 'a draft is never saved by itself')
     await page.locator('[data-wfd-name]').fill(name)
     await page.locator('[data-action="wfd-create"]').click()
     await nodesIn(page, name).first().waitFor()
     const saved = byId(await latest(name))
-    assert.deepEqual(Object.keys(saved), ['reproduce', 'fix', 'merge'])
-    assert.equal(saved.fix.loop.max_iterations, 3)
-    assert.deepEqual(saved.merge.depends_on, ['fix'])
+    assert.deepEqual(Object.keys(saved), ANSWERED_IDS)
+    assert.equal(saved[WORK_NODE.id].loop.max_iterations, loopRounds(WORK_NODE))
+    assert.deepEqual(ANSWERED_IDS.map((id) => saved[id].depends_on), ANSWERED_PLAN.nodes.map((node) => node.depends_on))
     // The AI's check is a preview kept in memory: the frame shows it.
-    await until(async () => /AI judge/.test(await page.locator(`${canvas(name)} [data-wf-frame-open="fix"]`).getAttribute('aria-label')), 'the frame shows the preview check')
+    await until(async () => new RegExp(escapeRegex(JUDGE)).test(await page.locator(`${canvas(name)} [data-wf-frame-open="${WORK_NODE.id}"]`).getAttribute('aria-label')), 'the frame shows the preview check')
     // The conversation carries on beside the canvas.
     await sidebar(page).waitFor()
-    assert.equal(await page.locator('[data-wfd-ai-user]').first().textContent(), 'Fix a bug until the tests pass')
-    assert.match(await sidebar(page).textContent(), new RegExp(`Created "${name}"`))
+    assert.equal(await page.locator('[data-wfd-ai-user]').first().textContent(), RECIPE_TEXT)
+    assert.match(await sidebar(page).textContent(), sentence(AI_CREATED, [name]))
     // The plan it was created from is settled: its answers can no longer change anything.
     assert.ok(await sidebar(page).locator('[data-wfd-ai-plan] [data-wfd-answer]').first().isDisabled(), 'the plan it was made from is settled')
     await page.locator('[data-wfd-ai-input]').fill('add a step to tell the team')
     await page.locator('[data-action="wfd-ai-send"]').click()
     await page.locator('[data-wfd-ai-suggestion="pending"]').waitFor()
-    assert.equal(await nodesIn(page, name).count(), 3, 'a suggestion changes nothing until Apply')
+    assert.equal(await nodesIn(page, name).count(), ANSWERED_IDS.length, 'a suggestion changes nothing until Apply')
     await page.locator('[data-wfd-ai-suggestion="pending"] [data-action="wfd-ai-apply"]').click()
     await page.locator('[data-wfd-draft-banner]').waitFor()
     await until(async () => (await nodesIn(page, name).count()) === 4, 'Apply draws the follow-up')
     assert.equal((await versionsOf(name)).length, 1, 'the follow-up is not saved by itself')
     await page.locator('[data-action="wfd-ai-save"]').click()
     await until(async () => (await versionsOf(name)).length === 2, 'Save version keeps it')
-    assert.equal(Object.values(byId(await latest(name))).at(-1).title, 'Tell the team')
+    assert.equal(Object.values(byId(await latest(name))).at(-1).title, ADDED_TITLE)
   })
 })
 
@@ -342,10 +479,10 @@ test('Builder: the step panel saves who, what, repeat and Ask me first as a vers
     await panelTitle(page, name).waitFor()
     const heads = await page.locator('.dy-wfx-section h5').evaluateAll((els) => els.map((e) => e.textContent))
     // Ask me first is saved with the workflow (08/10/2026); only Limits is still a preview.
-    assert.deepEqual(heads, ['Who does it', 'What to do', 'Repeat', 'Ask me first', 'LimitsPreview'])
+    assert.deepEqual(heads, [SECTION_TITLES[0], SECTION_TITLES[1], SECTION_TITLES[2], SECTION_TITLES[3], `${SECTION_TITLES[4]}${PREVIEW_TAG}`])
     assert.equal(await page.locator('[data-wfx-who]').inputValue(), 'worker')
     assert.equal(await page.locator('[data-wfx-body]').inputValue(), 'Make the new test pass.')
-    assert.match(await page.locator('.dy-wfx-section').nth(2).textContent(), /Up to 5 rounds, then asks you\. The repeat settings are on this step's frame/)
+    assert.match(await page.locator('.dy-wfx-section').nth(2).textContent(), sentence(REPEAT_HELP, [ROUNDS_5]))
     await page.locator('[data-wfx-edit-frame="fix"]').click()
     await page.locator('[data-wfd-repeat="fix"]').waitFor()
     await page.locator('[data-action="wfd-repeat-cancel"]').click()
@@ -368,7 +505,7 @@ test('Builder: the step panel saves who, what, repeat and Ask me first as a vers
     await nodeIn(page, name, 'reproduce').dblclick()
     await until(async () => (await panelTitle(page, name).textContent()) === 'Reproduce the bug', 'the first step is open')
     assert.equal(await page.locator('[data-wfx-repeat]').count(), 0)
-    assert.match(await page.locator('[data-wfx-no-repeat]').textContent(), /comes first, so it can't repeat/)
+    assert.match(await page.locator('[data-wfx-no-repeat]').textContent(), new RegExp(escapeRegex(NO_REPEAT)))
     // A later step that does not repeat is made to repeat from its panel (3 rounds, then its frame).
     await page.locator(`${canvas(name)} .dy-wf-passport-close`).click()
     await nodeIn(page, name, 'merge').dblclick()
@@ -411,8 +548,8 @@ test('Builder: a run hands each step to its bot; Move on now moves it on and the
       await until(async () => said.test(await page.locator('[data-wf-move-note]').textContent().catch(() => '')), `Move on now says ${said}`)
     }
     await readout.waitFor()
-    assert.match(await readout.textContent(), /Running/)
-    assert.match(await page.locator('[data-wf-timer]').textContent(), /the timer is off/)
+    assert.match(await readout.textContent(), new RegExp(escapeRegex(RUN_WORD_PENDING)))
+    assert.match(await page.locator('[data-wf-timer]').textContent(), new RegExp(escapeRegex(TIMER_OFF)))
     await moveOn(/Fix: handed to worker/)
     await until(async () => (await stepText('Fix')) === 'Fix — working', 'Fix is with its bot')
     // A stuck round gets a new round at once.
@@ -425,8 +562,8 @@ test('Builder: a run hands each step to its bot; Move on now moves it on and the
     await moveOn(/still stuck after 2 rounds/)
     await until(async () => (await stepText('Fix')) === 'Fix — stuck after 2 rounds', 'the readout says stuck after 2 rounds')
     assert.equal(await stepText('Tell me'), 'Tell me — working')
-    assert.match(await readout.textContent(), /Needs a person/)
-    assert.match(await page.locator('[data-wf-live-node]').filter({ hasText: 'Fix —' }).textContent(), /needs attention/)
+    assert.match(await readout.textContent(), new RegExp(escapeRegex(RUN_WORD_ESCALATED)))
+    assert.match(await page.locator('[data-wf-live-node]').filter({ hasText: 'Fix —' }).textContent(), new RegExp(escapeRegex(NEEDS_ATTENTION)))
     // Retry gives the stuck round back to its bot (it used to move it to To do, which the board refuses).
     await nodeIn(page, name, 'fix').dblclick()
     await page.locator(`${canvas(name)} .dy-wf-passport button`).filter({ hasText: /re-?queue/i }).click()
@@ -472,7 +609,7 @@ test('Builder: a frame opens its repeat settings; rounds save as a version and S
     await page.locator('[data-wfd-repeat="fix"]').waitFor()
     await page.locator('[data-wfd-repeat-rounds]').fill('0')
     await page.locator('[data-action="wfd-repeat-save"]').click()
-    assert.match(await page.locator('[data-wfd-repeat] .dy-wfd-error').textContent(), /from 1 to 10/)
+    assert.match(await page.locator('[data-wfd-repeat] .dy-wfd-error').textContent(), new RegExp(escapeRegex(ROUNDS_ERROR)))
     await page.locator('[data-wfd-repeat-rounds]').fill('4')
     await page.locator('[data-wfd-repeat-check]').selectOption('judge')
     await page.locator('[data-action="wfd-repeat-save"]').click()
@@ -481,7 +618,7 @@ test('Builder: a frame opens its repeat settings; rounds save as a version and S
     assert.deepEqual(saved.fix.loop, { max_iterations: 4, until: { status: 'done' } })
     for (const id of ['reproduce', 'review', 'stuck', 'merge']) assert.deepEqual(saved[id], first[id], `${id} untouched`)
     assert.equal(saved.fix.body, first.fix.body)
-    await until(async () => /Up to 4 rounds.*AI judge/.test(await page.locator(`${canvas(name)} [data-wf-frame-open="fix"]`).getAttribute('aria-label')), 'the frame shows the new rounds and the preview check')
+    await until(async () => new RegExp(`${escapeRegex(roundsWords(4))}.*${escapeRegex(JUDGE)}`).test(await page.locator(`${canvas(name)} [data-wf-frame-open="fix"]`).getAttribute('aria-label')), 'the frame shows the new rounds and the preview check')
     await page.locator(`${canvas(name)} [data-wf-frame-open="fix"]`).click()
     await page.locator('[data-action="wfd-repeat-stop"]').click()
     await until(async () => (await versionsOf(name)).length === 3, 'Stop repeating saves a version')
@@ -504,21 +641,21 @@ test('Builder: Ask AI talks first: a question gets an answer and changes nothing
     await say(page, 'what does this workflow do?')
     const answer = page.locator('[data-wfd-ai-reply]').first()
     await answer.waitFor()
-    assert.match(await answer.textContent(), /has 5 steps/)
+    assert.match(await answer.textContent(), new RegExp(escapeRegex(practiceExplain(Object.values(byId(await latest(name))), name).reply[0])))
     assert.equal(await answer.locator('[data-wfd-steps]').getAttribute('data-wfd-steps'), '5')
-    assert.match(await answer.textContent(), /repeats, up to 5 rounds/)
+    assert.match(await answer.textContent(), sentence(NOTE_LOOP_TEXT, [5]))
     assert.equal(await page.locator('[data-wfd-ai-suggestion]').count(), 0, 'a question gets an answer, not a change')
     // A change is suggested, not made.
     await say(page, 'add a sign-off at the end')
     await card(page, 'pending').waitFor()
-    assert.deepEqual(await card(page, 'pending').locator('[data-wfd-ai-changes] li').allTextContents(), ['Added a sign-off at the end'])
+    assert.deepEqual(await card(page, 'pending').locator('[data-wfd-ai-changes] li').allTextContents(), SIGN_OFF_DID)
     assert.equal(await nodesIn(page, name).count(), 5, 'the canvas is unchanged')
     assert.equal(await page.locator('[data-wfd-draft-banner]').count(), 0, 'nothing is unsaved yet')
     // Talking refines it: the newest suggestion carries both changes, the older one says it was replaced.
     await say(page, 'repeat up to 3 times')
     await until(async () => (await card(page, 'replaced').count()) === 1, 'the earlier suggestion is replaced')
     assert.equal(await card(page, 'pending').count(), 1, 'one live suggestion at a time')
-    assert.deepEqual(await card(page, 'pending').locator('[data-wfd-ai-changes] li').allTextContents(), ['Added a sign-off at the end', 'Set "Fix the code" to at most 3 rounds'])
+    assert.deepEqual(await card(page, 'pending').locator('[data-wfd-ai-changes] li').allTextContents(), [...SIGN_OFF_DID, ...ROUNDS_DID])
     assert.equal(await card(page, 'replaced').locator('[data-action="wfd-ai-apply"]').count(), 0, 'a replaced suggestion cannot be applied')
     assert.equal(await nodesIn(page, name).count(), 5, 'still unchanged')
     // A request it does not understand changes nothing and leaves the suggestion as it is.
@@ -536,7 +673,7 @@ test('Builder: Ask AI talks first: a question gets an answer and changes nothing
     await until(async () => (await versionsOf(name)).length === 2, 'Save version keeps it')
     const saved = byId(await latest(name))
     assert.equal(saved.fix.loop.max_iterations, 3)
-    assert.ok(Object.values(saved).some((n) => n.human_gate && n.title === 'Your sign-off' && n.depends_on.includes('merge')), 'the sign-off is at the end')
+    assert.ok(Object.values(saved).some((n) => n.human_gate && n.title === SIGN_OFF_TITLE && n.depends_on.includes('merge')), 'the sign-off is at the end')
     // The server has the version before the page has handled the reply (it marks the chat after the
     // POST returns), so wait for the note rather than look once.
     await until(async () => (await page.locator('[data-wfd-ai-settled="saved"]').count()) === 1, 'the chat says it was saved')
@@ -570,7 +707,7 @@ test('Builder: a suggestion can wait (Not yet) and goes stale when the canvas ch
     await until(async () => (await versionsOf(name)).length === 2, 'the toolbar edit saves a version')
     await card(page, 'stale').waitFor()
     assert.equal(await card(page, 'stale').locator('[data-action="wfd-ai-apply"]').count(), 0, 'a stale suggestion cannot be applied')
-    assert.match(await card(page, 'stale').textContent(), /canvas has changed/)
+    assert.match(await card(page, 'stale').textContent(), new RegExp(escapeRegex(STALE_WORDS)))
     // A fresh one applies and saves from the toolbar.
     await say(page, 'add a step to tell the team')
     await card(page, 'pending').locator('[data-action="wfd-ai-apply"]').click()
@@ -578,7 +715,7 @@ test('Builder: a suggestion can wait (Not yet) and goes stale when the canvas ch
     await page.locator('[data-action="wfd-draft-save"]').click()
     await until(async () => (await versionsOf(name)).length === 3, 'Save version saves it')
     const saved = byId(await latest(name))
-    assert.ok(Object.values(saved).some((n) => n.title === 'Tell the team'), 'the applied step is saved')
+    assert.ok(Object.values(saved).some((n) => n.title === ADDED_TITLE), 'the applied step is saved')
     for (const id of Object.keys(first)) assert.deepEqual(saved[id], first[id], `${id} untouched`)
     // The server has the version before the page has handled the reply (it marks the chat after the
     // POST returns), so wait for the note rather than look once.
@@ -647,7 +784,7 @@ test('Builder: Use a template shows 30 built-in templates on five tabs plus a Sa
     // Two questions; the same bot for both gets a warning, and it goes when they differ.
     await page.locator('[data-wfd-who-works]').selectOption('worker')
     await page.locator('[data-wfd-who-checks]').selectOption('worker')
-    assert.match(await page.locator('[data-wfd-same-bot]').textContent(), /checks its own work/)
+    assert.match(await page.locator('[data-wfd-same-bot]').textContent(), sentence(SAME_BOT, ['worker']))
     await page.locator('[data-wfd-who-checks]').selectOption('reviewer')
     assert.equal(await page.locator('[data-wfd-same-bot]').count(), 0)
     await page.locator('[data-wfd-name]').fill(name)
@@ -677,12 +814,12 @@ test('Builder: a global workflow is saved to the library, not to this project, a
   await withPage('', async (page) => {
     const projectBefore = (await api(`/projects/${PROJECT}/workflows`)).workflows.length
     await newWorkflow(page, 'global')
-    assert.match(await page.locator('[data-wfd-scope-chosen="global"]').textContent(), /Global/)
+    assert.match(await page.locator('[data-wfd-scope-chosen="global"]').textContent(), new RegExp(escapeRegex(SCOPE_GLOBAL_LINE)))
     await page.locator('[data-wfd-way="blank"]').click()
     // The library adds a version to a global name that exists, so the dialog refuses it.
     await page.locator('[data-wfd-name]').fill('fix-until-green')
     await page.locator('[data-action="wfd-create"]').click()
-    assert.match(await page.locator('[data-wfd-name-error]').textContent(), /already exists/)
+    assert.match(await page.locator('[data-wfd-name-error]').textContent(), sentence(NAME_TAKEN))
     await page.locator('[data-wfd-name]').fill(name)
     await page.locator('[data-wfd-first-step]').fill('Plan the launch')
     await page.locator('[data-action="wfd-create"]').click()
@@ -742,14 +879,14 @@ test('Workflows tab: New workflow opens the same dialog (no name-and-first-step 
     await toLibrary()
     await openNew('project')
     await page.locator('[data-wfd-way="ai"]').click()
-    await page.locator('[data-wfd-ai-example="Fix a bug until the tests pass"]').click()
+    await page.locator(`[data-wfd-ai-example="${AI_EXAMPLE}"]`).click()
     await page.locator('[data-action="wfd-ai-draft"]').click()
     await page.locator('[data-wfd-ai-plan]').waitFor()
     await page.locator('[data-wfd-name]').fill(described)
     await page.locator('[data-action="wfd-create"]').click()
     await nodesIn(page, described).first().waitFor()
     await sidebar(page).waitFor()
-    assert.match(await sidebar(page).textContent(), /Fix a bug until the tests pass/, 'the conversation carried on')
+    assert.match(await sidebar(page).textContent(), new RegExp(escapeRegex(AI_EXAMPLE)), 'the conversation carried on')
     // Open builder opens the workflow clicked, not the first one.
     await toLibrary()
     await page.locator(`[data-library-row="${other}"] [data-action="library-open"]`).click()
@@ -762,7 +899,7 @@ test('Workflows tab: New workflow opens the same dialog (no name-and-first-step 
     await page.locator('[data-action="library-create"]').click()
     await page.locator('[data-wfd-new-dialog="scope"]').waitFor()
     assert.ok(await page.locator('[data-wfd-scope="project"]').isDisabled(), 'This project is off with no project picked')
-    assert.match(await page.locator('[data-wfd-scope="project"]').textContent(), /Pick a project in the switcher first/)
+    assert.match(await page.locator('[data-wfd-scope="project"]').textContent(), new RegExp(escapeRegex(SCOPE_OFF)))
     assert.ok(await page.locator('[data-wfd-scope="global"]').isEnabled())
     await page.locator('[data-action="wfd-new-cancel"]').click()
     await pickProject(page, PROJECT)
@@ -842,12 +979,12 @@ test('Builder: workflow settings (preview) check their fields and are kept for t
     await page.locator('[data-wfd-trigger="schedule"]').check()
     await page.locator('[data-wfd-time]').fill('25:00')
     await page.locator('[data-action="wfd-settings-save"]').click()
-    assert.match(await page.locator('[data-wfd-settings] .dy-wfd-error').textContent(), /24-hour time/)
+    assert.match(await page.locator('[data-wfd-settings] .dy-wfd-error').textContent(), new RegExp(escapeRegex(TIME_ERROR)))
     await page.locator('[data-wfd-time]').fill('09:30')
     await page.locator('[data-wfd-improve]').check()
     await page.locator('[data-wfd-improve-runs]').fill('0')
     await page.locator('[data-action="wfd-settings-save"]').click()
-    assert.match(await page.locator('[data-wfd-settings] .dy-wfd-error').textContent(), /1 to 50/)
+    assert.match(await page.locator('[data-wfd-settings] .dy-wfd-error').textContent(), new RegExp(escapeRegex(RUNS_ERROR)))
     await page.locator('[data-wfd-improve-runs]').fill('3')
     await page.locator('[data-action="wfd-settings-save"]').click()
     await page.locator('[data-wfd-settings]').waitFor({ state: 'detached' })

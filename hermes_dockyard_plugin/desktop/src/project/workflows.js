@@ -32,20 +32,20 @@ import { writeStepSettings } from './workflow-design/standins.js'
 import { EMPTY_STEP } from './workflow-design/standins.js'
 const NO_RUNS = []
 const NO_THREAD = []
-const failureText = (failure) => String(failure?.message ?? failure ?? 'unknown error').replace(/^\d{3}:\s*/, '')
+const failureText = (failure) => String(failure?.message ?? failure ?? 'неизвестная ошибка').replace(/^\d{3}:\s*/, '')
 // A run's status in plain words (the engine says pending, escalated or
 // complete; the readout used to look for "completed" and "failed").
-const RUN_WORDS = { pending: ['Running', 'info'], escalated: ['Нужен человек', 'danger'], complete: ['Завершено', 'success'] }
+const RUN_WORDS = { pending: ['Идёт', 'info'], escalated: ['Нужен человек', 'danger'], complete: ['Завершено', 'success'] }
 const runWord = (status) => RUN_WORDS[status] ?? [String(status ?? 'unknown'), 'neutral']
 // Step counts in the canvas's own words.
-const COUNT_WORDS = [['done', 'done'], ['working', 'working'], ['blocked', 'blocked'], ['pending', 'pending'], ['skipped', 'not needed']]
+const COUNT_WORDS = [['done', 'готово'], ['working', 'в работе'], ['blocked', 'заблокировано'], ['pending', 'ожидает'], ['skipped', 'не нужно']]
 // Whether runs move on by themselves: the timer's last pass (08/10/2026).
 const timerWords = (timer) => {
   if (!timer) return null
   if (!timer.moving) return 'Запуски двигаются, когда вы нажмёте «Продолжить сейчас» (таймер выключен).'
   const at = new Date(timer.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const failed = timer.failed?.length ?? 0
-  return `Runs move on by themselves (checked ${at})${failed ? ` · ${failed} run${failed === 1 ? '' : 's'} could not move on` : ''}`
+  return `Запуски двигаются сами (проверено в ${at})${failed ? ` · ${failed} ${failed === 1 ? 'запуск не смог' : 'запусков не смогли'} двигаться` : ''}`
 }
 // openWorkflow: { project, name, conversation?, checks? } from the Workflows
 // tab (Open builder, or a project workflow just made there). It opens that
@@ -349,7 +349,7 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
     const id = gate ? `gate-${index}` : `step-${index}`
     const after = existingIds.has(selectedNodeRef.current) ? selectedNodeRef.current : nodesNow[nodesNow.length - 1]?.node_id
     persistNodes([...nodesNow, {
-      node_id: id, title: gate ? `Gate ${index}` : `Step ${index}`, depends_on: after ? [after] : [],
+      node_id: id, title: gate ? `Гейт ${index}` : `Шаг ${index}`, depends_on: after ? [after] : [],
       human_gate: gate, task_ref: null, kind: gate ? 'gate' : 'task', phase_team: null,
     }])
   }
@@ -371,10 +371,10 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
         if (problem) issues.push(`${n.title} ← ${dep}: ${problem}`)
       }
     }
-    if (!nodesNow.some((n) => n.human_gate)) issues.push('no human gate on this graph')
+    if (!nodesNow.some((n) => n.human_gate)) issues.push('на этом графе нет человеческого гейта')
     // Both outcomes are stated: an empty result is a finding too, and it must
     // not read as "the button did nothing".
-    setValidation(issues.length ? { ok: false, text: `Validation: ${issues.join('; ')}` } : { ok: true, text: 'Проверка: проблем нет' })
+    setValidation(issues.length ? { ok: false, text: `Проверка: ${issues.join('; ')}` } : { ok: true, text: 'Проверка: проблем нет' })
   }
   const statusFor = (run, node) => run?.nodes?.find((item) => item.node_id === (node.id || node.node_id))?.status ?? 'pending'
   const latest = runs[0]
@@ -394,7 +394,7 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
     try {
       const moved = await api(`/projects/${encoded}/workflows/${encodeURIComponent(current.name)}/runs/${encodeURIComponent(latest.run_key)}/advance`, { method: 'POST', body: {}, suppressErrorToast: true })
       const changes = moved?.changes ?? []
-      setMoveNote(changes.length ? `Moved on: ${changes.join('; ')}.` : 'Двигать нечего: каждый шаг ждёт своей очереди, своего бота или вас.')
+      setMoveNote(changes.length ? `Продвинулось: ${changes.join('; ')}.` : 'Двигать нечего: каждый шаг ждёт своей очереди, своего бота или вас.')
     } catch (failure) {
       setMoveNote(null)
       setError(failureText(failure))
@@ -470,7 +470,7 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
       await api(`/projects/${encoded}/workflows/${encodeURIComponent(d.base.name)}/versions`, { method: 'POST', body: { nodes: d.nodes }, quiet: true })
       closeDraft('saved'); onRefresh?.()
     } catch (failure) {
-      setDraftError(`Couldn't save: ${failureText(failure)}`)
+      setDraftError(`Не удалось сохранить: ${failureText(failure)}`)
     }
   }
   const pinAi = (pinned) => { writeAiPinned(pinned); setAiPinned(pinned) }
@@ -495,8 +495,8 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
     // canvas below the window).
     jsxs('header', { className: 'dy-wfd-head', 'data-wfd-head': true, children: [
       jsx('h2', { children: 'Процессы' }),
-      jsx(StatusTag, { tone: latest ? runWord(latest.status)[1] : 'neutral', label: latest ? `Live: ${runWord(latest.status)[0]}` : `${number(grouped.length)} ${plural(grouped.length, 'workflow')}` }),
-      !latest && current && !draft ? jsx('span', { className: 'dy-wfd-chip', 'data-workflow-no-run': true, children: `${current.name}: no runs yet` }) : null,
+      jsx(StatusTag, { tone: latest ? runWord(latest.status)[1] : 'neutral', label: latest ? `Живой запуск: ${runWord(latest.status)[0]}` : `${number(grouped.length)} ${plural(grouped.length, 'процесс', 'процессов')}` }),
+      !latest && current && !draft ? jsx('span', { className: 'dy-wfd-chip', 'data-workflow-no-run': true, children: `${current.name}: запусков пока нет` }) : null,
       jsx('span', { className: 'dy-wfd-grow' }),
       jsx(Button, { small: true, action: 'open-workflow-library', onClick: () => onOpenLibrary?.(), children: 'Открыть библиотеку' }),
       jsx(Button, { small: true, variant: 'primary', action: 'wfd-new-workflow', disabled: Boolean(draft), onClick: startNew, children: 'Новый процесс' }),
@@ -517,7 +517,7 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
           onClick: () => setSelected(item.name),
           children: [
             jsx('strong', { children: item.name }),
-            jsx('small', { children: `v${item.versions[item.versions.length - 1].version}${item.archived_at ? ' · archived' : ''}` }),
+            jsx('small', { children: `v${item.versions[item.versions.length - 1].version}${item.archived_at ? ' · в архиве' : ''}` }),
           ],
         }, item.name)) }) : jsx('p', { className: 'dockyard-meta', children: 'Процессов пока нет. Нажмите «Новый процесс».' }),
       ]}),
@@ -531,11 +531,11 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
           // The AI's unsaved changes have their own controls; the run
           // controls come back once they are saved or discarded.
           jsx('button', { type: 'button', className: 'dockyard-wf3-libtoggle', 'data-action': 'wf-toggle-library', 'aria-expanded': libCollapsed ? 'false' : 'true', 'aria-label': libCollapsed ? 'Показать библиотеку процессов' : 'Скрыть библиотеку процессов', title: libCollapsed ? 'Показать библиотеку' : 'Скрыть библиотеку', onClick: () => setLibCollapsed((v) => !v), children: libCollapsed ? '»' : '«' }, 'lib'),
-          jsx('span', { className: 'dy-wfd-draft-label', 'data-wfd-draft-label': true, children: `Unsaved changes to ${draft.base.name}` }, 'label'),
+          jsx('span', { className: 'dy-wfd-draft-label', 'data-wfd-draft-label': true, children: `Несохранённые правки: ${draft.base.name}` }, 'label'),
           jsx('span', { className: 'dockyard-wf3-sep', 'aria-hidden': true }, 'sep1'),
-          jsx(Button, { small: true, action: 'wf-add-step', onClick: () => addNode(false), children: '＋ Step' }, 'step'),
-          jsx(Button, { small: true, action: 'wf-add-gate', onClick: () => addNode(true), children: '＋ Gate' }, 'gate'),
-          jsx(Button, { small: true, action: 'wf-auto-layout', disabled: !draft.nodes.length, onClick: autoLayout, children: 'Автораскладка' }, 'layout'),
+          jsx(Button, { small: true, action: 'wf-add-step', onClick: () => addNode(false), children: '＋ Шаг' }, 'step'),
+          jsx(Button, { small: true, action: 'wf-add-gate', onClick: () => addNode(true), children: '＋ Гейт' }, 'gate'),
+          jsx(Button, { small: true, action: 'wf-auto-layout', disabled: !draft.nodes.length, onClick: autoLayout, children: 'Раскладка' }, 'layout'),
           jsx(Button, { small: true, action: 'wf-validate', disabled: !draft.nodes.length, onClick: validateGraph, children: 'Проверить' }, 'validate'),
           jsx(Button, { small: true, action: 'wfd-settings', onClick: () => setDialog('settings'), children: 'Настройки' }, 'settings'),
           askAi('ai'),
@@ -548,20 +548,20 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
           jsx(Button, { small: true, action: 'wf-view-definition', variant: mode === 'definition' ? 'primary' : '', onClick: () => setMode('definition'), children: 'Определение' }),
           jsx(Button, { small: true, action: 'wf-view-live', variant: mode === 'live' ? 'primary' : '', disabled: !latest, onClick: () => setMode('live'), children: 'Живой запуск' }),
           jsx('span', { className: 'dockyard-wf3-sep', 'aria-hidden': true }),
-          jsx(Button, { small: true, action: 'wf-add-step', disabled: !current, onClick: () => addNode(false), children: '＋ Step' }),
-          jsx(Button, { small: true, action: 'wf-add-gate', disabled: !current, onClick: () => addNode(true), children: '＋ Gate' }),
-          jsx(Button, { small: true, action: 'wf-auto-layout', disabled: !current || layoutPendingVersion !== null, onClick: autoLayout, children: layoutPendingVersion !== null ? 'Saving layout…' : 'Автораскладка' }),
+          jsx(Button, { small: true, action: 'wf-add-step', disabled: !current, onClick: () => addNode(false), children: '＋ Шаг' }),
+          jsx(Button, { small: true, action: 'wf-add-gate', disabled: !current, onClick: () => addNode(true), children: '＋ Гейт' }),
+          jsx(Button, { small: true, action: 'wf-auto-layout', disabled: !current || layoutPendingVersion !== null, onClick: autoLayout, children: layoutPendingVersion !== null ? 'Сохранение раскладки…' : 'Раскладка' }),
           jsx(Button, { small: true, action: 'wf-validate', disabled: !current, onClick: validateGraph, children: 'Проверить' }),
           jsx('span', { className: 'dockyard-wf3-sep', 'aria-hidden': true }),
           // Run lifecycle (was the inspector column). Start runs the LATEST
           // stored version; older versions start from the Versions menu.
-          jsx(Button, { small: true, action: 'start-workflow', variant: 'primary', disabled: !current || Boolean(current?.archived_at), onClick: () => startVersion(latestVersion), children: latestVersion ? `▶ Start v${latestVersion.version}` : '▶ Start' }),
+          jsx(Button, { small: true, action: 'start-workflow', variant: 'primary', disabled: !current || Boolean(current?.archived_at), onClick: () => startVersion(latestVersion), children: latestVersion ? `▶ Запустить v${latestVersion.version}` : '▶ Запустить' }),
           current ? jsxs('details', { className: 'dockyard-wf3-versions', 'data-workflow-definitions': current.name, children: [
-            jsx('summary', { children: `Versions (${current.versions.length})` }),
+            jsx('summary', { children: `Версии (${current.versions.length})` }),
             jsx('div', { className: 'dockyard-wf3-versions-menu', children: [...current.versions].reverse().map((version) => jsxs('section', { 'data-workflow-definition-version': version.version, children: [
               jsxs('div', { className: 'dockyard-wf3-version-head', children: [
-                jsx('strong', { children: `Version ${version.version}${version === latestVersion ? ' · latest' : ''}` }),
-                jsx(Button, { small: true, action: 'start-workflow-version', disabled: Boolean(current.archived_at), onClick: () => startVersion(version), children: `Start v${version.version}` }),
+                jsx('strong', { children: `Версия ${version.version}${version === latestVersion ? ' · последняя' : ''}` }),
+                jsx(Button, { small: true, action: 'start-workflow-version', disabled: Boolean(current.archived_at), onClick: () => startVersion(version), children: `Запустить v${version.version}` }),
               ] }),
               jsx('pre', { children: JSON.stringify(version.definition?.nodes ?? [], null, 2) }),
             ] }, `definition-${version.version}`)) }),
@@ -575,15 +575,15 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
         ]}),
         draftError ? jsx('p', { className: 'dy-wfd-error', role: 'alert', 'data-wfd-draft-error': true, children: draftError }) : null,
         validation ? jsx('p', { className: 'dockyard-wf3-validation', role: 'status', 'data-wf-validate-result': validation.ok ? 'ok' : 'issues', children: validation.text }) : null,
-        layoutPendingVersion !== null ? jsx('p', { role: 'status', 'data-wf-layout-saving': true, children: 'Saving layout version before the graph can be edited…' }) : null,
+        layoutPendingVersion !== null ? jsx('p', { role: 'status', 'data-wf-layout-saving': true, children: 'Сохранение версии раскладки, прежде чем граф можно будет править…' }) : null,
         // Run readout: the latest canonical run only. Nothing here is inferred.
         latest && !draft ? jsxs('div', { className: 'dockyard-wf3-run', 'data-workflow-live-run': latest.run_key, children: [
           jsx(StatusTag, { tone: runWord(latest.status)[1], label: runWord(latest.status)[0] }),
           jsx('span', { className: 'dockyard-wf3-runkey', children: `${latest.run_key} · v${latest.version}` }),
           liveCounts ? jsx('span', { className: 'dockyard-wf3-counts', children: COUNT_WORDS.filter(([k]) => liveCounts[k]).map(([k, word]) => `${liveCounts[k]} ${word}`).join(' · ') }) : null,
           jsxs('details', { className: 'dockyard-wf3-steps', children: [
-            jsx('summary', { children: attentionCount ? `Steps · ${attentionCount} need attention` : 'Шаги' }),
-            jsx('ul', { 'data-wf-live-map': latest.run_key, children: latestView.nodes.map((node) => jsx('li', { 'data-wf-live-node': node.node_id, 'data-wf-needs-attention': needsAttention(node) ? 'true' : undefined, children: `${node.title} — ${stepWord(node, latestView)}${node.assignee ? ` · ${node.assignee}` : ''}${needsAttention(node) ? ' · needs attention' : ''}` }, node.node_id)) }),
+            jsx('summary', { children: attentionCount ? `Шаги · ${attentionCount} требуют внимания` : 'Шаги' }),
+            jsx('ul', { 'data-wf-live-map': latest.run_key, children: latestView.nodes.map((node) => jsx('li', { 'data-wf-live-node': node.node_id, 'data-wf-needs-attention': needsAttention(node) ? 'true' : undefined, children: `${node.title} — ${stepWord(node, latestView)}${node.assignee ? ` · ${node.assignee}` : ''}${needsAttention(node) ? ' · требует внимания' : ''}` }, node.node_id)) }),
           ] }),
           latest.status !== 'complete' ? jsx(Button, { small: true, action: 'wf-move-on', onClick: moveOn, children: 'Продолжить сейчас' }) : null,
           timer ? jsx('span', { className: 'dockyard-wf3-timer', 'data-wf-timer': timer.moving ? 'on' : 'off', children: timerWords(timer) }) : null,
@@ -593,7 +593,7 @@ export function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpen
         // row: the AI chat is a sidebar beside the page, not a column here.
         (current || draft) ? jsxs('div', { className: 'dy-wfd-canvas-wrap', children: [
           jsx('div', { ref: canvasRef, className: 'dockyard-workflow-graph', 'data-workflow-canvas': draft ? draft.base.name : current.name, 'data-wfd-draft': draft ? 'edit' : undefined, role: 'img', 'aria-label': 'Граф планирования процессов', 'aria-busy': !draft && (layoutPendingVersion !== null || !canvasReady), style: !draft && layoutPendingVersion !== null ? { pointerEvents: 'none' } : undefined }),
-          draft ? jsx('p', { className: 'dy-wfd-draft-banner', role: 'status', 'data-wfd-draft-banner': true, children: 'The AI’s changes are on the canvas but not saved. Save version keeps them; Discard drops them.' }) : null,
+          draft ? jsx('p', { className: 'dy-wfd-draft-banner', role: 'status', 'data-wfd-draft-banner': true, children: 'Изменения ИИ есть на холсте, но не сохранены. «Сохранить версию» оставит их; «Отменить правки» отбросит.' }) : null,
         ] }, 'canvas') : jsx('p', { className: 'dockyard-meta', children: 'Процесс не выбран.' }),
       ]}),
     ]}),

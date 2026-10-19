@@ -13,6 +13,27 @@ import { test } from 'node:test'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
 const { chromium } = require('playwright')
+import { readFileSync } from 'node:fs'
+import { ROADMAP_WORDS, SWITCHER_WORDS, WORK_CARD_WORDS } from './src/lib/panel-words.js'
+// The words a person reads are read from the source module that renders them,
+// never spelled out here: the panel stays translatable without touching this test.
+const sourceText = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8')
+const rendered = (text, pattern, what) => {
+  const found = text.match(pattern)
+  if (!found) throw new Error(`src no longer renders ${what}`)
+  return found[1]
+}
+const wordRe = (word) => new RegExp(String(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+const DETAIL_SRC = sourceText('./src/work-item/detail.js')
+const BOARD_SRC = sourceText('./src/kanban/board.js')
+const PLAN_DRAWER_SRC = sourceText('./src/project/plan/plan-drawer.js')
+const DRAWER_GOAL = rendered(DETAIL_SRC, /'aria-label': '([^']+)', value: goalDraft/, 'the work-item goal select')
+const SAVE_CHANGES = rendered(DETAIL_SRC, /onClick: save, children: busy \? '[^']*' : '([^']+)'/, 'the save-changes control')
+const PLACE_CONFIRM = rendered(sourceText('./src/project/plan/plan-ui.js'), /action: 'plan-link-confirm',[\s\S]*?children: busy \? '[^']*' : '([^']+)'/, 'the place-in-dialog confirm control')
+const MILESTONE_GOTO = rendered(BOARD_SRC, /goto\('([^']+)', \(\) => onNavigate\(`plan:milestone:/, 'the milestone link on a card')
+const PLACED_OBJECTIVE = rendered(PLAN_DRAWER_SRC, /jsx\(Section, \{ title: '([^']+)', readOnly, action: item\.objectiveId \? null : linkButton\('objective'/, 'the goal drawer\'s objective section')
+const PLACED_MILESTONE = rendered(PLAN_DRAWER_SRC, /jsx\(Section, \{ title: '([^']+)', readOnly, action: [^,]*?linkButton\('milestone'\), children: jsx\(Links, \{\s*empty: '[^']*',\s*rows: \(\(\) =>/, 'the objective drawer\'s milestone section')
+const PLACED_INITIATIVE = rendered(PLAN_DRAWER_SRC, /jsx\(Section, \{ title: '([^']+)', readOnly, action: linkButton\('initiative'/, 'the milestone drawer\'s initiative section')
 const BASE = process.env.STEWARD_DESKTOP_URL || 'http://127.0.0.1:19500/desktop'
 const API = process.env.STEWARD_API_URL
 const PROJECT = 'atlas-mobile'
@@ -31,9 +52,9 @@ const call = async (path, init = {}) => {
 }
 
 async function goToBoard(page) {
-  await page.getByRole('button', { name: 'Project context', exact: true }).click()
-  await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-  await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+  await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click()
+  await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(PROJECT)
+  await page.getByRole('listbox', { name: SWITCHER_WORDS.list }).getByRole('option', { name: PROJECT, exact: true }).click()
   await page.locator('[data-tab="project"]').click()
   await page.locator('[data-project-view="board"]').click()
   await page.locator('[data-kanban-screen]').waitFor()
@@ -54,7 +75,7 @@ async function open(browser) {
 // (the same navigation a person uses).
 async function openVision(page, card, title) {
   await card(title).locator('[data-card-toggle]').click()
-  await card(title).getByRole('button', { name: /^Milestone:/ }).first().click()
+  await card(title).getByRole('button', { name: new RegExp('^' + MILESTONE_GOTO + ':') }).first().click()
   await page.locator('[data-project-view="plan"].active').waitFor()
   await page.locator('[data-plan-screen]').waitFor()
 }
@@ -72,13 +93,13 @@ test('Batch L pickers: a task is placed under a goal from the work-item drawer',
   try {
     const { page, errors, card } = await open(browser)
     await card('Crash on first launch').locator('[data-card-toggle]').click()
-    await card('Crash on first launch').getByRole('button', { name: 'Open full details' }).click()
+    await card('Crash on first launch').getByRole('button', { name: WORK_CARD_WORDS.openDetails }).click()
     const drawer = page.locator('[data-work-item-detail]')
     await drawer.waitFor()
     // The real rendered control, clicked and filled like a person.
-    const goalSelect = drawer.getByLabel('Goal')
+    const goalSelect = drawer.getByLabel(DRAWER_GOAL)
     await goalSelect.selectOption(String(goal.goal_id))
-    await drawer.getByRole('button', { name: 'Save changes' }).click()
+    await drawer.getByRole('button', { name: SAVE_CHANGES }).click()
     // After a reload the task sits under that goal in the Roadmap.
     await page.reload({ waitUntil: 'networkidle' })
     const placed = await call('/roadmap?project_id=atlas-mobile')
@@ -112,30 +133,30 @@ test('Batch L pickers: Vision goal → Objective, objective → Milestone, miles
     const linkDialog = page.locator('[data-plan-dialog]')
     await linkDialog.waitFor()
     await linkDialog.locator('#dy-plan-link-choice').selectOption(String(objective.id ?? objective.objective_id))
-    await linkDialog.getByRole('button', { name: 'Place' }).click()
+    await linkDialog.getByRole('button', { name: PLACE_CONFIRM }).click()
     await page.waitForTimeout(400)
     drawer = await openDrawer(page, 'goal', goal.goal_id)
-    assert.match(await drawer.innerText(), /Objective it is placed under[\s\S]*Picker objective/i)
+    assert.match(await drawer.innerText(), new RegExp(wordRe(PLACED_OBJECTIVE).source + '[\\s\\S]*Picker objective', 'i'))
 
     // 2. objective → milestone.
     drawer = await openDrawer(page, 'objective', objective.id ?? objective.objective_id)
     await drawer.locator('[data-action="plan-link-milestone"]').click()
     await linkDialog.waitFor()
     await linkDialog.locator('#dy-plan-link-choice').selectOption(String(milestone.id))
-    await linkDialog.getByRole('button', { name: 'Place' }).click()
+    await linkDialog.getByRole('button', { name: PLACE_CONFIRM }).click()
     await page.waitForTimeout(400)
     drawer = await openDrawer(page, 'objective', objective.id ?? objective.objective_id)
-    assert.match(await drawer.innerText(), /Milestone it is placed under[\s\S]*Picker milestone/i)
+    assert.match(await drawer.innerText(), new RegExp(wordRe(PLACED_MILESTONE).source + '[\\s\\S]*Picker milestone', 'i'))
 
     // 3. milestone → initiative.
     drawer = await openDrawer(page, 'milestone', milestone.id)
     await drawer.locator('[data-action="plan-link-initiative"]').click()
     await linkDialog.waitFor()
     await linkDialog.locator('#dy-plan-link-choice').selectOption({ label: 'Picker initiative' })
-    await linkDialog.getByRole('button', { name: 'Place' }).click()
+    await linkDialog.getByRole('button', { name: PLACE_CONFIRM }).click()
     await page.waitForTimeout(400)
     drawer = await openDrawer(page, 'milestone', milestone.id)
-    assert.match(await drawer.innerText(), /Initiative it is placed under[\s\S]*Picker initiative/i)
+    assert.match(await drawer.innerText(), new RegExp(wordRe(PLACED_INITIATIVE).source + '[\\s\\S]*Picker initiative', 'i'))
 
     // After a reload the Roadmap shows the whole placement chain.
     await page.reload({ waitUntil: 'networkidle' })

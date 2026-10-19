@@ -17,7 +17,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
-import { pickProject, rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { rememberedProject, restoreRememberedProject } from './test-support/project-scope.mjs'
+import { one, pickProject } from './test-support/src-words.mjs'
 import { projectAttention } from './src/project/attention.js'
 
 const require = createRequire(fileURLToPath(new URL('../dashboard/package.json', import.meta.url)))
@@ -25,6 +26,12 @@ const { chromium } = require('playwright')
 const BASE = process.env.STEWARD_DESKTOP_URL || 'http://127.0.0.1:19500/desktop'
 const API = process.env.STEWARD_API_URL || 'http://127.0.0.1:19500/api/plugins/hermes-project-stewardship'
 const HEADERS = { 'x-hermes-session-token': 'demo-session-token' }
+
+// The two words this journey reads that attention.js does not already hand back
+// through projectAttention: the blocked-count card's own word
+// (project/dashboard.js) and the drawer's next-step row (project/header-strip.js).
+const BLOCKED_WORD = one('src/project/dashboard.js', /jsx\('h2', \{ children: `\$\{number\(project\.work\?\.blocked \?\? 0\)\} ([^`]+)` \}\)/)
+const NEXT_STEP = one('src/project/header-strip.js', /\['([^']+)', item\.next\]/)
 
 const get = async (path) => {
   const response = await fetch(`${API}${path}`, { headers: HEADERS })
@@ -62,7 +69,7 @@ async function assertOverviewCardsKept(page, project) {
   const grid = page.locator('.dockyard-project-grid[data-project-visual]')
   assert.equal(await grid.count(), 1, 'Overview keeps its first row of cards (Sahil 06/10: keep all)')
   assert.equal(await grid.locator('.dockyard-project-hero .dockyard-work-visual[role="img"]').count(), 1, 'the mission card keeps its delivery bar')
-  assert.equal(await grid.locator('.dockyard-feature-card:not(.dockyard-project-hero) h2').innerText(), `${Number(project.work?.blocked ?? 0)} blocked`, 'the Current signals card keeps the blocked count')
+  assert.equal(await grid.locator('.dockyard-feature-card:not(.dockyard-project-hero) h2').innerText(), `${Number(project.work?.blocked ?? 0)} ${BLOCKED_WORD}`, 'the Current signals card keeps the blocked count')
 }
 
 const bannerColours = (page) => page.locator('.dy-ov-banner').evaluate((el) => {
@@ -134,8 +141,10 @@ test('Overview strip: banner from the backend, drawer by mouse and keyboard, Ope
     await drawer.locator(`[data-attention-item="blocked:${blocked.ref}"] .dy-ov-attn-row`).click()
     const detail = drawer.locator('.dy-ov-attn-detail')
     await detail.waitFor()
-    assert.match(await detail.innerText(), /Next step/)
-    await detail.getByRole('button', { name: 'Open work item' }).click()
+    assert.match(await detail.innerText(), new RegExp(NEXT_STEP))
+    const openWork = want.items.find((item) => item.key === `blocked:${blocked.ref}`)
+    assert.ok(openWork, 'the drawer lists the blocked item')
+    await detail.getByRole('button', { name: openWork.openLabel }).click()
     await page.locator(`[data-work-item-detail="${blocked.ref}"]`).waitFor()
     assert.equal(await drawer.count(), 0, 'the drawer closed when Open was used')
   })
@@ -162,7 +171,9 @@ test('Overview strip: on every project tab; approvals open in the Approval inbox
     await row.waitFor()
     assert.equal(await row.getAttribute('data-tone'), 'warning', 'an approval is amber in the drawer (signed 16/09)')
     await row.locator('.dy-ov-attn-row').click()
-    await row.getByRole('button', { name: 'Open in Approval inbox' }).click()
+    const openInbox = want.items.find((item) => item.key === `approval:${decision.ref}`)
+    assert.ok(openInbox, 'the drawer lists the approval item')
+    await row.getByRole('button', { name: openInbox.openLabel }).click()
     await page.locator('[data-tab="inbox"][aria-selected="true"]').waitFor()
     await page.locator(`[data-inbox-ref="${decision.ref}"][aria-selected="true"]`).first().waitFor()
   })

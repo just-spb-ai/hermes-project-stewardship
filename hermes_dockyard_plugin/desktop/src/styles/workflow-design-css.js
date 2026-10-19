@@ -9,9 +9,13 @@ export const WORKFLOW_DESIGN_CSS = `
 .dockyard-root .dy-wfd-on .dy-wfd-head h2 { margin: 0; font-size: 18px; }
 .dockyard-root .dy-wfd-on .dy-wfd-grow { flex: 1 1 auto; }
 .dockyard-root .dy-wfd-on .dockyard-wf3 { margin-top: 0; }
-.dockyard-root .dy-wfd-on .dockyard-wf3-toolbar { gap: 4px; row-gap: 6px; padding: 8px 10px; }
-.dockyard-root .dy-wfd-on .dockyard-wf3-toolbar .dockyard-wf3-sep { margin: 0 2px; }
-.dockyard-root .dy-wfd-on .dockyard-wf3-toolbar .dockyard-button.small { padding-inline: 9px; }
+/* Russian labels are wider than the English ones they replaced: tighten this
+   toolbar so the run controls stay on one row at 1440x900 (workflow-builder.test.mjs
+   measures its height). The rule below wins over the generic toolbar rule, so the
+   numbers must match dockyard-css.js or the two states disagree. */
+.dockyard-root .dy-wfd-on .dockyard-wf3-toolbar { gap: 2px; row-gap: 6px; padding: 8px 6px; }
+.dockyard-root .dy-wfd-on .dockyard-wf3-toolbar .dockyard-wf3-sep { margin: 0 1px; }
+.dockyard-root .dy-wfd-on .dockyard-wf3-toolbar .dockyard-button.small { padding-inline: 6px; }
 /* Card notes carry meaning (repeats, sign-off, only if), so they stay when
    the canvas is zoomed out, where the canvas hides the card's second line. */
 .dockyard-root .dy-wfd-on .dy-wf-scope .dy-wf-svg[data-lod="map"] .dy-wf-sub[data-wf-card-note] { opacity: 1; }

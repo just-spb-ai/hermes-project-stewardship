@@ -57,6 +57,9 @@ function ThemePreview({ theme }) {
     ] })
 }
 
+// Theme mode words for the card subtitle ('light'/'dark' are stored values).
+const MODE_WORDS = { light: 'Светлая', dark: 'Тёмная' }
+
 function AppearanceSettings({ appearance, onAppearance }) {
   const theme = appearance?.theme ?? 'auto'
   const font = appearance?.font ?? 'system'
@@ -74,7 +77,7 @@ function AppearanceSettings({ appearance, onAppearance }) {
           jsx(ThemePreview, { theme: option }),
           jsxs('span', { className: 'dy-theme-name', children: [
             jsx('strong', { children: option.name }),
-            jsx('span', { children: option.mode === 'auto' ? 'Светлая или тёмная' : option.art ? `${option.mode} · art` : option.mode }),
+            jsx('span', { children: option.mode === 'auto' ? 'Светлая или тёмная' : option.art ? `${MODE_WORDS[option.mode] ?? option.mode} · с фоном` : (MODE_WORDS[option.mode] ?? option.mode) }),
           ] }),
         ],
       }, option.id)) }),
@@ -150,22 +153,22 @@ export function AppSettingsView({ view, selectedProject, appearance, onAppearanc
 
   return jsxs('div', { className: 'dockyard-app-settings', 'data-app-settings': true, children: [
     jsx('style', { 'data-dy-notifications': 'true', children: NOTIFICATIONS_CSS }),
-    jsx(PageHead, { title: 'Настройки приложения', description: 'Settings for the whole app. Each project keeps its own settings in Projects > Settings.', onRefresh }),
+    jsx(PageHead, { title: 'Настройки приложения', description: 'Настройки для всего приложения. У каждого проекта свои настройки — в разделе «Проекты > Настройки».', onRefresh }),
     selectedProject ? jsxs('p', { className: 'dockyard-app-settings-project', 'data-app-settings-project': selectedProject, children: [
-      jsx('span', { children: `${nameOf(selectedProject)} has its own settings: mission, lead, members, autonomy and checks.` }),
+      jsx('span', { children: `${nameOf(selectedProject)}: свои настройки — миссия, ведущий, участники, автономия и проверки.` }),
       jsx(Button, { small: true, action: 'open-project-settings', onClick: onOpenProjectSettings, children: 'Настройки проекта' }),
     ] }) : null,
     section('opening', 'При открытии приложения', null, lastProject
       ? jsxs(Fragment, { children: [
           jsx('p', { 'data-opening-project': lastProject, children: lastProject === ALL_PROJECTS
             ? 'Открывается на «Все проекты» либо на последнем выборе в переключателе.'
-            : `It opens on the last project you chose: ${nameOf(lastProject)}.` }),
+            : `Открывается на последнем выбранном проекте: ${nameOf(lastProject)}.` }),
           jsx(Button, { small: true, action: 'forget-last-project', disabled: busy === 'opening', onClick: forgetProject, children: 'Забудь' }),
         ] })
       : jsx('p', { 'data-opening-project': '', children: 'Открывается на «Все проекты», пока вы не выберете в переключателе.' })),
     section('dashboard', 'Панель', null, jsxs('label', { className: 'dockyard-app-settings-check', children: [
       jsx('input', { type: 'checkbox', 'data-app-setting-fold': 'needs-you-now', checked: collapsed.includes('needs-you-now'), onChange: (event) => setFolded(event.target.checked) }),
-      jsx('span', { children: 'Keep "Needs you now" folded' }),
+      jsx('span', { children: 'Держать «Ждёт твоего решения» свёрнутым' }),
     ] })),
     section('notifications', 'Уведомления по всем проектам', 'Проект может изменить это в своих настройках.',
       jsx(NotificationSettings, { settings: policy, busy: busy === 'notifications', error: policyError, onSave: saveNotifications })),

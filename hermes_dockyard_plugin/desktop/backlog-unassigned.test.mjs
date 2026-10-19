@@ -11,6 +11,28 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { chromium } from './browser-harness.mjs'
+import { readFileSync } from 'node:fs'
+import { CONSOLE_TABS, SWITCHER_WORDS } from './src/lib/panel-words.js'
+// The words a person reads are read from the source module that renders them,
+// never spelled out here: the panel stays translatable without touching this test.
+const sourceText = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8')
+const rendered = (text, pattern, what) => {
+  const found = text.match(pattern)
+  if (!found) throw new Error(`src no longer renders ${what}`)
+  return found[1]
+}
+const wordRe = (word) => new RegExp(String(word).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+const BOARD_SRC = sourceText('./src/views/backlog-board.js')
+const DETAIL_SRC = sourceText('./src/work-item/detail.js')
+const CHOOSE_ASSIGNEE = rendered(BOARD_SRC, /jsx\('option', \{ value: '', children: '([^']+)' \}, 'choose'\)/, 'the create-form assignee placeholder')
+const UNSET_ASSIGNEE = rendered(BOARD_SRC, /jsx\('option', \{ value: UNASSIGNED, children: '([^']+)' \}, 'unassigned'\)/, 'the create-form unassigned option')
+const NO_BOT_NOTE = rendered(BOARD_SRC, /'data-create-help': 'unassigned', children: '([^']+)'/, 'the unassigned create-form note')
+const ALERT_PARTS = BOARD_SRC.match(/number\(unassigned\.length\)\} \$\{pluralRu\(unassigned\.length, '([^']+)', '([^']+)', '([^']+)'\)\}([^`]+)`/)
+if (!ALERT_PARTS) throw new Error('src no longer renders the unassigned alert')
+const UNASSIGNED_ALERT_SINGULAR = `1 ${ALERT_PARTS[1]}${ALERT_PARTS[4]}`
+const UNASSIGNED_ALERT_TAIL = ALERT_PARTS[4].trim()
+const ASSIGNEE_SELECT = rendered(DETAIL_SRC, /'aria-label': '([^']+)', value: draft\?\.assignee \?\? ''/, 'the drawer assignee select')
+const UNSET_OPTION = rendered(DETAIL_SRC, /value: draft\?\.assignee \?\? ''[\s\S]*?jsx\('option', \{ value: '', children: '([^']+)' \}/, 'the drawer unassigned option')
 
 const BASE = process.env.STEWARD_DESKTOP_URL
 const API = process.env.STEWARD_API_URL
@@ -43,9 +65,9 @@ test('Unassigned: chosen on purpose, named on the Backlog and Dashboard, fixed f
     const errors = []
     page.on('pageerror', (error) => errors.push(String(error)))
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', { name: 'Project context', exact: true }).click()
-    await page.getByRole('combobox', { name: 'Find project' }).fill(PROJECT)
-    await page.getByRole('listbox', { name: 'Projects' }).getByRole('option', { name: PROJECT, exact: true }).click()
+    await page.getByRole('button', { name: SWITCHER_WORDS.context, exact: true }).click()
+    await page.getByRole('combobox', { name: SWITCHER_WORDS.find }).fill(PROJECT)
+    await page.getByRole('listbox', { name: SWITCHER_WORDS.list }).getByRole('option', { name: PROJECT, exact: true }).click()
     await page.locator('[data-tab="backlog"]').click()
     await page.locator(`[data-backlog-board="${PROJECT}"]`).waitFor()
     assert.equal(await page.locator('[data-unassigned-alert]').count(), 0, 'no alert while every open item is assigned')
@@ -53,12 +75,12 @@ test('Unassigned: chosen on purpose, named on the Backlog and Dashboard, fixed f
     // Create: "Unassigned" is a choice you make; the form says what it means.
     await page.locator('[data-action="open-create-backlog-item"]').click()
     const owner = page.locator('[data-create-field="assignee"]')
-    assert.deepEqual((await owner.locator('option').allInnerTexts()).slice(0, 2), ['Choose an assignee', 'Unassigned'])
+    assert.deepEqual((await owner.locator('option').allInnerTexts()).slice(0, 2), [CHOOSE_ASSIGNEE, UNSET_ASSIGNEE])
     await page.locator('[data-create-field="title"]').fill(TITLE)
     await page.locator('[data-create-field="reason"]').fill('Support asks for it every week')
     assert.ok(await page.locator('[data-action="submit-create-backlog-item"]').isDisabled(), 'no silent default: an assignee choice is still needed')
     await owner.selectOption('__unassigned__')
-    assert.match(await page.locator('[data-create-help="unassigned"]').innerText(), /No bot will pick this up until it is assigned/)
+    assert.match(await page.locator('[data-create-help="unassigned"]').innerText(), wordRe(NO_BOT_NOTE))
     await page.locator('[data-action="submit-create-backlog-item"]').click()
     await until(async () => Boolean(await itemByTitle()), 'the item was not created')
     const created = await itemByTitle()
@@ -69,13 +91,13 @@ test('Unassigned: chosen on purpose, named on the Backlog and Dashboard, fixed f
     // The Backlog names it; the name opens the item; the drawer assigns it.
     const alert = page.locator(`[data-unassigned-alert="${PROJECT}"]`)
     await alert.waitFor()
-    assert.match(await alert.innerText(), /1 work item is unassigned, so no bot will pick it up\./)
+    assert.match(await alert.innerText(), wordRe(UNASSIGNED_ALERT_SINGULAR))
     await alert.locator(`[data-unassigned-item="${ref}"]`).click()
     const drawer = page.locator(`[data-work-item-detail="${ref}"]`)
     await drawer.waitFor()
-    assert.equal(await drawer.locator('select[aria-label="Assignee"] option').first().innerText(), 'Unassigned')
-    const bot = await drawer.locator('select[aria-label="Assignee"] option:not([disabled])').nth(1).getAttribute('value')
-    await drawer.locator('select[aria-label="Assignee"]').selectOption(bot)
+    assert.equal(await drawer.locator(`select[aria-label="${ASSIGNEE_SELECT}"] option`).first().innerText(), UNSET_OPTION)
+    const bot = await drawer.locator(`select[aria-label="${ASSIGNEE_SELECT}"] option:not([disabled])`).nth(1).getAttribute('value')
+    await drawer.locator(`select[aria-label="${ASSIGNEE_SELECT}"]`).selectOption(bot)
     await drawer.locator('[data-action="save-work-item"]').click()
     await until(async () => (await itemByTitle()).assignee === bot, 'the drawer did not assign it')
     await until(async () => (await unassignedNotes(ref)).every((note) => note.state === 'resolved'), 'assigning the item did not resolve its notification')
@@ -94,7 +116,7 @@ test('Unassigned: chosen on purpose, named on the Backlog and Dashboard, fixed f
     await page.locator('[data-tab="dashboard"]').click()
     const fleet = page.locator('[data-unassigned-alert="fleet"]')
     await fleet.waitFor()
-    assert.match(await fleet.innerText(), /unassigned, so no bot will pick/)
+    assert.match(await fleet.innerText(), wordRe(UNASSIGNED_ALERT_TAIL))
     await fleet.locator(`[data-unassigned-project="${PROJECT}"]`).click()
     await page.locator(`[data-backlog-board="${PROJECT}"]`).waitFor()
     assert.equal(await page.locator('[data-filter-field="assignee"]').inputValue(), '__unassigned__', 'the Backlog opens on unassigned work')

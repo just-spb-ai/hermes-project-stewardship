@@ -4,7 +4,7 @@
 // project-chat-screen.test.mjs.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { chatOutcomeMessage, chatRoute, chatTargets, openProjectChat } from './src/project/chat.js'
+import { CHAT_MESSAGES, chatOutcomeMessage, chatRoute, chatTargets, openProjectChat } from './src/project/chat.js'
 
 test('the team is listed lead first, once each, never a departed member', () => {
   const members = [
@@ -62,7 +62,7 @@ test('without routes the chat opens by profile name; a refused link still opens 
   assert.deepEqual(outcome, { opened: true, linked: false, via: 'profile' })
   assert.deepEqual(calls, ['lead'])
   assert.equal(chatOutcomeMessage('lead', outcome)[0], 'danger')
-  assert.match(chatOutcomeMessage('lead', outcome)[1], /without this project's memory/)
+  assert.equal(chatOutcomeMessage('lead', outcome)[1], CHAT_MESSAGES.unlinked('lead'));
 })
 
 test('an old Desktop without newChat opens nothing and says so', async () => {
@@ -72,6 +72,6 @@ test('an old Desktop without newChat opens nothing and says so', async () => {
   assert.deepEqual(outcome, { opened: false, reason: 'unsupported' })
   assert.equal(asked, false, 'no link is recorded for a chat that cannot open')
   assert.deepEqual(calls, [])
-  assert.match(chatOutcomeMessage('lead', outcome)[1], /Update Hermes Desktop/)
-  assert.deepEqual(chatOutcomeMessage('lead', { opened: true, linked: true }), ['success', "Chat with lead opened. Its first message brings this project's memory."])
+  assert.equal(chatOutcomeMessage('lead', outcome)[1], CHAT_MESSAGES.unsupported);
+  assert.deepEqual(chatOutcomeMessage('lead', { opened: true, linked: true }), ['success', CHAT_MESSAGES.opened('lead')]);
 })

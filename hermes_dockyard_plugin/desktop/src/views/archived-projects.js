@@ -17,13 +17,13 @@ import { Button } from '../lib/ui.js'
 import { Icon } from '../lib/ui.js'
 
 // Where the archive messages send people to restore a project.
-export const RESTORE_FROM = 'the project switcher > Archived projects'
+export const RESTORE_FROM = 'переключателя проектов > «Архивные проекты»'
 
-const PHASE_WORDS = { active: 'active', paused: 'paused', frozen: 'frozen' }
+const PHASE_WORDS = { active: 'активен', paused: 'на паузе', frozen: 'заморожен' }
 
 // "switched on, frozen": the state a project is in now, or comes back in.
 export function stateWords({ enabled, phase } = {}) {
-  return `${enabled ? 'switched on' : 'switched off'}, ${PHASE_WORDS[phase] ?? String(phase ?? 'unknown')}`
+  return `${enabled ? 'включён' : 'выключен'}, ${PHASE_WORDS[phase] ?? String(phase ?? 'неизвестно')}`
 }
 
 const day = (iso) => {
@@ -56,7 +56,7 @@ function ArchivedProjectsList({ onRestored, onCount }) {
     setBusy(row.project_id)
     try {
       await api(`/projects/${encodeURIComponent(row.project_id)}/restore`, { method: 'POST', body: {}, quiet: true })
-      emitToast('success', `${row.project_id} is back, exactly as it was archived: ${stateWords(row.restores_to)}.`)
+      emitToast('success', `${row.project_id} вернулся точно таким, каким был архивирован: ${stateWords(row.restores_to)}.`)
       setConfirming(null)
       await load()
       onRestored?.(row.project_id)
@@ -69,7 +69,7 @@ function ArchivedProjectsList({ onRestored, onCount }) {
   if (!rows) return jsx('p', { className: 'dockyard-meta', 'data-archived-loading': true, children: 'Загрузка архивных проектов…' })
   if (!rows.length) {
     return jsx('p', { className: 'dy-arch-empty', 'data-archived-empty': true,
-      children: 'No archived projects. Archive one from its Settings tab: it is hidden everywhere else and waits here until you restore it.' })
+      children: 'Архивных проектов нет. Архивируйте проект на вкладке «Настройки»: он скрывается везде и ждёт здесь, пока вы его не восстановите.' })
   }
   return jsx('ul', { className: 'dy-arch-list', 'data-archived-list': true, children: rows.map((row) => {
     const asking = confirming === row.project_id
@@ -79,11 +79,11 @@ function ArchivedProjectsList({ onRestored, onCount }) {
         jsx('strong', { children: row.project_id }),
         row.mission ? jsx('span', { className: 'dy-arch-mission', children: row.mission }) : null,
         jsx('span', { className: 'dy-arch-meta', children:
-          `Archived ${day(row.archived_at)}${row.archived_by ? ` by ${row.archived_by}` : ''} · comes back ${stateWords(row.restores_to)}` }),
+          `Архивирован ${day(row.archived_at)}${row.archived_by ? ` · автор: ${row.archived_by}` : ''} · вернётся ${stateWords(row.restores_to)}` }),
       ] }),
       asking
-        ? jsxs('div', { className: 'dy-arch-confirm', role: 'group', 'aria-label': `Restore ${row.project_id}`, children: [
-            jsx('span', { children: `Restore ${row.project_id}? It comes back exactly as it was archived (${stateWords(row.restores_to)}) and shows on your dashboard, inbox and roadmap again.` }),
+        ? jsxs('div', { className: 'dy-arch-confirm', role: 'group', 'aria-label': `Восстановить ${row.project_id}`, children: [
+            jsx('span', { children: `Восстановить ${row.project_id}? Он вернётся точно таким, каким был архивирован (${stateWords(row.restores_to)}), и снова появится на панели, во «Входящих одобрениях» и в дорожной карте.` }),
             jsxs('span', { className: 'dy-arch-confirm-actions', children: [
               jsx(Button, { small: true, action: 'cancel-restore', disabled: working, onClick: () => setConfirming(null), children: 'Отмена' }),
               jsx(Button, { small: true, variant: 'primary', action: 'confirm-restore', disabled: working, onClick: () => restore(row), children: working ? 'Восстановление...' : 'Восстановить' }),
@@ -108,7 +108,7 @@ export function ArchivedProjectsDialog({ onClose, onRestored, onCount }) {
     children: jsxs('div', { className: 'dockyard-modal dy-arch-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dy-arch-title', children: [
       jsxs('header', { className: 'dy-arch-head', children: [
         jsx('h2', { id: 'dy-arch-title', children: 'Архивные проекты' }),
-        jsx('p', { children: 'Hidden everywhere else, and nothing was deleted. Restore brings a project back exactly as it was archived.' }),
+        jsx('p', { children: 'Скрыт везде, и ничего не удалено. Восстановление возвращает проект точно таким, каким он был архивирован.' }),
       ] }),
       jsx(ArchivedProjectsList, { onRestored, onCount }),
       jsx('div', { className: 'dockyard-modal-actions', children: jsx(Button, { action: 'close-archived', onClick: onClose, children: 'Закрыть' }) }),

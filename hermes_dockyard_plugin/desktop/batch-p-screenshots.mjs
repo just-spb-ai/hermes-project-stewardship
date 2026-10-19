@@ -5,6 +5,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {chromium} from './browser-harness.mjs';
+import {CANVAS_WORDS} from './src/lib/canvas-words.js';
+import {SWITCHER_WORDS} from './src/lib/panel-words.js';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -22,9 +24,9 @@ test('Batch P planning acceptance screenshots (3 widths x 2 themes)', {timeout: 
   try {
     await page.goto(BASE, {waitUntil: 'load'});
     await page.waitForSelector('[data-tab="dashboard"]', {timeout: 20000});
-    await page.getByRole('button', {name: 'Project context', exact: true}).click();
-    await page.getByRole('combobox', {name: 'Find project'}).fill('payments-relaunch');
-    await page.getByRole('listbox', {name: 'Projects'}).getByRole('option', {name: 'payments-relaunch', exact: true}).click();
+    await page.getByRole('button', {name: SWITCHER_WORDS.context, exact: true}).click();
+    await page.getByRole('combobox', {name: SWITCHER_WORDS.find}).fill('payments-relaunch');
+    await page.getByRole('listbox', {name: SWITCHER_WORDS.list}).getByRole('option', {name: 'payments-relaunch', exact: true}).click();
     await page.waitForTimeout(500);
     await page.locator('[data-tab="project"]').click();
     await page.waitForSelector('[data-project-view="planning"]', {timeout: 20000});
@@ -35,29 +37,29 @@ test('Batch P planning acceptance screenshots (3 widths x 2 themes)', {timeout: 
     // seed objects + save so the board is not empty
     for (const text of ['Payments API spec signed off', 'Staged rollout with feature flag', 'Rollback window question', 'Decision: use a canary lane']) {
       await canvas.locator('[data-canvas-draft]').fill(text);
-      await canvas.getByRole('button', {name: 'Add object'}).click();
+      await canvas.getByRole('button', {name: CANVAS_WORDS.addObject}).click();
     }
-    await canvas.getByRole('button', {name: 'Save canvas'}).click();
+    await canvas.getByRole('button', {name: CANVAS_WORDS.saveCanvas}).click();
     await page.waitForTimeout(300);
 
     // curate -> answer -> proposals -> approve -> plan -> doc (the journey path)
-    await canvas.getByRole('button', {name: 'Curate'}).click();
+    await canvas.getByRole('button', {name: CANVAS_WORDS.curate}).click();
     await page.waitForTimeout(400);
     if (await canvas.locator('[data-canvas-question]').count()) {
       await canvas.locator('[data-canvas-question] textarea').fill('safe preview evidence');
-      await canvas.getByRole('button', {name: 'Answer'}).click();
+      await canvas.getByRole('button', {name: CANVAS_WORDS.answer}).click();
       await page.waitForTimeout(400);
     }
-    const approvals = canvas.getByRole('button', {name: 'Approve', exact: true});
+    const approvals = canvas.getByRole('button', {name: CANVAS_WORDS.approve, exact: true});
     while (await approvals.count()) {
       await approvals.first().click();
       await page.waitForTimeout(300);
     }
-    const planButton = canvas.getByRole('button', {name: 'Plan from proposal'});
+    const planButton = canvas.getByRole('button', {name: CANVAS_WORDS.planFromProposal});
     if (await planButton.count()) {
       await planButton.first().click();
       await canvas.locator('[data-canvas-plan]').waitFor({timeout: 10000});
-      await canvas.locator('[data-canvas-plan]').getByRole('button', {name: 'Save doc to Content'}).click();
+      await canvas.locator('[data-canvas-plan]').getByRole('button', {name: CANVAS_WORDS.saveDocToContent}).click();
       await page.waitForTimeout(500);
     }
 

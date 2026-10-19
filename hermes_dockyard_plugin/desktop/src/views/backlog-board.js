@@ -7,10 +7,13 @@
 import { jsx, jsxs } from '../runtime/react.js'
 import { readableLabel } from '../data/loaders.js'
 import { api } from '../runtime/context.js'
-import { Button, EmptyState, GROUP_LABELS, Icon, number, PageHead, plural } from '../lib/ui.js'
+import { Button, EmptyState, GROUP_LABELS, Icon, number, PageHead, pluralRu } from '../lib/ui.js'
 import { BacklogImportWizard } from './backlog-import-wizard.js'
 import { BacklogReasonModal } from './backlog-reason-modal.js'
 import { WorkItemDetail } from '../work-item/detail.js'
+
+// Bulk and transfer operation words as the backend reports them.
+const RUN_STATE_WORDS = { pending: 'Ожидает', running: 'В работе', completed: 'Завершён', failed: 'Ошибка', skipped: 'Пропущен' }
 
 export function BacklogBoard(ctx) {
   const {
@@ -158,12 +161,12 @@ export function BacklogBoard(ctx) {
     jsx(PageHead, {
       title: 'Бэклог',
       description: 'Одна ранжированная очередь того, что должно произойти дальше.',
-      status: `${number(entries.length)} ranked`,
+      status: `Ранжировано: ${number(entries.length)}`,
       onRefresh,
     }),
     jsxs('div', { className: 'dockyard-project-toolbar backlog-create-toolbar', children: [
-      jsx('span', { className: 'dockyard-meta', children: `${project.name || project.id} / Work items` }),
-      jsx(Button, { action: 'open-bulk-import', small: true, disabled: !canCreate, onClick: () => { setImportOpen(true); setImportRows(null); setImportValid(false); setImportError(null); setImportResult(null); setImportStep(1) }, children: 'Import' }),
+      jsx('span', { className: 'dockyard-meta', children: `${project.name || project.id} / Рабочие элементы` }),
+      jsx(Button, { action: 'open-bulk-import', small: true, disabled: !canCreate, onClick: () => { setImportOpen(true); setImportRows(null); setImportValid(false); setImportError(null); setImportResult(null); setImportStep(1) }, children: 'Импорт' }),
       jsx(Button, { action: 'open-create-backlog-item', variant: 'primary', small: true, disabled: !canCreate, onClick: () => openCreate(), children: 'Создать элемент' }),
     ]}),
     // Sahil 04/10 (demo feedback b): a gentle note, never a blocker. Unassigned
@@ -171,10 +174,10 @@ export function BacklogBoard(ctx) {
     unassigned.length ? jsxs('div', { className: 'dockyard-soft-alert', 'data-unassigned-alert': project.id, role: 'status', children: [
       jsx(Icon, { name: 'user' }),
       jsxs('div', { className: 'dockyard-soft-alert-body', children: [
-        jsx('strong', { children: `${number(unassigned.length)} ${plural(unassigned.length, 'work item')} ${unassigned.length === 1 ? 'is' : 'are'} unassigned, so no bot will pick ${unassigned.length === 1 ? 'it' : 'them'} up.` }),
+        jsx('strong', { children: `${number(unassigned.length)} ${pluralRu(unassigned.length, 'рабочий элемент не назначен', 'рабочих элемента не назначены', 'рабочих элементов не назначено')} — ни один бот их не подхватит.` }),
         jsxs('span', { className: 'dockyard-soft-alert-items', children: [
           ...unassigned.slice(0, 5).map((item) => jsx('button', { type: 'button', className: 'dockyard-soft-alert-item', 'data-unassigned-item': item.ref, onClick: () => setDetailItem(item), children: `${item.ref} ${item.title}` }, item.ref)),
-          unassigned.length > 5 ? jsx('span', { children: `and ${number(unassigned.length - 5)} more` }, 'more') : null,
+          unassigned.length > 5 ? jsx('span', { children: `и ещё ${number(unassigned.length - 5)}` }, 'more') : null,
         ] }),
       ] }),
       hasUnassignedItems ? jsx(Button, { small: true, onClick: () => setColumnFilters((current) => ({ ...current, assignee: '__unassigned__' })), children: 'Показать в списке' }) : null,
@@ -183,19 +186,19 @@ export function BacklogBoard(ctx) {
     // preview/execute/retry handlers unchanged.
     bulkError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: bulkError }) : null,
     bulkPreview ? jsxs('div', { className: 'dockyard-view-only-note', 'data-bulk-preview': bulkPreview.fingerprint, children: [
-      jsx('strong', { children: `Preview · ${number(bulkPreview.enumerated_count)} items · fingerprint ${bulkPreview.fingerprint}` }),
-      jsx('span', { children: `${(bulkPreview.eligible_items ?? []).length} eligible · ${(bulkPreview.excluded_items ?? []).length} excluded · confirm in the popover below` }),
-      jsx('ul', { children: [...(bulkPreview.eligible_items ?? []), ...(bulkPreview.excluded_items ?? [])].map((item) => jsx('li', { children: `${item.id} · ${item.title || ''} · ${item.status} · ${item.reason || 'eligible'}` }, item.id)) }),
+      jsx('strong', { children: `Предпросмотр · элементов: ${number(bulkPreview.enumerated_count)} · отпечаток ${bulkPreview.fingerprint}` }),
+      jsx('span', { children: `подходят: ${(bulkPreview.eligible_items ?? []).length} · исключены: ${(bulkPreview.excluded_items ?? []).length} · подтвердите во всплывающем окне ниже` }),
+      jsx('ul', { children: [...(bulkPreview.eligible_items ?? []), ...(bulkPreview.excluded_items ?? [])].map((item) => jsx('li', { children: `${item.id} · ${item.title || ''} · ${item.status} · ${item.reason || 'подходит'}` }, item.id)) }),
     ] }) : null,
     bulkOperation ? jsxs('div', { className: 'dockyard-view-only-note', 'data-bulk-operation': bulkOperation.op_id, role: 'status', children: [
-      jsx('strong', { children: `${bulkOperation.op_id} · ${bulkOperation.state}` }),
-      jsx('span', { children: `${(bulkOperation.items ?? []).filter((item) => item.outcome === 'completed').length} of ${(bulkOperation.items ?? []).length} completed · actor ${bulkOperation.actor || 'verified principal'}` }),
-      jsx('ul', { children: (bulkOperation.items ?? []).map((item) => jsx('li', { children: `${item.item_id} · ${item.outcome} · ${item.audit?.actor || bulkOperation.actor || 'verified principal'} · ${item.audit?.action || 'audit pending'}${item.detail ? ` · ${item.detail}` : ''}` }, item.item_id)) }),
+      jsx('strong', { children: `${bulkOperation.op_id} · ${RUN_STATE_WORDS[bulkOperation.state] ?? bulkOperation.state}` }),
+      jsx('span', { children: `выполнено ${(bulkOperation.items ?? []).filter((item) => item.outcome === 'completed').length} из ${(bulkOperation.items ?? []).length} · исполнитель: ${bulkOperation.actor || 'подтверждённый субъект'}` }),
+      jsx('ul', { children: (bulkOperation.items ?? []).map((item) => jsx('li', { children: `${item.item_id} · ${RUN_STATE_WORDS[item.outcome] ?? item.outcome} · ${item.audit?.actor || bulkOperation.actor || 'подтверждённый субъект'} · ${item.audit?.action || 'запись аудита ожидается'}${item.detail ? ` · ${item.detail}` : ''}` }, item.item_id)) }),
       bulkOperation.state !== 'completed' ? jsx(Button, { action: 'retry-bulk-reassignment', disabled: bulkBusy, small: true, onClick: retryBulk, children: 'Повторить оставшиеся пункты' }) : null,
     ] }) : null,
     Object.values(transfers).map((operation) => jsxs('div', { className: 'dockyard-view-only-note', 'data-transfer-operation': operation.op_id, role: 'status', children: [
-      jsx('strong', { children: `${operation.op_id} · ${operation.state}` }),
-      jsx('span', { children: `${(operation.items ?? []).length} items · project ${operation.project_id || project.id}` }),
+      jsx('strong', { children: `${operation.op_id} · ${RUN_STATE_WORDS[operation.state] ?? operation.state}` }),
+      jsx('span', { children: `элементов: ${(operation.items ?? []).length} · проект ${operation.project_id || project.id}` }),
       jsx('button', { type: 'button', 'data-transfer-refresh': operation.op_id, onClick: () => refreshTransfer(operation.op_id), children: 'Обновить' }),
       jsx('button', { type: 'button', 'data-transfer-retry': operation.op_id, onClick: () => retryTransfer(operation.op_id), children: 'Повторить оставшиеся пункты' }),
     ] }, operation.op_id)),
@@ -210,7 +213,7 @@ export function BacklogBoard(ctx) {
           ['sort', 'arrow-up-down', 'Сортировка', `${sortLabels[sortKey]} ${sortDir > 0 ? '↑' : '↓'}`, sortKey !== 'rank' || sortDir < 0,
             ['rank', 'type', 'title', 'status', 'initiative', 'assignee', 'age'].map((key) => [key, sortLabels[key], sortKey === key]),
             (key) => { if (sortKey === key) setSortDir(-sortDir); else { setSortKey(key); setSortDir(1) } }],
-          ['group', 'layers', 'Group', GROUP_LABELS[groupBy], groupBy !== 'none',
+          ['group', 'layers', 'Группировка', GROUP_LABELS[groupBy], groupBy !== 'none',
             Object.entries(GROUP_LABELS).map(([key, label]) => [key, label, groupBy === key]),
             (key) => setGroupBy(key)],
         ].map(([menu, icon, label, value, modified, options, choose]) => jsxs('span', { className: 'cm-anchor', 'data-cm-anchor': menu, children: [
@@ -218,7 +221,7 @@ export function BacklogBoard(ctx) {
             onClick: (event) => { event.stopPropagation(); setCmMenu(cmMenu === menu ? null : menu) },
             onKeyDown: (event) => { if (event.key === 'ArrowDown') { event.preventDefault(); setCmMenu(menu) } },
             children: [jsx(Icon, { name: icon }, `${menu}-icon`), modified ? jsx('span', { className: 'cm-icon-dot', 'aria-hidden': true }, `${menu}-dot`) : null] }),
-          cmMenu === menu ? jsxs('div', { className: 'cm-menu cm-popover', role: 'menu', 'aria-label': `${label} by`, 'data-cm-menu': menu, onClick: (event) => event.stopPropagation(),
+          cmMenu === menu ? jsxs('div', { className: 'cm-menu cm-popover', role: 'menu', 'aria-label': `${label}`, 'data-cm-menu': menu, onClick: (event) => event.stopPropagation(),
             onKeyDown: (event) => {
               const items = [...event.currentTarget.querySelectorAll('[data-cm-option]')]
               const at = items.indexOf(document.activeElement)
@@ -228,7 +231,7 @@ export function BacklogBoard(ctx) {
               else if (event.key === 'Tab') setCmMenu(null)
             },
             children: [
-              jsx('div', { className: 'menu-label', children: `${label} by` }, 'label'),
+              jsx('div', { className: 'menu-label', children: label }, 'label'),
               ...options.map(([key, optionLabel, active]) => jsxs('button', { type: 'button', role: 'menuitemradio', 'aria-checked': active ? 'true' : 'false', className: active ? 'is-active' : '', 'data-cm-option': `${menu}-${key}`, autoFocus: active,
                 onClick: () => { choose(key); setCmMenu(null); document.querySelector(`[data-cm-menu-btn="${menu}"]`)?.focus() },
                 children: [
@@ -270,16 +273,16 @@ export function BacklogBoard(ctx) {
         ] }),
         hasFilters ? jsx('button', { type: 'button', className: 'cm-reset-filters', 'data-clear-filters': true, onClick: resetFilters, children: 'Очистить всё' }) : null,
         jsx('span', { className: 'cm-count', 'data-cm-count': true, role: 'status', title: [
-          `${number(treeRows.length)} of ${number(entries.length)} items`,
-          q ? `search “${search}”` : '',
-          activeFilterCount ? `${activeFilterCount} filter${activeFilterCount === 1 ? '' : 's'}` : '',
-          sortKey !== 'rank' ? `sorted by ${sortLabels[sortKey]}` : '',
-          groupBy !== 'none' ? `grouped by ${GROUP_LABELS[groupBy]}` : '',
-        ].filter(Boolean).join(' · '), children: treeRows.length === entries.length ? `${number(entries.length)} items` : `${number(treeRows.length)} of ${number(entries.length)}` }),
+          `показано ${number(treeRows.length)} из ${number(entries.length)}`,
+          q ? `поиск «${search}»` : '',
+          activeFilterCount ? `фильтров: ${activeFilterCount}` : '',
+          sortKey !== 'rank' ? `сортировка: ${sortLabels[sortKey]}` : '',
+          groupBy !== 'none' ? `группировка: ${GROUP_LABELS[groupBy]}` : '',
+        ].filter(Boolean).join(' · '), children: treeRows.length === entries.length ? `элементов: ${number(entries.length)}` : `${number(treeRows.length)} из ${number(entries.length)}` }),
       ] }),
       jsxs('div', { className: 'tree-head', children: [
         jsx('span', { className: 'th-gutter' }),
-        sortHeader('rank', 'Rank', 'th-rank'),
+        sortHeader('rank', 'Ранг', 'th-rank'),
         sortHeader('type', 'Тип', 'th-type'),
         sortHeader('title', 'Рабочий элемент', 'th-title'),
         sortHeader('status', 'Статус', 'th-status'),
@@ -343,8 +346,8 @@ export function BacklogBoard(ctx) {
             children: [
               jsxs('span', { className: 'tree-gutter', children: [
                 ...guides.map((mode, idx) => jsx('span', { className: `tree-guide ${mode}`, 'aria-hidden': true }, `g${idx}`)),
-                kids.length ? jsx('button', { type: 'button', className: 'tree-twisty', 'data-collapse-ref': ref, 'aria-expanded': String(!collapsedSet.has(ref)), 'aria-label': `${collapsedSet.has(ref) ? 'Expand' : 'Collapse'} ${kids.length} sub-item${kids.length === 1 ? '' : 's'}`, onClick: (event) => { event.stopPropagation(); toggleCollapse(ref) }, children: jsx(Icon, { name: 'chevron' }) }) : null,
-                jsx('input', { type: 'checkbox', className: 'tree-check', 'data-bulk-select': ref, 'aria-label': `Select ${titleText}`, checked: bulkSelected.includes(ref), onClick: (event) => event.stopPropagation(), onChange: () => toggleBulk(ref) }),
+                kids.length ? jsx('button', { type: 'button', className: 'tree-twisty', 'data-collapse-ref': ref, 'aria-expanded': String(!collapsedSet.has(ref)), 'aria-label': `${collapsedSet.has(ref) ? 'Развернуть' : 'Свернуть'} ${kids.length} ${pluralRu(kids.length, 'дочерний элемент', 'дочерних элемента', 'дочерних элементов')}`, onClick: (event) => { event.stopPropagation(); toggleCollapse(ref) }, children: jsx(Icon, { name: 'chevron' }) }) : null,
+                jsx('input', { type: 'checkbox', className: 'tree-check', 'data-bulk-select': ref, 'aria-label': `Выбрать: ${titleText}`, checked: bulkSelected.includes(ref), onClick: (event) => event.stopPropagation(), onChange: () => toggleBulk(ref) }),
               ] }),
               !hiddenCols.includes('rank') ? jsxs('span', { className: 'tree-rank', children: [
                 depth === 0 ? jsx('span', { className: 'drag-grip', 'aria-hidden': true, draggable: true, onDragStart: (event) => { event.stopPropagation(); setDraggedRef(ref) }, children: '⠿' }) : null,
@@ -353,7 +356,7 @@ export function BacklogBoard(ctx) {
                   : jsx('button', { type: 'button', className: 'cell-edit cell-rank', 'data-cell': 'rank', onClick: (event) => { event.stopPropagation(); setEditing({ ref, field: 'rank' }) }, children: number(entry.rank) }))
                   : jsx('span', { children: '·' }),
               ] }) : null,
-              jsxs('span', { className: 'tree-type-cell', title: `Type: ${typeLabel(item.type)}`, children: [
+              jsxs('span', { className: 'tree-type-cell', title: `Тип: ${typeLabel(item.type)}`, children: [
                 jsx('span', { className: `tree-type ${TYPE_NAMES.includes(item.type) ? item.type : 'task'}`, 'aria-hidden': true, children: jsx(Icon, { name: `type-${TYPE_NAMES.includes(item.type) ? item.type : 'task'}` }) }),
                 jsx('span', { children: typeLabel(item.type) }),
               ] }),
@@ -369,11 +372,11 @@ export function BacklogBoard(ctx) {
                           jsx('span', { className: 'tree-ref-chip', children: item.ref }),
                           jsx('button', {
                             type: 'button', className: 'cell-edit cell-title', 'data-cell': 'title', 'data-title-edit': ref,
-                            title: 'Double-click to edit title inline · single-click opens details',
+                            title: 'Двойной клик — правка заголовка на месте · одиночный клик открывает детали',
                             onDoubleClick: startTitleEdit,
                             onClick: openDetailsSoon, children: titleText,
                           }),
-                          depth && parentOf[ref] ? jsx('span', { className: 'tree-parent', children: ` · in ${workByRef[parentOf[ref]]?.title || parentOf[ref]}` }) : null,
+                          depth && parentOf[ref] ? jsx('span', { className: 'tree-parent', children: ` · в «${workByRef[parentOf[ref]]?.title || parentOf[ref]}»` }) : null,
                         ] }),
                         item.body ? jsx('span', { className: 'tree-desc', children: String(item.body).replace(/\s+/g, ' ').slice(0, 90) }) : null,
                       ] }),
@@ -391,7 +394,7 @@ export function BacklogBoard(ctx) {
                     ] }),
                 err && err.field === 'status' ? jsx('span', { className: 'cell-due overdue', children: err.message }) : null,
               ] }),
-              jsxs('span', { className: 'tree-initiative', title: item.initiative_ref ? `Initiative ${item.initiative_ref}` : 'Связанной инициативы нет', children: [
+              jsxs('span', { className: 'tree-initiative', title: item.initiative_ref ? `Инициатива ${item.initiative_ref}` : 'Связанной инициативы нет', children: [
                 item.initiative_ref
                   ? jsxs('span', { className: 'initiative-cell-value', children: [
                       jsx('strong', { children: initiativeLabel(item.initiative_ref) }),
@@ -411,17 +414,17 @@ export function BacklogBoard(ctx) {
                     ] }),
                 err && err.field === 'assignee' ? jsx('span', { className: 'cell-due overdue', children: err.message }) : null,
               ] }),
-              jsx('span', { className: 'tree-age', title: entry?.aged_since ? `Ranked since ${entry.aged_since}` : 'Дата ранга недоступна', children: entry?.aged_since ? `${Math.max(0, Math.floor((Date.now() - Date.parse(entry.aged_since)) / 86400000))}d` : '—' }),
+              jsx('span', { className: 'tree-age', title: entry?.aged_since ? `В ранге с ${entry.aged_since}` : 'Дата ранга недоступна', children: entry?.aged_since ? `${Math.max(0, Math.floor((Date.now() - Date.parse(entry.aged_since)) / 86400000))} дн.` : '—' }),
               jsx('span', { className: 'tree-priority-reason', title: entry?.priority_reason || 'Причина приоритета не записана', children: entry?.priority_reason || 'Причина не записана' }),
               jsxs('span', { className: 'tree-actions', children: [
-                jsx('button', { type: 'button', className: 'tree-menu-btn', 'data-menu-ref': ref, 'aria-expanded': String(menuRef === ref), 'aria-label': `Actions for ${titleText}`, onClick: (event) => { event.stopPropagation(); setMenuRef(menuRef === ref ? null : ref) }, children: '⋯' }),
+                jsx('button', { type: 'button', className: 'tree-menu-btn', 'data-menu-ref': ref, 'aria-expanded': String(menuRef === ref), 'aria-label': `Действия: ${titleText}`, onClick: (event) => { event.stopPropagation(); setMenuRef(menuRef === ref ? null : ref) }, children: '⋯' }),
               ] }),
               menuRef === ref ? jsxs('div', { className: 'tree-menu', role: 'menu', onClick: (event) => event.stopPropagation(), children: [
                 jsx('div', { className: 'menu-label', children: 'Открыть' }),
                 jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'details', onClick: () => { setMenuRef(null); setDetailItem(item) }, children: [jsx(Icon, { name: 'pencil' }), 'Детали задачи'] }),
                 validTypeChoices.length > 1 ? jsxs('label', { className: 'tree-menu-field', children: [
                   jsx('span', { children: 'Тип' }),
-                  jsx('select', { 'data-menu-type': ref, 'aria-label': `Change type for ${titleText}`, value: item.type, onChange: (event) => { setMenuRef(null); changeType(ref, event.target.value) }, children:
+                  jsx('select', { 'data-menu-type': ref, 'aria-label': `Сменить тип: ${titleText}`, value: item.type, onChange: (event) => { setMenuRef(null); changeType(ref, event.target.value) }, children:
                     validTypeChoices.map((type) => jsx('option', { value: type, children: typeLabel(type) }, type)),
                   }),
                 ] }) : jsxs('div', { className: 'tree-menu-static', children: [jsx('span', { children: 'Тип' }), jsx('strong', { children: typeLabel(item.type) })] }),
@@ -444,12 +447,12 @@ export function BacklogBoard(ctx) {
         }),
       ]),
       bulkSelected.length ? jsxs('div', { className: 'sel-pop', 'data-selection-popover': true, onClick: (event) => event.stopPropagation(), children: [
-        jsx('span', { className: 'sel-count', children: `${bulkSelected.length} selected` }),
+        jsx('span', { className: 'sel-count', children: `Выбрано: ${bulkSelected.length}` }),
         jsx('span', { className: 'sel-sep' }),
         jsxs('select', { 'data-pop-target': true, 'aria-label': 'Цель массовой операции', defaultValue: '', children: [
-          jsx('option', { value: '', disabled: true, children: 'Act on selection…' }),
-          ...(view.bots ?? []).map((bot) => jsxs('option', { value: `assign:${bot.id}`, children: [`Reassign all → ${bot.name || bot.id}`] }, `a-${bot.id}`)),
-          ...STATUS_OPTIONS.map((st) => jsxs('option', { value: `status:${st}`, children: [`Set status → ${STATUS_LABELS[st]}`] }, `s-${st}`)),
+          jsx('option', { value: '', disabled: true, children: 'Действие над выбранным…' }),
+          ...(view.bots ?? []).map((bot) => jsxs('option', { value: `assign:${bot.id}`, children: [`Переназначить всем → ${bot.name || bot.id}`] }, `a-${bot.id}`)),
+          ...STATUS_OPTIONS.map((st) => jsxs('option', { value: `status:${st}`, children: [`Сменить статус → ${STATUS_LABELS[st]}`] }, `s-${st}`)),
         ], onChange: (event) => {
           const [op, value] = event.target.value.split(':')
           event.target.value = ''
@@ -465,11 +468,11 @@ export function BacklogBoard(ctx) {
           setBulkSelected([])
           refs.forEach((ref) => changeStatus(ref, value))
         } }),
-        !bulkSameSource && bulkSelected.length > 0 ? jsx('span', { style: { fontSize: 11, color: 'var(--dy-warning)', padding: '0 6px' }, children: 'mixed current assignees' }) : null,
-        bulkPreview ? jsxs('button', { type: 'button', 'data-pop-action': 'execute', disabled: bulkBusy || !selectedEligible, onClick: () => { executeBulk(); }, children: [`Confirm reassign (${(bulkPreview.eligible_items ?? []).length})`] }) : null,
+        !bulkSameSource && bulkSelected.length > 0 ? jsx('span', { style: { fontSize: 11, color: 'var(--dy-warning)', padding: '0 6px' }, children: 'у выбранных разные исполнители' }) : null,
+        bulkPreview ? jsxs('button', { type: 'button', 'data-pop-action': 'execute', disabled: bulkBusy || !selectedEligible, onClick: () => { executeBulk(); }, children: [`Подтвердить переназначение (${(bulkPreview.eligible_items ?? []).length})`] }) : null,
         jsxs('button', { type: 'button', 'data-pop-action': 'clear', onClick: () => { setBulkSelected([]); setBulkPreview(null); setBulkOperation(null); setBulkError(null) }, children: ['Очистить', jsx('span', { style: { opacity: .6 }, children: ' esc' })] }),
       ] }) : null,
-    ] }) : (q ? jsx(EmptyState, { title: 'Совпадений нет', description: `Nothing in the backlog matches “${search}”. Clear the filter to see all items.`, icon: 'project', children: jsx(Button, { small: true, onClick: () => setSearch(''), children: 'Сбросить фильтр' }) }) : jsx(EmptyState, { title: 'Нет ранжированных пунктов бэклога', description: 'Рабочие элементы появятся здесь после добавления в бэклог проекта.', icon: 'project' })),
+    ] }) : (q ? jsx(EmptyState, { title: 'Совпадений нет', description: `В бэклоге ничего нет по запросу «${search}». Сбросьте фильтр, чтобы увидеть все элементы.`, icon: 'project', children: jsx(Button, { small: true, onClick: () => setSearch(''), children: 'Сбросить фильтр' }) }) : jsx(EmptyState, { title: 'Нет ранжированных пунктов бэклога', description: 'Рабочие элементы появятся здесь после добавления в бэклог проекта.', icon: 'project' })),
     detailItem ? jsx(WorkItemDetail, { item: detailItem, projectId: project.id, profiles: view.profiles ?? [], initiatives: view.initiatives ?? [], onClose: () => setDetailItem(null), onRefresh }) : null,
     jsx(BacklogImportWizard, {
       project, importOpen, importStep, importText, importMode, importRows, importValid, importError, importBusy, importResult, importSelected, importWarningsOnly, importColumnMetadata, setImportMode, setImportText, setImportRows, setImportValid, setImportError, setImportBusy, setImportStep, setImportSelected, closeImport, parseImport, runImport, api,
@@ -483,11 +486,11 @@ export function BacklogBoard(ctx) {
       children: [
       jsxs('form', { className: 'dockyard-modal dockyard-create-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dockyard-create-title', 'data-create-backlog-item': true, onSubmit: (event) => { event.preventDefault(); saveCreate() }, children: [
         jsxs('header', { className: 'dockyard-modal-head', children: [
-          jsxs('div', { children: [jsx('span', { className: 'dockyard-create-eyebrow', children: `New work item · ${project.id}` }), jsx('h2', { id: 'dockyard-create-title', children: 'Создать элемент бэклога' })] }),
+          jsxs('div', { children: [jsx('span', { className: 'dockyard-create-eyebrow', children: `Новый рабочий элемент · ${project.id}` }), jsx('h2', { id: 'dockyard-create-title', children: 'Создать элемент бэклога' })] }),
           jsx(Button, { action: 'close-create-backlog-item', ariaLabel: 'Закрыть диалог создания элемента', disabled: createSaving, onClick: () => setCreateOpen(false), children: 'Закрыть' }),
         ]}),
         jsxs('div', { className: 'dockyard-create-body', children: [
-          jsxs('p', { className: 'dockyard-create-context', children: [jsx('span', { className: 'dockyard-status-dot status-backlog', 'aria-hidden': true }), 'Starts in Backlog · Sahil is recorded as creator'] }),
+          jsxs('p', { className: 'dockyard-create-context', children: [jsx('span', { className: 'dockyard-status-dot status-backlog', 'aria-hidden': true }), 'Начинает в статусе «Бэклог» · автором запишется Sahil'] }),
           jsxs('div', { className: 'dockyard-settings-grid dockyard-create-fields', children: [
           jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Заголовок' }), jsx('input', { 'data-create-field': 'title', value: createForm.title, onInput: (event) => updateCreate('title', event.target.value), onChange: (event) => updateCreate('title', event.target.value), placeholder: 'Опишите результат поставки' })] }),
           jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Описание (необязательно)' }), jsx('textarea', { rows: 3, 'data-create-field': 'body', value: createForm.body, onChange: (event) => updateCreate('body', event.target.value), placeholder: 'Опишите результат и критерии приёмки…' })] }),
@@ -499,7 +502,7 @@ export function BacklogBoard(ctx) {
           jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Тип' }), jsx('select', { 'data-create-field': 'type', value: createForm.type, onChange: (event) => updateCreate('type', event.target.value), children:
             availableCreateTypes.map((type) => jsx('option', { value: type, children: typeLabel(type) }, type)),
           })] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Оценка в днях (необязательно)' }), jsx('input', { type: 'number', min: 0, step: 0.5, 'data-create-field': 'estimate_days', value: createForm.estimate_days, onInput: (event) => updateCreate('estimate_days', event.target.value), onChange: (event) => updateCreate('estimate_days', event.target.value), placeholder: 'e.g. 2.5' })] }),
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Оценка в днях (необязательно)' }), jsx('input', { type: 'number', min: 0, step: 0.5, 'data-create-field': 'estimate_days', value: createForm.estimate_days, onInput: (event) => updateCreate('estimate_days', event.target.value), onChange: (event) => updateCreate('estimate_days', event.target.value), placeholder: 'напр. 2.5' })] }),
           jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Исполнитель' }), jsx('select', { 'data-create-field': 'assignee', value: createForm.assignee, onChange: (event) => updateCreate('assignee', event.target.value), children: [
             jsx('option', { value: '', children: 'Выбрать исполнителя' }, 'choose'),
             jsx('option', { value: UNASSIGNED, children: 'Не назначен' }, 'unassigned'),
@@ -520,7 +523,7 @@ export function BacklogBoard(ctx) {
         createTouched.title && createForm.title.trim().length < 3 ? jsx('p', { className: 'create-help bad', 'data-create-help': 'title', children: 'Заголовок — минимум 3 символа.' }) : null,
         createTouched.assignee && !createForm.assignee ? jsx('p', { className: 'create-help bad', 'data-create-help': 'assignee', children: 'Выберите исполнителя или «Не назначен».' }) : null,
         createTouched.reason && createForm.reason.trim().length < 4 ? jsx('p', { className: 'create-help bad', 'data-create-help': 'reason', children: 'Требуется причина ранжирования — она становится записью аудита.' }) : null,
-        jsx('p', { className: 'create-help', 'data-create-reqnote': true, children: '* required. Initial rank and priority reason are recorded in the backlog audit trail.' }),
+        jsx('p', { className: 'create-help', 'data-create-reqnote': true, children: '* обязательные поля. Начальный ранг и причина приоритета записываются в аудит бэклога.' }),
         createError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: createError }) : null,
         ]}),
         jsxs('div', { className: 'dockyard-modal-actions', children: [

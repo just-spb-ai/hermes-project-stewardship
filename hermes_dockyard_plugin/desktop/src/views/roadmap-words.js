@@ -15,19 +15,19 @@ export const chip = (text, tone = '') => jsx('span', { className: `dy-rm-chip${t
 
 // v43: a waived item shows its reason, so the decision is never anonymous.
 export const waivedChip = (row) => (row.waived
-  ? chip(`No longer required — ${row.waived.reason}`, 'waived')
+  ? chip(`Больше не требуется — ${row.waived.reason}`, 'waived')
   : null)
 
 export const milestoneStateWords = (row) => (
-  `${STATE_LABEL[row.state] ?? words(row.state)}${row.overdue ? ' · overdue' : ''}${row.closed ? ' · closed' : ''}`)
+  `${STATE_LABEL[row.state] ?? words(row.state)}${row.overdue ? ' · просрочено' : ''}${row.closed ? ' · закрыто' : ''}`)
 export const objectiveStateWords = (row) => {
   const check = row.check?.state
-  const checkText = check && check !== 'no_check' ? ` · check ${STATE_LABEL[check] ?? words(check)}` : ''
+  const checkText = check && check !== 'no_check' ? ` · проверка: ${STATE_LABEL[check] ?? words(check)}` : ''
   return `${STATE_LABEL[row.state] ?? words(row.state)}${checkText}`
 }
 export const goalStateWords = (row) => {
   const check = row.check?.state
-  const checkText = check && check !== 'no_check' ? ` · check ${STATE_LABEL[check] ?? words(check)}` : ''
-  const tasks = row.task_count ? ` · ${row.task_count} ${row.task_count === 1 ? 'task' : 'tasks'}` : ' · no tasks'
+  const checkText = check && check !== 'no_check' ? ` · проверка: ${STATE_LABEL[check] ?? words(check)}` : ''
+  const tasks = row.task_count ? ` · задач: ${row.task_count}` : ' · задач нет'
   return `${STATE_LABEL[row.state] ?? words(row.state)}${tasks}${checkText}`
 }

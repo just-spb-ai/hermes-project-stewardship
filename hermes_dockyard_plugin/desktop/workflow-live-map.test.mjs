@@ -5,9 +5,14 @@ import assert from 'node:assert/strict';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+
+// The live map's "needs attention" suffix is the panel's own word (the canvas
+// supplies the status word; this one is written in src/project/workflows.js).
+import { one, escape } from './test-support/src-words.mjs'
+const NEEDS_ATTENTION = one('src/project/workflows.js', /needsAttention\(node\) \? ' · ([^']+)' : ''/);
 
 test('W5 live map attributes come from the canonical run projection', async () => {
   // Direct source evaluation avoids the bundler: the panel is a pure function
@@ -47,24 +52,27 @@ test('W5 live map attributes come from the canonical run projection', async () =
   // adapter is compiled with the repo's own esbuild; only drawing is stubbed.
   const { execFileSync } = await import('node:child_process');
   const realMount = path.join(dir, 'mount-real.mjs');
-  execFileSync(path.join(HERE, '..', 'dashboard', 'node_modules', '.bin', 'esbuild'), [
+  // Windows has no extensionless .bin/esbuild (execFileSync cannot start the sh
+  // shim), so run the package's JS CLI through this same node binary.
+  execFileSync(process.execPath, [
+    path.join(HERE, '..', 'dashboard', 'node_modules', 'esbuild', 'bin', 'esbuild'),
     path.join(HERE, 'workflow-canvas-mount.js'), '--bundle', '--format=esm', `--outfile=${realMount}`,
   ]);
   const mountStub = `
-    export * from 'file://${realMount.replace(/\\/g, '/')}'
+    export * from '${pathToFileURL(realMount).href}'
     export function mountDesktopWorkflowCanvas(){ return () => {} }
   `;
   fs.writeFileSync(path.join(dir, 'mount-stub.js'), mountStub);
   const source = fs.readFileSync(path.join(HERE, 'src', 'project', 'workflows.js'), 'utf8')
-    .replace(/from '\.\.\/runtime\/react\.js'/g, `from '${path.join(dir, 'react-stub.js').replace(/\\/g, '/').replace(/^/, 'file://')}'`)
-    .replace(/from '\.\/runtime\/context\.js'|from '\.\.\/runtime\/context\.js'/g, `from 'file://${path.join(dir, 'context-stub.js').replace(/\\\\/g, '/')}'`)
-    .replace(/from '\.\.\/lib\/ui\.js'/g, `from 'file://${path.join(dir, 'ui-stub.js').replace(/\\\\/g, '/')}'`)
-    .replace(/from '\.\.\/\.\.\/workflow-canvas-mount\.js'/g, `from 'file://${path.join(dir, 'mount-stub.js').replace(/\\\\/g, '/')}'`)
+    .replace(/from '\.\.\/runtime\/react\.js'/g, `from '${pathToFileURL(path.join(dir, 'react-stub.js')).href}'`)
+    .replace(/from '\.\/runtime\/context\.js'|from '\.\.\/runtime\/context\.js'/g, `from '${pathToFileURL(path.join(dir, 'context-stub.js')).href}'`)
+    .replace(/from '\.\.\/lib\/ui\.js'/g, `from '${pathToFileURL(path.join(dir, 'ui-stub.js')).href}'`)
+    .replace(/from '\.\.\/\.\.\/workflow-canvas-mount\.js'/g, `from '${pathToFileURL(path.join(dir, 'mount-stub.js')).href}'`)
     // The shared planning wording has no imports of its own, so the real file loads as is.
-    .replace(/from '\.\.\/lib\/plan-vocab\.js'/g, `from 'file://${path.join(HERE, 'src', 'lib', 'plan-vocab.js').replace(/\\\\/g, '/')}'`)
+    .replace(/from '\.\.\/lib\/plan-vocab\.js'/g, `from '${pathToFileURL(path.join(HERE, 'src', 'lib', 'plan-vocab.js')).href}'`)
     // The builder's modules (dialog, AI sidebar, step-panel hooks) render
     // nothing until opened, so they are stubbed; this test reads the run readout.
-    .replace(/from '\.\/workflow-design\/[a-z-]+\.js'/g, `from 'file://${path.join(dir, 'design-stub.js').replace(/\\\\/g, '/')}'`);
+    .replace(/from '\.\/workflow-design\/[a-z-]+\.js'/g, `from '${pathToFileURL(path.join(dir, 'design-stub.js')).href}'`);
   fs.writeFileSync(path.join(dir, 'design-stub.js'), [
     'export function canvasDesignHooks(){ return {} }', 'export function NewWorkflowDialog(){ return null }',
     'export function AiSidebar(){ return null }', 'export function createdConversation(){ return [] }',
@@ -73,7 +81,7 @@ test('W5 live map attributes come from the canonical run projection', async () =
     'export function RepeatPopover(){ return null }', 'export function readStepSettings(){ return {} }',
     'export function writeStepSettings(){}', 'export const EMPTY_STEP = {}',
   ].join('\n'));
-  const { __setRuns__ } = await import('file://' + path.join(dir, 'context-stub.js').replace(/\\\\/g, '/'));
+  const { __setRuns__ } = await import(pathToFileURL(path.join(dir, 'context-stub.js')).href);
   const runs = [{ run_key: 'r1', version: 1, status: 'running', nodes: [
     { node_id: 'a', title: 'Assemble', depends_on: [], human_gate: false, kind: 'task', status: 'done', task_ref: null, evidence_refs: [] },
     { node_id: 'g', title: 'Approve', depends_on: ['a'], human_gate: true, kind: 'gate', status: 'backlog', task_ref: 'INIT-1', evidence_refs: [] },
@@ -89,7 +97,7 @@ test('W5 live map attributes come from the canonical run projection', async () =
   const { ExecutableWorkflowsPanel } = await import(moduleUrl);
   const project = { id: 'p1' };
   const workflows = [{ project_id: 'p1', name: 'release', version: 1, archived_at: null, definition: { nodes: [{ id: 'a', title: 'Assemble', depends_on: [], human_gate: false }, { id: 'g', title: 'Approve', depends_on: ['a'], human_gate: true }] } }];
-  const react = await import('file://' + path.join(dir, 'react-stub.js').replace(/\\/g, '/'));
+  const react = await import(pathToFileURL(path.join(dir, 'react-stub.js')).href);
   react.__beginRender()
   let tree = ExecutableWorkflowsPanel({ project, workflows, runs, onRefresh: null, onOpenLibrary: null });
   await new Promise((resolve) => setImmediate(resolve));
@@ -110,7 +118,7 @@ test('W5 live map attributes come from the canonical run projection', async () =
   const approve = rows.find((r) => r['data-wf-live-node'] === 'g');
   assert.equal(assemble['data-wf-needs-attention'], undefined);
   assert.equal(approve['data-wf-needs-attention'], 'true');
-  assert.match(String(approve.children), /needs attention/);
+  assert.match(String(approve.children), new RegExp(escape(NEEDS_ATTENTION)));
   // Project Stewardship's words reach the readout as the canvas's words.
   assert.match(String(approve.children), /Approve — awaiting decision/);
   assert.match(String(assemble.children), /Assemble — done/);
