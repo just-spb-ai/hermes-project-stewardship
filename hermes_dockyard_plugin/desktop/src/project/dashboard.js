@@ -98,13 +98,13 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
   if (!project && view.missingProject) {
     return jsxs('section', { className: 'dockyard-deep-link-miss', 'data-deep-link-miss': view.missingProject, children: [
       jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Project ${view.missingProject} no longer exists or is not connected. Nothing was substituted.` }),
-      jsx(Button, { onClick: () => onSelectProject?.((view.projects ?? [])[0]?.id ?? null), children: 'Back to fleet' }),
+      jsx(Button, { onClick: () => onSelectProject?.((view.projects ?? [])[0]?.id ?? null), children: 'Назад к флоту' }),
     ]})
   }
-  if (!project) return jsx(EmptyState, { title: 'No project selected', description: 'Connect a project before opening the project dashboard.', icon: 'project' })
+  if (!project) return jsx(EmptyState, { title: 'Проект не выбран', description: 'Подключите проект, прежде чем открывать его панель.', icon: 'project' })
   const [healthTone, healthLabel] = healthDetails(project.health)
   const views = [
-    ['overview', 'Overview'], ['plan', 'Vision'], ['board', 'Kanban'], ['planning', 'Planning'], ['workflows', 'Workflows'], ['content', 'Content'], ['memory', 'Memory'], ['activity', 'Activity'], ['reports', 'Reports'], ['settings', 'Settings'],
+    ['overview', 'Обзор'], ['plan', 'Видение'], ['board', 'Канбан'], ['planning', 'Планирование'], ['workflows', 'Процессы'], ['content', 'Контент'], ['memory', 'Память'], ['activity', 'Активность'], ['reports', 'Отчёты'], ['settings', 'Настройки'],
   ]
   // C1: Open on a "Needs attention" item goes to the exact place to act.
   const openAttentionItem = (item) => {
@@ -179,23 +179,23 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
       ]}),
       jsxs('div', { className: 'dockyard-project-overview-grid', children: [
         jsxs('section', { className: 'dockyard-feature-card dockyard-overview-card', 'data-overview-work': true, children: [
-          jsxs('header', { children: [jsx('h2', { children: 'Current work' }), jsx('span', { children: number(view.workItems?.length ?? 0) })] }),
-          jsx('p', { children: 'Live work, ownership and stage.' }),
+          jsxs('header', { children: [jsx('h2', { children: 'Текущая работа' }), jsx('span', { children: number(view.workItems?.length ?? 0) })] }),
+          jsx('p', { children: 'Текущая работа, владение и стадия.' }),
           visibleWork.length > 0 ? jsx('div', { className: 'dockyard-overview-list', children:
             visibleWork.map((item) => jsxs('article', { children: [
               jsxs('span', { children: [jsx('strong', { children: item.title || item.ref }), jsx('small', { children: `${item.ref} / ${item.assignee || 'Unassigned'}` })] }),
               jsx(StatusTag, { tone: ['done', 'completed'].includes(item.status) ? 'success' : item.status === 'in_progress' ? 'info' : 'neutral', label: String(item.status || 'unknown').replaceAll('_', ' ') }),
             ]}, item.ref)),
           })
-            : jsx('p', { className: 'dockyard-meta', children: 'No work items are attached.' }),
+            : jsx('p', { className: 'dockyard-meta', children: 'Рабочие элементы не прикреплены.' }),
         ]}),
         jsxs('section', { className: 'dockyard-feature-card dockyard-overview-card', 'data-overview-initiatives': true, children: [
-          jsxs('header', { children: [jsx('h2', { children: 'Initiatives' }), jsx('span', { children: number(view.initiatives?.length ?? 0) })] }),
-          jsx('p', { children: 'Current improvement bets and their decision state.' }),
+          jsxs('header', { children: [jsx('h2', { children: 'Инициативы' }), jsx('span', { children: number(view.initiatives?.length ?? 0) })] }),
+          jsx('p', { children: 'Текущие ставки на улучшение и их состояние решений.' }),
           visibleInitiatives.length > 0 ? jsx('div', { className: 'dockyard-overview-list', children:
             visibleInitiatives.map((initiative) => jsx(InitiativeRevisionRow, { initiative, onResubmitted: onRefresh }, initiative.ref)),
           })
-            : jsx('p', { className: 'dockyard-meta', children: 'No initiatives are attached.' }),
+            : jsx('p', { className: 'dockyard-meta', children: 'Инициативы не прикреплены.' }),
         ]}),
         // C5 (Sahil 06/10): the Activity tab's words, the latest four, and View all.
         jsx(RecentActivityCard, { view, onViewAll: () => changeView('activity') }),
@@ -218,7 +218,7 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
     ]}) : null,
     jsx('p', { className: 'dockyard-inline-error', role: 'alert', 'data-deep-link-error': true, hidden: !(workNotice || notice), children: workNotice || notice }),
     jsx('div', { className: 'dockyard-project-toolbar', children:
-      jsx('nav', { className: 'dockyard-project-tabs', 'aria-label': 'Project views', children:
+      jsx('nav', { className: 'dockyard-project-tabs', 'aria-label': 'Виды проекта', children:
         views.map(([key, label]) => jsx('button', {
           type: 'button',
           className: projectView === key ? 'active' : '',
@@ -231,14 +231,14 @@ export function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDi
     }),
     panel,
     pendingView ? jsxs('section', { className: 'dockyard-modal-layer', 'data-view-switch-confirm': pendingView, children: [
-      jsxs('div', { className: 'dockyard-modal', role: 'alertdialog', 'aria-modal': true, 'aria-label': 'Unsaved planning board changes',
+      jsxs('div', { className: 'dockyard-modal', role: 'alertdialog', 'aria-modal': true, 'aria-label': 'Несохранённые изменения доски планирования',
         onKeyDown: (event) => { if (event.key === 'Escape' && !viewSaving) { event.stopPropagation(); setPendingView(null) } }, children: [
-        jsx('h2', { children: 'Unsaved changes on this board' }),
+        jsx('h2', { children: 'Несохранённые изменения на этой доске' }),
         jsx('p', { children: 'The planning board has edits that are not saved. Save them before you leave, discard them, or cancel to keep editing.' }),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
-          jsx(Button, { action: 'view-switch-cancel', disabled: viewSaving, onClick: () => setPendingView(null), children: 'Cancel' }),
-          jsx(Button, { variant: 'danger', action: 'view-switch-discard', disabled: viewSaving, onClick: () => leaveView(pendingView), children: 'Discard' }),
-          jsx(Button, { variant: 'primary', action: 'view-switch-save', disabled: viewSaving || !canvasSaver.current, onClick: saveThenLeave, children: viewSaving ? 'Saving...' : 'Save and continue' }),
+          jsx(Button, { action: 'view-switch-cancel', disabled: viewSaving, onClick: () => setPendingView(null), children: 'Отмена' }),
+          jsx(Button, { variant: 'danger', action: 'view-switch-discard', disabled: viewSaving, onClick: () => leaveView(pendingView), children: 'Отменить правки' }),
+          jsx(Button, { variant: 'primary', action: 'view-switch-save', disabled: viewSaving || !canvasSaver.current, onClick: saveThenLeave, children: viewSaving ? 'Сохранение...' : 'Сохранить и продолжить' }),
         ]}),
       ]}),
     ]}) : null,

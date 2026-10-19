@@ -53,7 +53,7 @@ import { themeById } from '../styles/themes.js'
 import { themeMode } from '../styles/themes.js'
 // Sahil 04/10 (demo feedback d): screens that work on one project ask for one
 // while the switcher is on All projects.
-const ONE_PROJECT_TABS = Object.freeze({ project: 'Projects', backlog: 'Backlog' })
+const ONE_PROJECT_TABS = Object.freeze({ project: 'Проекты', backlog: 'Бэклог' })
 export function DashboardPage({ inboxCss = '' } = {}) {
   useDockyardStyles()
   useStylesheet('dy-inbox-stylesheet', 'dyInboxStylesheet', inboxCss)
@@ -96,7 +96,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
       return true
     } catch {
       setAppearance(before)
-      emitToast('danger', 'That change was not saved. Try again.')
+      emitToast('danger', 'Изменение не сохранено. Попробуйте ещё раз.')
       return false
     }
   }
@@ -437,7 +437,7 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     if (tab === 'inbox') return scopeInbox(payload, selectedProject)
     return null
   }, [payload, tab, selectedProject, isAll])
-  const scopeLabel = isAll ? 'All projects' : projectName(projectOptions.find((project) => project.id === selectedProject) ?? { id: selectedProject })
+  const scopeLabel = isAll ? 'Все проекты' : projectName(projectOptions.find((project) => project.id === selectedProject) ?? { id: selectedProject })
   const scopeNote = (hidden, noun) => (!isAll && selectedProject
     ? jsx(ScopeNote, { name: scopeLabel, hidden, noun, onShowAll: showAllProjects }, 'scope-note') : null)
   const activeError = error?.tab === tab ? error.error : null
@@ -554,14 +554,14 @@ export function DashboardPage({ inboxCss = '' } = {}) {
     ]}),
     jsx(ToastRegion, { toasts, onDismiss: dismissToast }),
     navPending ? jsxs('section', { className: 'dockyard-modal-layer', 'data-project-switch-confirm': true, 'data-nav-target': pendingProject ? `project:${pendingProject}` : `tab:${pendingTab}`, children: [
-      jsxs('div', { className: 'dockyard-modal', role: 'alertdialog', 'aria-modal': true, 'aria-label': 'Unsaved changes',
+      jsxs('div', { className: 'dockyard-modal', role: 'alertdialog', 'aria-modal': true, 'aria-label': 'Несохранённые изменения',
         onKeyDown: (event) => { if (event.key === 'Escape' && !navSaving) { event.stopPropagation(); cancelNav() } }, children: [
-        jsx('h2', { children: 'Unsaved changes' }),
+        jsx('h2', { children: 'Несохранённые изменения' }),
         jsx('p', { children: `This project has unsaved changes. ${dirtySaver.current ? 'Save them and continue, discard them, or cancel to keep editing.' : 'Discard them to continue, or cancel to keep editing.'}` }),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
-          jsx(Button, { action: 'nav-cancel', disabled: navSaving, onClick: cancelNav, children: 'Cancel' }),
-          jsx(Button, { variant: 'danger', action: 'nav-discard', disabled: navSaving, onClick: discardProjectChange, children: 'Discard' }),
-          dirtySaver.current ? jsx(Button, { variant: 'primary', action: 'nav-save', disabled: navSaving, onClick: saveThenNavigate, children: navSaving ? 'Saving...' : 'Save and continue' }) : null,
+          jsx(Button, { action: 'nav-cancel', disabled: navSaving, onClick: cancelNav, children: 'Отмена' }),
+          jsx(Button, { variant: 'danger', action: 'nav-discard', disabled: navSaving, onClick: discardProjectChange, children: 'Отменить правки' }),
+          dirtySaver.current ? jsx(Button, { variant: 'primary', action: 'nav-save', disabled: navSaving, onClick: saveThenNavigate, children: navSaving ? 'Сохранение...' : 'Сохранить и продолжить' }) : null,
         ]}),
       ]}),
     ]}) : null,

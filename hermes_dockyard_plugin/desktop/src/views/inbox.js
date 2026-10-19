@@ -30,7 +30,7 @@ function InboxRow({ item, selected, onSelect, onOpenProject }) {
         jsx('a', {
           href: '#',
           onClick: (event) => { event.preventDefault(); event.stopPropagation(); onOpenProject?.(item.deep_link) },
-          children: 'Open project',
+          children: 'Открыть проект',
         }),
       ],
     })
@@ -56,7 +56,7 @@ function InboxRow({ item, selected, onSelect, onOpenProject }) {
 function AttentionDetail({ item, onBack, onOpenProject }) {
   const copy = attentionPanel(item)
   return jsxs('article', { className: 'dockyard-inbox-panel dockyard-attention-panel', 'data-inbox-panel': 'true', children: [
-    onBack ? jsx(Button, { variant: 'quiet', small: true, onClick: onBack, children: 'Back' }) : null,
+    onBack ? jsx(Button, { variant: 'quiet', small: true, onClick: onBack, children: 'Назад' }) : null,
     jsx('h2', { children: copy.title }),
     jsx('p', { children: copy.description }),
     jsx(Button, { variant: 'primary', onClick: () => onOpenProject?.(copy.deeplink), children: `Open ${copy.project || 'project'}` }),
@@ -85,7 +85,7 @@ function ReadyToConfirm({ rows, onDone }) {
     jsx('h3', { children: `Ready to confirm · ${number(rows.length)}` }),
     jsx('ul', { children: rows.map((row) => jsxs('li', { children: [
       jsxs('span', { children: [row.title, jsx('small', { children: ` · ${row.project}` })] }),
-      jsx(Button, { small: true, variant: 'primary', action: 'inbox-confirm-delivered', disabled: busy === row.ref, onClick: () => confirm(row), children: busy === row.ref ? 'Confirming…' : 'Confirm as delivered' }),
+      jsx(Button, { small: true, variant: 'primary', action: 'inbox-confirm-delivered', disabled: busy === row.ref, onClick: () => confirm(row), children: busy === row.ref ? 'Подтверждение…' : 'Подтвердить поставку' }),
     ] }, `${row.project}/${row.ref}`)) }),
   ] })
 }
@@ -143,19 +143,19 @@ export function InboxView({ view, onRefresh, focusRef = null, onOpenProject }) {
 
   if (items.length === 0) {
     return jsxs('div', { 'data-inbox-screen': 'true', children: [
-      jsx(PageHead, { title: 'Approval Inbox', description: 'Every pending human decision across every project, with enough context to decide here.', onRefresh }),
-      jsx(EmptyState, { title: 'No approvals waiting', description: 'New owner decisions will appear here with their project, evidence context and risk.', icon: 'check' }),
+      jsx(PageHead, { title: 'Входящие одобрения', description: 'Все ожидающие решения человека по всем проектам — с достаточным контекстом, чтобы решить здесь.', onRefresh }),
+      jsx(EmptyState, { title: 'Одобрений не ожидается', description: 'Новые решения владельца появятся здесь вместе с проектом, контекстом доказательств и риском.', icon: 'check' }),
     ]})
   }
 
   return jsxs('div', { className: 'dockyard-inbox', 'data-inbox-screen': 'true', children: [
     jsx(PageHead, {
-      title: 'Approval Inbox',
-      description: 'Review one decision at a time. Attention rows are project warnings, not decisions.',
+      title: 'Входящие одобрения',
+      description: 'Рассматривайте по одному решению. Строки внимания — предупреждения проекта, а не решения.',
       status: `${number(items.length)} ${plural(items.length, 'item')} waiting`,
       onRefresh,
     }),
-    jsx('div', { className: 'dockyard-inbox-tabs', role: 'tablist', 'aria-label': 'Approval age filters', children:
+    jsx('div', { className: 'dockyard-inbox-tabs', role: 'tablist', 'aria-label': 'Фильтры по возрасту одобрений', children:
       TAB_KEYS.map((key) => jsxs('button', {
         type: 'button',
         role: 'tab',
@@ -168,7 +168,7 @@ export function InboxView({ view, onRefresh, focusRef = null, onOpenProject }) {
     }),
     jsxs('section', { className: 'dockyard-inbox-layout', children: [
       jsx(ReadyToConfirm, { rows: view.readyToConfirm ?? [], onDone: onRefresh }),
-      narrow && selected ? null : jsx('div', { className: 'dockyard-inbox-list', 'aria-label': 'Pending approvals and project attention', children: visible.length
+      narrow && selected ? null : jsx('div', { className: 'dockyard-inbox-list', 'aria-label': 'Ожидающие одобрения и внимание по проектам', children: visible.length
         ? visible.map((item) => jsx(InboxRow, { item, selected: item.ref === selectedRef, onSelect: selectRow, onOpenProject }, item.ref))
         : jsx('p', { className: 'dockyard-inbox-empty', children: `No ${TAB_LABELS[tab].toLowerCase()} items.` }) }),
       selected
@@ -177,7 +177,7 @@ export function InboxView({ view, onRefresh, focusRef = null, onOpenProject }) {
           : jsx(ApprovalDetail, { item: selected, onResolved: resolved, onBack: narrow ? closePanel : null })
         : narrow
           ? null
-          : jsx('p', { className: 'dockyard-inbox-empty', children: 'Select a row to review its full decision context.' }),
+          : jsx('p', { className: 'dockyard-inbox-empty', children: 'Выберите строку, чтобы посмотреть полный контекст решения.' }),
     ]}),
   ]})
 }

@@ -37,7 +37,7 @@ function ReportControls({ type, onType, includeActivity, onActivity, generating,
   return jsxs('div', { className: 'dy-rep-controls', 'data-report-controls': true, children: [
     jsxs('div', { className: 'dy-rep-row', children: [
       jsxs('label', { className: 'dy-rep-field', children: [
-        jsx('span', { children: 'Report type' }),
+        jsx('span', { children: 'Тип отчёта' }),
         jsx('select', {
           'data-report-type': true, value: type, onChange: (event) => onType(event.target.value),
           children: REPORT_TYPES.map((entry) => jsx('option', { value: entry.value, children: entry.label }, entry.value)),
@@ -47,9 +47,9 @@ function ReportControls({ type, onType, includeActivity, onActivity, generating,
         // Risk reports never carry activity, so the box shows off there; the
         // person's choice comes back for the other types.
         jsx('input', { type: 'checkbox', checked: allowed && includeActivity, disabled: !allowed, onChange: (event) => onActivity(event.target.checked) }),
-        jsx('span', { children: 'Include recent activity' }),
+        jsx('span', { children: 'Включить недавнюю активность' }),
       ]}),
-      jsx(Button, { action: 'generate-report', variant: 'primary', disabled: generating, onClick: onGenerate, children: generating ? 'Generating…' : 'Generate report' }),
+      jsx(Button, { action: 'generate-report', variant: 'primary', disabled: generating, onClick: onGenerate, children: generating ? 'Создание…' : 'Создать отчёт' }),
     ]}),
     jsx('p', { className: 'dy-rep-hint', 'data-report-hint': true, children: reportHint(type, includeActivity) }),
     error ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: error }) : null,
@@ -88,8 +88,8 @@ function ReportPage({ report, onCopy, onDownload }) {
         jsx('p', { className: 'dy-rep-meta', 'data-report-meta': true, children: `${reportTypeLabel(report.report_type)} · Generated ${when}${by ? ` by ${by}` : ''}` }),
       ]}),
       jsxs('div', { className: 'dy-rep-actions', children: [
-        jsx(Button, { action: 'copy-report', small: true, onClick: onCopy, children: 'Copy Markdown' }),
-        jsx(Button, { action: 'download-report', small: true, onClick: onDownload, children: 'Download Markdown' }),
+        jsx(Button, { action: 'copy-report', small: true, onClick: onCopy, children: 'Скопировать Markdown' }),
+        jsx(Button, { action: 'download-report', small: true, onClick: onDownload, children: 'Скачать Markdown' }),
       ]}),
     ]}),
     jsx('div', { className: 'dy-rep-body', children: doc.blocks.map((block, index) => jsx(ReportBlock, { block }, index)) }),
@@ -102,29 +102,29 @@ function ReportBody({ state, history, onRetry, onCopy, onDownload }) {
   if (state.openError) {
     return jsxs('div', { className: 'dy-rep-state', role: 'alert', children: [
       jsx('p', { children: `This report could not be opened: ${state.openError}` }),
-      jsx(Button, { action: 'retry-report', small: true, onClick: onRetry, children: 'Try again' }),
+      jsx(Button, { action: 'retry-report', small: true, onClick: onRetry, children: 'Попробовать снова' }),
     ]})
   }
   if (state.report) return jsx(ReportPage, { report: state.report, onCopy, onDownload })
-  if (state.opening) return jsx('p', { className: 'dy-rep-state', 'aria-busy': true, children: 'Opening the report…' })
+  if (state.opening) return jsx('p', { className: 'dy-rep-state', 'aria-busy': true, children: 'Открытие отчёта…' })
   return jsxs('div', { className: 'dy-rep-state', 'data-report-empty': true, children: [
     jsx(Icon, { name: 'project' }),
     jsx('p', { children: history.length > 0
-      ? 'Pick a report from the list to read it here.'
+      ? 'Выберите отчёт из списка, чтобы прочитать его здесь.'
       : 'No reports yet. Pick a type above and press Generate report. Reports are saved here, so you can read, copy or download them later.' }),
   ]})
 }
 
 function ReportList({ history, openId, onOpen }) {
-  return jsxs('aside', { className: 'dy-rep-list', 'data-report-list': true, 'aria-label': 'Past reports', children: [
-    jsxs('h3', { children: ['Past reports', jsx('span', { children: history.length })] }),
+  return jsxs('aside', { className: 'dy-rep-list', 'data-report-list': true, 'aria-label': 'Прошлые отчёты', children: [
+    jsxs('h3', { children: ['Прошлые отчёты', jsx('span', { children: history.length })] }),
     history.length > 0
       ? jsx('ul', { children: history.map((report) => jsx('li', { children: jsxs('button', {
           type: 'button', 'data-report-history': report.report_id, 'aria-current': report.report_id === openId ? 'true' : undefined,
           onClick: () => onOpen(report.report_id, { scroll: true }),
           children: [jsx('strong', { children: reportTypeLabel(report.report_type) }), jsx('span', { children: byline(report) })],
         }) }, report.report_id)) })
-      : jsx('p', { className: 'dy-rep-none', children: 'No reports yet.' }),
+      : jsx('p', { className: 'dy-rep-none', children: 'Отчётов пока нет.' }),
   ]})
 }
 
@@ -190,7 +190,7 @@ export function ProjectReportsPanel({ project, reports, onRefresh }) {
   const shown = report && report.report_id === openId ? report : null
   const copy = async () => {
     const copied = shown?.content && _os?.writeClipboard ? await _os.writeClipboard(shown.content) : false
-    emitToast(copied ? 'success' : 'danger', copied ? 'Report copied to clipboard' : 'Clipboard is unavailable')
+    emitToast(copied ? 'success' : 'danger', copied ? 'Отчёт скопирован в буфер обмена' : 'Буфер обмена недоступен')
   }
   const download = () => {
     // Phase 4: download the exact generated Markdown the API returned, under
@@ -198,7 +198,7 @@ export function ProjectReportsPanel({ project, reports, onRefresh }) {
     if (!shown?.content) return
     const filename = reportDownloadFilename(project.id, shown)
     const started = downloadTextFile(shown.content, filename)
-    emitToast(started ? 'success' : 'danger', started ? `Downloading ${filename}` : 'Download could not start in this environment')
+    emitToast(started ? 'success' : 'danger', started ? `Downloading ${filename}` : 'Загрузка не удалась в этой среде')
   }
   const body = jsx(ReportBody, {
     state: { report: shown, opening, openError }, history,

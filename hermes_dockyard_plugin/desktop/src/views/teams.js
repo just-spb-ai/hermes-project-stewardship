@@ -134,36 +134,36 @@ export function TeamsView({ view, onRefresh }) {
   }
   return jsxs('div', { 'data-bot-teams': true, children: [
     jsx(PageHead, {
-      title: 'Bot teams',
-      description: 'Capabilities, availability, group ownership and structured handoffs.',
+      title: 'Команды ботов',
+      description: 'Возможности, доступность, групповое владение и структурированные передачи.',
       status: workload.stuck?.length > 0 ? `${number(workload.stuck.length)} stuck` : null,
       onRefresh,
     }),
     jsxs('section', { className: 'dockyard-feature-card', 'data-team-management': true, children: [
-      jsxs('header', { children: [jsx('h2', { children: 'Project team' }), jsx('span', { children: team ? `Revision ${team.membership_revision}` : unlinked ? 'Not linked' : 'Loading canonical roster…' })] }),
+      jsxs('header', { children: [jsx('h2', { children: 'Команда проекта' }), jsx('span', { children: team ? `Revision ${team.membership_revision}` : unlinked ? 'Не связан' : 'Loading canonical roster…' })] }),
       // The roster lives in Hermes: an unlinked project has none (10/10/2026).
       unlinked ? jsx(UnlinkedNotice, { projectId }) : null,
       teamError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: teamError }) : null,
       jsx('div', { className: 'dockyard-bot-grid', children: (team?.members ?? []).map((member) => jsxs('article', { className: 'dockyard-bot-card', 'data-project-member': member.profile_slug, children: [
         jsxs('strong', { children: [member.profile_slug, member.role === 'lead' ? ' · Lead' : ' · Member'] }),
-        jsx(StatusTag, { tone: member.hermes_available ? 'success' : 'warning', label: member.hermes_available ? 'Hermes available' : 'Unavailable' }),
+        jsx(StatusTag, { tone: member.hermes_available ? 'success' : 'warning', label: member.hermes_available ? 'Hermes доступен' : 'Недоступно' }),
         jsx('span', { children: `${number(member.workload?.total ?? 0)} canonical work items` }),
         jsx('small', { children: member.state }),
       ] }, member.profile_slug)) }),
-      jsx(DiscoveredProfilePicker, { profiles, name: 'team-member-lead', label: 'Discovered Hermes profile', value: chosenProfile, onChange: setChosenProfile }),
+      jsx(DiscoveredProfilePicker, { profiles, name: 'team-member-lead', label: 'Обнаруженный профиль Hermes', value: chosenProfile, onChange: setChosenProfile }),
       jsxs('div', { className: 'dockyard-modal-actions', children: [
-        jsx(Button, { action: 'add-project-member', disabled: !chosenProfile || !projectId, onClick: addMember, children: 'Add member' }),
-        jsx(Button, { action: 'transfer-project-lead', disabled: !chosenProfile || !projectId, onClick: transferLead, children: 'Transfer lead' }),
+        jsx(Button, { action: 'add-project-member', disabled: !chosenProfile || !projectId, onClick: addMember, children: 'Добавить участника' }),
+        jsx(Button, { action: 'transfer-project-lead', disabled: !chosenProfile || !projectId, onClick: transferLead, children: 'Передать ведущего' }),
       ] }),
       jsxs('div', { className: 'dockyard-settings-grid', children: [
-        jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Member leaving' }), jsx('select', { ['data-transfer-fr' + 'om']: true, value: transferFrom, onChange: (event) => setTransferFrom(event.target.value), children: (team?.members ?? []).map((member) => jsx('option', { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] }),
-        jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Replacement' }), jsx('select', { 'data-transfer-to': true, value: transferTo, onChange: (event) => setTransferTo(event.target.value), children: (team?.members ?? []).map((member) => jsx('option', { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] }),
+        jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Участник покидает проект' }), jsx('select', { ['data-transfer-fr' + 'om']: true, value: transferFrom, onChange: (event) => setTransferFrom(event.target.value), children: (team?.members ?? []).map((member) => jsx('option', { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] }),
+        jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Замена' }), jsx('select', { 'data-transfer-to': true, value: transferTo, onChange: (event) => setTransferTo(event.target.value), children: (team?.members ?? []).map((member) => jsx('option', { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] }),
       ] }),
-      jsx(Button, { action: 'preview-work-transfer', disabled: !transferFrom || !transferTo || transferFrom === transferTo, onClick: previewTransfer, children: 'Preview exact consequences' }),
+      jsx(Button, { action: 'preview-work-transfer', disabled: !transferFrom || !transferTo || transferFrom === transferTo, onClick: previewTransfer, children: 'Посмотреть точные последствия' }),
       preview ? jsxs('div', { 'data-transfer-preview': preview.fingerprint, children: [
         jsx('strong', { children: `${number(preview.enumerated_count)} items enumerated · fingerprint ${preview.fingerprint}` }),
         jsx('ul', { children: [...(preview.eligible_items ?? []), ...(preview.excluded_items ?? [])].map((item) => jsx('li', { children: `${item.id} · ${item.title || ''} · ${item.status} · ${item.reason || 'eligible'}` }, item.id)) }),
-        jsx(Button, { action: 'execute-work-transfer', variant: 'primary', disabled: preview.complete !== true || (preview.excluded_items ?? []).length > 0, onClick: executeTransfer, children: 'Confirm exact transfer' }),
+        jsx(Button, { action: 'execute-work-transfer', variant: 'primary', disabled: preview.complete !== true || (preview.excluded_items ?? []).length > 0, onClick: executeTransfer, children: 'Подтвердить точный перенос' }),
       ] }) : null,
       pendingOperations.length ? jsxs('section', { 'data-pending-transfers': true, children: [
         jsx('h3', { children: 'Unfinished transfers · member departure' }),
@@ -176,11 +176,11 @@ export function TeamsView({ view, onRefresh }) {
         jsx('strong', { children: `${operation.op_id} · ${operation.state}` }),
         jsx('span', { children: `${(operation.items ?? []).filter((item) => item.outcome === 'completed').length} of ${(operation.items ?? []).length} transferred` }),
         jsx('ul', { children: (operation.items ?? []).map((item) => jsx('li', { children: `${item.item_id} · ${item.outcome}${item.detail ? ` · ${item.detail}` : ''}` }, item.item_id)) }),
-        operation.state !== 'completed' ? jsx(Button, { action: 'retry-work-transfer', onClick: retryTransfer, children: 'Retry remaining items' }) : null,
+        operation.state !== 'completed' ? jsx(Button, { action: 'retry-work-transfer', onClick: retryTransfer, children: 'Повторить оставшиеся пункты' }) : null,
       ] }) : null,
     ]}),
     jsxs('section', { className: 'dockyard-workload-card', 'data-workload-visual': true, children: [
-      jsxs('div', { children: [jsx('h2', { children: 'Workload heat' }), jsx('p', { children: 'Current fleet availability from owned work.' })] }),
+      jsxs('div', { children: [jsx('h2', { children: 'Нагрузка' }), jsx('p', { children: 'Текущая доступность флота по его работе.' })] }),
       jsxs('div', { className: 'dockyard-workload-chart', children: [
         jsxs('div', { className: 'dockyard-work-visual', role: 'img', 'aria-label': `${workload.busy?.length ?? 0} busy, ${workload.idle?.length ?? 0} idle, ${workload.stuck?.length ?? 0} stuck, ${workload.offline?.length ?? 0} offline`, children: [
           workload.busy?.length > 0 ? jsx('span', { className: 'active', style: { width: `${(workload.busy.length / total) * 100}%` } }) : null,
@@ -192,19 +192,19 @@ export function TeamsView({ view, onRefresh }) {
     ]}),
     jsxs('div', { className: 'dockyard-teams-layout', children: [
       jsxs('section', { className: 'dockyard-feature-card', children: [
-        jsx('h2', { children: 'Registry' }),
-        jsx('p', { children: 'Declared capabilities and current state. Capability never expands permission.' }),
+        jsx('h2', { children: 'Реестр' }),
+        jsx('p', { children: 'Заявленные возможности и текущее состояние. Возможности не расширяют права.' }),
         jsx('div', { className: 'dockyard-bot-grid', children:
           bots.map((bot) => jsxs('article', { className: 'dockyard-bot-card', 'data-bot-card': bot.id, children: [
             jsxs('header', { children: [
               jsx('span', { className: 'dockyard-avatar', children: initials(bot.name || bot.id) }),
-              jsxs('span', { children: [jsx('strong', { children: bot.name || bot.id }), jsx('small', { children: bot.current_item || 'No active item' })] }),
+              jsxs('span', { children: [jsx('strong', { children: bot.name || bot.id }), jsx('small', { children: bot.current_item || 'Нет активного элемента' })] }),
               jsx(StatusTag, { tone: bot.status === 'busy' ? 'warning' : bot.status === 'idle' ? 'success' : 'neutral', label: bot.status || 'unknown' }),
             ]}),
             jsx('div', { className: 'dockyard-capabilities', children:
               (bot.capabilities ?? []).length > 0
                 ? bot.capabilities.map((capability) => jsx('span', { children: capability }, capability))
-                : jsx('span', { children: 'No capabilities declared' }),
+                : jsx('span', { children: 'Возможности не заявлены' }),
             }),
             jsxs('button', {
               type: 'button',
@@ -213,30 +213,30 @@ export function TeamsView({ view, onRefresh }) {
               'data-bot-id': bot.id,
               'aria-expanded': selectedBot === bot.id,
               onClick: () => openSessions(bot.id),
-              children: [jsx(Icon, { name: 'activity' }), jsx('span', { children: 'Session logs' }), jsx(Icon, { name: 'chevron' })],
+              children: [jsx(Icon, { name: 'activity' }), jsx('span', { children: 'Журналы сессий' }), jsx(Icon, { name: 'chevron' })],
             }),
           ]}, bot.id)),
         }),
       ]}),
       jsxs('section', { className: 'dockyard-feature-card', children: [
-        jsx('h2', { children: 'Groups and handoffs' }),
-        jsx('p', { children: 'Group membership and audited A2A messages from the canonical feed.' }),
+        jsx('h2', { children: 'Группы и передачи' }),
+        jsx('p', { children: 'Состав групп и аудируемые A2A-сообщения из канонического потока.' }),
         jsx('div', { className: 'dockyard-group-list', children:
           (view.groups ?? []).length > 0
             ? view.groups.map((group) => jsxs('article', { className: 'dockyard-group-card', 'data-bot-group': group.name, children: [
                 jsxs('header', { children: [jsx('strong', { children: group.name }), jsx('span', { children: `${number(group.members?.length ?? 0)} members` })] }),
-                jsx('p', { children: group.purpose || 'No purpose supplied' }),
+                jsx('p', { children: group.purpose || 'Назначение не указано' }),
                 jsx('div', { className: 'dockyard-group-members', children: (group.members ?? []).map((member) => jsx('span', { className: 'dockyard-avatar', title: member, children: initials(member) }, member)) }),
                 jsx('div', { className: 'dockyard-handoff-list', children:
                   (view.messages?.[group.name] ?? []).length > 0
                     ? view.messages[group.name].map((message, index) => jsxs('div', { children: [
-                        jsx('strong', { children: message.payload?.summary || message.msg_type || 'A2A event' }),
+                        jsx('strong', { children: message.payload?.summary || message.msg_type || 'Событие A2A' }),
                         jsx('span', { children: `${message.from_actor || 'Unknown actor'} / ${formatWhen(message.created_at)}` }),
                       ]}, String(message.id ?? index)))
-                    : jsx('span', { className: 'dockyard-meta', children: 'No handoff messages recorded.' }),
+                    : jsx('span', { className: 'dockyard-meta', children: 'Сообщения о передаче не записаны.' }),
                 }),
               ]}, group.name))
-            : jsx('p', { className: 'dockyard-meta', children: 'No bot groups configured.' }),
+            : jsx('p', { className: 'dockyard-meta', children: 'Группы ботов не настроены.' }),
         }),
       ]}),
     ]}),
@@ -245,18 +245,18 @@ export function TeamsView({ view, onRefresh }) {
         jsxs('div', { children: [
           jsx('span', { className: 'dockyard-card-label', children: 'SESSION EVIDENCE' }),
           jsx('h2', { children: `${bots.find((bot) => bot.id === selectedBot)?.name || selectedBot} activity` }),
-          jsx('p', { children: sessionData?.scope_note || 'System prompts and private reasoning are excluded.' }),
+          jsx('p', { children: sessionData?.scope_note || 'Системные промпты и приватные рассуждения исключены.' }),
         ]}),
-        jsx(Button, { small: true, onClick: () => { setSelectedBot(null); setSessionData(null); setTranscript(null) }, children: 'Close' }),
+        jsx(Button, { small: true, onClick: () => { setSelectedBot(null); setSessionData(null); setTranscript(null) }, children: 'Закрыть' }),
       ]}),
       sessionError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: sessionError }) : null,
       sessionState === 'loading'
-        ? jsx('p', { className: 'dockyard-meta', children: 'Loading sessions...' })
+        ? jsx('p', { className: 'dockyard-meta', children: 'Загрузка сессий…' })
         : jsxs('div', { className: 'dockyard-session-layout', children: [
             jsxs('aside', { className: 'dockyard-session-list', children: [
-              jsx('h3', { children: 'Recent sessions' }),
+              jsx('h3', { children: 'Недавние сессии' }),
               sessionData?.available === false
-                ? jsx('p', { className: 'dockyard-meta', children: 'No Hermes session store is available for this bot profile.' })
+                ? jsx('p', { className: 'dockyard-meta', children: 'Для этого профиля бота нет хранилища сессий Hermes.' })
                 : (sessionData?.sessions ?? []).length > 0
                   ? sessionData.sessions.map((session) => jsxs('button', {
                       type: 'button',
@@ -268,24 +268,24 @@ export function TeamsView({ view, onRefresh }) {
                         jsx(StatusTag, { tone: session.status === 'active' ? 'success' : 'neutral', label: session.status }),
                       ],
                     }, session.session_id))
-                  : jsx('p', { className: 'dockyard-meta', children: 'No sessions were recorded for this bot.' }),
+                  : jsx('p', { className: 'dockyard-meta', children: 'Сессии этого бота не записаны.' }),
             ]}),
             transcript
               ? jsxs('article', { className: 'dockyard-transcript', 'data-session-transcript': transcript.session?.session_id, children: [
                   jsxs('header', { children: [
-                    jsxs('div', { children: [jsx('h3', { children: transcript.session?.title || 'Session transcript' }), jsx('span', { children: `${transcript.session?.source || 'unknown'} / ${transcript.session?.model || 'model not recorded'}` })] }),
+                    jsxs('div', { children: [jsx('h3', { children: transcript.session?.title || 'Транскрипт сессии' }), jsx('span', { children: `${transcript.session?.source || 'unknown'} / ${transcript.session?.model || 'model not recorded'}` })] }),
                     jsx(StatusTag, { tone: 'info', label: `${number(transcript.messages?.length ?? 0)} messages` }),
                   ]}),
                   jsx('div', { className: 'dockyard-transcript-messages', children:
                     (transcript.messages ?? []).map((message, index) => jsxs('div', { className: `dockyard-transcript-message ${message.role}`, 'data-transcript-message': message.role, children: [
                       jsxs('div', { children: [jsx('strong', { children: message.tool_name || message.role }), jsx('span', { children: formatWhen(message.timestamp) })] }),
                       jsx('pre', { children: message.content || '(empty message)' }),
-                      message.truncated ? jsx('small', { children: 'Message truncated at the safe display limit.' }) : null,
+                      message.truncated ? jsx('small', { children: 'Сообщение обрезано по лимиту безопасного показа.' }) : null,
                     ]}, String(message.message_id ?? index))),
                   }),
                   jsx('p', { className: 'dockyard-transcript-scope', children: transcript.scope_note }),
                 ]})
-              : jsx('div', { className: 'dockyard-transcript-placeholder', children: sessionState === 'loading-transcript' ? 'Loading transcript...' : 'Select a session to inspect its transcript.' }),
+              : jsx('div', { className: 'dockyard-transcript-placeholder', children: sessionState === 'loading-transcript' ? 'Загрузка транскрипта...' : 'Выберите сессию, чтобы посмотреть её транскрипт.' }),
           ]}),
     ]}) : null,
   ]})

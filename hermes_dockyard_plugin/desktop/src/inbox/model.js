@@ -7,7 +7,7 @@
 // Age comes from age_days when the backend supplies it, else created_at.
 
 export const TAB_KEYS = ['all', 'urgent', 'today', 'earlier']
-export const TAB_LABELS = { all: 'All', urgent: 'Urgent', today: 'Today', earlier: 'Earlier' }
+export const TAB_LABELS = { all: 'Все', urgent: 'Срочно', today: 'Сегодня', earlier: 'Ранее' }
 
 const highRisk = (item) => ['high', 'critical'].includes(String(item?.risk ?? '').toLowerCase())
 
@@ -114,7 +114,7 @@ export function mergeActivity(payload = {}) {
 // Copy for the honest attention panel. Never pretends to be decidable.
 export function attentionPanel(item) {
   return {
-    title: 'This project needs attention',
+    title: 'Проект требует внимания',
     description: `${item?.project ?? 'This project'} is frozen or disabled, so its pending work cannot be decided here. Open the project to see what is blocking it.`,
     project: item?.project ?? '',
     deeplink: item?.deep_link ?? null,

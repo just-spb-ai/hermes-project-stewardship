@@ -18,7 +18,7 @@
 
 export const STALLED_AFTER_DAYS = 14
 
-const PHASE_LABEL = { paused: 'Paused', frozen: 'Frozen', disabled: 'Disabled', archived: 'Archived' }
+const PHASE_LABEL = { paused: 'На паузе', frozen: 'Заморожен', disabled: 'Выключено', archived: 'В архиве' }
 
 const plural = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`
 
@@ -82,8 +82,8 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
   const row = (portfolio?.projects ?? []).find((entry) => entry?.project_id === id) ?? null
   if (!id || !row) {
     return {
-      available: false, state: 'unknown', tone: 'neutral', label: 'Status unavailable',
-      summary: 'the attention check did not load. Refresh to try again.', items: [],
+      available: false, state: 'unknown', tone: 'neutral', label: 'Статус недоступен',
+      summary: 'проверка внимания не загрузилась. Обновите и попробуйте снова.', items: [],
     }
   }
   const groups = portfolio.groups ?? {}
@@ -93,60 +93,60 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
     // Signed 16/09: an approval item is amber in the drawer (the banner
     // state it causes, "Needs review", is blue).
     items.push({
-      key: `approval:${decision.ref}`, kind: 'approval', tone: 'warning', label: 'Approval waiting',
+      key: `approval:${decision.ref}`, kind: 'approval', tone: 'warning', label: 'Одобрение ожидается',
       title: decision.title || decision.ref, ref: decision.ref,
       note: `Initiative waiting for your decision${decision.risk ? ` (${decision.risk} risk)` : ''}.`,
       ageDays: decision.age_days, owner: null,
-      next: 'Decide in the Approval inbox, where the fingerprint is shown.',
+      next: 'Решение принимается во «Входящих одобрениях», где показан отпечаток.',
       target: { kind: 'deep_link', link: decision.deep_link || `s6:initiative/${decision.ref}` },
-      openLabel: 'Open in Approval inbox',
+      openLabel: 'Открыть во «Входящих одобрениях»',
     })
   }
   for (const entry of groups.interventions ?? []) {
     if (entry?.project !== id) continue
     const base = { ref: entry.ref, ageDays: entry.age_days, owner: entry.owner ?? null, next: entry.next_action ?? null }
     if (entry.cause === 'blocked_item') {
-      items.push({ ...base, key: `blocked:${entry.ref}`, kind: 'blocked', tone: 'danger', label: 'Blocked',
-        title: `${entry.ref} · ${entry.title}`, note: entry.detail || 'Blocked without a recorded reason.',
-        target: { kind: 'work', ref: entry.ref }, openLabel: 'Open work item' })
+      items.push({ ...base, key: `blocked:${entry.ref}`, kind: 'blocked', tone: 'danger', label: 'Заблокировано',
+        title: `${entry.ref} · ${entry.title}`, note: entry.detail || 'Заблокировано без записанной причины.',
+        target: { kind: 'work', ref: entry.ref }, openLabel: 'Открыть рабочий элемент' })
     } else if (entry.cause === 'overdue_item') {
-      items.push({ ...base, key: `overdue:${entry.ref}`, kind: 'overdue', tone: 'warning', label: 'Overdue',
-        title: `${entry.ref} · ${entry.title}`, note: entry.detail || 'Past its due date and not done.',
-        target: { kind: 'work', ref: entry.ref }, openLabel: 'Open work item' })
+      items.push({ ...base, key: `overdue:${entry.ref}`, kind: 'overdue', tone: 'warning', label: 'Просрочено',
+        title: `${entry.ref} · ${entry.title}`, note: entry.detail || 'Просрочено и не выполнено.',
+        target: { kind: 'work', ref: entry.ref }, openLabel: 'Открыть рабочий элемент' })
     } else if (entry.cause === 'evidence_stale') {
-      items.push({ ...base, key: 'evidence', kind: 'evidence', tone: 'warning', label: 'Evidence out of date',
-        title: entry.title || 'The last health check is old', note: entry.detail || '',
-        target: { kind: 'view', view: 'overview' }, openLabel: 'Open the assessment' })
+      items.push({ ...base, key: 'evidence', kind: 'evidence', tone: 'warning', label: 'Доказательства устарели',
+        title: entry.title || 'Последняя проверка здоровья устарела', note: entry.detail || '',
+        target: { kind: 'view', view: 'overview' }, openLabel: 'Открыть оценку' })
     } else if (entry.cause === 'unlinked_project') {
       // Hermes has no project for it (10/10/2026): its work cannot be read.
-      items.push({ ...base, key: 'unlinked', kind: 'unlinked', tone: 'warning', label: 'Not linked',
-        title: entry.title || 'Not linked to a Hermes project', note: entry.detail || '',
-        target: { kind: 'view', view: 'settings' }, openLabel: 'Open project settings' })
+      items.push({ ...base, key: 'unlinked', kind: 'unlinked', tone: 'warning', label: 'Не связан',
+        title: entry.title || 'Не привязан к проекту Hermes', note: entry.detail || '',
+        target: { kind: 'view', view: 'settings' }, openLabel: 'Настройки проекта' })
     } else if (entry.cause === 'project_attention') {
       const switchedOff = project.enabled === false || row.enabled === false
       items.push({ ...base, key: 'project', kind: 'project', tone: 'neutral',
-        label: switchedOff ? 'Switched off' : (PHASE_LABEL[project.phase ?? row.phase] ?? 'Project state'),
-        title: switchedOff ? 'This project is switched off' : `This project is ${project.phase ?? row.phase}`,
-        note: switchedOff ? 'Nothing runs for it until someone enables it again.' : 'Its lifecycle state needs a decision.',
-        target: { kind: 'view', view: 'settings' }, openLabel: 'Open project settings' })
+        label: switchedOff ? 'Выключено' : (PHASE_LABEL[project.phase ?? row.phase] ?? 'Состояние проекта'),
+        title: switchedOff ? 'Этот проект выключен' : `This project is ${project.phase ?? row.phase}`,
+        note: switchedOff ? 'Для него ничего не запускается, пока кто-нибудь не включит его снова.' : 'Его состояние жизненного цикла требует решения.',
+        target: { kind: 'view', view: 'settings' }, openLabel: 'Настройки проекта' })
     }
   }
   for (const milestone of overdueMilestones(milestones, now)) {
     items.push({
-      key: `milestone:${milestone.id}`, kind: 'milestone', tone: 'warning', label: 'Milestone overdue',
+      key: `milestone:${milestone.id}`, kind: 'milestone', tone: 'warning', label: 'Веха просрочена',
       title: milestone.name, ref: milestone.id,
       note: `Due ${milestone.due} and still open${Number.isFinite(Number(milestone.total)) ? ` (${Number(milestone.done ?? 0)} of ${Number(milestone.total)} done)` : ''}.`,
       ageDays: Math.max(0, Math.floor((now.getTime() - Date.parse(milestone.due)) / 86400000)), owner: null,
-      next: 'Review the date or close the milestone.',
-      target: { kind: 'plan', entry: `plan:milestone:${milestone.id}` }, openLabel: 'Open in Vision',
+      next: 'Пересмотрите дату или закройте веху.',
+      target: { kind: 'plan', entry: `plan:milestone:${milestone.id}` }, openLabel: 'Открыть в «Видении»',
     })
   }
   if (row.status === 'stalled') {
     items.push({
-      key: 'stalled', kind: 'stalled', tone: 'warning', label: 'Stalled',
+      key: 'stalled', kind: 'stalled', tone: 'warning', label: 'Застряло',
       title: `No work has moved for ${STALLED_AFTER_DAYS} days or more`,
-      note: 'There is open work, but nothing on it has changed.', ageDays: null, owner: null,
-      next: 'Check the board and re-plan.', target: { kind: 'view', view: 'board' }, openLabel: 'Open Kanban',
+      note: 'Есть открытая работа, но ничего в ней не изменилось.', ageDays: null, owner: null,
+      next: 'Проверьте доску и перепланируйте.', target: { kind: 'view', view: 'board' }, openLabel: 'Открыть канбан',
     })
   }
 
@@ -157,22 +157,22 @@ export function projectAttention({ project, portfolio, milestones = [], now = ne
   const enabled = project.enabled ?? row.enabled
   const phase = project.phase ?? row.phase
   let state
-  if (enabled === false) state = ['disabled', 'neutral', 'Disabled']
+  if (enabled === false) state = ['disabled', 'neutral', 'Выключено']
   else if (phase && phase !== 'active') state = [phase, 'neutral', PHASE_LABEL[phase] ?? phase]
-  else if (row.status === 'unlinked') state = ['unlinked', 'warning', 'Not linked']
-  else if (Number(row.items?.blocked ?? 0) > 0) state = ['blocked', 'danger', 'Blocked']
-  else if (row.status === 'at_risk') state = ['at_risk', 'warning', 'At risk']
-  else if (row.status === 'stalled') state = ['stalled', 'warning', 'Stalled']
-  else if (items.some((item) => item.kind === 'approval')) state = ['review', 'info', 'Needs review']
-  else if (row.status === 'idle') state = ['idle', 'neutral', 'Idle']
-  else state = ['on_track', 'success', 'On track']
+  else if (row.status === 'unlinked') state = ['unlinked', 'warning', 'Не связан']
+  else if (Number(row.items?.blocked ?? 0) > 0) state = ['blocked', 'danger', 'Заблокировано']
+  else if (row.status === 'at_risk') state = ['at_risk', 'warning', 'Под угрозой']
+  else if (row.status === 'stalled') state = ['stalled', 'warning', 'Застряло']
+  else if (items.some((item) => item.kind === 'approval')) state = ['review', 'info', 'Нужна проверка']
+  else if (row.status === 'idle') state = ['idle', 'neutral', 'Простой']
+  else state = ['on_track', 'success', 'В графике']
 
   const count = (kind) => items.filter((item) => item.kind === kind).length
   const countable = [
     ['blocked', 'blocked item'], ['overdue', 'overdue item'], ['milestone', 'overdue milestone'], ['approval', 'approval'],
   ].filter(([kind]) => count(kind) > 0)
   const sentences = []
-  if (state[0] === 'unlinked') sentences.push('Hermes has no project for it, so its work cannot be shown')
+  if (state[0] === 'unlinked') sentences.push('У Hermes нет для него проекта, поэтому его работа не может быть показана')
   if (countable.length > 0) {
     const total = countable.reduce((sum, [kind]) => sum + count(kind), 0)
     sentences.push(`${joinAnd(countable.map(([kind, word]) => plural(count(kind), word)))} ${total === 1 ? 'needs' : 'need'} you`)

@@ -245,7 +245,7 @@ export function docProblem(doc, rest = {}) {
   const bytes = serverJsonBytes(counted)
   if (chars > RICH_TEXT_LIMITS.chars) return `Too long: ${chars.toLocaleString('en-GB')} of ${RICH_TEXT_LIMITS.chars.toLocaleString('en-GB')} characters. Shorten it before applying.`
   if (nodes > RICH_TEXT_LIMITS.nodes) return `Too much formatting: ${nodes.toLocaleString('en-GB')} of ${RICH_TEXT_LIMITS.nodes.toLocaleString('en-GB')} pieces. Remove some paragraphs or formatting before applying.`
-  if (bytes > RICH_TEXT_LIMITS.bytes) return 'This card is too large to save. Remove some text or formatting before applying.'
+  if (bytes > RICH_TEXT_LIMITS.bytes) return 'Карточка слишком большая для сохранения. Уберите часть текста или форматирования перед применением.'
   return null
 }
 
@@ -397,18 +397,18 @@ function normaliseDom(host, { afterDelete = false } = {}) {
 }
 
 const TOOLS = [
-  ['bold', 'Bold (Ctrl+B)', 'B', () => exec('bold'), (s) => s.bold],
-  ['italic', 'Italic (Ctrl+I)', 'I', () => exec('italic'), (s) => s.italic],
-  ['underline', 'Underline (Ctrl+U)', 'U', () => exec('underline'), (s) => s.underline],
-  ['strike', 'Strikethrough', 'S', () => exec('strikeThrough'), (s) => s.strike],
+  ['bold', 'Жирный (Ctrl+B)', 'B', () => exec('bold'), (s) => s.bold],
+  ['italic', 'Курсив (Ctrl+I)', 'I', () => exec('italic'), (s) => s.italic],
+  ['underline', 'Подчёркнутый (Ctrl+U)', 'U', () => exec('underline'), (s) => s.underline],
+  ['strike', 'Зачёркнутый', 'S', () => exec('strikeThrough'), (s) => s.strike],
   null,
-  ['bullets', 'Bullet list', { icon: 'list' }, () => exec('insertUnorderedList'), (s) => s.list === 'UL'],
-  ['numbers', 'Numbered list', { icon: 'list-ordered' }, () => exec('insertOrderedList'), (s) => s.list === 'OL'],
+  ['bullets', 'Маркированный список', { icon: 'list' }, () => exec('insertUnorderedList'), (s) => s.list === 'UL'],
+  ['numbers', 'Нумерованный список', { icon: 'list-ordered' }, () => exec('insertOrderedList'), (s) => s.list === 'OL'],
   null,
-  ['left', 'Align left', { icon: 'align-left' }, () => exec('justifyLeft'), (s) => s.align === 'left'],
-  ['center', 'Align centre', { icon: 'align-center' }, () => exec('justifyCenter'), (s) => s.align === 'center'],
-  ['right', 'Align right', { icon: 'align-right' }, () => exec('justifyRight'), (s) => s.align === 'right'],
-  ['justify', 'Justify', { icon: 'align-justify' }, () => exec('justifyFull'), (s) => s.align === 'justify'],
+  ['left', 'По левому краю', { icon: 'align-left' }, () => exec('justifyLeft'), (s) => s.align === 'left'],
+  ['center', 'По центру', { icon: 'align-center' }, () => exec('justifyCenter'), (s) => s.align === 'center'],
+  ['right', 'По правому краю', { icon: 'align-right' }, () => exec('justifyRight'), (s) => s.align === 'right'],
+  ['justify', 'По ширине', { icon: 'align-justify' }, () => exec('justifyFull'), (s) => s.align === 'justify'],
 ]
 
 // ---- caret as a number (survives re-rendering from a doc) ----------------
@@ -634,7 +634,7 @@ function applySize(host, size) {
 
 // Word-style editor: a formatting bar over the text. `value` is a TipTap-
 // shaped doc (or null); `onChange(doc, plainText)` fires on every edit.
-export function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOnly, label = 'Description' }) {
+export function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOnly, label = 'Описание' }) {
   const host = useRef(null)
   const saved = useRef(null)
   const changeRef = useRef(onChange)
@@ -840,18 +840,18 @@ export function RichTextEditor({ value, fallbackText, onChange, onProblem, rest,
     jsx('span', { className: 'dy-pc-field-label', children: label }),
     // Owner 01/10: two tidy rows (style + size, then the buttons) instead of
     // letting everything wrap into a ragged five-row stack.
-    readOnly ? null : jsxs('div', { className: 'dy-rt-bar', role: 'toolbar', 'aria-label': 'Text formatting', children: [
+    readOnly ? null : jsxs('div', { className: 'dy-rt-bar', role: 'toolbar', 'aria-label': 'Форматирование текста', children: [
      jsxs('div', { className: 'dy-rt-row dy-rt-row-sel', children: [
-      jsxs('select', { className: 'dy-rt-select', 'data-rt': 'style', 'aria-label': 'Text style', value: state.style,
+      jsxs('select', { className: 'dy-rt-select', 'data-rt': 'style', 'aria-label': 'Стиль текста', value: state.style,
         onChange: (event) => { const v = event.target.value; run((el) => setBlockStyle(el, v)) },
-        children: [['p', 'Normal text'], ['h1', 'Heading 1'], ['h2', 'Heading 2'], ['h3', 'Heading 3']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
-      jsxs('select', { className: 'dy-rt-select', 'data-rt': 'size', 'aria-label': 'Text size', value: state.size,
+        children: [['p', 'Обычный текст'], ['h1', 'Заголовок 1'], ['h2', 'Заголовок 2'], ['h3', 'Заголовок 3']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
+      jsxs('select', { className: 'dy-rt-select', 'data-rt': 'size', 'aria-label': 'Размер текста', value: state.size,
         onChange: (event) => { const v = event.target.value; run((el) => applySize(el, v)) },
-        children: [['small', 'Small'], ['normal', 'Normal size'], ['large', 'Large'], ['huge', 'Huge']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
+        children: [['small', 'Small'], ['normal', 'Обычный размер'], ['large', 'Large'], ['huge', 'Huge']].map(([v, t]) => jsx('option', { value: v, children: t }, v)) }),
      ] }, 'sel'),
      jsxs('div', { className: 'dy-rt-row', children: [
       ...TOOLS.map((tool, i) => (tool ? button(tool) : jsx('span', { className: 'dy-rt-sep', 'aria-hidden': 'true' }, `sep-${i}`))),
-      jsx('button', { type: 'button', className: 'dy-rt-btn', 'data-rt': 'clear', title: 'Clear formatting', 'aria-label': 'Clear formatting', disabled: readOnly,
+      jsx('button', { type: 'button', className: 'dy-rt-btn', 'data-rt': 'clear', title: 'Очистить форматирование', 'aria-label': 'Очистить форматирование', disabled: readOnly,
         onMouseDown: (event) => event.preventDefault(),
         onClick: () => run((el) => clearFormatting(el)), children: jsx(Icon, { name: 'remove-formatting' }) }, 'clear'),
      ] }, 'btns'),

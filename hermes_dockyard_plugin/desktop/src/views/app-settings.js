@@ -63,7 +63,7 @@ function AppearanceSettings({ appearance, onAppearance }) {
   const chooseTheme = (id) => { if (id !== theme) onAppearance?.({ theme: id }) }
   const chooseFont = (id) => { if (id !== font) onAppearance?.({ font: id }) }
   return jsxs(Fragment, { children: [
-    jsx('h3', { className: 'dockyard-app-settings-sub', id: 'dy-appearance-theme', children: 'Theme' }),
+    jsx('h3', { className: 'dockyard-app-settings-sub', id: 'dy-appearance-theme', children: 'Тема' }),
     jsx('div', { className: 'dy-theme-grid', role: 'radiogroup', 'aria-labelledby': 'dy-appearance-theme', children: THEMES.map((option) =>
       jsxs('button', {
         type: 'button', role: 'radio', className: 'dy-theme-card', 'aria-checked': option.id === theme, 'data-theme-choice': option.id,
@@ -74,14 +74,14 @@ function AppearanceSettings({ appearance, onAppearance }) {
           jsx(ThemePreview, { theme: option }),
           jsxs('span', { className: 'dy-theme-name', children: [
             jsx('strong', { children: option.name }),
-            jsx('span', { children: option.mode === 'auto' ? 'Light or dark' : option.art ? `${option.mode} · art` : option.mode }),
+            jsx('span', { children: option.mode === 'auto' ? 'Светлая или тёмная' : option.art ? `${option.mode} · art` : option.mode }),
           ] }),
         ],
       }, option.id)) }),
     jsx('p', { className: 'dy-appearance-note', children: theme === 'auto'
-      ? 'Match Hermes: light or dark, the same as Hermes Desktop, and it changes when Hermes does.'
-      : 'The theme applies to the whole app straight away, for everyone using this Hermes.' }),
-    jsx('h3', { className: 'dockyard-app-settings-sub', id: 'dy-appearance-font', children: 'Typeface' }),
+      ? 'Как в Hermes: светлая или тёмная, как в Hermes Desktop, и меняется вместе с ним.'
+      : 'Тема применяется ко всему приложению сразу — для всех, кто пользуется этим Hermes.' }),
+    jsx('h3', { className: 'dockyard-app-settings-sub', id: 'dy-appearance-font', children: 'Шрифт' }),
     jsx('div', { className: 'dy-font-grid', role: 'radiogroup', 'aria-labelledby': 'dy-appearance-font', children: FONTS.map((option) =>
       jsxs('button', {
         type: 'button', role: 'radio', className: 'dy-font-card', 'aria-checked': option.id === font, 'data-font-choice': option.id,
@@ -101,7 +101,7 @@ const section = (key, title, description, body) => jsxs('section', { className: 
 
 export function AppSettingsView({ view, selectedProject, appearance, onAppearance, onOpenProjectSettings, onForgetProject, onRefresh }) {
   const projects = view.projects ?? []
-  const nameOf = (id) => id === ALL_PROJECTS ? 'All projects' : projects.find((project) => project.id === id)?.name || id
+  const nameOf = (id) => id === ALL_PROJECTS ? 'Все проекты' : projects.find((project) => project.id === id)?.name || id
   const [lastProject, setLastProject] = useState(view.lastProject ?? null)
   const [collapsed, setCollapsed] = useState(view.ui?.collapsed ?? [])
   const [policy, setPolicy] = useState(view.notificationPolicy ?? null)
@@ -114,9 +114,9 @@ export function AppSettingsView({ view, selectedProject, appearance, onAppearanc
       await api('/settings/last-project', { method: 'PUT', body: { project_id: null }, quiet: true })
       setLastProject(null)
       onForgetProject?.()
-      emitToast('success', 'The app will open on All projects.')
+      emitToast('success', 'Приложение будет открываться на «Все проекты».')
     } catch {
-      emitToast('danger', 'That change was not saved. Try again.')
+      emitToast('danger', 'Изменение не сохранено. Попробуйте ещё раз.')
     }
     setBusy(null)
   }
@@ -128,7 +128,7 @@ export function AppSettingsView({ view, selectedProject, appearance, onAppearanc
       await api('/settings/ui', { method: 'PUT', body: { collapsed: next }, quiet: true })
     } catch {
       setCollapsed(before)
-      emitToast('danger', 'That change was not saved. Try again.')
+      emitToast('danger', 'Изменение не сохранено. Попробуйте ещё раз.')
     }
   }
   // Same save as the Notifications screen: the read shape carries read-only
@@ -150,26 +150,26 @@ export function AppSettingsView({ view, selectedProject, appearance, onAppearanc
 
   return jsxs('div', { className: 'dockyard-app-settings', 'data-app-settings': true, children: [
     jsx('style', { 'data-dy-notifications': 'true', children: NOTIFICATIONS_CSS }),
-    jsx(PageHead, { title: 'App settings', description: 'Settings for the whole app. Each project keeps its own settings in Projects > Settings.', onRefresh }),
+    jsx(PageHead, { title: 'Настройки приложения', description: 'Settings for the whole app. Each project keeps its own settings in Projects > Settings.', onRefresh }),
     selectedProject ? jsxs('p', { className: 'dockyard-app-settings-project', 'data-app-settings-project': selectedProject, children: [
       jsx('span', { children: `${nameOf(selectedProject)} has its own settings: mission, lead, members, autonomy and checks.` }),
-      jsx(Button, { small: true, action: 'open-project-settings', onClick: onOpenProjectSettings, children: 'Open project settings' }),
+      jsx(Button, { small: true, action: 'open-project-settings', onClick: onOpenProjectSettings, children: 'Настройки проекта' }),
     ] }) : null,
-    section('opening', 'When the app opens', null, lastProject
+    section('opening', 'При открытии приложения', null, lastProject
       ? jsxs(Fragment, { children: [
           jsx('p', { 'data-opening-project': lastProject, children: lastProject === ALL_PROJECTS
-            ? 'It opens on All projects, your last choice in the switcher.'
+            ? 'Открывается на «Все проекты» либо на последнем выборе в переключателе.'
             : `It opens on the last project you chose: ${nameOf(lastProject)}.` }),
-          jsx(Button, { small: true, action: 'forget-last-project', disabled: busy === 'opening', onClick: forgetProject, children: 'Forget it' }),
+          jsx(Button, { small: true, action: 'forget-last-project', disabled: busy === 'opening', onClick: forgetProject, children: 'Забудь' }),
         ] })
-      : jsx('p', { 'data-opening-project': '', children: 'It opens on All projects, until you choose in the switcher.' })),
-    section('dashboard', 'Dashboard', null, jsxs('label', { className: 'dockyard-app-settings-check', children: [
+      : jsx('p', { 'data-opening-project': '', children: 'Открывается на «Все проекты», пока вы не выберете в переключателе.' })),
+    section('dashboard', 'Панель', null, jsxs('label', { className: 'dockyard-app-settings-check', children: [
       jsx('input', { type: 'checkbox', 'data-app-setting-fold': 'needs-you-now', checked: collapsed.includes('needs-you-now'), onChange: (event) => setFolded(event.target.checked) }),
       jsx('span', { children: 'Keep "Needs you now" folded' }),
     ] })),
-    section('notifications', 'Notifications for every project', 'A project can change these in its own settings.',
+    section('notifications', 'Уведомления по всем проектам', 'Проект может изменить это в своих настройках.',
       jsx(NotificationSettings, { settings: policy, busy: busy === 'notifications', error: policyError, onSave: saveNotifications })),
     // Sahil 05/10 (demo feedback h): the September themes, backgrounds and fonts.
-    section('appearance', 'Appearance', 'Colour theme and typeface for the whole app.', jsx(AppearanceSettings, { appearance, onAppearance })),
+    section('appearance', 'Внешний вид', 'Цветовая тема и шрифт для всего приложения.', jsx(AppearanceSettings, { appearance, onAppearance })),
   ] })
 }

@@ -41,19 +41,19 @@ export function initials(value) {
   return words.slice(0, 2).map((word) => word.charAt(0).toUpperCase()).join('') || '?'
 }
 
-export function readableLabel(value, fallback = 'All') {
+export function readableLabel(value, fallback = 'Все') {
   const text = String(value || fallback).replace(/[_-]+/g, ' ').trim()
   return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : fallback
 }
 
 export function validationSummary(contract) {
-  if (!contract || typeof contract !== 'object') return 'No validation contract supplied'
+  if (!contract || typeof contract !== 'object') return 'Контракт проверки не задан'
   const steps = Array.isArray(contract.steps) ? contract.steps.filter(Boolean) : []
   const tests = typeof contract.tests === 'string' ? contract.tests.trim() : ''
   if (steps.length > 0 && tests) return `${steps.length} checks plus ${tests}`
   if (steps.length > 0) return steps.join('; ')
   if (tests) return tests
-  return 'No validation contract supplied'
+  return 'Контракт проверки не задан'
 }
 
 export async function loadDashboardData() {

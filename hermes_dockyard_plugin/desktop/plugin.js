@@ -15,9 +15,9 @@ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { host as host2 } from "@hermes/plugin-sdk";
 
 // hermes_dockyard_plugin/desktop/src/data/unlinked.js
-var UNLINKED_TITLE = "Not linked to a Hermes project";
-var UNLINKED_DETAIL = "Hermes has no project with this id or slug, so its work cannot be shown.";
-var UNLINKED_LABEL = "Not linked";
+var UNLINKED_TITLE = "\u041D\u0435 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D \u043A \u043F\u0440\u043E\u0435\u043A\u0442\u0443 Hermes";
+var UNLINKED_DETAIL = "\u0423 Hermes \u043D\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0441 \u0442\u0430\u043A\u0438\u043C id \u0438\u043B\u0438 \u0441\u043B\u0430\u0433\u043E\u043C, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0435\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u0430 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u0430.";
+var UNLINKED_LABEL = "\u041D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D";
 function unlinkedNextStep(projectId) {
   return `Create a Hermes project with the slug "${projectId}" to link it.`;
 }
@@ -40,12 +40,12 @@ async function hermesRead(link, read, empty) {
 }
 function unavailableWords(reason) {
   if (reason === "unlinked") return `${UNLINKED_TITLE}: its work cannot be shown.`;
-  if (reason === "archived") return "Unavailable: archived.";
-  return "Unavailable: the work host did not respond.";
+  if (reason === "archived") return "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E: \u0432 \u0430\u0440\u0445\u0438\u0432\u0435.";
+  return "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E: \u0445\u043E\u0441\u0442 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u043B.";
 }
 
 // hermes_dockyard_plugin/desktop/src/data/plugin-off.js
-var PLUGIN_OFF_TITLE = "Project Stewardship is not switched on for this profile";
+var PLUGIN_OFF_TITLE = "Project Stewardship \u043D\u0435 \u0432\u043A\u043B\u044E\u0447\u0451\u043D \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F";
 var PLUGIN_OFF_DETAIL = "It runs per Hermes profile and this profile does not have it, so there is nothing to show here. Nothing is lost: your projects stay with the profiles that use it.";
 var PLUGIN_OFF_COMMAND = "hermes -p <profile> plugins enable hermes-project-stewardship";
 var PLUGIN_OFF_NEXT_STEP = "Switch it on for this profile on the Plugins page, or run the command below, then press Try again.";
@@ -2203,10 +2203,10 @@ var DEFAULT_FONT = "system";
 var SYSTEM_STACK = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 var THEMES = Object.freeze(
   [
-    { id: "auto", name: "Match Hermes", mode: "auto", source: "dockyard", art: null, tokens: null },
+    { id: "auto", name: "\u041A\u0430\u043A \u0432 Hermes", mode: "auto", source: "dockyard", art: null, tokens: null },
     {
       id: "caffeine",
-      name: "Caffeine Paper",
+      name: "\u041A\u043E\u0444\u0435\u0439\u043D\u0430\u044F \u0431\u0443\u043C\u0430\u0433\u0430",
       mode: "light",
       source: "v6",
       art: null,
@@ -2214,7 +2214,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "kodama",
-      name: "Kodama Grove",
+      name: "\u0420\u043E\u0449\u0430 \u041A\u043E\u0434\u0430\u043C\u044B",
       mode: "light",
       source: "v6",
       art: null,
@@ -2222,7 +2222,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "cobalt",
-      name: "Midnight Cobalt",
+      name: "\u041F\u043E\u043B\u043D\u043E\u0447\u043D\u044B\u0439 \u043A\u043E\u0431\u0430\u043B\u044C\u0442",
       mode: "dark",
       source: "v6",
       art: "cobalt",
@@ -2230,7 +2230,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "estuary",
-      name: "Deep Estuary",
+      name: "\u0422\u0451\u043C\u043D\u044B\u0439 \u044D\u0441\u0442\u0443\u0430\u0440\u0438\u0439",
       mode: "dark",
       source: "v6",
       art: "estuary",
@@ -2238,7 +2238,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "burgundy",
-      name: "Burgundy Ink",
+      name: "\u0411\u043E\u0440\u0434\u043E\u0432\u044B\u0435 \u0447\u0435\u0440\u043D\u0438\u043B\u0430",
       mode: "dark",
       source: "v6",
       art: "burgundy",
@@ -2246,7 +2246,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "violet",
-      name: "Violet Signal",
+      name: "\u0424\u0438\u043E\u043B\u0435\u0442\u043E\u0432\u044B\u0439 \u0441\u0438\u0433\u043D\u0430\u043B",
       mode: "dark",
       source: "v6",
       art: "violet",
@@ -2254,7 +2254,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "ember",
-      name: "Ember Spectrum",
+      name: "\u042F\u043D\u0442\u0430\u0440\u043D\u044B\u0439 \u0441\u043F\u0435\u043A\u0442\u0440",
       mode: "dark",
       source: "v6",
       art: "ember",
@@ -2262,7 +2262,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "neon",
-      name: "Neon Block Night",
+      name: "\u041D\u0435\u043E\u043D\u043E\u0432\u044B\u0439 \u043A\u0432\u0430\u0440\u0442\u0430\u043B: \u043D\u043E\u0447\u044C",
       mode: "dark",
       source: "hpsui2",
       art: "neon",
@@ -2270,7 +2270,7 @@ var THEMES = Object.freeze(
     },
     {
       id: "grove",
-      name: "Kodama Grove Night",
+      name: "\u0420\u043E\u0449\u0430 \u041A\u043E\u0434\u0430\u043C\u044B: \u043D\u043E\u0447\u044C",
       mode: "dark",
       source: "hpsui2",
       art: "grove",
@@ -4212,17 +4212,17 @@ function bindContext(ctx) {
 }
 function mutationMessage(path, result) {
   if (path === "/onboard") return `Project ${result?.project_id || "created"} onboarded`;
-  if (path.endsWith("/approve")) return "Initiative approved";
-  if (path.endsWith("/reject")) return "Initiative rejected";
-  if (path.endsWith("/ack")) return "Notification cleared";
-  if (path.endsWith("/rerank")) return "Backlog priority updated";
-  if (path.endsWith("/views")) return "Workflow view saved";
-  if (path.endsWith("/reports")) return "Report generated";
-  if (path.endsWith("/settings")) return "Project configuration saved";
-  if (path.endsWith("/freeze")) return "Project frozen";
-  if (path.endsWith("/resume")) return "Project resumed";
-  if (path.endsWith("/transition")) return "Work item updated";
-  return "Change saved";
+  if (path.endsWith("/approve")) return "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0430";
+  if (path.endsWith("/reject")) return "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0430";
+  if (path.endsWith("/ack")) return "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 \u043E\u0447\u0438\u0449\u0435\u043D\u043E";
+  if (path.endsWith("/rerank")) return "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0431\u044D\u043A\u043B\u043E\u0433\u0430 \u043E\u0431\u043D\u043E\u0432\u043B\u0451\u043D";
+  if (path.endsWith("/views")) return "\u0412\u0438\u0434 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D";
+  if (path.endsWith("/reports")) return "\u041E\u0442\u0447\u0451\u0442 \u0441\u043E\u0437\u0434\u0430\u043D";
+  if (path.endsWith("/settings")) return "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430";
+  if (path.endsWith("/freeze")) return "\u041F\u0440\u043E\u0435\u043A\u0442 \u0437\u0430\u043C\u043E\u0440\u043E\u0436\u0435\u043D";
+  if (path.endsWith("/resume")) return "\u041F\u0440\u043E\u0435\u043A\u0442 \u0432\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u043B\u0451\u043D";
+  if (path.endsWith("/transition")) return "\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u043E\u0431\u043D\u043E\u0432\u043B\u0451\u043D";
+  return "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E";
 }
 function emitToast(tone, message) {
   if (typeof window === "undefined" || typeof window.dispatchEvent !== "function") return;
@@ -4242,7 +4242,7 @@ async function api(path, init) {
     const pluginOff = isPluginOffError(error);
     const unlinked = isUnlinkedError(error);
     const projectInPath = /^\/projects\/([^/?]+)/.exec(path)?.[1];
-    const message = pluginOff ? `${PLUGIN_OFF_TITLE}.` : unlinked ? `${UNLINKED_TITLE}. ${projectInPath ? unlinkedNextStep(decodeURIComponent(projectInPath)) : "Link it to a Hermes project first."}` : /^403:\s*\[object Object\]$/.test(raw) && /^\/projects\/[^/]+\/workflows\/[^/]+\/archive$/.test(path) ? "403 Forbidden: archive permission (project_archive) is required or this action is denied. No change was made." : /(?:error\s*)?500|internal service error/i.test(raw) ? "Project Stewardship could not confirm the request." : raw;
+    const message = pluginOff ? `${PLUGIN_OFF_TITLE}.` : unlinked ? `${UNLINKED_TITLE}. ${projectInPath ? unlinkedNextStep(decodeURIComponent(projectInPath)) : "Link it to a Hermes project first."}` : /^403:\s*\[object Object\]$/.test(raw) && /^\/projects\/[^/]+\/workflows\/[^/]+\/archive$/.test(path) ? "403 Forbidden: archive permission (project_archive) is required or this action is denied. No change was made." : /(?:error\s*)?500|internal service error/i.test(raw) ? "Project Stewardship \u043D\u0435 \u0441\u043C\u043E\u0433 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0437\u0430\u043F\u0440\u043E\u0441." : raw;
     if (method !== "GET" && !init?.suppressErrorToast && !quiet) emitToast("danger", message);
     const failure = new Error(message);
     failure.cause = error;
@@ -6193,12 +6193,12 @@ var LUCIDE_ICON_NODES = {
 // hermes_dockyard_plugin/desktop/src/lib/project-switcher.js
 var ALL_PROJECTS = "*";
 var HEALTH = Object.freeze({
-  critical: ["danger", "Critical"],
-  frozen: ["danger", "Frozen"],
-  attention: ["danger", "Needs attention"],
-  degraded: ["warning", "Degraded"],
-  watch: ["warning", "Watch"],
-  healthy: ["success", "Healthy"]
+  critical: ["danger", "\u041A\u0440\u0438\u0442\u0438\u0447\u043D\u043E"],
+  frozen: ["danger", "\u0417\u0430\u043C\u043E\u0440\u043E\u0436\u0435\u043D"],
+  attention: ["danger", "\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F"],
+  degraded: ["warning", "\u0414\u0435\u0433\u0440\u0430\u0434\u0430\u0446\u0438\u044F"],
+  watch: ["warning", "\u041D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435"],
+  healthy: ["success", "\u0417\u0434\u043E\u0440\u043E\u0432"]
 });
 var healthOf = (project) => HEALTH[project?.health] ?? [null, ""];
 var projectName = (project) => project?.name || project?.id || "";
@@ -6247,7 +6247,7 @@ function useSwitcherList(projects, scope) {
       if (entries[active]) pick(entries[active].id);
       return;
     }
-    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+    if (["ArrowDown", "ArrowUp", "\u0413\u043B\u0430\u0432\u043D\u0430\u044F", "End"].includes(event.key)) {
       event.preventDefault();
       const last = Math.max(0, entries.length - 1);
       setActive(event.key === "Home" ? 0 : event.key === "End" ? last : Math.max(0, Math.min(last, active + (event.key === "ArrowDown" ? 1 : -1))));
@@ -6264,12 +6264,12 @@ function SwitcherSearch({ idPrefix, list, onPick, onClose }) {
     jsx("input", {
       autoFocus: true,
       role: "combobox",
-      "aria-label": "Find project",
+      "aria-label": "\u041D\u0430\u0439\u0442\u0438 \u043F\u0440\u043E\u0435\u043A\u0442",
       "aria-expanded": true,
       "aria-controls": `${idPrefix}-options`,
       "aria-autocomplete": "list",
       "aria-activedescendant": list.entries[list.active] ? `${idPrefix}-option-${list.active}` : void 0,
-      placeholder: "Find a project",
+      placeholder: "\u041D\u0430\u0439\u0442\u0438 \u043F\u0440\u043E\u0435\u043A\u0442",
       value: list.query,
       onChange: (event) => list.setQuery(event.target.value),
       onKeyDown: (event) => list.onKeyDown(event, onPick, onClose)
@@ -6281,8 +6281,8 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
   useEffect(() => {
     document.getElementById(activeId)?.scrollIntoView?.({ block: "nearest" });
   }, [activeId]);
-  if (!list.entries.length) return jsx("p", { role: "status", className: "dy-sw-empty", children: "No matching projects" });
-  return jsx("div", { role: "listbox", id: `${idPrefix}-options`, "aria-label": "Projects", className: "dy-sw-options", children: list.entries.map((entry, index) => {
+  if (!list.entries.length) return jsx("p", { role: "status", className: "dy-sw-empty", children: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432" });
+  return jsx("div", { role: "listbox", id: `${idPrefix}-options`, "aria-label": "\u041F\u0440\u043E\u0435\u043A\u0442\u044B", className: "dy-sw-options", children: list.entries.map((entry, index) => {
     const project = entry.project;
     const [tone, healthLabel] = entry.all ? ["neutral", ""] : healthOf(project);
     const meta = entry.all ? `Every project \xB7 ${plural(projects.length, "project")}` : projectMeta(project);
@@ -6290,7 +6290,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
       role: "option",
       id: `${idPrefix}-option-${index}`,
       "aria-selected": entry.id === scope,
-      "aria-label": entry.all ? "All projects" : projectName(project),
+      "aria-label": entry.all ? "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" : projectName(project),
       className: "dy-sw-option",
       "data-active": index === list.active ? "true" : void 0,
       "data-project-option": entry.id,
@@ -6302,7 +6302,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
       children: [
         jsx(ProjectAvatar, { project, all: entry.all }),
         jsxs("span", { className: "dy-sw-option-copy", children: [
-          jsx("strong", { children: entry.all ? "All projects" : projectName(project) }),
+          jsx("strong", { children: entry.all ? "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" : projectName(project) }),
           meta ? jsx("span", { children: meta }) : null
         ] }),
         entry.all || !tone ? null : jsx("span", { className: `dy-sw-dot ${tone}`, title: healthLabel, "aria-hidden": true }),
@@ -6313,7 +6313,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
 }
 function TriggerLabel({ projects, scope }) {
   const current = scope && scope !== ALL_PROJECTS ? projects.find((project) => project.id === scope) : null;
-  const label = scope === ALL_PROJECTS ? "All projects" : current ? projectName(current) : scope || "Choose project";
+  const label = scope === ALL_PROJECTS ? "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" : current ? projectName(current) : scope || "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442";
   return [
     jsx(ProjectAvatar, { project: current ?? { id: label }, all: scope === ALL_PROJECTS }, "avatar"),
     jsx("span", { className: "dy-sw-trigger-name", children: label }, "name")
@@ -6332,8 +6332,8 @@ function SwitcherFoot({ onNewProject, onOnboardExisting, onOpenArchived, archive
     children: [jsx(Icon, { name: icon }), label]
   }, marker);
   const actions = [
-    onNewProject ? action("data-switcher-new-project", "plus", "New project", onNewProject) : null,
-    onOnboardExisting ? action("data-switcher-onboard-existing", "folder-open", "Onboard existing project", onOnboardExisting) : null,
+    onNewProject ? action("data-switcher-new-project", "plus", "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442", onNewProject) : null,
+    onOnboardExisting ? action("data-switcher-onboard-existing", "folder-open", "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442", onOnboardExisting) : null,
     // Archived projects are hidden everywhere else; this is the way to them (11/10/2026).
     onOpenArchived && archivedCount > 0 ? action("data-switcher-archived", "archive", `Archived projects (${archivedCount})`, onOpenArchived) : null
   ].filter(Boolean);
@@ -6362,7 +6362,7 @@ function ProjectSwitcher({ projects, scope, onChange, onNewProject, onOnboardExi
         ref: trigger,
         type: "button",
         className: "dy-sw-trigger",
-        "aria-label": "Project context",
+        "aria-label": "\u041A\u043E\u043D\u0442\u0435\u043A\u0441\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
         "aria-haspopup": "listbox",
         "aria-expanded": open,
         "data-scope": scope ?? "",
@@ -6372,7 +6372,7 @@ function ProjectSwitcher({ projects, scope, onChange, onNewProject, onOnboardExi
         },
         children: [...TriggerLabel({ projects, scope }), jsx("span", { className: "dy-sw-caret", children: jsx(Icon, { name: "arrow-up-down" }) }, "caret")]
       }),
-      open ? jsxs("div", { className: "dy-sw-popover", role: "dialog", "aria-label": "Switch project", children: [
+      open ? jsxs("div", { className: "dy-sw-popover", role: "dialog", "aria-label": "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442", children: [
         jsx(SwitcherSearch, { idPrefix: "dy-sw", list, onPick: pick, onClose: () => close() }),
         jsx(SwitcherOptions, { idPrefix: "dy-sw", list, scope, projects, onPick: pick }),
         jsx(SwitcherFoot, { onNewProject, onOnboardExisting, onOpenArchived, archivedCount, close })
@@ -6387,7 +6387,7 @@ function ScopeNote({ name, hidden = 0, noun = "items", onShowAll }) {
       jsx("strong", { children: `Showing ${name} only.` }),
       hidden > 0 ? ` ${plural(hidden, noun.replace(/s$/, ""), noun)} in other projects.` : ""
     ] }),
-    jsx("button", { type: "button", className: "dockyard-button small", "data-show-all-projects": "true", onClick: onShowAll, children: "Show all projects" })
+    jsx("button", { type: "button", className: "dockyard-button small", "data-show-all-projects": "true", onClick: onShowAll, children: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" })
   ] });
 }
 function ProjectChooser({ projects, screen, onPick, onNewProject, onOnboardExisting }) {
@@ -6407,16 +6407,16 @@ function ProjectChooser({ projects, screen, onPick, onNewProject, onOnboardExist
           jsx(ProjectAvatar, { project, size: "lg" }),
           jsxs("span", { className: "dy-sw-option-copy", children: [
             jsx("strong", { children: projectName(project) }),
-            jsx("span", { children: projectMeta(project) || "No work yet" })
+            jsx("span", { children: projectMeta(project) || "\u0420\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435\u0442" })
           ] }),
           tone ? jsxs("span", { className: `dy-sw-health ${tone}`, children: [jsx("span", { className: "dy-sw-dot", "aria-hidden": true }), healthLabel] }) : null,
           jsx("span", { className: "dy-chooser-go", "aria-hidden": true, children: jsx(Icon, { name: "chevron" }) })
         ]
       }) }, project.id);
     }) }) : jsxs("div", { className: "dy-chooser-empty", children: [
-      jsx("p", { children: "No projects yet." }),
-      onNewProject ? jsx("button", { type: "button", className: "dockyard-button primary", onClick: onNewProject, children: "New project" }) : null,
-      onOnboardExisting ? jsx("button", { type: "button", className: "dockyard-button", onClick: onOnboardExisting, children: "Onboard existing project" }) : null
+      jsx("p", { children: "\u041F\u0440\u043E\u0435\u043A\u0442\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442." }),
+      onNewProject ? jsx("button", { type: "button", className: "dockyard-button primary", onClick: onNewProject, children: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442" }) : null,
+      onOnboardExisting ? jsx("button", { type: "button", className: "dockyard-button", onClick: onOnboardExisting, children: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442" }) : null
     ] })
   ] });
 }
@@ -6451,18 +6451,18 @@ function initials2(value) {
   const words2 = String(value || "?").replace(/-bot$/i, "").split(/[-_\s]+/).filter(Boolean);
   return words2.slice(0, 2).map((word) => word.charAt(0).toUpperCase()).join("") || "?";
 }
-function readableLabel(value, fallback = "All") {
+function readableLabel(value, fallback = "\u0412\u0441\u0435") {
   const text2 = String(value || fallback).replace(/[_-]+/g, " ").trim();
   return text2 ? `${text2.charAt(0).toUpperCase()}${text2.slice(1)}` : fallback;
 }
 function validationSummary(contract) {
-  if (!contract || typeof contract !== "object") return "No validation contract supplied";
+  if (!contract || typeof contract !== "object") return "\u041A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043D\u0435 \u0437\u0430\u0434\u0430\u043D";
   const steps = Array.isArray(contract.steps) ? contract.steps.filter(Boolean) : [];
   const tests = typeof contract.tests === "string" ? contract.tests.trim() : "";
   if (steps.length > 0 && tests) return `${steps.length} checks plus ${tests}`;
   if (steps.length > 0) return steps.join("; ");
   if (tests) return tests;
-  return "No validation contract supplied";
+  return "\u041A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043D\u0435 \u0437\u0430\u0434\u0430\u043D";
 }
 async function loadDashboardData() {
   const [dashboard, portfolio, inbox, notifications, bots, workload, ui] = await Promise.all([
@@ -6667,7 +6667,7 @@ var ICON_NAME = Object.freeze({
   "type-bug": "bug",
   "type-spike": "zap"
 });
-var GROUP_LABELS = Object.freeze({ none: "None", status: "Status", assignee: "Owner", type: "Type", initiative: "Initiative", month: "Due month" });
+var GROUP_LABELS = Object.freeze({ none: "\u041D\u0435\u0442", status: "\u0421\u0442\u0430\u0442\u0443\u0441", assignee: "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446", type: "\u0422\u0438\u043F", initiative: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", month: "\u041C\u0435\u0441\u044F\u0446 \u0441\u0440\u043E\u043A\u0430" });
 function Icon({ name }) {
   const iconName = ICON_NAME[name] ?? name;
   const nodes = LUCIDE_ICON_NODES[iconName] ?? LUCIDE_ICON_NODES.bell;
@@ -6692,21 +6692,21 @@ function plural2(value, singular, multiple = `${singular}s`) {
 }
 function healthDetails(value) {
   const map = {
-    healthy: ["success", "Healthy"],
-    watch: ["warning", "Watch"],
-    frozen: ["danger", "Frozen"],
-    attention: ["danger", "Needs attention"],
-    degraded: ["warning", "Degraded"],
-    critical: ["danger", "Critical"],
-    unknown: ["neutral", "Not verified"]
+    healthy: ["success", "\u0417\u0434\u043E\u0440\u043E\u0432"],
+    watch: ["warning", "\u041D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435"],
+    frozen: ["danger", "\u0417\u0430\u043C\u043E\u0440\u043E\u0436\u0435\u043D"],
+    attention: ["danger", "\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F"],
+    degraded: ["warning", "\u0414\u0435\u0433\u0440\u0430\u0434\u0430\u0446\u0438\u044F"],
+    critical: ["danger", "\u041A\u0440\u0438\u0442\u0438\u0447\u043D\u043E"],
+    unknown: ["neutral", "\u041D\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043E"]
   };
-  return map[value] ?? ["neutral", "Not verified"];
+  return map[value] ?? ["neutral", "\u041D\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043E"];
 }
 function riskDetails(value) {
   const risk = String(value || "medium").toLowerCase();
-  if (risk === "low") return ["success", "Low risk"];
+  if (risk === "low") return ["success", "\u041D\u0438\u0437\u043A\u0438\u0439 \u0440\u0438\u0441\u043A"];
   if (risk === "high" || risk === "critical") return ["danger", `${risk.charAt(0).toUpperCase()}${risk.slice(1)} risk`];
-  return ["warning", "Medium risk"];
+  return ["warning", "\u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u0440\u0438\u0441\u043A"];
 }
 function severityTone(value) {
   const severity = String(value || "info").toLowerCase();
@@ -6722,7 +6722,7 @@ function formatWhen(value) {
 }
 function formatBytes(value) {
   const bytes = Number(value ?? 0);
-  if (!Number.isFinite(bytes) || bytes < 0) return "Unknown size";
+  if (!Number.isFinite(bytes) || bytes < 0) return "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440";
   if (bytes < 1024) return `${number(bytes)} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
@@ -6732,22 +6732,22 @@ function mediaTypeLabel(value) {
     "text/plain": "Text",
     "text/markdown": "Markdown",
     "application/pdf": "PDF",
-    "image/png": "PNG image",
-    "image/jpeg": "JPEG image",
-    "image/webp": "WebP image",
-    "video/mp4": "MP4 video",
-    "video/webm": "WebM video"
-  }[value] || readableLabel(value, "File");
+    "image/png": "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 PNG",
+    "image/jpeg": "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 JPEG",
+    "image/webp": "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 WebP",
+    "video/mp4": "\u0412\u0438\u0434\u0435\u043E MP4",
+    "video/webm": "\u0412\u0438\u0434\u0435\u043E WebM"
+  }[value] || readableLabel(value, "\u0424\u0430\u0439\u043B");
 }
 function fileAsBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error("The selected file could not be read."));
+    reader.onerror = () => reject(new Error("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0444\u0430\u0439\u043B \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C."));
     reader.onload = () => {
       const result = String(reader.result ?? "");
       const comma = result.indexOf(",");
       if (comma < 0) {
-        reject(new Error("The selected file could not be encoded."));
+        reject(new Error("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u0444\u0430\u0439\u043B \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u043A\u043E\u0434\u0438\u0440\u043E\u0432\u0430\u0442\u044C."));
         return;
       }
       resolve(result.slice(comma + 1));
@@ -6836,8 +6836,8 @@ function ConfirmDialog({ confirmKey, title, description, confirmLabel, busy = fa
         jsx("h2", { id: `dockyard-confirm-${confirmKey}`, children: title }),
         jsx("p", { children: description }),
         jsxs("div", { className: "dockyard-modal-actions", children: [
-          jsx(Button, { action: "cancel-destructive-action", disabled: busy, onClick: onCancel, children: "Cancel" }),
-          jsx(Button, { action: "confirm-destructive-action", variant: "danger", disabled: busy, onClick: onConfirm, children: busy ? "Applying..." : confirmLabel })
+          jsx(Button, { action: "cancel-destructive-action", disabled: busy, onClick: onCancel, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+          jsx(Button, { action: "confirm-destructive-action", variant: "danger", disabled: busy, onClick: onConfirm, children: busy ? "\u041F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u0435\u2026" : confirmLabel })
         ] })
       ]
     })
@@ -6847,14 +6847,14 @@ function ToastRegion({ toasts, onDismiss }) {
   return jsx("div", {
     className: "dockyard-toast-region",
     "data-toast-region": true,
-    "aria-label": "Status messages",
+    "aria-label": "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u043E \u0441\u0442\u0430\u0442\u0443\u0441\u0435",
     children: toasts.map((toast) => jsxs("div", {
       className: `dockyard-toast ${toast.tone}`,
       role: toast.tone === "danger" ? "alert" : "status",
       children: [
         jsx("span", { className: "dockyard-toast-icon", "aria-hidden": true, children: jsx(Icon, { name: toast.tone === "danger" ? "alert" : "check" }) }),
         jsx("span", { children: toast.message }),
-        jsx("button", { type: "button", "aria-label": "Dismiss message", onClick: () => onDismiss(toast.id), children: "\xD7" })
+        jsx("button", { type: "button", "aria-label": "\u0421\u043A\u0440\u044B\u0442\u044C \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435", onClick: () => onDismiss(toast.id), children: "\xD7" })
       ]
     }, toast.id))
   });
@@ -6927,7 +6927,7 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
       setPreflightState({
         ok: true,
         mode: result.mode,
-        text: result.mode === "connect_existing" ? "Host already owns this project \u2014 it will be connected, not recreated." : "Host validated the details; nothing exists yet \u2014 create-new.",
+        text: result.mode === "connect_existing" ? "\u0425\u043E\u0441\u0442 \u0443\u0436\u0435 \u0432\u043B\u0430\u0434\u0435\u0435\u0442 \u044D\u0442\u0438\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u043C \u2014 \u043E\u043D \u0431\u0443\u0434\u0435\u0442 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0451\u043D, \u0430 \u043D\u0435 \u0441\u043E\u0437\u0434\u0430\u043D \u0437\u0430\u043D\u043E\u0432\u043E." : "\u0425\u043E\u0441\u0442 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u043B \u0434\u0430\u043D\u043D\u044B\u0435; \u043F\u043E\u043A\u0430 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u2014 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0441 \u043D\u0443\u043B\u044F.",
         projects: (result?.existing?.projects ?? []).map((p) => p.slug),
         // P7.4: exact proposed targets + automation state.
         preview: result.preview ?? null,
@@ -6967,10 +6967,10 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
     }
   };
   const steps = [
-    ["Project", "Name and repository"],
-    ["Mission", "Define the outcome"],
-    ["Lead", "Assign ownership"],
-    ["Review", "Confirm the contract"]
+    ["\u041F\u0440\u043E\u0435\u043A\u0442", "\u0418\u043C\u044F \u0438 \u0440\u0435\u043F\u043E\u0437\u0438\u0442\u043E\u0440\u0438\u0439"],
+    ["\u041C\u0438\u0441\u0441\u0438\u044F", "\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442"],
+    ["\u0412\u0435\u0434\u0443\u0449\u0438\u0439", "\u041D\u0430\u0437\u043D\u0430\u0447\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0433\u043E"],
+    ["\u041E\u0431\u0437\u043E\u0440", "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043A\u043E\u043D\u0442\u0440\u0430\u043A\u0442"]
   ];
   return jsx("div", {
     className: "dockyard-modal-backdrop",
@@ -6985,15 +6985,15 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
         jsxs("header", { className: "dockyard-onboarding-head", children: [
           jsxs("div", { children: [
             jsx("span", { className: "dockyard-card-label", children: intent === "existing" ? "EXISTING PROJECT" : "NEW PROJECT" }),
-            jsx("h2", { id: "dockyard-onboarding-title", children: "Bring a project into Project Stewardship" }),
-            jsx("p", { children: "Four bounded steps. Nothing runs until the final review." })
+            jsx("h2", { id: "dockyard-onboarding-title", children: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442 \u043A \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E" }),
+            jsx("p", { children: "\u0427\u0435\u0442\u044B\u0440\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u043D\u044B\u0445 \u0448\u0430\u0433\u0430. \u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F \u0434\u043E \u0444\u0438\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0435\u0432\u044C\u044E." })
           ] }),
-          jsx("button", { type: "button", className: "dockyard-modal-close", "aria-label": "Close onboarding", disabled: submitting, onClick: onClose, children: "\xD7" })
+          jsx("button", { type: "button", className: "dockyard-modal-close", "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043E\u043D\u0431\u043E\u0440\u0434\u0438\u043D\u0433", disabled: submitting, onClick: onClose, children: "\xD7" })
         ] }),
         jsx("div", {
           className: "dockyard-wizard-progress",
           role: "progressbar",
-          "aria-label": "Onboarding progress",
+          "aria-label": "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u043E\u043D\u0431\u043E\u0440\u0434\u0438\u043D\u0433\u0430",
           "aria-valuemin": 1,
           "aria-valuemax": 4,
           "aria-valuenow": step,
@@ -7004,21 +7004,21 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
         }),
         jsxs("div", { className: "dockyard-wizard-body", children: [
           jsxs("div", { className: step === 1 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: step !== 1, "data-wizard-step": "1", children: [
-            jsx("h3", { children: "Project identity" }),
-            jsx("p", { children: "Use the stable project identifier and its absolute repository path." }),
+            jsx("h3", { children: "\u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }),
+            jsx("p", { children: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0441\u0442\u0430\u0431\u0438\u043B\u044C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0438 \u0435\u0433\u043E \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0439 \u043F\u0443\u0442\u044C \u043A \u0440\u0435\u043F\u043E\u0437\u0438\u0442\u043E\u0440\u0438\u044E." }),
             discovered ? jsxs("div", { children: [
               jsxs("p", { className: "dockyard-meta", "data-discovered-projects": true, children: [
-                "Host projects: ",
-                (discovered.projects ?? []).length > 0 ? (discovered.projects ?? []).map((project) => project.slug).join(", ") : "none yet \u2014 create-new below"
+                "\u041F\u0440\u043E\u0435\u043A\u0442\u044B \u0445\u043E\u0441\u0442\u0430: ",
+                (discovered.projects ?? []).length > 0 ? (discovered.projects ?? []).map((project) => project.slug).join(", ") : "\u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u2014 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0441 \u043D\u0443\u043B\u044F \u043D\u0438\u0436\u0435"
               ] }),
-              jsx("p", { className: "dockyard-meta", "data-profile-guidance": true, children: "Profiles are managed in the Hermes host profile manager." }),
-              jsx(Button, { action: "refresh-onboarding-discovery", small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: "Refresh host discovery" })
+              jsx("p", { className: "dockyard-meta", "data-profile-guidance": true, children: "\u041F\u0440\u043E\u0444\u0438\u043B\u0438 \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0432 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439 \u0445\u043E\u0441\u0442\u0430 Hermes." }),
+              jsx(Button, { action: "refresh-onboarding-discovery", small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u043F\u043E\u0438\u0441\u043A \u0445\u043E\u0441\u0442\u0430" })
             ] }) : discoverFailed ? jsxs("div", { children: [
               jsx("p", { className: "dockyard-inline-error", role: "alert", "data-discovery-failed": true, children: "Host discovery failed. Retry \u2014 onboarding stays closed until the host answers. No fallback choices are offered. If profiles are missing, manage them in the Hermes host profile manager, then retry." }),
-              jsx(Button, { action: "refresh-onboarding-discovery", small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: "Retry host discovery" })
+              jsx(Button, { action: "refresh-onboarding-discovery", small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043F\u043E\u0438\u0441\u043A \u0445\u043E\u0441\u0442\u0430" })
             ] }) : jsxs("div", { children: [
               jsx("p", { className: "dockyard-meta", children: "Loading host discovery\u2026" }),
-              jsx(Button, { action: "refresh-onboarding-discovery", small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: "Refresh host discovery" })
+              jsx(Button, { action: "refresh-onboarding-discovery", small: true, onClick: () => setDiscoveryRefresh((value) => value + 1), children: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u043F\u043E\u0438\u0441\u043A \u0445\u043E\u0441\u0442\u0430" })
             ] }),
             // R4: connect-existing as a real selectable path — fills/binds
             // the discovered host project into the form.
@@ -7034,35 +7034,35 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
                 children: `Connect ${project.slug}`
               }, project.slug))
             ] }) : null,
-            jsx("label", { htmlFor: "dockyard-project-id", children: "Project ID" }),
+            jsx("label", { htmlFor: "dockyard-project-id", children: "ID \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }),
             jsx("input", { id: "dockyard-project-id", "data-field": "project-id", value: projectId, placeholder: "payments-relaunch", autoComplete: "off", onInput: (event) => setProjectId(event.target.value) }),
-            jsx("small", { children: "Lowercase letters, numbers and hyphens." }),
-            jsx("label", { htmlFor: "dockyard-repo-path", children: "Repository path" }),
+            jsx("small", { children: "\u0421\u0442\u0440\u043E\u0447\u043D\u044B\u0435 \u0431\u0443\u043A\u0432\u044B, \u0446\u0438\u0444\u0440\u044B \u0438 \u0434\u0435\u0444\u0438\u0441\u044B." }),
+            jsx("label", { htmlFor: "dockyard-repo-path", children: "\u041F\u0443\u0442\u044C \u043A \u0440\u0435\u043F\u043E\u0437\u0438\u0442\u043E\u0440\u0438\u044E" }),
             jsx("input", { id: "dockyard-repo-path", "data-field": "repo-path", value: repoPath, placeholder: "/path/to/repos/project", autoComplete: "off", onInput: (event) => setRepoPath(event.target.value) })
           ] }),
           jsxs("div", { className: step === 2 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: step !== 2, "data-wizard-step": "2", children: [
-            jsx("h3", { children: "Mission and outcome" }),
-            jsx("p", { children: "State what the project must improve. This anchors later initiative decisions." }),
-            jsx("label", { htmlFor: "dockyard-mission", children: "Mission" }),
-            jsx("textarea", { id: "dockyard-mission", "data-field": "mission", value: mission, rows: 5, placeholder: "Reduce payment failures without weakening release gates.", onInput: (event) => setMission(event.target.value) }),
+            jsx("h3", { children: "\u041C\u0438\u0441\u0441\u0438\u044F \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442" }),
+            jsx("p", { children: "\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435, \u0447\u0442\u043E \u043F\u0440\u043E\u0435\u043A\u0442 \u0434\u043E\u043B\u0436\u0435\u043D \u0443\u043B\u0443\u0447\u0448\u0438\u0442\u044C. \u042D\u0442\u043E \u0441\u0442\u0430\u043D\u0435\u0442 \u043E\u043F\u043E\u0440\u043E\u0439 \u0434\u043B\u044F \u0440\u0435\u0448\u0435\u043D\u0438\u0439 \u043F\u043E \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430\u043C." }),
+            jsx("label", { htmlFor: "dockyard-mission", children: "\u041C\u0438\u0441\u0441\u0438\u044F" }),
+            jsx("textarea", { id: "dockyard-mission", "data-field": "mission", value: mission, rows: 5, placeholder: "\u0421\u043D\u0438\u0437\u0438\u0442\u044C \u0441\u0431\u043E\u0438 \u043F\u043B\u0430\u0442\u0435\u0436\u0435\u0439, \u043D\u0435 \u043E\u0441\u043B\u0430\u0431\u043B\u044F\u044F \u0440\u0435\u043B\u0438\u0437\u043D\u044B\u0435 \u0433\u0435\u0439\u0442\u044B.", onInput: (event) => setMission(event.target.value) }),
             jsx("small", { children: `${number(mission.trim().length)} characters / minimum 12` })
           ] }),
           jsxs("div", { className: step === 3 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: step !== 3, "data-wizard-step": "3", children: [
-            jsx("h3", { children: "Lead ownership" }),
-            jsx("p", { children: "Assign the specialist profile accountable for the project." }),
-            jsx("label", { htmlFor: "dockyard-lead-profile", children: "Lead profile" }),
+            jsx("h3", { children: "\u0420\u043E\u043B\u044C \u0432\u0435\u0434\u0443\u0449\u0435\u0433\u043E" }),
+            jsx("p", { children: "\u041D\u0430\u0437\u043D\u0430\u0447\u044C\u0442\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u044C-\u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0441\u0442\u0430, \u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0433\u043E \u0437\u0430 \u043F\u0440\u043E\u0435\u043A\u0442." }),
+            jsx("label", { htmlFor: "dockyard-lead-profile", children: "\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0432\u0435\u0434\u0443\u0449\u0435\u0433\u043E" }),
             // jsxs: a fixed placeholder plus the profiles (keyed), like the other static lists here.
             jsxs("select", { id: "dockyard-lead-profile", "data-field": "lead-profile", value: leadProfile, onChange: (event) => setLeadProfile(event.target.value), children: [
-              jsx("option", { value: "", children: "Select a lead profile" }),
+              jsx("option", { value: "", children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0432\u0435\u0434\u0443\u0449\u0435\u0433\u043E" }),
               ...(discovered?.profiles ?? []).map((profile) => jsx("option", {
                 value: profile.name,
                 disabled: profile.available === false || profile.selectable === false || (profile.host_capabilities ?? []).length > 0 && !(profile.host_capabilities ?? []).includes("lead"),
                 children: `${profile.name}${profile.available === false || profile.selectable === false ? " \u2014 unavailable" : ""}`
               }, profile.name))
             ] }),
-            jsx("small", { children: discovered ? `Valid host profiles: ${(discovered.profiles ?? []).map((p) => `${p.name}${p.available === false || p.selectable === false ? " (unavailable)" : ""}`).join(", ") || "n/a"}.` : discoverFailed ? "Host profile list unavailable \u2014 onboarding is closed until discovery succeeds." : "Loading host profiles\u2026" }),
-            jsx("label", { htmlFor: "dockyard-member-search", children: "Team members" }),
-            jsx("input", { id: "dockyard-member-search", "data-field": "member-search", value: memberSearch, placeholder: "Search profiles", autoComplete: "off", onInput: (event) => setMemberSearch(event.target.value) }),
+            jsx("small", { children: discovered ? `Valid host profiles: ${(discovered.profiles ?? []).map((p) => `${p.name}${p.available === false || p.selectable === false ? " (unavailable)" : ""}`).join(", ") || "n/a"}.` : discoverFailed ? "\u0421\u043F\u0438\u0441\u043E\u043A \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439 \u0445\u043E\u0441\u0442\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u2014 \u043E\u043D\u0431\u043E\u0440\u0434\u0438\u043D\u0433 \u0437\u0430\u043A\u0440\u044B\u0442, \u043F\u043E\u043A\u0430 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0435\u043D\u0438\u0435 \u043D\u0435 \u0443\u0434\u0430\u0441\u0442\u0441\u044F." : "Loading host profiles\u2026" }),
+            jsx("label", { htmlFor: "dockyard-member-search", children: "\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0438 \u043A\u043E\u043C\u0430\u043D\u0434\u044B" }),
+            jsx("input", { id: "dockyard-member-search", "data-field": "member-search", value: memberSearch, placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439", autoComplete: "off", onInput: (event) => setMemberSearch(event.target.value) }),
             jsx("div", { "data-member-picker": true, children: (discovered?.profiles ?? []).filter((profile) => profile.name.toLowerCase().includes(memberSearch.trim().toLowerCase())).filter((profile) => profile.name !== leadProfile).map((profile) => {
               const selectable = profile.available !== false && profile.selectable !== false && ((profile.host_capabilities ?? []).length === 0 || (profile.host_capabilities ?? []).includes("member"));
               return jsxs("label", { "data-member-option": profile.name, children: [
@@ -7075,27 +7075,27 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
                 `${profile.name}${selectable ? "" : " \u2014 unavailable"}`
               ] }, profile.name);
             }) }),
-            jsx("small", { children: "This records ownership; it does not expand permissions." })
+            jsx("small", { children: "\u042D\u0442\u043E \u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0435\u0442 \u0432\u043B\u0430\u0434\u0435\u043D\u0438\u0435; \u043F\u0440\u0430\u0432\u0430 \u043D\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u044F\u044E\u0442\u0441\u044F." })
           ] }),
           jsxs("div", { className: step === 4 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: step !== 4, "data-wizard-step": "4", children: [
-            jsx("h3", { children: "Review onboarding contract" }),
+            jsx("h3", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u043E\u043D\u0431\u043E\u0440\u0434\u0438\u043D\u0433\u0430" }),
             jsxs("dl", { className: "dockyard-onboarding-review", children: [
-              jsx("dt", { children: "Project" }),
+              jsx("dt", { children: "\u041F\u0440\u043E\u0435\u043A\u0442" }),
               jsx("dd", { children: projectId }),
-              jsx("dt", { children: "Repository" }),
+              jsx("dt", { children: "\u0420\u0435\u043F\u043E\u0437\u0438\u0442\u043E\u0440\u0438\u0439" }),
               jsx("dd", { children: repoPath }),
-              jsx("dt", { children: "Mission" }),
+              jsx("dt", { children: "\u041C\u0438\u0441\u0441\u0438\u044F" }),
               jsx("dd", { children: mission }),
-              jsx("dt", { children: "Lead" }),
+              jsx("dt", { children: "\u0412\u0435\u0434\u0443\u0449\u0438\u0439" }),
               jsx("dd", { children: leadProfile }),
-              jsx("dt", { children: "Members" }),
-              jsx("dd", { children: memberProfiles.join(", ") || "None" })
+              jsx("dt", { children: "\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0438" }),
+              jsx("dd", { children: memberProfiles.join(", ") || "\u041D\u0435\u0442" })
             ] }),
             jsx(Button, {
               action: "run-onboarding-preflight",
               disabled: preflightBusy || !valid,
               onClick: runPreflight,
-              children: preflightBusy ? "Validating\u2026" : "Validate with host before commit"
+              children: preflightBusy ? "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u2026" : "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043D\u0430 \u0445\u043E\u0441\u0442\u0435 \u043F\u0435\u0440\u0435\u0434 \u0444\u0438\u043A\u0441\u0430\u0446\u0438\u0435\u0439"
             }),
             preflightState ? jsx("p", {
               className: preflightState.ok ? "dockyard-review-note" : "dockyard-inline-error",
@@ -7112,7 +7112,7 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
             // P7.3: reviewable inert suggestions; unsupported ones stay
             // visible as unsupported; acceptance is explicit per item.
             preflightState?.ok && (preflightState.suggestions ?? []).length > 0 ? jsxs("div", { className: "dockyard-onboarding-suggestions", "data-onboarding-suggestions": true, children: [
-              jsx("p", { className: "dockyard-card-label", children: "SUGGESTED MANUAL OBJECTIVES \u2014 nothing runs automatically" }),
+              jsx("p", { className: "dockyard-card-label", children: "\u041F\u0420\u0415\u0414\u041B\u041E\u0416\u0415\u041D\u041D\u042B\u0415 \u0417\u0410\u0414\u0410\u0427\u0418-\u0426\u0415\u041B\u0418 \u0412\u0420\u0423\u0427\u041D\u0423\u042E \u2014 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438" }),
               ...preflightState.suggestions.map((suggestion) => jsxs("p", { className: "dockyard-review-note", "data-suggestion": suggestion.name, children: [
                 `${suggestion.name} \u2014 ${suggestion.description}`,
                 suggestion.supported === false ? " (unsupported \u2014 shown for review only)" : ""
@@ -7123,14 +7123,14 @@ function OnboardingWizard({ onClose, onComplete, intent = "new" }) {
         ] }),
         error ? jsx("p", { className: "dockyard-inline-error", children: error }) : null,
         jsxs("footer", { className: "dockyard-wizard-actions", children: [
-          jsx(Button, { action: step === 1 ? "cancel-onboarding" : "wizard-back", disabled: submitting, onClick: step === 1 ? onClose : () => setStep((value) => value - 1), children: step === 1 ? "Cancel" : "Back" }),
-          step < 4 ? jsx(Button, { action: "wizard-next", variant: "primary", disabled: !valid, onClick: () => setStep((value) => value + 1), children: "Continue" }) : jsx(Button, {
+          jsx(Button, { action: step === 1 ? "cancel-onboarding" : "wizard-back", disabled: submitting, onClick: step === 1 ? onClose : () => setStep((value) => value - 1), children: step === 1 ? "\u041E\u0442\u043C\u0435\u043D\u0430" : "\u041D\u0430\u0437\u0430\u0434" }),
+          step < 4 ? jsx(Button, { action: "wizard-next", variant: "primary", disabled: !valid, onClick: () => setStep((value) => value + 1), children: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C" }) : jsx(Button, {
             action: "submit-onboarding",
             variant: "primary",
             disabled: submitting || !preflightCurrent,
             data: { "data-preflight-gate": preflightCurrent ? "open" : "locked" },
             onClick: submit,
-            children: submitting ? "Onboarding\u2026" : preflightCurrent ? "Onboard project" : "Validate before onboarding"
+            children: submitting ? "Onboarding\u2026" : preflightCurrent ? "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442" : "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u043E\u043D\u0431\u043E\u0440\u0434\u0438\u043D\u0433\u043E\u043C"
           })
         ] })
       ]
@@ -7194,10 +7194,10 @@ function FleetSearch({ onOpen }) {
     jsx("input", {
       ref: inputRef,
       type: "search",
-      "aria-label": "Search projects, work and initiatives",
+      "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C, \u0440\u0430\u0431\u043E\u0442\u0435 \u0438 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430\u043C",
       "aria-expanded": active && query.trim().length >= 2,
       "aria-controls": "dockyard-search-results",
-      placeholder: "Search projects, work, initiatives\u2026",
+      placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C, \u0440\u0430\u0431\u043E\u0442\u0435, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430\u043C\u2026",
       value: query,
       onFocus: () => setActive(true),
       onChange: (event) => {
@@ -7212,8 +7212,8 @@ function FleetSearch({ onOpen }) {
       }
     }),
     jsx("span", { className: "dockyard-search-shortcut", "aria-hidden": true, children: "\u2318K" }),
-    active && query.trim().length >= 2 ? jsxs("div", { id: "dockyard-search-results", className: "dockyard-search-results", role: "region", "aria-label": "Search results", children: [
-      busy ? jsx("p", { children: "Searching\u2026" }) : error ? jsx("p", { role: "alert", children: error }) : results.length === 0 ? jsx("p", { children: "No matches found" }) : results.map((item) => jsxs("button", { type: "button", onClick: () => {
+    active && query.trim().length >= 2 ? jsxs("div", { id: "dockyard-search-results", className: "dockyard-search-results", role: "region", "aria-label": "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u043F\u043E\u0438\u0441\u043A\u0430", children: [
+      busy ? jsx("p", { children: "\u041F\u043E\u0438\u0441\u043A\u2026" }) : error ? jsx("p", { role: "alert", children: error }) : results.length === 0 ? jsx("p", { children: "\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E" }) : results.map((item) => jsxs("button", { type: "button", onClick: () => {
         onOpen?.(item.deep_link);
         setActive(false);
       }, children: [
@@ -7225,15 +7225,15 @@ function FleetSearch({ onOpen }) {
 }
 function ConsoleBar({ tab, counts, onTab, onNewProject, onOnboardExisting, projects = [], selectedProject, onProjectChange, onOpen, onOpenArchived, archivedCount = 0 }) {
   const tabs = [
-    ["dashboard", "Dashboard", null],
-    ["project", "Projects", null],
-    ["roadmap", "Roadmap", null],
-    ["backlog", "Backlog", null],
-    ["workflows", "Workflows", null],
-    ["inbox", "Approval Inbox", counts.approvals],
-    ["notifications", "Notifications", counts.notifications],
+    ["dashboard", "\u041F\u0430\u043D\u0435\u043B\u044C", null],
+    ["project", "\u041F\u0440\u043E\u0435\u043A\u0442\u044B", null],
+    ["roadmap", "\u0414\u043E\u0440\u043E\u0436\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u0430", null],
+    ["backlog", "\u0411\u044D\u043A\u043B\u043E\u0433", null],
+    ["workflows", "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u044B", null],
+    ["inbox", "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F", counts.approvals],
+    ["notifications", "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F", counts.notifications],
     // Sahil 04/10: app-wide settings only; each project's settings live in the project.
-    ["settings", "App settings", null]
+    ["settings", "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F", null]
   ];
   const moveTab = (event, index) => {
     let next = null;
@@ -7252,8 +7252,8 @@ function ConsoleBar({ tab, counts, onTab, onNewProject, onOnboardExisting, proje
       jsxs("div", { className: "dockyard-brand", children: [
         jsx("span", { className: "dockyard-brand-mark", children: jsx(Icon, { name: "dock" }) }),
         jsxs("span", { className: "dockyard-brand-copy", children: [
-          jsx("strong", { children: "Project Stewardship" }),
-          jsx("span", { children: "Fleet oversight" })
+          jsx("strong", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C\u0438" }),
+          jsx("span", { children: "\u041D\u0430\u0434\u0437\u043E\u0440 \u0444\u043B\u043E\u0442\u0430" })
         ] })
       ] }),
       // Kept while archived projects exist, even with none listed, so the way
@@ -7264,7 +7264,7 @@ function ConsoleBar({ tab, counts, onTab, onNewProject, onOnboardExisting, proje
     jsx("nav", {
       className: "dockyard-tabs",
       role: "tablist",
-      "aria-label": "Project Stewardship sections",
+      "aria-label": "\u0420\u0430\u0437\u0434\u0435\u043B\u044B Project Stewardship",
       children: tabs.map(([key, label, count], index) => jsxs("button", {
         id: `dockyard-tab-${key}`,
         type: "button",
@@ -7289,19 +7289,19 @@ function ConsoleBar({ tab, counts, onTab, onNewProject, onOnboardExisting, proje
         action: "open-onboarding",
         variant: "primary dockyard-console-action",
         small: true,
-        ariaLabel: "New project",
-        data: { title: "New project" },
+        ariaLabel: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
+        data: { title: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442" },
         onClick: onNewProject,
-        children: jsxs(Fragment, { children: [jsx(Icon, { name: "project" }), jsx("span", { className: "dockyard-console-action-label", children: "New project" })] })
+        children: jsxs(Fragment, { children: [jsx(Icon, { name: "project" }), jsx("span", { className: "dockyard-console-action-label", children: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442" })] })
       }),
       jsx(Button, {
         action: "open-onboard-existing",
         variant: "dockyard-console-action",
         small: true,
-        ariaLabel: "Onboard existing project",
-        data: { title: "Onboard existing project" },
+        ariaLabel: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
+        data: { title: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442" },
         onClick: onOnboardExisting,
-        children: jsxs(Fragment, { children: [jsx(Icon, { name: "folder-open" }), jsx("span", { className: "dockyard-console-action-label", children: "Onboard existing project" })] })
+        children: jsxs(Fragment, { children: [jsx(Icon, { name: "folder-open" }), jsx("span", { className: "dockyard-console-action-label", children: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442" })] })
       })
     ] })
   ] });
@@ -7320,7 +7320,7 @@ function PageHead({ title, description, onRefresh, status }) {
       onRefresh ? jsx(Button, {
         action: "refresh",
         onClick: onRefresh,
-        children: jsxs(Fragment, { children: [jsx(Icon, { name: "refresh" }), "Refresh"] })
+        children: jsxs(Fragment, { children: [jsx(Icon, { name: "refresh" }), "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C"] })
       }) : null
     ] }) : null
   ] });
@@ -7340,14 +7340,14 @@ function ErrorState({ error, onRetry }) {
       jsx("p", { children: PLUGIN_OFF_DETAIL }),
       jsx("p", { children: PLUGIN_OFF_NEXT_STEP }),
       jsx("code", { className: "dockyard-plugin-off-command", "data-plugin-off-command": true, children: PLUGIN_OFF_COMMAND }),
-      jsx(Button, { action: "retry", variant: "primary", onClick: onRetry, children: "Try again" })
+      jsx(Button, { action: "retry", variant: "primary", onClick: onRetry, children: "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043D\u043E\u0432\u0430" })
     ] });
   }
   return jsxs("section", { className: "dockyard-state-panel", "data-state": "error", children: [
     jsx("span", { className: "dockyard-error-icon", children: jsx(Icon, { name: "alert" }) }),
-    jsx("h2", { children: "Project Stewardship could not load this view" }),
+    jsx("h2", { children: "Project Stewardship \u043D\u0435 \u0441\u043C\u043E\u0433 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u044D\u043A\u0440\u0430\u043D" }),
     jsx("p", { children: String(error) }),
-    jsx(Button, { action: "retry", variant: "primary", onClick: onRetry, children: "Try again" })
+    jsx(Button, { action: "retry", variant: "primary", onClick: onRetry, children: "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043D\u043E\u0432\u0430" })
   ] });
 }
 function UnlinkedNotice({ projectId }) {
@@ -7357,7 +7357,7 @@ function UnlinkedNotice({ projectId }) {
   ] });
 }
 function LoadingState() {
-  return jsxs("div", { className: "dockyard-skeleton-page", "data-state": "loading", "aria-label": "Loading Project Stewardship data", children: [
+  return jsxs("div", { className: "dockyard-skeleton-page", "data-state": "loading", "aria-label": "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0434\u0430\u043D\u043D\u044B\u0445 Project Stewardship", children: [
     jsx("div", { className: "dockyard-skeleton title" }),
     jsx("div", { className: "dockyard-skeleton copy" }),
     jsxs("div", { className: "dockyard-overview-grid", children: [
@@ -7373,7 +7373,7 @@ function LoadingState() {
 
 // hermes_dockyard_plugin/desktop/src/inbox/model.js
 var TAB_KEYS = ["all", "urgent", "today", "earlier"];
-var TAB_LABELS = { all: "All", urgent: "Urgent", today: "Today", earlier: "Earlier" };
+var TAB_LABELS = { all: "\u0412\u0441\u0435", urgent: "\u0421\u0440\u043E\u0447\u043D\u043E", today: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F", earlier: "\u0420\u0430\u043D\u0435\u0435" };
 var highRisk = (item) => ["high", "critical"].includes(String(item?.risk ?? "").toLowerCase());
 var isAttention = (item) => item?.kind === "project_attention";
 var sameDay = (iso, now) => {
@@ -7451,7 +7451,7 @@ function mergeActivity(payload = {}) {
 }
 function attentionPanel(item) {
   return {
-    title: "This project needs attention",
+    title: "\u041F\u0440\u043E\u0435\u043A\u0442 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F",
     description: `${item?.project ?? "This project"} is frozen or disabled, so its pending work cannot be decided here. Open the project to see what is blocking it.`,
     project: item?.project ?? "",
     deeplink: item?.deep_link ?? null,
@@ -7461,7 +7461,7 @@ function attentionPanel(item) {
 
 // hermes_dockyard_plugin/desktop/src/work-item/approvals.js
 var decisionText = (value) => {
-  if (value == null || value === "") return "Not supplied";
+  if (value == null || value === "") return "\u041D\u0435 \u0437\u0430\u0434\u0430\u043D\u043E";
   if (Array.isArray(value)) return value.join(", ");
   if (typeof value === "object") return JSON.stringify(value);
   return String(value);
@@ -7486,22 +7486,22 @@ function RejectDialog({ item, busy, reason, onReason, onCancel, onConfirm }) {
       if (event.target === event.currentTarget && !busy) onCancel();
     },
     children: jsxs("div", { className: "dockyard-modal", role: "dialog", "aria-modal": true, "aria-label": `Reject ${item.title}`, children: [
-      jsx("h2", { children: "Reject this initiative?" }),
+      jsx("h2", { children: "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443?" }),
       jsx("p", { children: `${item.title} will leave the approval queue. Record the reason in this one confirmation step.` }),
-      jsxs("label", { children: ["Rejection reason ", jsx("input", {
+      jsxs("label", { children: ["\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u043E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0438\u044F ", jsx("input", {
         value: reason,
         onChange: (event) => onReason(event.target.value),
-        placeholder: "Why this initiative should not proceed",
+        placeholder: "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u0443 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443 \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0442\u044C",
         autoFocus: true
       })] }),
       jsxs("div", { className: "dockyard-modal-actions", children: [
-        jsx(Button, { disabled: busy, onClick: onCancel, children: "Cancel" }),
+        jsx(Button, { disabled: busy, onClick: onCancel, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
         jsx(Button, {
           action: "confirm-destructive-action",
           variant: "danger",
           disabled: busy || !reason.trim(),
           onClick: onConfirm,
-          children: busy ? "Rejecting..." : "Reject initiative"
+          children: busy ? "\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0438\u0435..." : "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443"
         })
       ] })
     ] })
@@ -7539,7 +7539,7 @@ function ApprovalDetail({ item, onResolved, onBack }) {
       setComments(thread.comments ?? []);
       setReceipts(ledger.receipts ?? []);
     }).catch(() => {
-      if (current) setDecisionError("Decision evidence unavailable; refresh before deciding.");
+      if (current) setDecisionError("\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B; \u043E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u043F\u0435\u0440\u0435\u0434 \u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C.");
     });
     return () => {
       current = false;
@@ -7571,7 +7571,7 @@ function ApprovalDetail({ item, onResolved, onBack }) {
         suppressErrorToast: true
       });
       await confirmReceipt(expected);
-      finish(action === "approve" ? "Approved; confirmed by decision receipt" : "Rejected; confirmed by decision receipt");
+      finish(action === "approve" ? "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u043E; \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u043A\u0432\u0438\u0442\u0430\u043D\u0446\u0438\u0435\u0439 \u0440\u0435\u0448\u0435\u043D\u0438\u044F" : "\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u043E; \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u043A\u0432\u0438\u0442\u0430\u043D\u0446\u0438\u0435\u0439 \u0440\u0435\u0448\u0435\u043D\u0438\u044F");
     } catch (failure) {
       setState("failed");
       setRejectOpen(false);
@@ -7591,7 +7591,7 @@ function ApprovalDetail({ item, onResolved, onBack }) {
         suppressErrorToast: true
       });
       await confirmReceipt("changes_requested");
-      finish("Returned to the proposer with your feedback");
+      finish("\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D\u043E \u0430\u0432\u0442\u043E\u0440\u0443 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0441 \u0432\u0430\u0448\u0438\u043C \u043E\u0442\u0437\u044B\u0432\u043E\u043C");
     } catch (failure) {
       setState("failed");
       const message = `Request changes could not be confirmed. ${String(failure?.message ?? failure)}`;
@@ -7638,50 +7638,50 @@ function ApprovalDetail({ item, onResolved, onBack }) {
     children: [
       jsxs("header", { className: "dockyard-inbox-panel-head", children: [
         jsxs("div", { children: [
-          onBack ? jsx(Button, { variant: "quiet", small: true, onClick: onBack, children: "Back" }) : null,
+          onBack ? jsx(Button, { variant: "quiet", small: true, onClick: onBack, children: "\u041D\u0430\u0437\u0430\u0434" }) : null,
           jsx("h2", { children: scope.title }),
           jsx("small", { children: `${item.project || scope.project_id || "Unknown project"} \xB7 ${item.ref}` })
         ] }),
         jsx(StatusTag, { tone: riskTone, label: riskLabel })
       ] }),
       decisionError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: decisionError }) : null,
-      jsx(Section, { title: "Requested change", children: jsx("p", { children: decisionText(scope.reason) }) }),
-      jsx(Section, { title: "Policy gate", children: jsx("p", { className: "dim", children: decision ? `Decision revision ${decision.revision}; the displayed fingerprint is required before mutation.` : "Loading the decision gate\u2026" }) }),
-      jsx(Section, { title: "Potential impact", children: jsx("p", { children: decisionText(scope.expected_outcome) }) }),
-      jsx(Section, { title: "Capability boundary", children: jsx("p", { children: scope.authority?.granted ? jsxs("span", { children: [jsx("code", { children: scope.authority.granted }), ` for ${decisionText(scope.authority.scope)}`] }) : "No capability grant supplied." }) }),
-      jsx(Section, { title: "Who asked", children: jsx("p", { children: decisionText(scope.proposer) }) }),
-      jsx(Section, { title: "Evidence", children: jsxs("ul", { className: "dockyard-inbox-evidence-list", children: [
+      jsx(Section, { title: "\u0417\u0430\u043F\u0440\u043E\u0448\u0435\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435", children: jsx("p", { children: decisionText(scope.reason) }) }),
+      jsx(Section, { title: "\u041F\u043E\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0433\u0435\u0439\u0442", children: jsx("p", { className: "dim", children: decision ? `Decision revision ${decision.revision}; the displayed fingerprint is required before mutation.` : "Loading the decision gate\u2026" }) }),
+      jsx(Section, { title: "\u041F\u043E\u0442\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u0432\u043B\u0438\u044F\u043D\u0438\u0435", children: jsx("p", { children: decisionText(scope.expected_outcome) }) }),
+      jsx(Section, { title: "\u0413\u0440\u0430\u043D\u0438\u0446\u0430 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0435\u0439", children: jsx("p", { children: scope.authority?.granted ? jsxs("span", { children: [jsx("code", { children: scope.authority.granted }), ` for ${decisionText(scope.authority.scope)}`] }) : "\u0420\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u044F \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B." }) }),
+      jsx(Section, { title: "\u041A\u0442\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0438\u043B", children: jsx("p", { children: decisionText(scope.proposer) }) }),
+      jsx(Section, { title: "\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", children: jsxs("ul", { className: "dockyard-inbox-evidence-list", children: [
         ...steps.map((step, index) => jsx("li", { "data-evidence-cell": true, children: `Step ${index + 1}: ${decisionText(step)}` }, `${item.ref}-step-${index}`)),
         contract.tests ? jsx("li", { "data-evidence-cell": true, children: `Tests: ${decisionText(contract.tests)}` }) : null,
-        steps.length === 0 && !contract.tests ? jsx("li", { "data-evidence-cell": true, children: "No validation evidence supplied." }) : null
+        steps.length === 0 && !contract.tests ? jsx("li", { "data-evidence-cell": true, children: "\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B." }) : null
       ] }) }),
-      jsx(Section, { title: "Affected work items", children: jsx("ul", { className: "dockyard-inbox-workitems", children: affected.length ? affected.map((work) => jsx("li", { children: decisionText(work) }, decisionText(work))) : jsx("li", { children: "No linked work items supplied." }) }) }),
-      jsx(Section, { title: "Activity", children: jsx("div", { className: "dockyard-comment-thread", children: activity.length ? activity.map((entry, index) => jsx("p", { children: `${entry.actor || entry.kind} \xB7 ${formatWhen(entry.at)} \xB7 ${entry.body || entry.summary || entry.decision || entry.kind}` }, `${entry.kind}-${entry.at}-${index}`)) : jsx("p", { children: "No activity recorded yet." }) }) }),
-      jsx(Section, { title: "Comments don't change the decision", children: jsxs("div", { className: "dockyard-approval-comments", "data-approval-comments": true, children: [
+      jsx(Section, { title: "\u0417\u0430\u0442\u0440\u043E\u043D\u0443\u0442\u044B\u0435 \u0440\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B", children: jsx("ul", { className: "dockyard-inbox-workitems", children: affected.length ? affected.map((work) => jsx("li", { children: decisionText(work) }, decisionText(work))) : jsx("li", { children: "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B." }) }) }),
+      jsx(Section, { title: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C", children: jsx("div", { className: "dockyard-comment-thread", children: activity.length ? activity.map((entry, index) => jsx("p", { children: `${entry.actor || entry.kind} \xB7 ${formatWhen(entry.at)} \xB7 ${entry.body || entry.summary || entry.decision || entry.kind}` }, `${entry.kind}-${entry.at}-${index}`)) : jsx("p", { children: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043A\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0430." }) }) }),
+      jsx(Section, { title: "\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0438 \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442 \u0440\u0435\u0448\u0435\u043D\u0438\u0435", children: jsxs("div", { className: "dockyard-approval-comments", "data-approval-comments": true, children: [
         jsx("p", { className: "dim", children: "Comments add audit context only. They do not approve, reject, or alter the decision fingerprint." }),
         jsxs("div", { className: "dockyard-comment-form", children: [
-          jsx("input", { value: commentBody, onChange: (event) => setCommentBody(event.target.value), placeholder: "Add context without deciding", "aria-label": "Comment" }),
-          jsx(Button, { small: true, variant: "quiet", onClick: addComment, disabled: !commentBody.trim(), children: "Comment" })
+          jsx("input", { value: commentBody, onChange: (event) => setCommentBody(event.target.value), placeholder: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442, \u043D\u0435 \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u044F \u0440\u0435\u0448\u0435\u043D\u0438\u0435", "aria-label": "\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439" }),
+          jsx(Button, { small: true, variant: "quiet", onClick: addComment, disabled: !commentBody.trim(), children: "\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439" })
         ] })
       ] }) }),
       changesOpen ? jsxs("section", { className: "dockyard-request-changes", "data-request-changes-form": "true", children: [
         // Sahil 05/10: the box sits under its label and is big enough to write real feedback in.
         jsxs("label", { className: "dockyard-request-changes-field", children: [
-          jsx("span", { children: "Feedback for the proposer" }),
-          jsx("textarea", { value: feedback, rows: 6, onChange: (event) => setFeedback(event.target.value), placeholder: "What must change before approval" })
+          jsx("span", { children: "\u041E\u0442\u0437\u044B\u0432 \u0430\u0432\u0442\u043E\u0440\u0443" }),
+          jsx("textarea", { value: feedback, rows: 6, onChange: (event) => setFeedback(event.target.value), placeholder: "\u0427\u0442\u043E \u0434\u043E\u043B\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C\u0441\u044F \u0434\u043E \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F" })
         ] }),
         jsxs("div", { className: "dockyard-request-changes-actions", children: [
-          jsx(Button, { variant: "primary", action: "confirm-request-changes", disabled: busy || !feedback.trim(), onClick: requestChanges, children: busy ? "Returning\u2026" : "Return to proposer" }),
-          jsx(Button, { variant: "quiet", disabled: busy, onClick: () => setChangesOpen(false), children: "Cancel" })
+          jsx(Button, { variant: "primary", action: "confirm-request-changes", disabled: busy || !feedback.trim(), onClick: requestChanges, children: busy ? "Returning\u2026" : "\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0430\u0432\u0442\u043E\u0440\u0443" }),
+          jsx(Button, { variant: "quiet", disabled: busy, onClick: () => setChangesOpen(false), children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
         ] })
       ] }) : null,
       error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null,
       jsxs("footer", { className: "dockyard-inbox-actions", children: [
-        jsx(Button, { action: "approve", variant: "primary", disabled: busy || !decision, onClick: () => decide("approve"), children: state === "approving" ? "Approving..." : "Approve" }),
-        jsx(Button, { action: "reject", variant: "danger", disabled: busy || !decision, onClick: () => setRejectOpen(true), children: "Reject" }),
-        jsx(Button, { action: "request-changes", variant: "quiet", disabled: busy || !decision, onClick: () => setChangesOpen((open) => !open), children: "Request changes" }),
+        jsx(Button, { action: "approve", variant: "primary", disabled: busy || !decision, onClick: () => decide("approve"), children: state === "approving" ? "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435..." : "\u041E\u0434\u043E\u0431\u0440\u0438\u0442\u044C" }),
+        jsx(Button, { action: "reject", variant: "danger", disabled: busy || !decision, onClick: () => setRejectOpen(true), children: "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C" }),
+        jsx(Button, { action: "request-changes", variant: "quiet", disabled: busy || !decision, onClick: () => setChangesOpen((open) => !open), children: "\u0417\u0430\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u043A\u0438" }),
         jsx("span", { className: "spacer" }),
-        jsx("span", { className: "dockyard-inbox-status", children: decision ? "Receipt required" : "Loading evidence\u2026" })
+        jsx("span", { className: "dockyard-inbox-status", children: decision ? "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043A\u0432\u0438\u0442\u0430\u043D\u0446\u0438\u044F" : "Loading evidence\u2026" })
       ] }),
       rejectOpen ? jsx(RejectDialog, {
         item,
@@ -7702,7 +7702,7 @@ function normaliseBulkImportText(text2, mode) {
     let rowsJson;
     try {
       rowsJson = JSON.parse(text2);
-      if (!Array.isArray(rowsJson)) throw new Error("JSON must be an array");
+      if (!Array.isArray(rowsJson)) throw new Error("JSON \u0434\u043E\u043B\u0436\u0435\u043D \u0431\u044B\u0442\u044C \u043C\u0430\u0441\u0441\u0438\u0432\u043E\u043C");
       if (rowsJson.some((row) => row?.initiative_ref)) throw new Error("initiative_ref is not supported by bulk import; link the item after import");
       const supported = /* @__PURE__ */ new Set(["row_key", "type", "title", "parent", "parent_key", "labels", "estimate_days", "due"]);
       const unknown = rowsJson.flatMap((row) => Object.keys(row ?? {}).filter((key) => !supported.has(key)));
@@ -7889,7 +7889,7 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
     if (draft.due !== base.due) changes.due = draft.due || null;
     if (draft.parent_ref !== base.parent_ref) {
       if (parentReason.trim().length < 4) {
-        setError("Changing the parent needs a reason of at least 4 characters.");
+        setError("\u0421\u043C\u0435\u043D\u0430 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u043F\u0440\u0438\u0447\u0438\u043D\u044B \u043C\u0438\u043D\u0438\u043C\u0443\u043C \u0438\u0437 4 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432.");
         setBusy(false);
         return;
       }
@@ -7929,7 +7929,7 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
       }
       await loadDetail(item.ref);
       setParentReason("");
-      setFeedback("Saved.");
+      setFeedback("\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E.");
       await onRefresh?.();
     } catch (failure) {
       setError(String(failure?.message ?? failure));
@@ -7947,7 +7947,7 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
       });
       setDepRef("");
       await loadDetail(item.ref);
-      setFeedback("Dependency added.");
+      setFeedback("\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430.");
       await onRefresh?.();
     } catch (failure) {
       setError(String(failure?.message ?? failure));
@@ -7998,113 +7998,113 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
         jsxs("header", { className: "dockyard-modal-head", children: [
           jsxs("div", { children: [
             jsx("span", { className: "dockyard-create-eyebrow", children: `Work item \xB7 ${detailProject || projectId}` }),
-            jsx("h2", { id: "dockyard-work-item-title", children: "Edit backlog item" })
+            jsx("h2", { id: "dockyard-work-item-title", children: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0443\u043D\u043A\u0442 \u0431\u044D\u043A\u043B\u043E\u0433\u0430" })
           ] }),
-          jsx(Button, { action: "close-work-item-detail", ariaLabel: "Close work item details", onClick: () => {
+          jsx(Button, { action: "close-work-item-detail", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438 \u0440\u0430\u0431\u043E\u0447\u0435\u0433\u043E \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430", onClick: () => {
             if (isDirty) {
               setConfirmDiscard(true);
             } else {
               onClose();
             }
-          }, children: "Close" })
+          }, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" })
         ] }),
-        confirmDiscard ? jsxs("div", { className: "dockyard-dirty-confirm", role: "alertdialog", "aria-label": "Unsaved changes", "data-discard-confirm": true, children: [
-          jsx("strong", { children: "Discard unsaved changes?" }),
+        confirmDiscard ? jsxs("div", { className: "dockyard-dirty-confirm", role: "alertdialog", "aria-label": "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "data-discard-confirm": true, children: [
+          jsx("strong", { children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F?" }),
           jsx("p", { children: "Your edits to this work item have not been saved. Choosing discard loses them; keep editing returns you to the form." }),
           jsxs("div", { className: "dockyard-modal-actions", children: [
-            jsx(Button, { action: "keep-editing", variant: "primary", onClick: () => setConfirmDiscard(false), children: "Keep editing" }),
+            jsx(Button, { action: "keep-editing", variant: "primary", onClick: () => setConfirmDiscard(false), children: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435" }),
             jsx(Button, { action: "confirm-discard", onClick: () => {
               setConfirmDiscard(false);
               onClose();
-            }, children: "Discard changes" })
+            }, children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
           ] })
         ] }) : null,
         jsxs("div", { className: "dockyard-create-body dockyard-edit-body", children: [
           jsxs("div", { className: "dockyard-create-context dockyard-edit-context", children: [
-            jsx("span", { children: "Status" }),
+            jsx("span", { children: "\u0421\u0442\u0430\u0442\u0443\u0441" }),
             jsx("span", { className: `dockyard-status-dot status-${draft?.status ?? "backlog"}`, "aria-hidden": true }),
             jsx("select", {
-              "aria-label": "Status",
+              "aria-label": "\u0421\u0442\u0430\u0442\u0443\u0441",
               value: draft?.status ?? "backlog",
               onChange: (event) => setDraft({ ...draft, status: event.target.value }),
               children: ["backlog", "in_progress", "in_review", "blocked", "done"].map((status) => jsx("option", { value: status, children: readableLabel(status) }, status))
             }),
             jsxs("span", { className: "dockyard-detail-task-id", "data-task-id": taskIdText ?? void 0, children: [
-              jsx("span", { children: "Task ID" }),
-              jsx("code", { children: taskIdText ?? "Unavailable" })
+              jsx("span", { children: "ID \u0437\u0430\u0434\u0430\u0447\u0438" }),
+              jsx("code", { children: taskIdText ?? "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E" })
             ] }),
             detail?.work_item?.created_by || item.created_by ? jsx("span", { children: `\xB7 Created by ${detail?.work_item?.created_by || item.created_by}` }) : null
           ] }),
           jsxs("div", { className: "dockyard-settings-grid dockyard-create-fields dockyard-edit-fields", children: [
-            jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [jsx("span", { children: "Title" }), jsx("input", { "aria-label": "Title", value: draft?.title ?? "", onChange: (event) => setDraft({ ...draft, title: event.target.value }) })] }),
-            jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [jsx("span", { children: "Description (optional)" }), jsx("textarea", { "aria-label": "Body", rows: 3, placeholder: "Describe the outcome and acceptance criteria\u2026", value: draft?.body ?? "", onChange: (event) => setDraft({ ...draft, body: event.target.value }) })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Parent (optional)" }), jsx("select", { "aria-label": "Parent", value: draft?.parent_ref ?? "", onChange: (event) => setDraft({ ...draft, parent_ref: event.target.value }), children: [
-              jsx("option", { value: "", children: "Top level" }, "none"),
+            jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [jsx("span", { children: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A" }), jsx("input", { "aria-label": "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A", value: draft?.title ?? "", onChange: (event) => setDraft({ ...draft, title: event.target.value }) })] }),
+            jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [jsx("span", { children: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("textarea", { "aria-label": "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", rows: 3, placeholder: "\u041E\u043F\u0438\u0448\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u043F\u0440\u0438\u0451\u043C\u043A\u0438\u2026", value: draft?.body ?? "", onChange: (event) => setDraft({ ...draft, body: event.target.value }) })] }),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0420\u043E\u0434\u0438\u0442\u0435\u043B\u044C (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("select", { "aria-label": "\u0420\u043E\u0434\u0438\u0442\u0435\u043B\u044C", value: draft?.parent_ref ?? "", onChange: (event) => setDraft({ ...draft, parent_ref: event.target.value }), children: [
+              jsx("option", { value: "", children: "\u0412\u0435\u0440\u0445\u043D\u0438\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C" }, "none"),
               ...(detail?.parent_choices ?? []).map((choice) => jsx("option", { value: choice.ref, children: `${choice.ref} \xB7 ${choice.title}` }, choice.ref)),
               draft?.parent_ref && !(detail?.parent_choices ?? []).some((choice) => choice.ref === draft.parent_ref) ? jsx("option", { value: draft.parent_ref, children: draft.parent_ref }, "current-parent") : null
             ] })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Due date (optional)" }), jsx("input", { type: "date", "aria-label": "Due date", value: draft?.due ?? "", onChange: (event) => setDraft({ ...draft, due: event.target.value }) })] }),
-            draft && baseline && draft.parent_ref !== baseline.parent_ref ? jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [jsx("span", { children: "Reason for changing parent *" }), jsx("input", { "aria-label": "Reason for changing parent", value: parentReason, placeholder: "Required for the audit trail", onChange: (event) => setParentReason(event.target.value) })] }) : null,
-            jsxs("label", { className: "dockyard-field field-required", children: [jsx("span", { children: "Type" }), jsx("select", {
-              "aria-label": "Type",
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0421\u0440\u043E\u043A (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { type: "date", "aria-label": "\u0421\u0440\u043E\u043A", value: draft?.due ?? "", onChange: (event) => setDraft({ ...draft, due: event.target.value }) })] }),
+            draft && baseline && draft.parent_ref !== baseline.parent_ref ? jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [jsx("span", { children: "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u0441\u043C\u0435\u043D\u044B \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F *" }), jsx("input", { "aria-label": "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u0441\u043C\u0435\u043D\u044B \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F", value: parentReason, placeholder: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u0430\u0443\u0434\u0438\u0442\u0430", onChange: (event) => setParentReason(event.target.value) })] }) : null,
+            jsxs("label", { className: "dockyard-field field-required", children: [jsx("span", { children: "\u0422\u0438\u043F" }), jsx("select", {
+              "aria-label": "\u0422\u0438\u043F",
               value: draft?.type ?? "task",
               onChange: (event) => setDraft({ ...draft, type: event.target.value }),
               children: [.../* @__PURE__ */ new Set([draft?.type || "task", "task", "bug", "spike", "subtask", "gate", "feature"])].map((kind) => jsx("option", { value: kind, children: readableLabel(kind) }, kind))
             })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Estimated days (optional)" }), jsx("input", { type: "number", min: 0, step: 0.5, "aria-label": "Estimated days", placeholder: "e.g. 2.5", value: draft?.estimate_days ?? "", onChange: (event) => setDraft({ ...draft, estimate_days: event.target.value }) })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Assignee (optional)" }), jsx("select", { "aria-label": "Assignee", value: draft?.assignee ?? "", disabled: busy, onChange: (event) => setDraft({ ...draft, assignee: event.target.value }), children: [
-              jsx("option", { value: "", children: "Unassigned" }, "none"),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u041E\u0446\u0435\u043D\u043A\u0430 \u0432 \u0434\u043D\u044F\u0445 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { type: "number", min: 0, step: 0.5, "aria-label": "\u041E\u0446\u0435\u043D\u043A\u0430, \u0434\u043D\u0435\u0439", placeholder: "e.g. 2.5", value: draft?.estimate_days ?? "", onChange: (event) => setDraft({ ...draft, estimate_days: event.target.value }) })] }),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("select", { "aria-label": "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", value: draft?.assignee ?? "", disabled: busy, onChange: (event) => setDraft({ ...draft, assignee: event.target.value }), children: [
+              jsx("option", { value: "", children: "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" }, "none"),
               ...(profiles ?? []).filter((profile) => profile.slug || profile.id || profile.name).map((profile) => {
                 const value = profile.slug || profile.id || profile.name;
                 return jsx("option", { value, disabled: profile.available === false && value !== draft?.assignee, children: profile.display_name || profile.name || value }, value);
               }),
               draft?.assignee && !(profiles ?? []).some((profile) => (profile.slug || profile.id || profile.name) === draft.assignee) ? jsx("option", { value: draft.assignee, children: `${draft.assignee} (current)` }, "current-assignee") : null
             ] })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "Initiative" }), jsx("select", { "aria-label": "Initiative", value: draft?.initiative_ref ?? "", onChange: (event) => setDraft({ ...draft, initiative_ref: event.target.value }), children: [
-              jsx("option", { value: "", children: "No initiative" }, "none"),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430" }), jsx("select", { "aria-label": "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", value: draft?.initiative_ref ?? "", onChange: (event) => setDraft({ ...draft, initiative_ref: event.target.value }), children: [
+              jsx("option", { value: "", children: "\u0411\u0435\u0437 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B" }, "none"),
               ...initiatives.map((initiative) => jsx("option", { value: initiative.ref, children: `${initiative.ref} / ${initiative.title}` }, initiative.ref)),
               draft?.initiative_ref && !initiatives.some((initiative) => initiative.ref === draft.initiative_ref) ? jsx("option", { value: draft.initiative_ref, children: `${draft.initiative_ref} (current)` }, "current-initiative") : null
             ] })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "Goal" }), jsx("select", { "aria-label": "Goal", value: goalDraft ?? currentGoal ?? "", disabled: busy, onChange: (event) => setGoalDraft(event.target.value), children: [
-              jsx("option", { value: "", children: "Not placed yet" }, "none"),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "\u0426\u0435\u043B\u044C" }), jsx("select", { "aria-label": "\u0426\u0435\u043B\u044C", value: goalDraft ?? currentGoal ?? "", disabled: busy, onChange: (event) => setGoalDraft(event.target.value), children: [
+              jsx("option", { value: "", children: "\u0415\u0449\u0451 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E" }, "none"),
               ...goals.map((goal) => jsx("option", { value: String(goal.id), children: goal.title }, String(goal.id)))
             ] })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Evidence refs (optional)" }), jsx("input", { "aria-label": "Evidence refs", placeholder: "Comma-separated refs", value: draft?.evidence_refs ?? "", onChange: (event) => setDraft({ ...draft, evidence_refs: event.target.value }) })] }),
-            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Labels (optional)" }), jsx("input", { "aria-label": "Labels", placeholder: "Comma-separated labels", value: draft?.labels ?? "", onChange: (event) => setDraft({ ...draft, labels: event.target.value }) })] }),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { "aria-label": "\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", placeholder: "\u0421\u0441\u044B\u043B\u043A\u0438 \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E", value: draft?.evidence_refs ?? "", onChange: (event) => setDraft({ ...draft, evidence_refs: event.target.value }) })] }),
+            jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u041C\u0435\u0442\u043A\u0438 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { "aria-label": "\u041C\u0435\u0442\u043A\u0438", placeholder: "\u041C\u0435\u0442\u043A\u0438 \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E", value: draft?.labels ?? "", onChange: (event) => setDraft({ ...draft, labels: event.target.value }) })] }),
             jsxs("div", { className: "dockyard-edit-backlog-fields dockyard-field-wide", children: [
-              jsxs("span", { children: ["Current rank: ", jsx("strong", { children: detail?.work_item?.priority_rank ?? item.priority_rank ?? "Not ranked" })] }),
-              jsxs("span", { children: ["Priority reason: ", jsx("strong", { children: detail?.work_item?.priority_reason || item.priority_reason || "Not recorded" })] }),
-              jsx("small", { children: "Change rank from the backlog table; a new priority reason is required there." })
+              jsxs("span", { children: ["\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0440\u0430\u043D\u0433: ", jsx("strong", { children: detail?.work_item?.priority_rank ?? item.priority_rank ?? "\u0411\u0435\u0437 \u0440\u0430\u043D\u0433\u0430" })] }),
+              jsxs("span", { children: ["\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430: ", jsx("strong", { children: detail?.work_item?.priority_reason || item.priority_reason || "\u041D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E" })] }),
+              jsx("small", { children: "\u0420\u0430\u043D\u0433 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0438\u0437 \u0442\u0430\u0431\u043B\u0438\u0446\u044B \u0431\u044D\u043A\u043B\u043E\u0433\u0430; \u0442\u0430\u043C \u043F\u043E\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043D\u043E\u0432\u0430\u044F \u043F\u0440\u0438\u0447\u0438\u043D\u0430 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430." })
             ] })
           ] }),
           detail ? jsxs("div", { className: "dockyard-edit-dependencies", "data-dependency-editor": true, children: [
-            jsxs("strong", { children: ["Dependencies", ` \xB7 ${(detail.dependencies ?? []).length}`] }),
-            (detail.dependencies ?? []).length ? jsx("ul", { children: detail.dependencies.map((dependency) => jsx("li", { children: `${dependency.ref} \xB7 ${dependency.title}` }, dependency.ref)) }) : jsx("span", { children: "None recorded" }),
-            jsx("input", { "aria-label": "Dependency task ref", placeholder: "Task ref, e.g. HDY-4", value: depRef, onChange: (event) => setDepRef(event.target.value) }),
+            jsxs("strong", { children: ["\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438", ` \xB7 ${(detail.dependencies ?? []).length}`] }),
+            (detail.dependencies ?? []).length ? jsx("ul", { children: detail.dependencies.map((dependency) => jsx("li", { children: `${dependency.ref} \xB7 ${dependency.title}` }, dependency.ref)) }) : jsx("span", { children: "\u041D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E" }),
+            jsx("input", { "aria-label": "\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0437\u0430\u0434\u0430\u0447\u0443-\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C", placeholder: "\u041D\u043E\u043C\u0435\u0440 \u0437\u0430\u0434\u0430\u0447\u0438, \u043D\u0430\u043F\u0440. HDY-4", value: depRef, onChange: (event) => setDepRef(event.target.value) }),
             jsx(Button, { action: "add-dependency", variant: "quiet", disabled: busy || !depRef.trim(), onClick: addDependency, children: "Add" })
           ] }) : null,
           error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null
         ] }),
         // Approved reference: the Activity timeline is a full-width section
         // below the field columns, with an 'All activity' scope dropdown.
-        detail ? jsxs("section", { className: "dockyard-detail-activity", "data-work-history": true, "aria-label": "Task activity", children: [
+        detail ? jsxs("section", { className: "dockyard-detail-activity", "data-work-history": true, "aria-label": "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438", children: [
           jsxs("div", { className: "dockyard-detail-activity-head", children: [
             jsx("h3", { children: `Activity \xB7 ${historyEntries.length}` }),
             jsxs("div", { className: "dockyard-activity-actions", children: [
-              historyEntries.length > 2 ? jsx("button", { type: "button", className: "dockyard-activity-expand", "aria-expanded": activityExpanded, onClick: () => setActivityExpanded(!activityExpanded), children: activityExpanded ? "Show less" : `View all ${historyEntries.length}` }) : null,
+              historyEntries.length > 2 ? jsx("button", { type: "button", className: "dockyard-activity-expand", "aria-expanded": activityExpanded, onClick: () => setActivityExpanded(!activityExpanded), children: activityExpanded ? "\u0421\u0432\u0435\u0440\u043D\u0443\u0442\u044C" : `View all ${historyEntries.length}` }) : null,
               // jsxs: a static child list (jsx with an array made React warn
               // "Each child in a list should have a unique key", seen 05/10).
               jsxs("label", { className: "dockyard-activity-scope", children: [
                 jsxs("span", { className: "dockyard-field-shell dockyard-activity-scope-shell", children: [
                   jsx(Icon, { name: "filter" }),
-                  jsx("select", { "data-activity-scope": true, "aria-label": "Activity scope", value: historyFilter, onChange: (event) => {
+                  jsx("select", { "data-activity-scope": true, "aria-label": "\u041E\u0445\u0432\u0430\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438", value: historyFilter, onChange: (event) => {
                     setHistoryFilter(event.target.value);
                     setActivityExpanded(false);
                   }, children: [
-                    jsx("option", { value: "all", children: "All activity" }, "all"),
-                    jsx("option", { value: "status", children: "Status changes" }, "status"),
-                    jsx("option", { value: "assignee", children: "Assignment" }, "assignee"),
-                    jsx("option", { value: "fields", children: "Field edits" }, "fields")
+                    jsx("option", { value: "all", children: "\u0412\u0441\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C" }, "all"),
+                    jsx("option", { value: "status", children: "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0441\u0442\u0430\u0442\u0443\u0441\u0430" }, "status"),
+                    jsx("option", { value: "assignee", children: "\u041D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435" }, "assignee"),
+                    jsx("option", { value: "fields", children: "\u041F\u0440\u0430\u0432\u043A\u0438 \u043F\u043E\u043B\u0435\u0439" }, "fields")
                   ] })
                 ] })
               ] })
@@ -8114,10 +8114,10 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
             const rawAction = String(entry.summary || entry.action || entry.kind || "workitem.updated");
             const detail2 = entry.detail && typeof entry.detail === "object" ? entry.detail : {};
             const changes = Array.isArray(detail2.changes) ? detail2.changes : /transition/.test(rawAction) && Object.hasOwn(detail2, "from") ? [{ field: "status", from: detail2.from, to: detail2.to }] : /assigned/.test(rawAction) && Object.hasOwn(detail2, "from") ? [{ field: "assignee", from: detail2.from, to: detail2.to }] : /dependency_added/.test(rawAction) ? [{ field: "dependencies", from: null, to: detail2.dependency }] : /dependency_removed/.test(rawAction) ? [{ field: "dependencies", from: detail2.dependency, to: null }] : [];
-            const action = /workitem\.updated/.test(rawAction) ? "Updated fields" : /workitem\.transition/.test(rawAction) ? "Status changed" : /workitem\.assigned/.test(rawAction) ? "Assignee changed" : /dependency_added/.test(rawAction) ? "Dependency added" : /dependency_removed/.test(rawAction) ? "Dependency removed" : rawAction.replace(/[._]/g, " ");
-            const fieldNames = { title: "Title", body: "Description", type: "Type", parent_ref: "Parent", initiative_ref: "Initiative", labels: "Labels", evidence_refs: "Evidence refs", estimate_days: "Estimate", due: "Due date", status: "Status", assignee: "Assignee", dependencies: "Dependency" };
+            const action = /workitem\.updated/.test(rawAction) ? "\u041E\u0431\u043D\u043E\u0432\u043B\u0451\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u044F" : /workitem\.transition/.test(rawAction) ? "\u0421\u0442\u0430\u0442\u0443\u0441 \u0438\u0437\u043C\u0435\u043D\u0451\u043D" : /workitem\.assigned/.test(rawAction) ? "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C \u0438\u0437\u043C\u0435\u043D\u0451\u043D" : /dependency_added/.test(rawAction) ? "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0430" : /dependency_removed/.test(rawAction) ? "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u0443\u0434\u0430\u043B\u0435\u043D\u0430" : rawAction.replace(/[._]/g, " ");
+            const fieldNames = { title: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A", body: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", type: "\u0422\u0438\u043F", parent_ref: "\u0420\u043E\u0434\u0438\u0442\u0435\u043B\u044C", initiative_ref: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", labels: "\u041C\u0435\u0442\u043A\u0438", evidence_refs: "\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", estimate_days: "\u041E\u0446\u0435\u043D\u043A\u0430", due: "\u0421\u0440\u043E\u043A", status: "\u0421\u0442\u0430\u0442\u0443\u0441", assignee: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", dependencies: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C" };
             const valueText = (value, field) => Array.isArray(value) ? value.length ? value.join(", ") : "\u2014" : value === null || value === void 0 || value === "" ? "\u2014" : ["status", "type"].includes(field) ? readableLabel(value) : String(value);
-            const actor = entry.actor_id || entry.actor || entry.verified_actor || "Actor not recorded";
+            const actor = entry.actor_id || entry.actor || entry.verified_actor || "\u0421\u0443\u0431\u044A\u0435\u043A\u0442 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D";
             const at = entry.ts || entry.created_at || entry.at;
             return jsxs("li", { children: [
               jsx("strong", { children: action }),
@@ -8131,7 +8131,7 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
               !changes.length && detail2.fields?.length ? jsx("span", { className: "dockyard-history-legacy", children: `Changed: ${detail2.fields.map((field) => fieldNames[field] || readableLabel(field)).join(", ")} (previous value not recorded)` }) : null,
               detail2.reason ? jsx("span", { children: `Reason: ${detail2.reason}` }) : null
             ] }, String(entry.id ?? index));
-          }) }) : jsx("p", { className: "dockyard-meta", children: (detail?.history ?? []).length ? "No entries match this scope." : "No recorded activity for this item yet." })
+          }) }) : jsx("p", { className: "dockyard-meta", children: (detail?.history ?? []).length ? "\u041D\u0435\u0442 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0432 \u044D\u0442\u043E\u0439 \u043E\u0431\u043B\u0430\u0441\u0442\u0438." : "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u043F\u043E \u044D\u0442\u043E\u043C\u0443 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0443 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0430." })
         ] }) : null,
         jsxs("div", { className: "dockyard-form-actions dockyard-detail-footer", children: [
           // Approved reference: Cancel sits on the left; 'Unsaved changes' and
@@ -8147,19 +8147,19 @@ function WorkItemDetail({ item, projectId, profiles, initiatives = [], onClose, 
               }
             },
             disabled: busy,
-            children: "Cancel"
+            children: "\u041E\u0442\u043C\u0435\u043D\u0430"
           }),
           jsxs("span", { className: "dockyard-detail-footer-right", children: [
             isDirty ? jsxs("span", { className: "dockyard-edit-unsaved", role: "status", "data-dirty-banner": true, children: [
-              jsx("span", { children: "Unsaved changes" }),
-              jsx(Button, { small: true, action: "undo-work-item-changes", disabled: busy, onClick: undoChanges, children: "Undo" })
+              jsx("span", { children: "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" }),
+              jsx(Button, { small: true, action: "undo-work-item-changes", disabled: busy, onClick: undoChanges, children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C" })
             ] }) : null,
             jsx(Button, {
               action: "save-work-item",
               variant: "primary",
               disabled: busy || !isDirty,
               onClick: save2,
-              children: busy ? "Saving..." : "Save changes"
+              children: busy ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F"
             }),
             feedback ? jsx("span", { role: "status", children: feedback }) : null
           ] })
@@ -8191,16 +8191,16 @@ function ObjectiveEvidence({ objective, projectId, onSaved }) {
   };
   return jsxs("details", { "data-objective-evidence": objective.id, children: [
     jsx("summary", { children: `Result: ${readableLabel(state)} \xB7 Evidence/history` }),
-    jsx("p", { children: evidence.detail || "Insufficient data: no recorded evidence." }),
+    jsx("p", { children: evidence.detail || "\u041D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0434\u0430\u043D\u043D\u044B\u0445: \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B." }),
     jsx("p", { children: `Evidence age: ${evidence.evidence_age_seconds == null ? "unavailable" : Math.floor(evidence.evidence_age_seconds) + " seconds"} \xB7 Window: ${objective.window || "30d"} \xB7 Samples: ${evidence.sample_count || 0} \xB7 Pass rate: ${evidence.pass_rate == null ? "insufficient data" : Math.round(evidence.pass_rate * 100) + "%"}` }),
     jsx("ul", { children: (evidence.history || []).map((sample, index) => jsx("li", { children: `${sample.recorded_at} \xB7 ${sample.state} \xB7 ${sample.verified_actor || sample.actor || sample.source_evidence?.source || "objective evaluator"}${sample.source === "evaluate-now" ? " (Evaluate now)" : ""} \xB7 ${sample.detail || ""} \xB7 ${JSON.stringify(sample.evidence || sample.source_evidence || {})}` }, index)) }),
     objective.evaluator_type === "manual" && objective.enabled !== false ? jsxs("form", { onSubmit: save2, children: [
-      jsxs("label", { children: ["Result ", jsx("select", { name: "result", children: ["passed", "failed"].map((value) => jsx("option", { value, children: value }, value)) })] }),
-      jsxs("label", { children: ["Evidence reference ", jsx("input", { name: "evidence", required: true, maxLength: 500 })] }),
-      jsxs("label", { children: ["Assessment note ", jsx("input", { name: "detail", maxLength: 2e3 })] }),
-      jsxs("label", { children: ["Expires at (local time) ", jsx("input", { name: "expiry", type: "datetime-local" })] }),
-      jsx("button", { type: "submit", disabled: busy || !objective.can_record_assessment, children: busy ? "Saving and verifying\u2026" : "Record human assessment" }),
-      !objective.can_record_assessment ? jsx("p", { children: "Read-only: a dedicated authenticated human principal is required to record assessments." }) : null
+      jsxs("label", { children: ["\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 ", jsx("select", { name: "result", children: ["passed", "failed"].map((value) => jsx("option", { value, children: value }, value)) })] }),
+      jsxs("label", { children: ["\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E ", jsx("input", { name: "evidence", required: true, maxLength: 500 })] }),
+      jsxs("label", { children: ["\u0417\u0430\u043C\u0435\u0442\u043A\u0430 \u043E\u0446\u0435\u043D\u043A\u0438 ", jsx("input", { name: "detail", maxLength: 2e3 })] }),
+      jsxs("label", { children: ["\u0418\u0441\u0442\u0435\u043A\u0430\u0435\u0442 \u0432 (\u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F) ", jsx("input", { name: "expiry", type: "datetime-local" })] }),
+      jsx("button", { type: "submit", disabled: busy || !objective.can_record_assessment, children: busy ? "Saving and verifying\u2026" : "\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0446\u0435\u043D\u043A\u0443 \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430" }),
+      !objective.can_record_assessment ? jsx("p", { children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0447\u0442\u0435\u043D\u0438\u0435: \u0434\u043B\u044F \u0444\u0438\u043A\u0441\u0430\u0446\u0438\u0438 \u043E\u0446\u0435\u043D\u043E\u043A \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0430\u0443\u0442\u0435\u043D\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0447\u0435\u043B\u043E\u0432\u0435\u043A." }) : null
     ] }) : null,
     error ? jsx("p", { role: "alert", children: error }) : null
   ] });
@@ -8239,26 +8239,26 @@ function BacklogImportWizard(props) {
     jsxs("div", { className: "dockyard-modal dockyard-onboarding", role: "dialog", "aria-modal": true, "aria-labelledby": "dockyard-import-title", children: [
       jsxs("header", { className: "dockyard-onboarding-head", children: [
         jsxs("div", { children: [
-          jsx("h2", { id: "dockyard-import-title", children: "Bulk import backlog items" }),
+          jsx("h2", { id: "dockyard-import-title", children: "\u041C\u0430\u0441\u0441\u043E\u0432\u044B\u0439 \u0438\u043C\u043F\u043E\u0440\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0431\u044D\u043A\u043B\u043E\u0433\u0430" }),
           jsx("p", { children: `Import into ${project.name || project.id}. Paste JSON or choose a CSV file, validate every row, then confirm. No rows are written during preview.` })
         ] }),
-        jsx("button", { type: "button", className: "dockyard-modal-close", "aria-label": "Close bulk import", onClick: closeImport, children: "\xD7" })
+        jsx("button", { type: "button", className: "dockyard-modal-close", "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043C\u0430\u0441\u0441\u043E\u0432\u044B\u0439 \u0438\u043C\u043F\u043E\u0440\u0442", onClick: closeImport, children: "\xD7" })
       ] }),
       jsx("div", {
         className: "dockyard-wizard-progress",
         role: "progressbar",
-        "aria-label": "Import progress",
+        "aria-label": "\u0425\u043E\u0434 \u0438\u043C\u043F\u043E\u0440\u0442\u0430",
         "aria-valuemin": 1,
         "aria-valuemax": 3,
         "aria-valuenow": importStep,
-        children: [["Source", "Upload or paste"], ["Preview", "Validate every row"], ["Result", "Commit outcome"]].map(([label, detail], index) => jsxs("div", { className: index + 1 < importStep ? "complete" : index + 1 === importStep ? "active" : "", children: [
+        children: [["Source", "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u043B\u0438 \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044C"], ["\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440", "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043A\u0430\u0436\u0434\u0443\u044E \u0441\u0442\u0440\u043E\u043A\u0443"], ["\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442"]].map(([label, detail], index) => jsxs("div", { className: index + 1 < importStep ? "complete" : index + 1 === importStep ? "active" : "", children: [
           jsx("span", { children: index + 1 < importStep ? "\u2713" : number(index + 1) }),
           jsxs("span", { children: [jsx("strong", { children: label }), jsx("small", { children: detail })] })
         ] }, label))
       }),
       jsxs("div", { className: "dockyard-wizard-body", children: [
         jsxs("div", { className: importStep === 1 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: importStep !== 1, "data-import-step": "1", children: [
-          jsx("h3", { children: "Add your source" }),
+          jsx("h3", { children: "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A" }),
           jsx("p", { className: "import-source-hint", children: "Required: row_key, type, title. Other supported columns are optional; open Column reference for formats and examples." }),
           jsxs("div", { className: "dockyard-tabs", role: "tablist", children: [
             jsx("button", { type: "button", role: "tab", "aria-selected": String(importMode === "csv"), className: importMode === "csv" ? "active" : "", onClick: () => {
@@ -8272,7 +8272,7 @@ function BacklogImportWizard(props) {
           ] }),
           jsx("textarea", {
             "data-import-input": true,
-            "aria-label": "CSV or JSON import content",
+            "aria-label": "\u0421\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0435 \u0438\u043C\u043F\u043E\u0440\u0442\u0430 CSV \u0438\u043B\u0438 JSON",
             spellCheck: false,
             value: importText,
             onInput: (event) => {
@@ -8309,9 +8309,9 @@ function BacklogImportWizard(props) {
               },
               children: [
                 jsx(Icon, { name: "upload" }),
-                jsx("strong", { children: "Choose a CSV file or drop it here" }),
-                jsx("small", { children: "CSV only. File contents appear above before validation." }),
-                jsx("input", { type: "file", accept: ".csv,text/csv", "aria-label": "Choose CSV file", onChange: (event) => {
+                jsx("strong", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 CSV-\u0444\u0430\u0439\u043B \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0435\u0433\u043E \u0441\u044E\u0434\u0430" }),
+                jsx("small", { children: "\u0422\u043E\u043B\u044C\u043A\u043E CSV. \u0421\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0435 \u0444\u0430\u0439\u043B\u0430 \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0432\u044B\u0448\u0435 \u0434\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438." }),
+                jsx("input", { type: "file", accept: ".csv,text/csv", "aria-label": "\u0412\u044B\u0431\u0440\u0430\u0442\u044C CSV-\u0444\u0430\u0439\u043B", onChange: (event) => {
                   const file = event.target.files?.[0];
                   if (!file) return;
                   const reader = new FileReader();
@@ -8322,7 +8322,7 @@ function BacklogImportWizard(props) {
                     setImportValid(false);
                     setImportError(null);
                   };
-                  reader.onerror = () => setImportError("Could not read the selected CSV file.");
+                  reader.onerror = () => setImportError("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 CSV-\u0444\u0430\u0439\u043B.");
                   reader.readAsText(file);
                 } })
               ]
@@ -8349,21 +8349,21 @@ function BacklogImportWizard(props) {
                 a.remove();
                 setTimeout(() => URL.revokeObjectURL(a.href), 4e3);
               });
-            }, children: jsxs(Fragment, { children: [jsx(Icon, { name: "download" }), "Download CSV template"] }) })
+            }, children: jsxs(Fragment, { children: [jsx(Icon, { name: "download" }), "\u0421\u043A\u0430\u0447\u0430\u0442\u044C CSV-\u0448\u0430\u0431\u043B\u043E\u043D"] }) })
           ] }),
           importColumnMetadata.length ? jsxs("details", { className: "import-column-reference", children: [
             jsx("summary", { children: `Column reference \xB7 ${importColumnMetadata.filter((column) => column.required).map((column) => column.name).join(", ")} required \xB7 ${importColumnMetadata.length} supported` }),
             jsxs("div", { className: "import-column-scroll", children: [
               jsx("table", { children: [
-                jsx("thead", { children: jsx("tr", { children: ["Column", "Requirement", "Description", "Format / example"].map((heading) => jsx("th", { children: heading }, heading)) }) }),
-                jsx("tbody", { children: importColumnMetadata.map((column) => jsx("tr", { children: [jsx("td", { children: jsx("code", { children: column.name }) }), jsx("td", { children: jsx("span", { className: column.required ? "import-required" : "import-optional", children: column.required ? "Required" : "Optional" }) }), jsx("td", { children: column.description }), jsx("td", { children: `${column.format} \xB7 ${column.example}` })] }, column.name)) })
+                jsx("thead", { children: jsx("tr", { children: ["\u041A\u043E\u043B\u043E\u043D\u043A\u0430", "\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435", "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", "\u0424\u043E\u0440\u043C\u0430\u0442 / \u043F\u0440\u0438\u043C\u0435\u0440"].map((heading) => jsx("th", { children: heading }, heading)) }) }),
+                jsx("tbody", { children: importColumnMetadata.map((column) => jsx("tr", { children: [jsx("td", { children: jsx("code", { children: column.name }) }), jsx("td", { children: jsx("span", { className: column.required ? "import-required" : "import-optional", children: column.required ? "\u041E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E" : "\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E" }) }), jsx("td", { children: column.description }), jsx("td", { children: `${column.format} \xB7 ${column.example}` })] }, column.name)) })
               ] })
             ] })
-          ] }) : jsx("p", { className: "dockyard-meta", children: "Column reference unavailable. Download the server template before importing." }),
+          ] }) : jsx("p", { className: "dockyard-meta", children: "\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u043A\u043E\u043B\u043E\u043D\u043A\u0443 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0441\u0435\u0440\u0432\u0435\u0440\u043D\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D \u043F\u0435\u0440\u0435\u0434 \u0438\u043C\u043F\u043E\u0440\u0442\u043E\u043C." }),
           importError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: importError }) : null
         ] }),
         importRows && importRows.length ? jsxs("div", { className: importStep === 2 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: importStep !== 2, "data-import-step": "2", children: [
-          jsx("h3", { children: "Review before writing" }),
+          jsx("h3", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u0435\u0440\u0435\u0434 \u0437\u0430\u043F\u0438\u0441\u044C\u044E" }),
           // Approved design: four validation summary cards + warnings-only
           // toggle. Warnings never block; errors do.
           jsxs("div", { className: "import-summary", "data-import-summary": true, children: [
@@ -8373,13 +8373,13 @@ function BacklogImportWizard(props) {
             jsxs("div", { className: "import-stat errored", children: [jsx(Icon, { name: "alert" }), jsxs("span", { children: [jsx("strong", { children: importRows.filter((row) => row.errors.length).length }), " error", importRows.filter((row) => row.errors.length).length === 1 ? "" : "s"] })] })
           ] }),
           jsxs("div", { className: "import-review-toolbar", children: [
-            jsx("p", { className: "dockyard-meta", children: importValid ? "Server validation passed. Preview only: no items have been written." : "Server validation found row errors. Nothing can be imported until they are fixed." }),
+            jsx("p", { className: "dockyard-meta", children: importValid ? "\u0421\u0435\u0440\u0432\u0435\u0440\u043D\u0430\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043F\u0440\u043E\u0439\u0434\u0435\u043D\u0430. \u0422\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440: \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E." : "\u0421\u0435\u0440\u0432\u0435\u0440\u043D\u0430\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043D\u0430\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0438 \u0441\u0442\u0440\u043E\u043A. \u0418\u043C\u043F\u043E\u0440\u0442 \u043D\u0435\u0432\u043E\u0437\u043C\u043E\u0436\u0435\u043D, \u043F\u043E\u043A\u0430 \u0438\u0445 \u043D\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u044F\u0442." }),
             jsxs("label", { className: "import-warnings-toggle", children: [
               jsx("input", { type: "checkbox", "data-warnings-toggle": true, checked: importWarningsOnly, onChange: (event) => setImportWarningsOnly(event.target.checked) }),
-              "Show issues only"
+              "\u0422\u043E\u043B\u044C\u043A\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B"
             ] })
           ] }),
-          !importValid ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: "Correct every row error in the source, then validate again." }) : null,
+          !importValid ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: "\u0418\u0441\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0432\u0441\u0435 \u043E\u0448\u0438\u0431\u043A\u0438 \u0441\u0442\u0440\u043E\u043A \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u043D\u043E\u0432\u0430." }) : null,
           importError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: importError }) : null,
           // Approved design: split pane — left: per-row table with validation
           // badges; right: selected row's parsed values and will-import-as.
@@ -8389,9 +8389,9 @@ function BacklogImportWizard(props) {
               "data-import-row": row.idx,
               onClick: () => setImportSelected(row.idx),
               children: [
-                jsx("strong", { children: row.type || "Unknown" }),
-                jsx("span", { children: row.title || "Untitled row" }),
-                row.errors.length ? jsx("span", { className: "import-badge error", children: "Error" }) : row.warnings.length ? jsx("span", { className: "import-badge warning", children: "Warning" }) : jsx("span", { className: "import-badge ok", "data-import-badge": "ready", children: "Ready" }),
+                jsx("strong", { children: row.type || "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E" }),
+                jsx("span", { children: row.title || "\u0421\u0442\u0440\u043E\u043A\u0430 \u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F" }),
+                row.errors.length ? jsx("span", { className: "import-badge error", children: "\u041E\u0448\u0438\u0431\u043A\u0430" }) : row.warnings.length ? jsx("span", { className: "import-badge warning", children: "\u041F\u0440\u0435\u0434\u0443\u043F\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u0435" }) : jsx("span", { className: "import-badge ok", "data-import-badge": "ready", children: "\u0413\u043E\u0442\u043E\u0432\u043E \u043A \u0440\u0430\u0431\u043E\u0442\u0435" }),
                 row.problems.length ? jsx("span", { className: "import-row-error", children: row.problems.join("; ") }) : null
               ]
             }, row.idx)) }),
@@ -8399,25 +8399,25 @@ function BacklogImportWizard(props) {
               const selectedRow = (importRows ?? []).find((row) => row.idx === importSelected) ?? importRows.find((row) => row.problems.length) ?? importRows[0];
               return jsxs("aside", { className: "import-row-detail", "data-import-row-detail": true, children: [
                 jsxs("h4", { children: [
-                  "Row validation",
+                  "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0441\u0442\u0440\u043E\u043A",
                   selectedRow.rowKey ? jsx("span", { className: "dockyard-meta", children: ` \xB7 ${selectedRow.rowKey}` }) : null,
-                  selectedRow.errors.length ? jsx("span", { className: "import-badge error", children: "Error" }) : selectedRow.warnings.length ? jsx("span", { className: "import-badge warning", children: "Warning" }) : jsx("span", { className: "import-badge ok", children: "Ready" })
+                  selectedRow.errors.length ? jsx("span", { className: "import-badge error", children: "\u041E\u0448\u0438\u0431\u043A\u0430" }) : selectedRow.warnings.length ? jsx("span", { className: "import-badge warning", children: "\u041F\u0440\u0435\u0434\u0443\u043F\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u0435" }) : jsx("span", { className: "import-badge ok", children: "\u0413\u043E\u0442\u043E\u0432\u043E \u043A \u0440\u0430\u0431\u043E\u0442\u0435" })
                 ] }),
-                selectedRow.errors.length ? jsx("p", { className: "dockyard-inline-error", children: selectedRow.errors.join("; ") }) : selectedRow.warnings.length ? jsx("p", { className: "import-warning-text", children: selectedRow.warnings.join("; ") }) : jsx("p", { className: "dockyard-meta", children: "No validation problems for this row." }),
+                selectedRow.errors.length ? jsx("p", { className: "dockyard-inline-error", children: selectedRow.errors.join("; ") }) : selectedRow.warnings.length ? jsx("p", { className: "import-warning-text", children: selectedRow.warnings.join("; ") }) : jsx("p", { className: "dockyard-meta", children: "\u041F\u0440\u043E\u0431\u043B\u0435\u043C \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u0432 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u043E\u043A\u0435 \u043D\u0435\u0442." }),
                 jsxs("div", { className: "import-parsed", children: [
-                  jsx("strong", { children: "Parsed values (from CSV)" }),
+                  jsx("strong", { children: "\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F (\u0438\u0437 CSV)" }),
                   jsx("dl", { children: [
-                    jsxs("div", { children: [jsx("dt", { children: "Type" }), jsx("dd", { children: selectedRow.type || "task" })] }),
-                    jsxs("div", { children: [jsx("dt", { children: "Title" }), jsx("dd", { children: selectedRow.title || "\u2014" })] }),
-                    jsxs("div", { children: [jsx("dt", { children: "Parent" }), jsx("dd", { children: selectedRow.parent || "\u2014" })] }),
-                    jsxs("div", { children: [jsx("dt", { children: "Labels" }), jsx("dd", { children: selectedRow.labels || "\u2014" })] }),
-                    jsxs("div", { children: [jsx("dt", { children: "Estimate" }), jsx("dd", { children: selectedRow.estimate || "\u2014" })] }),
-                    jsxs("div", { children: [jsx("dt", { children: "Due" }), jsx("dd", { children: selectedRow.due || "\u2014" })] }),
-                    jsxs("div", { children: [jsx("dt", { children: "Initiative" }), jsx("dd", { children: selectedRow.initiative || "\u2014" })] })
+                    jsxs("div", { children: [jsx("dt", { children: "\u0422\u0438\u043F" }), jsx("dd", { children: selectedRow.type || "task" })] }),
+                    jsxs("div", { children: [jsx("dt", { children: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A" }), jsx("dd", { children: selectedRow.title || "\u2014" })] }),
+                    jsxs("div", { children: [jsx("dt", { children: "\u0420\u043E\u0434\u0438\u0442\u0435\u043B\u044C" }), jsx("dd", { children: selectedRow.parent || "\u2014" })] }),
+                    jsxs("div", { children: [jsx("dt", { children: "\u041C\u0435\u0442\u043A\u0438" }), jsx("dd", { children: selectedRow.labels || "\u2014" })] }),
+                    jsxs("div", { children: [jsx("dt", { children: "\u041E\u0446\u0435\u043D\u043A\u0430" }), jsx("dd", { children: selectedRow.estimate || "\u2014" })] }),
+                    jsxs("div", { children: [jsx("dt", { children: "\u0421\u0440\u043E\u043A" }), jsx("dd", { children: selectedRow.due || "\u2014" })] }),
+                    jsxs("div", { children: [jsx("dt", { children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430" }), jsx("dd", { children: selectedRow.initiative || "\u2014" })] })
                   ] })
                 ] }),
                 jsxs("div", { className: "import-as", children: [
-                  jsx("strong", { children: "Will import as" }),
+                  jsx("strong", { children: "\u0411\u0443\u0434\u0435\u0442 \u0438\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u043A\u0430\u043A" }),
                   jsx("p", { children: `${readableLabel(selectedRow.type || "task")} \u2192 ${readableLabel("backlog")}` }),
                   jsx("small", { className: "dockyard-meta", children: `A new ${selectedRow.type || "task"} will be created in ${project.name || project.id}.` })
                 ] })
@@ -8426,13 +8426,13 @@ function BacklogImportWizard(props) {
           ] })
         ] }) : null,
         importResult ? jsxs("div", { className: importStep === 3 ? "dockyard-wizard-step active" : "dockyard-wizard-step", hidden: importStep !== 3, "data-import-step": "3", children: [
-          jsx("h3", { children: importResult.written ? "Import complete" : "No items imported" }),
+          jsx("h3", { children: importResult.written ? "\u0418\u043C\u043F\u043E\u0440\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D" : "\u041F\u0443\u043D\u043A\u0442\u044B \u043D\u0435 \u0438\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u044B" }),
           jsxs("p", { role: "status", children: [
             `Imported ${importResult.written} item${importResult.written === 1 ? "" : "s"}.`,
             importResult.failed.length ? ` ${importResult.failed.length} row(s) failed: ${importResult.failed.join(" | ")}` : ""
           ] }),
           importResult.items?.length ? jsxs("div", { className: "import-result-refs", children: [
-            jsx("strong", { children: "Created work items" }),
+            jsx("strong", { children: "\u0421\u043E\u0437\u0434\u0430\u043D\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B" }),
             jsx("ul", { children: importResult.items.map((created) => jsx("li", { children: `${created.row_key} \u2192 ${created.ref}` }, created.row_key)) })
           ] }) : null
         ] }) : null
@@ -8441,14 +8441,14 @@ function BacklogImportWizard(props) {
         // Approved design: Cancel (and Back to source) on the left; the
         // primary forward action on the right.
         jsxs("span", { className: "dockyard-wizard-actions-left", children: [
-          importStep !== 3 ? jsx(Button, { onClick: closeImport, children: "Cancel" }) : null,
-          importStep === 2 && !importResult ? jsx(Button, { onClick: () => setImportStep(1), children: "Back to source" }) : null,
-          importStep === 3 && importResult ? jsx(Button, { onClick: () => setImportStep(1), children: "Back to source" }) : null
+          importStep !== 3 ? jsx(Button, { onClick: closeImport, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }) : null,
+          importStep === 2 && !importResult ? jsx(Button, { onClick: () => setImportStep(1), children: "\u041D\u0430\u0437\u0430\u0434 \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443" }) : null,
+          importStep === 3 && importResult ? jsx(Button, { onClick: () => setImportStep(1), children: "\u041D\u0430\u0437\u0430\u0434 \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443" }) : null
         ] }),
         jsxs("span", { className: "dockyard-wizard-actions-right", children: [
-          importStep === 1 ? jsx(Button, { action: "import-next", variant: "primary", disabled: importBusy, onClick: () => parseImport(true), children: importBusy ? "Validating\u2026" : "Validate and preview \u2192" }) : null,
-          importStep === 2 ? importValid ? jsx(Button, { action: "confirm-bulk-import", variant: "primary", disabled: importBusy, onClick: runImport, children: importBusy ? "Importing..." : `Import ${importRows.length} item${importRows.length === 1 ? "" : "s"} \u2192` }) : jsx("button", { type: "button", className: "dockyard-button primary", disabled: true, "data-import-blocked": true, children: "Import blocked \u2014 fix row errors first" }) : null,
-          importStep === 3 && importResult ? jsx(Button, { variant: "primary", onClick: closeImport, children: "Done" }) : null
+          importStep === 1 ? jsx(Button, { action: "import-next", variant: "primary", disabled: importBusy, onClick: () => parseImport(true), children: importBusy ? "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u2026" : "Validate and preview \u2192" }) : null,
+          importStep === 2 ? importValid ? jsx(Button, { action: "confirm-bulk-import", variant: "primary", disabled: importBusy, onClick: runImport, children: importBusy ? "\u0418\u043C\u043F\u043E\u0440\u0442\u2026" : `Import ${importRows.length} item${importRows.length === 1 ? "" : "s"} \u2192` }) : jsx("button", { type: "button", className: "dockyard-button primary", disabled: true, "data-import-blocked": true, children: "\u0418\u043C\u043F\u043E\u0440\u0442 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D \u2014 \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u0438\u0441\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u043E\u0448\u0438\u0431\u043A\u0438 \u0441\u0442\u0440\u043E\u043A" }) : null,
+          importStep === 3 && importResult ? jsx(Button, { variant: "primary", onClick: closeImport, children: "\u0413\u043E\u0442\u043E\u0432\u043E" }) : null
         ] })
       ] })
     ] })
@@ -8477,7 +8477,7 @@ var DOCKYARD_ALLOWED_CHILDREN = Object.freeze({
   spike: [],
   subtask: []
 });
-var dockyardTypeLabel = (type) => ({ epic: "Epic", initiative: "Initiative", feature: "Feature", task: "Task", subtask: "Sub-task", bug: "Bug", spike: "Spike" })[type] || readableLabel(type || "task");
+var dockyardTypeLabel = (type) => ({ epic: "\u042D\u043F\u0438\u043A", initiative: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", feature: "\u0424\u0438\u0447\u0430", task: "\u0417\u0430\u0434\u0430\u0447\u0430", subtask: "\u041F\u043E\u0434\u0437\u0430\u0434\u0430\u0447\u0430", bug: "\u0411\u0430\u0433", spike: "\u0421\u043F\u0430\u0439\u043A" })[type] || readableLabel(type || "task");
 var dockyardChildTypes = (parentType) => DOCKYARD_CREATE_CHILD_TYPES[parentType] ?? [];
 var dockyardParentAccepts = (parentType, childType) => (DOCKYARD_ALLOWED_CHILDREN[parentType] ?? []).includes(childType);
 
@@ -8499,27 +8499,27 @@ function BacklogReasonModal(props) {
   } = props;
   return jsxs("section", { className: "dockyard-modal-layer", "data-reason-modal": true, hidden: !pendingMove, children: [
     jsxs("div", { className: "dockyard-modal", role: "dialog", "aria-modal": true, "aria-labelledby": "dockyard-reason-title", children: [
-      jsx("h2", { id: "dockyard-reason-title", children: pendingMove?.mode === "parent" ? "Re-parent item" : "Record the reason" }),
+      jsx("h2", { id: "dockyard-reason-title", children: pendingMove?.mode === "parent" ? "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F" : "\u0417\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u043F\u0440\u0438\u0447\u0438\u043D\u0443" }),
       jsx("p", { children: pendingMove ? pendingMove.mode === "parent" ? `Change what \u201C${pendingMove.title}\u201D sits under. The move is audited.` : `Move ${pendingMove.title} to rank ${pendingMove.newRank}.` : "" }),
       pendingMove?.mode === "parent" ? jsxs("label", { children: [
-        jsx("span", { children: "New parent" }, "np-label"),
+        jsx("span", { children: "\u041D\u043E\u0432\u044B\u0439 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044C" }, "np-label"),
         jsx("select", {
           id: "dockyard-parent-select",
           value: pendingParentRef,
           onChange: (event) => setPendingMove((current) => ({ ...current, parent_ref: event.target.value })),
           children: [
-            pendingParentItem?.type !== "subtask" ? jsx("option", { value: "", children: "No parent \xB7 top level" }, "none") : null,
+            pendingParentItem?.type !== "subtask" ? jsx("option", { value: "", children: "\u0411\u0435\u0437 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F \xB7 \u0432\u0435\u0440\u0445\u043D\u0438\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C" }, "none") : null,
             ...pendingParentChoices.map((parent) => jsx("option", { value: parent.ref, children: `${parent.title || parent.ref} \xB7 ${dockyardTypeLabel(parent.type)}` }, parent.ref))
           ]
         }, "np-select")
       ] }) : null,
-      jsx("label", { htmlFor: "dockyard-rank-reason", children: pendingMove?.mode === "parent" ? "Reason for re-parenting" : "Reason for this priority change" }),
-      jsx("textarea", { id: "dockyard-rank-reason", value: reason, onChange: (event) => setReason(event.target.value), placeholder: pendingMove?.mode === "parent" ? "Explain why this parent is the right fit." : "Explain why this rank is right for the project." }),
-      jsx("p", { className: "dockyard-form-hint", children: "Enter at least 4 characters; this reason is stored in the audit history." }),
+      jsx("label", { htmlFor: "dockyard-rank-reason", children: pendingMove?.mode === "parent" ? "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u0441\u043C\u0435\u043D\u044B \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F" : "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u044D\u0442\u043E\u0433\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430" }),
+      jsx("textarea", { id: "dockyard-rank-reason", value: reason, onChange: (event) => setReason(event.target.value), placeholder: pendingMove?.mode === "parent" ? "\u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435, \u043F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u043F\u043E\u0434\u0445\u043E\u0434\u0438\u0442." : "\u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435, \u043F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u0440\u0430\u043D\u0433 \u043F\u043E\u0434\u0445\u043E\u0434\u0438\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u0443." }),
+      jsx("p", { className: "dockyard-form-hint", children: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043C\u0438\u043D\u0438\u043C\u0443\u043C 4 \u0441\u0438\u043C\u0432\u043E\u043B\u0430; \u043F\u0440\u0438\u0447\u0438\u043D\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442\u0441\u044F \u0432 \u0438\u0441\u0442\u043E\u0440\u0438\u0438 \u0430\u0443\u0434\u0438\u0442\u0430." }),
       error ? jsx("p", { className: "dockyard-inline-error", children: error }) : null,
       jsxs("div", { className: "dockyard-modal-actions", children: [
-        jsx(Button, { onClick: () => setPendingMove(null), children: "Cancel" }),
-        pendingMove?.mode === "parent" ? jsx(Button, { variant: "primary", disabled: saving || !pendingParentChanged || reason.trim().length < 4, onClick: saveParent, children: saving ? "Saving..." : "Save parent change" }) : jsx(Button, { variant: "primary", disabled: saving || reason.trim().length < 4, onClick: saveMove, children: saving ? "Saving..." : "Save rank change" })
+        jsx(Button, { onClick: () => setPendingMove(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+        pendingMove?.mode === "parent" ? jsx(Button, { variant: "primary", disabled: saving || !pendingParentChanged || reason.trim().length < 4, onClick: saveParent, children: saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0441\u043C\u0435\u043D\u0443 \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F" }) : jsx(Button, { variant: "primary", disabled: saving || reason.trim().length < 4, onClick: saveMove, children: saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0441\u043C\u0435\u043D\u0443 \u0440\u0430\u043D\u0433\u0430" })
       ] })
     ] })
   ] });
@@ -8670,8 +8670,8 @@ function BacklogBoard(ctx) {
   } = ctx;
   return jsxs("div", { "data-backlog-board": project.id, children: [
     jsx(PageHead, {
-      title: "Backlog",
-      description: "One ranked queue for what should happen next.",
+      title: "\u0411\u044D\u043A\u043B\u043E\u0433",
+      description: "\u041E\u0434\u043D\u0430 \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u043E\u0447\u0435\u0440\u0435\u0434\u044C \u0442\u043E\u0433\u043E, \u0447\u0442\u043E \u0434\u043E\u043B\u0436\u043D\u043E \u043F\u0440\u043E\u0438\u0437\u043E\u0439\u0442\u0438 \u0434\u0430\u043B\u044C\u0448\u0435.",
       status: `${number(entries.length)} ranked`,
       onRefresh
     }),
@@ -8685,7 +8685,7 @@ function BacklogBoard(ctx) {
         setImportResult(null);
         setImportStep(1);
       }, children: "Import" }),
-      jsx(Button, { action: "open-create-backlog-item", variant: "primary", small: true, disabled: !canCreate, onClick: () => openCreate(), children: "Create item" })
+      jsx(Button, { action: "open-create-backlog-item", variant: "primary", small: true, disabled: !canCreate, onClick: () => openCreate(), children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442" })
     ] }),
     // Sahil 04/10 (demo feedback b): a gentle note, never a blocker. Unassigned
     // work is never picked up by a bot; each item opens so it can be assigned.
@@ -8698,7 +8698,7 @@ function BacklogBoard(ctx) {
           unassigned.length > 5 ? jsx("span", { children: `and ${number(unassigned.length - 5)} more` }, "more") : null
         ] })
       ] }),
-      hasUnassignedItems ? jsx(Button, { small: true, onClick: () => setColumnFilters((current) => ({ ...current, assignee: "__unassigned__" })), children: "Show in the list" }) : null
+      hasUnassignedItems ? jsx(Button, { small: true, onClick: () => setColumnFilters((current) => ({ ...current, assignee: "__unassigned__" })), children: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0432 \u0441\u043F\u0438\u0441\u043A\u0435" }) : null
     ] }) : null,
     // PROTOTYPE v4: bulk reassignment now lives in the selection popover;
     // preview/execute/retry handlers unchanged.
@@ -8712,26 +8712,26 @@ function BacklogBoard(ctx) {
       jsx("strong", { children: `${bulkOperation.op_id} \xB7 ${bulkOperation.state}` }),
       jsx("span", { children: `${(bulkOperation.items ?? []).filter((item) => item.outcome === "completed").length} of ${(bulkOperation.items ?? []).length} completed \xB7 actor ${bulkOperation.actor || "verified principal"}` }),
       jsx("ul", { children: (bulkOperation.items ?? []).map((item) => jsx("li", { children: `${item.item_id} \xB7 ${item.outcome} \xB7 ${item.audit?.actor || bulkOperation.actor || "verified principal"} \xB7 ${item.audit?.action || "audit pending"}${item.detail ? ` \xB7 ${item.detail}` : ""}` }, item.item_id)) }),
-      bulkOperation.state !== "completed" ? jsx(Button, { action: "retry-bulk-reassignment", disabled: bulkBusy, small: true, onClick: retryBulk, children: "Retry remaining items" }) : null
+      bulkOperation.state !== "completed" ? jsx(Button, { action: "retry-bulk-reassignment", disabled: bulkBusy, small: true, onClick: retryBulk, children: "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u043F\u0443\u043D\u043A\u0442\u044B" }) : null
     ] }) : null,
     Object.values(transfers).map((operation) => jsxs("div", { className: "dockyard-view-only-note", "data-transfer-operation": operation.op_id, role: "status", children: [
       jsx("strong", { children: `${operation.op_id} \xB7 ${operation.state}` }),
       jsx("span", { children: `${(operation.items ?? []).length} items \xB7 project ${operation.project_id || project.id}` }),
-      jsx("button", { type: "button", "data-transfer-refresh": operation.op_id, onClick: () => refreshTransfer(operation.op_id), children: "Refresh" }),
-      jsx("button", { type: "button", "data-transfer-retry": operation.op_id, onClick: () => retryTransfer(operation.op_id), children: "Retry remaining items" })
+      jsx("button", { type: "button", "data-transfer-refresh": operation.op_id, onClick: () => refreshTransfer(operation.op_id), children: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C" }),
+      jsx("button", { type: "button", "data-transfer-retry": operation.op_id, onClick: () => retryTransfer(operation.op_id), children: "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u043F\u0443\u043D\u043A\u0442\u044B" })
     ] }, operation.op_id)),
     entries.length > 0 ? jsxs("section", { className: "dockyard-backlog-list", "data-backlog-table": true, children: [
       jsxs("div", { className: "dockyard-cmdbar", "data-column-filters": true, children: [
         jsxs("label", { className: "cm-search", children: [
           jsx(Icon, { name: "search" }, "v4-search"),
-          jsx("input", { type: "search", "data-cm-search": true, "aria-label": "Search backlog", placeholder: "Search backlog", value: search, onInput: (event) => setSearch(event.target.value) })
+          jsx("input", { type: "search", "data-cm-search": true, "aria-label": "\u041F\u043E\u0438\u0441\u043A \u0432 \u0431\u044D\u043A\u043B\u043E\u0433\u0435", placeholder: "\u041F\u043E\u0438\u0441\u043A \u0432 \u0431\u044D\u043A\u043B\u043E\u0433\u0435", value: search, onInput: (event) => setSearch(event.target.value) })
         ] }),
         // LANE-TOOLBAR: icon-driven Sort/Group controls with floating popover menus.
         ...[
           [
             "sort",
             "arrow-up-down",
-            "Sort",
+            "\u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u043A\u0430",
             `${sortLabels[sortKey]} ${sortDir > 0 ? "\u2191" : "\u2193"}`,
             sortKey !== "rank" || sortDir < 0,
             ["rank", "type", "title", "status", "initiative", "assignee", "age"].map((key) => [key, sortLabels[key], sortKey === key]),
@@ -8810,7 +8810,7 @@ function BacklogBoard(ctx) {
                 children: [
                   jsx("span", { className: "cm-check", children: active ? jsx(Icon, { name: "check" }) : null }, "check"),
                   jsx("span", { className: "cm-option-label", children: optionLabel }, "label"),
-                  menu === "sort" && active ? jsx("span", { className: "cm-dir", title: sortDir > 0 ? "Ascending \u2014 select again to reverse" : "Descending \u2014 select again to reverse", children: jsx(Icon, { name: sortDir > 0 ? "arrow-up-narrow-wide" : "arrow-down-wide-narrow" }) }, "dir") : null
+                  menu === "sort" && active ? jsx("span", { className: "cm-dir", title: sortDir > 0 ? "\u041F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0430\u043D\u0438\u044E \u2014 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0434\u043B\u044F \u043E\u0431\u0440\u0430\u0442\u043D\u043E\u0433\u043E" : "\u041F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E \u2014 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0434\u043B\u044F \u043E\u0431\u0440\u0430\u0442\u043D\u043E\u0433\u043E", children: jsx(Icon, { name: sortDir > 0 ? "arrow-up-narrow-wide" : "arrow-down-wide-narrow" }) }, "dir") : null
                 ]
               }, key))
             ]
@@ -8818,35 +8818,35 @@ function BacklogBoard(ctx) {
         ] }, menu)),
         jsx("span", { className: "cm-divider", "aria-hidden": true }),
         jsxs("label", { className: "cm-filter", children: [
-          jsx("span", { children: "Type" }),
-          jsx("select", { "data-filter-field": "type", "aria-label": "Filter by type", value: columnFilters.type, onChange: (event) => setColumnFilters((current) => ({ ...current, type: event.target.value })), children: [
-            jsx("option", { value: "", children: "All types" }, "all"),
+          jsx("span", { children: "\u0422\u0438\u043F" }),
+          jsx("select", { "data-filter-field": "type", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0442\u0438\u043F\u0443", value: columnFilters.type, onChange: (event) => setColumnFilters((current) => ({ ...current, type: event.target.value })), children: [
+            jsx("option", { value: "", children: "\u0412\u0441\u0435 \u0442\u0438\u043F\u044B" }, "all"),
             ...typeFilterValues.map((type) => jsx("option", { value: type, children: typeLabel2(type) }, type))
           ] })
         ] }),
         jsxs("label", { className: "cm-filter", children: [
-          jsx("span", { children: "Status" }),
-          jsx("select", { "data-filter-field": "status", "aria-label": "Filter by status", value: columnFilters.status, onChange: (event) => setColumnFilters((current) => ({ ...current, status: event.target.value })), children: [
-            jsx("option", { value: "", children: "All statuses" }, "all"),
+          jsx("span", { children: "\u0421\u0442\u0430\u0442\u0443\u0441" }),
+          jsx("select", { "data-filter-field": "status", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0441\u0442\u0430\u0442\u0443\u0441\u0443", value: columnFilters.status, onChange: (event) => setColumnFilters((current) => ({ ...current, status: event.target.value })), children: [
+            jsx("option", { value: "", children: "\u0412\u0441\u0435 \u0441\u0442\u0430\u0442\u0443\u0441\u044B" }, "all"),
             ...statusFilterValues.map((status) => jsx("option", { value: status, children: STATUS_LABELS[status] || readableLabel(status) }, status))
           ] })
         ] }),
         jsxs("label", { className: "cm-filter", children: [
-          jsx("span", { children: "Initiative" }),
-          jsx("select", { "data-filter-field": "initiative", "aria-label": "Filter by initiative", value: columnFilters.initiative, onChange: (event) => setColumnFilters((current) => ({ ...current, initiative: event.target.value })), children: [
-            jsx("option", { value: "", children: "All initiatives" }, "all"),
+          jsx("span", { children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430" }),
+          jsx("select", { "data-filter-field": "initiative", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0435", value: columnFilters.initiative, onChange: (event) => setColumnFilters((current) => ({ ...current, initiative: event.target.value })), children: [
+            jsx("option", { value: "", children: "\u0412\u0441\u0435 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B" }, "all"),
             ...initiativeFilterValues.map((ref) => jsx("option", { value: ref, children: initiativeLabel(ref) }, ref))
           ] })
         ] }),
         jsxs("label", { className: "cm-filter", children: [
-          jsx("span", { children: "Assignee" }),
-          jsx("select", { "data-filter-field": "assignee", "aria-label": "Filter by assignee", value: columnFilters.assignee, onChange: (event) => setColumnFilters((current) => ({ ...current, assignee: event.target.value })), children: [
-            jsx("option", { value: "", children: "All assignees" }, "all"),
-            hasUnassignedItems ? jsx("option", { value: "__unassigned__", children: "Unassigned" }, "unassigned") : null,
+          jsx("span", { children: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C" }),
+          jsx("select", { "data-filter-field": "assignee", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044E", value: columnFilters.assignee, onChange: (event) => setColumnFilters((current) => ({ ...current, assignee: event.target.value })), children: [
+            jsx("option", { value: "", children: "\u0412\u0441\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438" }, "all"),
+            hasUnassignedItems ? jsx("option", { value: "__unassigned__", children: "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" }, "unassigned") : null,
             ...assigneeFilterValues.map((owner) => jsx("option", { value: owner, children: ownerLabel(owner) }, owner))
           ] })
         ] }),
-        hasFilters ? jsx("button", { type: "button", className: "cm-reset-filters", "data-clear-filters": true, onClick: resetFilters, children: "Clear all" }) : null,
+        hasFilters ? jsx("button", { type: "button", className: "cm-reset-filters", "data-clear-filters": true, onClick: resetFilters, children: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0451" }) : null,
         jsx("span", { className: "cm-count", "data-cm-count": true, role: "status", title: [
           `${number(treeRows.length)} of ${number(entries.length)} items`,
           q ? `search \u201C${search}\u201D` : "",
@@ -8858,18 +8858,18 @@ function BacklogBoard(ctx) {
       jsxs("div", { className: "tree-head", children: [
         jsx("span", { className: "th-gutter" }),
         sortHeader("rank", "Rank", "th-rank"),
-        sortHeader("type", "Type", "th-type"),
-        sortHeader("title", "Work item", "th-title"),
-        sortHeader("status", "Status", "th-status"),
-        sortHeader("initiative", "Initiative", "th-initiative"),
-        sortHeader("assignee", "Assignee", "th-who"),
-        sortHeader("age", "Age", "th-age"),
-        jsx("span", { className: "th-reason", children: "Priority reason" }),
-        jsx("span", { className: "th-act", "aria-label": "Actions" })
+        sortHeader("type", "\u0422\u0438\u043F", "th-type"),
+        sortHeader("title", "\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442", "th-title"),
+        sortHeader("status", "\u0421\u0442\u0430\u0442\u0443\u0441", "th-status"),
+        sortHeader("initiative", "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", "th-initiative"),
+        sortHeader("assignee", "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", "th-who"),
+        sortHeader("age", "\u0414\u0430\u0432\u043D\u043E\u0441\u0442\u044C", "th-age"),
+        jsx("span", { className: "th-reason", children: "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430" }),
+        jsx("span", { className: "th-act", "aria-label": "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F" })
       ] }),
       treeRows.length === 0 ? jsxs("div", { className: "tree-group-head", "data-no-matches": true, children: [
-        jsx("span", { children: hasFilters ? "No items match the current search and filters." : "No backlog items to show." }),
-        hasFilters ? jsx("button", { type: "button", className: "cm-chip", onClick: resetFilters, children: "Clear filters" }) : null
+        jsx("span", { children: hasFilters ? "\u041D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432, \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0445 \u043F\u043E\u0438\u0441\u043A\u0443 \u0438 \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u043C." : "\u041D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0431\u044D\u043A\u043B\u043E\u0433\u0430 \u0434\u043B\u044F \u043F\u043E\u043A\u0430\u0437\u0430." }),
+        hasFilters ? jsx("button", { type: "button", className: "cm-chip", onClick: resetFilters, children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440\u044B" }) : null
       ] }) : null,
       ...groups.flatMap(([label, rows], gi) => [
         label !== null ? jsxs("div", { className: "tree-group-head", children: [
@@ -9007,16 +9007,16 @@ function BacklogBoard(ctx) {
                 cell === "status" ? jsx("select", { autoFocus: true, className: "cell-edit is-input", "data-cell-input": "status", value: item.status && STATUS_UI[item.status] || "backlog", onChange: (event) => {
                   setEditing(null);
                   changeStatus(ref, event.target.value);
-                }, onBlur: () => setEditing(null), children: validStatusChoices.map((st) => jsx("option", { value: st, children: STATUS_LABELS[st] }, st)) }) : jsxs("button", { type: "button", className: `cell-edit cell-status tree-status ${stUi === "done" ? "success" : overdue || stUi === "blocked" ? "danger" : stUi === "in_progress" ? "info" : stUi === "in_review" ? "warning" : "neutral"}`, "data-cell": "status", title: "Change status", onClick: (event) => {
+                }, onBlur: () => setEditing(null), children: validStatusChoices.map((st) => jsx("option", { value: st, children: STATUS_LABELS[st] }, st)) }) : jsxs("button", { type: "button", className: `cell-edit cell-status tree-status ${stUi === "done" ? "success" : overdue || stUi === "blocked" ? "danger" : stUi === "in_progress" ? "info" : stUi === "in_review" ? "warning" : "neutral"}`, "data-cell": "status", title: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441", onClick: (event) => {
                   event.stopPropagation();
                   setEditing({ ref, field: "status" });
                 }, children: [
                   jsx("span", { className: "tree-status-icon", "aria-hidden": true }),
-                  jsx("span", { children: STATUS_LABELS[item.status] || "Backlog" })
+                  jsx("span", { children: STATUS_LABELS[item.status] || "\u0411\u044D\u043A\u043B\u043E\u0433" })
                 ] }),
                 err && err.field === "status" ? jsx("span", { className: "cell-due overdue", children: err.message }) : null
               ] }),
-              jsxs("span", { className: "tree-initiative", title: item.initiative_ref ? `Initiative ${item.initiative_ref}` : "No linked initiative", children: [
+              jsxs("span", { className: "tree-initiative", title: item.initiative_ref ? `Initiative ${item.initiative_ref}` : "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u043E\u0439 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B \u043D\u0435\u0442", children: [
                 item.initiative_ref ? jsxs("span", { className: "initiative-cell-value", children: [
                   jsx("strong", { children: initiativeLabel(item.initiative_ref) }),
                   jsx("small", { children: item.initiative_ref })
@@ -9027,12 +9027,12 @@ function BacklogBoard(ctx) {
                   setEditing(null);
                   assignItem(ref, event.target.value);
                 }, onBlur: () => setEditing(null), children: [
-                  jsx("option", { value: "", children: "Unassigned" }),
+                  jsx("option", { value: "", children: "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" }),
                   ...(view.bots ?? []).map((bot) => jsx("option", { value: bot.id, children: bot.name || bot.id }, bot.id))
-                ] }) : jsxs("button", { type: "button", className: "cell-edit cell-who", "data-cell": "assignee", title: item.type === "epic" ? "Epics are never assigned \u2014 their children carry the work" : "Change assignee", disabled: (item.type || "task") === "epic", onClick: (event) => {
+                ] }) : jsxs("button", { type: "button", className: "cell-edit cell-who", "data-cell": "assignee", title: item.type === "epic" ? "\u042D\u043F\u0438\u043A\u0438 \u043D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u0441\u044F \u2014 \u0440\u0430\u0431\u043E\u0442\u0443 \u043D\u0435\u0441\u0443\u0442 \u0438\u0445 \u0434\u043E\u0447\u0435\u0440\u043D\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B" : "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F", disabled: (item.type || "task") === "epic", onClick: (event) => {
                   event.stopPropagation();
                   if ((item.type || "task") === "epic") {
-                    flashCell(ref, "assignee", "Epics are never assigned \u2014 assign one of its children instead.");
+                    flashCell(ref, "assignee", "\u042D\u043F\u0438\u043A\u0438 \u043D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u0441\u044F \u2014 \u043D\u0430\u0437\u043D\u0430\u0447\u044C\u0442\u0435 \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 \u0435\u0433\u043E \u0434\u043E\u0447\u0435\u0440\u043D\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432.");
                     return;
                   }
                   setEditing({ ref, field: "assignee" });
@@ -9042,8 +9042,8 @@ function BacklogBoard(ctx) {
                 ] }),
                 err && err.field === "assignee" ? jsx("span", { className: "cell-due overdue", children: err.message }) : null
               ] }),
-              jsx("span", { className: "tree-age", title: entry?.aged_since ? `Ranked since ${entry.aged_since}` : "Rank date unavailable", children: entry?.aged_since ? `${Math.max(0, Math.floor((Date.now() - Date.parse(entry.aged_since)) / 864e5))}d` : "\u2014" }),
-              jsx("span", { className: "tree-priority-reason", title: entry?.priority_reason || "No priority reason recorded", children: entry?.priority_reason || "No reason recorded" }),
+              jsx("span", { className: "tree-age", title: entry?.aged_since ? `Ranked since ${entry.aged_since}` : "\u0414\u0430\u0442\u0430 \u0440\u0430\u043D\u0433\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430", children: entry?.aged_since ? `${Math.max(0, Math.floor((Date.now() - Date.parse(entry.aged_since)) / 864e5))}d` : "\u2014" }),
+              jsx("span", { className: "tree-priority-reason", title: entry?.priority_reason || "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0430", children: entry?.priority_reason || "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0430" }),
               jsxs("span", { className: "tree-actions", children: [
                 jsx("button", { type: "button", className: "tree-menu-btn", "data-menu-ref": ref, "aria-expanded": String(menuRef === ref), "aria-label": `Actions for ${titleText}`, onClick: (event) => {
                   event.stopPropagation();
@@ -9051,13 +9051,13 @@ function BacklogBoard(ctx) {
                 }, children: "\u22EF" })
               ] }),
               menuRef === ref ? jsxs("div", { className: "tree-menu", role: "menu", onClick: (event) => event.stopPropagation(), children: [
-                jsx("div", { className: "menu-label", children: "Open" }),
+                jsx("div", { className: "menu-label", children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C" }),
                 jsxs("button", { type: "button", role: "menuitem", "data-menu-action": "details", onClick: () => {
                   setMenuRef(null);
                   setDetailItem(item);
-                }, children: [jsx(Icon, { name: "pencil" }), "Open task details"] }),
+                }, children: [jsx(Icon, { name: "pencil" }), "\u0414\u0435\u0442\u0430\u043B\u0438 \u0437\u0430\u0434\u0430\u0447\u0438"] }),
                 validTypeChoices.length > 1 ? jsxs("label", { className: "tree-menu-field", children: [
-                  jsx("span", { children: "Type" }),
+                  jsx("span", { children: "\u0422\u0438\u043F" }),
                   jsx("select", {
                     "data-menu-type": ref,
                     "aria-label": `Change type for ${titleText}`,
@@ -9068,30 +9068,30 @@ function BacklogBoard(ctx) {
                     },
                     children: validTypeChoices.map((type) => jsx("option", { value: type, children: typeLabel2(type) }, type))
                   })
-                ] }) : jsxs("div", { className: "tree-menu-static", children: [jsx("span", { children: "Type" }), jsx("strong", { children: typeLabel2(item.type) })] }),
-                mayAddChild || mayReparent || depth === 0 && entry ? jsx("div", { className: "menu-label", children: "Structure" }) : null,
+                ] }) : jsxs("div", { className: "tree-menu-static", children: [jsx("span", { children: "\u0422\u0438\u043F" }), jsx("strong", { children: typeLabel2(item.type) })] }),
+                mayAddChild || mayReparent || depth === 0 && entry ? jsx("div", { className: "menu-label", children: "\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430" }) : null,
                 mayAddChild ? jsxs("button", { type: "button", role: "menuitem", "data-menu-action": "add-child", onClick: () => {
                   setMenuRef(null);
                   openCreate(ref);
-                }, children: [jsx(Icon, { name: "type-subtask" }), "Add child item"] }) : null,
-                mayReparent ? jsxs("button", { type: "button", role: "menuitem", "data-menu-action": "reparent", onClick: () => requestReparent(ref), children: [jsx(Icon, { name: "arrow-right" }), "Change parent\u2026"] }) : null,
+                }, children: [jsx(Icon, { name: "type-subtask" }), "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0434\u043E\u0447\u0435\u0440\u043D\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442"] }) : null,
+                mayReparent ? jsxs("button", { type: "button", role: "menuitem", "data-menu-action": "reparent", onClick: () => requestReparent(ref), children: [jsx(Icon, { name: "arrow-right" }), "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F\u2026"] }) : null,
                 depth === 0 && entry ? jsxs("div", { className: "tree-menu-rank-actions", children: [
-                  jsx("div", { className: "menu-label", children: "Priority" }),
+                  jsx("div", { className: "menu-label", children: "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442" }),
                   jsx("button", { type: "button", role: "menuitem", "data-menu-action": "up", disabled: Number(entry.rank) <= 1, onClick: () => {
                     setMenuRef(null);
                     requestMove(entry, Number(entry.rank) - 1);
-                  }, children: "Move up" }),
+                  }, children: "\u0412\u0432\u0435\u0440\u0445" }),
                   jsx("button", { type: "button", role: "menuitem", "data-menu-action": "down", disabled: Number(entry.rank) >= entries.length, onClick: () => {
                     setMenuRef(null);
                     requestMove(entry, Number(entry.rank) + 1);
-                  }, children: "Move down" })
+                  }, children: "\u0412\u043D\u0438\u0437" })
                 ] }) : null,
                 item.status !== "done" && item.type !== "epic" ? jsxs("div", { className: "tree-menu-status-actions", children: [
-                  jsx("div", { className: "menu-label", children: "Status" }),
+                  jsx("div", { className: "menu-label", children: "\u0421\u0442\u0430\u0442\u0443\u0441" }),
                   jsx("button", { type: "button", role: "menuitem", "data-menu-action": "status-done", onClick: () => {
                     setMenuRef(null);
                     changeStatus(ref, "done");
-                  }, children: "Mark done" })
+                  }, children: "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043D\u044B\u043C" })
                 ] }) : null
               ] }) : null
             ]
@@ -9101,7 +9101,7 @@ function BacklogBoard(ctx) {
       bulkSelected.length ? jsxs("div", { className: "sel-pop", "data-selection-popover": true, onClick: (event) => event.stopPropagation(), children: [
         jsx("span", { className: "sel-count", children: `${bulkSelected.length} selected` }),
         jsx("span", { className: "sel-sep" }),
-        jsxs("select", { "data-pop-target": true, "aria-label": "Bulk target", defaultValue: "", children: [
+        jsxs("select", { "data-pop-target": true, "aria-label": "\u0426\u0435\u043B\u044C \u043C\u0430\u0441\u0441\u043E\u0432\u043E\u0439 \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u0438", defaultValue: "", children: [
           jsx("option", { value: "", disabled: true, children: "Act on selection\u2026" }),
           ...(view.bots ?? []).map((bot) => jsxs("option", { value: `assign:${bot.id}`, children: [`Reassign all \u2192 ${bot.name || bot.id}`] }, `a-${bot.id}`)),
           ...STATUS_OPTIONS.map((st) => jsxs("option", { value: `status:${st}`, children: [`Set status \u2192 ${STATUS_LABELS[st]}`] }, `s-${st}`))
@@ -9130,9 +9130,9 @@ function BacklogBoard(ctx) {
           setBulkPreview(null);
           setBulkOperation(null);
           setBulkError(null);
-        }, children: ["Clear", jsx("span", { style: { opacity: 0.6 }, children: " esc" })] })
+        }, children: ["\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C", jsx("span", { style: { opacity: 0.6 }, children: " esc" })] })
       ] }) : null
-    ] }) : q ? jsx(EmptyState, { title: "No matches", description: `Nothing in the backlog matches \u201C${search}\u201D. Clear the filter to see all items.`, icon: "project", children: jsx(Button, { small: true, onClick: () => setSearch(""), children: "Clear filter" }) }) : jsx(EmptyState, { title: "No ranked backlog items", description: "Work items appear here after they are added to the project backlog.", icon: "project" }),
+    ] }) : q ? jsx(EmptyState, { title: "\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442", description: `Nothing in the backlog matches \u201C${search}\u201D. Clear the filter to see all items.`, icon: "project", children: jsx(Button, { small: true, onClick: () => setSearch(""), children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440" }) }) : jsx(EmptyState, { title: "\u041D\u0435\u0442 \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0431\u044D\u043A\u043B\u043E\u0433\u0430", description: "\u0420\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C \u043F\u043E\u0441\u043B\u0435 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0432 \u0431\u044D\u043A\u043B\u043E\u0433 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.", icon: "project" }),
     detailItem ? jsx(WorkItemDetail, { item: detailItem, projectId: project.id, profiles: view.profiles ?? [], initiatives: view.initiatives ?? [], onClose: () => setDetailItem(null), onRefresh }) : null,
     jsx(BacklogImportWizard, {
       project,
@@ -9175,54 +9175,54 @@ function BacklogBoard(ctx) {
           saveCreate();
         }, children: [
           jsxs("header", { className: "dockyard-modal-head", children: [
-            jsxs("div", { children: [jsx("span", { className: "dockyard-create-eyebrow", children: `New work item \xB7 ${project.id}` }), jsx("h2", { id: "dockyard-create-title", children: "Create backlog item" })] }),
-            jsx(Button, { action: "close-create-backlog-item", ariaLabel: "Close create item dialog", disabled: createSaving, onClick: () => setCreateOpen(false), children: "Close" })
+            jsxs("div", { children: [jsx("span", { className: "dockyard-create-eyebrow", children: `New work item \xB7 ${project.id}` }), jsx("h2", { id: "dockyard-create-title", children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u0431\u044D\u043A\u043B\u043E\u0433\u0430" })] }),
+            jsx(Button, { action: "close-create-backlog-item", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0434\u0438\u0430\u043B\u043E\u0433 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u044F \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430", disabled: createSaving, onClick: () => setCreateOpen(false), children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" })
           ] }),
           jsxs("div", { className: "dockyard-create-body", children: [
             jsxs("p", { className: "dockyard-create-context", children: [jsx("span", { className: "dockyard-status-dot status-backlog", "aria-hidden": true }), "Starts in Backlog \xB7 Sahil is recorded as creator"] }),
             jsxs("div", { className: "dockyard-settings-grid dockyard-create-fields", children: [
-              jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [jsx("span", { children: "Title" }), jsx("input", { "data-create-field": "title", value: createForm.title, onInput: (event) => updateCreate("title", event.target.value), onChange: (event) => updateCreate("title", event.target.value), placeholder: "Describe the delivery outcome" })] }),
-              jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [jsx("span", { children: "Description (optional)" }), jsx("textarea", { rows: 3, "data-create-field": "body", value: createForm.body, onChange: (event) => updateCreate("body", event.target.value), placeholder: "Describe the outcome and acceptance criteria\u2026" })] }),
-              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Parent (optional)" }), jsx("select", { "data-create-field": "parent", value: createForm.parent, onChange: (event) => updateCreate("parent", event.target.value), children: [
-                ROOT_TYPES.includes(createForm.type) ? jsx("option", { value: "", children: "Top level" }, "none") : null,
+              jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [jsx("span", { children: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A" }), jsx("input", { "data-create-field": "title", value: createForm.title, onInput: (event) => updateCreate("title", event.target.value), onChange: (event) => updateCreate("title", event.target.value), placeholder: "\u041E\u043F\u0438\u0448\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438" })] }),
+              jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [jsx("span", { children: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("textarea", { rows: 3, "data-create-field": "body", value: createForm.body, onChange: (event) => updateCreate("body", event.target.value), placeholder: "\u041E\u043F\u0438\u0448\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u043F\u0440\u0438\u0451\u043C\u043A\u0438\u2026" })] }),
+              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0420\u043E\u0434\u0438\u0442\u0435\u043B\u044C (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("select", { "data-create-field": "parent", value: createForm.parent, onChange: (event) => updateCreate("parent", event.target.value), children: [
+                ROOT_TYPES.includes(createForm.type) ? jsx("option", { value: "", children: "\u0412\u0435\u0440\u0445\u043D\u0438\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C" }, "none") : null,
                 ...availableCreateParents.map((parent) => jsx("option", { value: parent.ref, children: `${parent.title || parent.ref} \xB7 ${typeLabel2(parent.type)}` }, parent.ref))
               ] })] }),
-              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Due date (optional)" }), jsx("input", { type: "date", "data-create-field": "due", value: createForm.due, onInput: (event) => updateCreate("due", event.target.value), onChange: (event) => updateCreate("due", event.target.value) })] }),
-              jsxs("label", { className: "dockyard-field field-required", children: [jsx("span", { children: "Type" }), jsx("select", {
+              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0421\u0440\u043E\u043A (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { type: "date", "data-create-field": "due", value: createForm.due, onInput: (event) => updateCreate("due", event.target.value), onChange: (event) => updateCreate("due", event.target.value) })] }),
+              jsxs("label", { className: "dockyard-field field-required", children: [jsx("span", { children: "\u0422\u0438\u043F" }), jsx("select", {
                 "data-create-field": "type",
                 value: createForm.type,
                 onChange: (event) => updateCreate("type", event.target.value),
                 children: availableCreateTypes.map((type) => jsx("option", { value: type, children: typeLabel2(type) }, type))
               })] }),
-              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Estimated days (optional)" }), jsx("input", { type: "number", min: 0, step: 0.5, "data-create-field": "estimate_days", value: createForm.estimate_days, onInput: (event) => updateCreate("estimate_days", event.target.value), onChange: (event) => updateCreate("estimate_days", event.target.value), placeholder: "e.g. 2.5" })] }),
+              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u041E\u0446\u0435\u043D\u043A\u0430 \u0432 \u0434\u043D\u044F\u0445 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { type: "number", min: 0, step: 0.5, "data-create-field": "estimate_days", value: createForm.estimate_days, onInput: (event) => updateCreate("estimate_days", event.target.value), onChange: (event) => updateCreate("estimate_days", event.target.value), placeholder: "e.g. 2.5" })] }),
               jsxs("label", { className: "dockyard-field field-required", children: [
-                jsx("span", { children: "Assignee" }),
+                jsx("span", { children: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C" }),
                 jsx("select", { "data-create-field": "assignee", value: createForm.assignee, onChange: (event) => updateCreate("assignee", event.target.value), children: [
-                  jsx("option", { value: "", children: "Choose an assignee" }, "choose"),
-                  jsx("option", { value: UNASSIGNED2, children: "Unassigned" }, "unassigned"),
+                  jsx("option", { value: "", children: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F" }, "choose"),
+                  jsx("option", { value: UNASSIGNED2, children: "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" }, "unassigned"),
                   ...(view.bots ?? []).map((bot) => jsx("option", { value: bot.id, children: bot.name || bot.id }, bot.id))
                 ] }),
                 // The note sits under the field it explains (Sahil 04/10).
-                createForm.assignee === UNASSIGNED2 ? jsx("small", { className: "create-help", "data-create-help": "unassigned", children: "No bot will pick this up until it is assigned." }) : null
+                createForm.assignee === UNASSIGNED2 ? jsx("small", { className: "create-help", "data-create-help": "unassigned", children: "\u041D\u0438 \u043E\u0434\u0438\u043D \u0431\u043E\u0442 \u043D\u0435 \u043F\u043E\u0434\u0445\u0432\u0430\u0442\u0438\u0442 \u044D\u0442\u043E, \u043F\u043E\u043A\u0430 \u043E\u043D\u043E \u043D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u043E." }) : null
               ] }),
-              jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "Initiative" }), jsx("select", { "data-create-field": "initiative", value: createForm.initiative, onChange: (event) => updateCreate("initiative", event.target.value), children: [
-                jsx("option", { value: "", children: "No initiative" }, "none"),
+              jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430" }), jsx("select", { "data-create-field": "initiative", value: createForm.initiative, onChange: (event) => updateCreate("initiative", event.target.value), children: [
+                jsx("option", { value: "", children: "\u0411\u0435\u0437 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B" }, "none"),
                 ...(view.initiatives ?? []).map((initiative) => jsx("option", { value: initiative.ref, children: `${initiative.ref} / ${initiative.title}` }, initiative.ref))
               ] })] }),
-              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Evidence refs (optional)" }), jsx("input", { "data-create-field": "evidence_refs", value: createForm.evidence_refs, onChange: (event) => updateCreate("evidence_refs", event.target.value), placeholder: "Comma-separated refs" })] }),
-              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Labels (optional)" }), jsx("input", { "data-create-field": "labels", value: createForm.labels, onChange: (event) => updateCreate("labels", event.target.value), placeholder: "Comma-separated labels" })] }),
-              jsxs("label", { className: "dockyard-field field-required", children: [jsx("span", { children: "Initial rank" }), jsx("input", { type: "number", min: 1, max: maxInitialRank, "data-create-field": "rank", value: createForm.rank, onInput: (event) => updateCreate("rank", event.target.value), onChange: (event) => updateCreate("rank", event.target.value) })] }),
-              jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [jsx("span", { children: "Priority reason" }), jsx("textarea", { rows: 3, "data-create-field": "reason", value: createForm.reason, onInput: (event) => updateCreate("reason", event.target.value), onChange: (event) => updateCreate("reason", event.target.value), placeholder: "Why should this item hold this rank?" })] })
+              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { "data-create-field": "evidence_refs", value: createForm.evidence_refs, onChange: (event) => updateCreate("evidence_refs", event.target.value), placeholder: "\u0421\u0441\u044B\u043B\u043A\u0438 \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E" })] }),
+              jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u041C\u0435\u0442\u043A\u0438 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("input", { "data-create-field": "labels", value: createForm.labels, onChange: (event) => updateCreate("labels", event.target.value), placeholder: "\u041C\u0435\u0442\u043A\u0438 \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E" })] }),
+              jsxs("label", { className: "dockyard-field field-required", children: [jsx("span", { children: "\u041D\u0430\u0447\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u043D\u0433" }), jsx("input", { type: "number", min: 1, max: maxInitialRank, "data-create-field": "rank", value: createForm.rank, onInput: (event) => updateCreate("rank", event.target.value), onChange: (event) => updateCreate("rank", event.target.value) })] }),
+              jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [jsx("span", { children: "\u041F\u0440\u0438\u0447\u0438\u043D\u0430 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430" }), jsx("textarea", { rows: 3, "data-create-field": "reason", value: createForm.reason, onInput: (event) => updateCreate("reason", event.target.value), onChange: (event) => updateCreate("reason", event.target.value), placeholder: "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u0434\u043E\u043B\u0436\u0435\u043D \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0440\u0430\u043D\u0433?" })] })
             ] }),
-            createTouched.title && createForm.title.trim().length < 3 ? jsx("p", { className: "create-help bad", "data-create-help": "title", children: "Title must be at least 3 characters." }) : null,
-            createTouched.assignee && !createForm.assignee ? jsx("p", { className: "create-help bad", "data-create-help": "assignee", children: "Choose an assignee, or Unassigned." }) : null,
-            createTouched.reason && createForm.reason.trim().length < 4 ? jsx("p", { className: "create-help bad", "data-create-help": "reason", children: "A ranking reason is required \u2014 it becomes the audit record." }) : null,
+            createTouched.title && createForm.title.trim().length < 3 ? jsx("p", { className: "create-help bad", "data-create-help": "title", children: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u2014 \u043C\u0438\u043D\u0438\u043C\u0443\u043C 3 \u0441\u0438\u043C\u0432\u043E\u043B\u0430." }) : null,
+            createTouched.assignee && !createForm.assignee ? jsx("p", { className: "create-help bad", "data-create-help": "assignee", children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F \u0438\u043B\u0438 \xAB\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\xBB." }) : null,
+            createTouched.reason && createForm.reason.trim().length < 4 ? jsx("p", { className: "create-help bad", "data-create-help": "reason", children: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043F\u0440\u0438\u0447\u0438\u043D\u0430 \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u2014 \u043E\u043D\u0430 \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u0437\u0430\u043F\u0438\u0441\u044C\u044E \u0430\u0443\u0434\u0438\u0442\u0430." }) : null,
             jsx("p", { className: "create-help", "data-create-reqnote": true, children: "* required. Initial rank and priority reason are recorded in the backlog audit trail." }),
             createError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: createError }) : null
           ] }),
           jsxs("div", { className: "dockyard-modal-actions", children: [
-            jsx(Button, { disabled: createSaving, onClick: () => setCreateOpen(false), children: "Cancel" }),
-            jsx(Button, { action: "submit-create-backlog-item", variant: "primary", disabled: createSaving || !createValid, onClick: saveCreate, children: createSaving ? "Creating..." : "Create and add" })
+            jsx(Button, { disabled: createSaving, onClick: () => setCreateOpen(false), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+            jsx(Button, { action: "submit-create-backlog-item", variant: "primary", disabled: createSaving || !createValid, onClick: saveCreate, children: createSaving ? "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435\u2026" : "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0438 \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C" })
           ] })
         ] })
       ]
@@ -9338,7 +9338,7 @@ function BacklogView({ view, onRefresh, preset }) {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [createOpen, createSaving]);
-  if (!project) return jsx(EmptyState, { title: "No project selected", description: "Select a project before prioritising its backlog.", icon: "project" });
+  if (!project) return jsx(EmptyState, { title: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D", description: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0435\u0433\u043E \u0431\u044D\u043A\u043B\u043E\u0433.", icon: "project" });
   const canCreate = project.enabled !== false && project.phase === "active" && !isUnlinked(project);
   const workByRef = Object.fromEntries((view.workItems ?? []).map((item) => [item.ref, item]));
   const entries = [...view.backlog ?? []].sort((left, right) => Number(left.rank) - Number(right.rank));
@@ -9348,7 +9348,7 @@ function BacklogView({ view, onRefresh, preset }) {
     setReason("");
     setError(null);
   };
-  const STATUS_LABELS = { backlog: "Backlog", triage: "Backlog", todo: "Backlog", ready: "Backlog", running: "In progress", in_progress: "In progress", review: "In review", in_review: "In review", blocked: "Blocked", done: "Done" };
+  const STATUS_LABELS = { backlog: "\u0411\u044D\u043A\u043B\u043E\u0433", triage: "\u0411\u044D\u043A\u043B\u043E\u0433", todo: "\u0411\u044D\u043A\u043B\u043E\u0433", ready: "\u0411\u044D\u043A\u043B\u043E\u0433", running: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", in_progress: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", review: "\u041D\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435", in_review: "\u041D\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435", blocked: "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E", done: "\u0413\u043E\u0442\u043E\u0432\u043E" };
   const STATUS_UI = { backlog: "backlog", triage: "backlog", todo: "backlog", ready: "backlog", running: "in_progress", in_progress: "in_progress", review: "in_review", in_review: "in_review", blocked: "blocked", done: "done" };
   const STATUS_OPTIONS = ["backlog", "in_progress", "in_review", "blocked", "done"];
   const TYPE_NAMES = DOCKYARD_TYPE_NAMES;
@@ -9361,8 +9361,8 @@ function BacklogView({ view, onRefresh, preset }) {
   const allItems = view.workItems ?? [];
   const initiativeByRef = Object.fromEntries((view.initiatives ?? []).map((initiative) => [initiative.ref, initiative]));
   const botById = Object.fromEntries((view.bots ?? []).map((bot) => [bot.id, bot]));
-  const initiativeLabel = (ref) => ref ? initiativeByRef[ref]?.title || ref : "No initiative";
-  const ownerLabel = (id) => id ? botById[id]?.name || id : "Unassigned";
+  const initiativeLabel = (ref) => ref ? initiativeByRef[ref]?.title || ref : "\u0411\u0435\u0437 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B";
+  const ownerLabel = (id) => id ? botById[id]?.name || id : "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D";
   const unassigned = unassignedWork(allItems);
   const parentOf = {};
   const childrenOf = {};
@@ -9443,7 +9443,7 @@ function BacklogView({ view, onRefresh, preset }) {
     const map = /* @__PURE__ */ new Map();
     for (const row of treeRows) {
       const it = workByRef[row.ref] ?? {};
-      const key = groupBy === "status" ? STATUS_LABELS[it.status] || it.status || "Unset" : groupBy === "assignee" ? ownerLabel(it.assignee) : groupBy === "initiative" ? initiativeLabel(it.initiative_ref) : groupBy === "type" ? typeLabel2(it.type) : String(it.due || "No due date").slice(0, 7) || "No due date";
+      const key = groupBy === "status" ? STATUS_LABELS[it.status] || it.status || "\u0421\u0431\u0440\u043E\u0448\u0435\u043D\u043E" : groupBy === "assignee" ? ownerLabel(it.assignee) : groupBy === "initiative" ? initiativeLabel(it.initiative_ref) : groupBy === "type" ? typeLabel2(it.type) : String(it.due || "\u0411\u0435\u0437 \u0441\u0440\u043E\u043A\u0430").slice(0, 7) || "\u0411\u0435\u0437 \u0441\u0440\u043E\u043A\u0430";
       (map.get(key) || map.set(key, []).get(key)).push(row);
     }
     return [...map.entries()].sort((a, b) => String(a[0]).localeCompare(String(b[0])));
@@ -9501,7 +9501,7 @@ function BacklogView({ view, onRefresh, preset }) {
     setEditing(null);
     const v = String(value || "").trim();
     if (v.length < 3) {
-      flashCell(ref, "title", "Title must be at least 3 characters.");
+      flashCell(ref, "title", "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u2014 \u043C\u0438\u043D\u0438\u043C\u0443\u043C 3 \u0441\u0438\u043C\u0432\u043E\u043B\u0430.");
       return;
     }
     if (v !== (workByRef[ref]?.title ?? "")) patchItem(ref, { title: v });
@@ -9519,7 +9519,7 @@ function BacklogView({ view, onRefresh, preset }) {
     const item = workByRef[ref];
     if (!item || nextStatus === item.status) return;
     if ((item.type || "task") === "epic" && nextStatus === "done") {
-      flashCell(ref, "status", "Epics are completed through their children \u2014 close the sub-items first.");
+      flashCell(ref, "status", "\u042D\u043F\u0438\u043A\u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0430\u044E\u0442\u0441\u044F \u0447\u0435\u0440\u0435\u0437 \u0434\u043E\u0447\u0435\u0440\u043D\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u2014 \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u0437\u0430\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u043E\u0434\u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B.");
       return;
     }
     try {
@@ -9535,7 +9535,7 @@ function BacklogView({ view, onRefresh, preset }) {
     const item = workByRef[ref];
     if (!item) return;
     if ((item.type || "task") === "epic") {
-      flashCell(ref, "assignee", "Epics are never assigned \u2014 assign one of its children instead.");
+      flashCell(ref, "assignee", "\u042D\u043F\u0438\u043A\u0438 \u043D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0430\u044E\u0442\u0441\u044F \u2014 \u043D\u0430\u0437\u043D\u0430\u0447\u044C\u0442\u0435 \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 \u0435\u0433\u043E \u0434\u043E\u0447\u0435\u0440\u043D\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432.");
       return;
     }
     try {
@@ -9597,7 +9597,7 @@ function BacklogView({ view, onRefresh, preset }) {
     setImportValid(false);
     const text2 = importText.trim();
     if (!text2) {
-      setImportError("Paste CSV lines or a JSON array first.");
+      setImportError("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0442\u0440\u043E\u043A\u0438 CSV \u0438\u043B\u0438 \u043C\u0430\u0441\u0441\u0438\u0432 JSON.");
       setImportRows(null);
       return;
     }
@@ -9616,7 +9616,7 @@ function BacklogView({ view, onRefresh, preset }) {
       setImportBusy(false);
       const preview = previewResult?.preview;
       if (!preview) {
-        setImportError("The import service returned no preview.");
+        setImportError("\u0421\u0435\u0440\u0432\u0438\u0441 \u0438\u043C\u043F\u043E\u0440\u0442\u0430 \u043D\u0435 \u0432\u0435\u0440\u043D\u0443\u043B \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440.");
         setImportRows(null);
         return;
       }
@@ -9635,13 +9635,13 @@ function BacklogView({ view, onRefresh, preset }) {
         const initiative = String(row.initiative_ref ?? "").trim();
         const rowKey = String(row.row_key ?? "").trim();
         const problems = [...errorByRow[String(idx + 2)] ?? [], ...errorByRow[String(row.row_key ?? "")] ?? []];
-        if (parent && type === "epic") problems.push("epics are top level \u2014 parent must be empty");
+        if (parent && type === "epic") problems.push("\u044D\u043F\u0438\u043A\u0438 \u2014 \u0432\u0435\u0440\u0445\u043D\u0438\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C, \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044C \u0434\u043E\u043B\u0436\u0435\u043D \u0431\u044B\u0442\u044C \u043F\u0443\u0441\u0442\u044B\u043C");
         const errors = problems.filter((problem) => !/can still be imported|warning/i.test(problem));
         const warnings = problems.filter((problem) => /can still be imported|warning/i.test(problem));
         return { idx, type, title, parent, labels, estimate, due, initiative, rowKey, assignee: String(row.owner ?? row.assignee ?? "").trim(), problems, errors, warnings, csv_text: csvText };
       });
       if (!parsed.length) {
-        setImportError("No rows found in that input.");
+        setImportError("\u0412 \u044D\u0442\u043E\u043C \u0432\u0432\u043E\u0434\u0435 \u0441\u0442\u0440\u043E\u043A\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B.");
         setImportRows(null);
         return;
       }
@@ -9672,7 +9672,7 @@ function BacklogView({ view, onRefresh, preset }) {
         items: Array.isArray(result?.items) ? result.items : [],
         failed: (result?.preview?.errors ?? []).map((problem) => `row ${problem.row}: ${problem.error}`)
       });
-      if (result?.preview?.valid === false) setImportError("The server rejected the import. Return to the source and correct the reported rows.");
+      if (result?.preview?.valid === false) setImportError("\u0421\u0435\u0440\u0432\u0435\u0440 \u043E\u0442\u043A\u043B\u043E\u043D\u0438\u043B \u0438\u043C\u043F\u043E\u0440\u0442. \u0412\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443 \u0438 \u0438\u0441\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0435 \u0441\u0442\u0440\u043E\u043A\u0438.");
       setImportStep(3);
       onRefresh();
     } catch (bad) {
@@ -9717,11 +9717,11 @@ function BacklogView({ view, onRefresh, preset }) {
   const estimateValid = createForm.estimate_days === "" || Number.isFinite(Number(createForm.estimate_days)) && Number(createForm.estimate_days) >= 0;
   const createFieldError = (key) => {
     if (!createTouched[key]) return null;
-    if (key === "title" && createForm.title.trim().length < 3) return "At least 3 characters.";
-    if (key === "assignee" && !createForm.assignee) return "Choose an assignee, or Unassigned.";
-    if (key === "reason" && createForm.reason.trim().length < 4) return "A ranking reason is required (audit trail).";
-    if (key === "estimate_days" && !estimateValid) return "Use a non-negative number of days.";
-    if (key === "type" && !availableCreateTypes.includes(createForm.type)) return "Choose a supported type for this parent.";
+    if (key === "title" && createForm.title.trim().length < 3) return "\u041C\u0438\u043D\u0438\u043C\u0443\u043C 3 \u0441\u0438\u043C\u0432\u043E\u043B\u0430.";
+    if (key === "assignee" && !createForm.assignee) return "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F \u0438\u043B\u0438 \xAB\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\xBB.";
+    if (key === "reason" && createForm.reason.trim().length < 4) return "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F \u043F\u0440\u0438\u0447\u0438\u043D\u0430 \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F (\u0434\u043B\u044F \u0430\u0443\u0434\u0438\u0442\u0430).";
+    if (key === "estimate_days" && !estimateValid) return "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u043D\u0435\u043E\u0442\u0440\u0438\u0446\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0447\u0438\u0441\u043B\u043E \u0434\u043D\u0435\u0439.";
+    if (key === "type" && !availableCreateTypes.includes(createForm.type)) return "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0439 \u0442\u0438\u043F \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0440\u043E\u0434\u0438\u0442\u0435\u043B\u044F.";
     return null;
   };
   const createValid = createForm.title.trim().length >= 3 && Boolean(createForm.assignee) && Number.isInteger(initialRank) && initialRank >= 1 && initialRank <= maxInitialRank && createForm.reason.trim().length >= 4 && estimateValid && availableCreateTypes.includes(createForm.type) && (!createForm.parent || availableCreateParents.some((parent) => parent.ref === createForm.parent));
@@ -9826,7 +9826,7 @@ function BacklogView({ view, onRefresh, preset }) {
     pendingParentChoices.unshift(workByRef[pendingCurrentParent]);
   }
   const pendingParentChanged = Boolean(pendingMove?.mode === "parent" && pendingParentRef !== pendingCurrentParent);
-  const sortLabels = { rank: "Rank", type: "Type", title: "Work item", status: "Status", initiative: "Initiative", assignee: "Assignee", age: "Age", estimate: "Estimate", due: "Due date" };
+  const sortLabels = { rank: "Rank", type: "\u0422\u0438\u043F", title: "\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442", status: "\u0421\u0442\u0430\u0442\u0443\u0441", initiative: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", assignee: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", age: "\u0414\u0430\u0432\u043D\u043E\u0441\u0442\u044C", estimate: "\u041E\u0446\u0435\u043D\u043A\u0430", due: "\u0421\u0440\u043E\u043A" };
   const sortHeader = (key, label, className = "") => jsx("button", {
     type: "button",
     className: `th-sort th-cell ${className}${sortKey === key ? " active" : ""}`.trim(),
@@ -10356,7 +10356,7 @@ function docProblem(doc, rest = {}) {
   const bytes = serverJsonBytes(counted);
   if (chars > RICH_TEXT_LIMITS.chars) return `Too long: ${chars.toLocaleString("en-GB")} of ${RICH_TEXT_LIMITS.chars.toLocaleString("en-GB")} characters. Shorten it before applying.`;
   if (nodes > RICH_TEXT_LIMITS.nodes) return `Too much formatting: ${nodes.toLocaleString("en-GB")} of ${RICH_TEXT_LIMITS.nodes.toLocaleString("en-GB")} pieces. Remove some paragraphs or formatting before applying.`;
-  if (bytes > RICH_TEXT_LIMITS.bytes) return "This card is too large to save. Remove some text or formatting before applying.";
+  if (bytes > RICH_TEXT_LIMITS.bytes) return "\u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u0430\u044F \u0434\u043B\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u044F. \u0423\u0431\u0435\u0440\u0438\u0442\u0435 \u0447\u0430\u0441\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u0430 \u0438\u043B\u0438 \u0444\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u043F\u0435\u0440\u0435\u0434 \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u0435\u043C.";
   return null;
 }
 function renderInline(parent, nodes) {
@@ -10527,18 +10527,18 @@ function normaliseDom(host3, { afterDelete = false } = {}) {
   }
 }
 var TOOLS = [
-  ["bold", "Bold (Ctrl+B)", "B", () => exec("bold"), (s) => s.bold],
-  ["italic", "Italic (Ctrl+I)", "I", () => exec("italic"), (s) => s.italic],
-  ["underline", "Underline (Ctrl+U)", "U", () => exec("underline"), (s) => s.underline],
-  ["strike", "Strikethrough", "S", () => exec("strikeThrough"), (s) => s.strike],
+  ["bold", "\u0416\u0438\u0440\u043D\u044B\u0439 (Ctrl+B)", "B", () => exec("bold"), (s) => s.bold],
+  ["italic", "\u041A\u0443\u0440\u0441\u0438\u0432 (Ctrl+I)", "I", () => exec("italic"), (s) => s.italic],
+  ["underline", "\u041F\u043E\u0434\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u044B\u0439 (Ctrl+U)", "U", () => exec("underline"), (s) => s.underline],
+  ["strike", "\u0417\u0430\u0447\u0451\u0440\u043A\u043D\u0443\u0442\u044B\u0439", "S", () => exec("strikeThrough"), (s) => s.strike],
   null,
-  ["bullets", "Bullet list", { icon: "list" }, () => exec("insertUnorderedList"), (s) => s.list === "UL"],
-  ["numbers", "Numbered list", { icon: "list-ordered" }, () => exec("insertOrderedList"), (s) => s.list === "OL"],
+  ["bullets", "\u041C\u0430\u0440\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A", { icon: "list" }, () => exec("insertUnorderedList"), (s) => s.list === "UL"],
+  ["numbers", "\u041D\u0443\u043C\u0435\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A", { icon: "list-ordered" }, () => exec("insertOrderedList"), (s) => s.list === "OL"],
   null,
-  ["left", "Align left", { icon: "align-left" }, () => exec("justifyLeft"), (s) => s.align === "left"],
-  ["center", "Align centre", { icon: "align-center" }, () => exec("justifyCenter"), (s) => s.align === "center"],
-  ["right", "Align right", { icon: "align-right" }, () => exec("justifyRight"), (s) => s.align === "right"],
-  ["justify", "Justify", { icon: "align-justify" }, () => exec("justifyFull"), (s) => s.align === "justify"]
+  ["left", "\u041F\u043E \u043B\u0435\u0432\u043E\u043C\u0443 \u043A\u0440\u0430\u044E", { icon: "align-left" }, () => exec("justifyLeft"), (s) => s.align === "left"],
+  ["center", "\u041F\u043E \u0446\u0435\u043D\u0442\u0440\u0443", { icon: "align-center" }, () => exec("justifyCenter"), (s) => s.align === "center"],
+  ["right", "\u041F\u043E \u043F\u0440\u0430\u0432\u043E\u043C\u0443 \u043A\u0440\u0430\u044E", { icon: "align-right" }, () => exec("justifyRight"), (s) => s.align === "right"],
+  ["justify", "\u041F\u043E \u0448\u0438\u0440\u0438\u043D\u0435", { icon: "align-justify" }, () => exec("justifyFull"), (s) => s.align === "justify"]
 ];
 var POS_BLOCKS = /* @__PURE__ */ new Set(["P", "H1", "H2", "H3", "LI"]);
 function measure(host3, target, targetOffset) {
@@ -10753,7 +10753,7 @@ function applySize(host3, size) {
   }
   reselect(texts);
 }
-function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOnly, label = "Description" }) {
+function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOnly, label = "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435" }) {
   const host3 = useRef(null);
   const saved = useRef(null);
   const changeRef = useRef(onChange);
@@ -10977,29 +10977,29 @@ function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOn
     jsx("span", { className: "dy-pc-field-label", children: label }),
     // Owner 01/10: two tidy rows (style + size, then the buttons) instead of
     // letting everything wrap into a ragged five-row stack.
-    readOnly ? null : jsxs("div", { className: "dy-rt-bar", role: "toolbar", "aria-label": "Text formatting", children: [
+    readOnly ? null : jsxs("div", { className: "dy-rt-bar", role: "toolbar", "aria-label": "\u0424\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u0442\u0435\u043A\u0441\u0442\u0430", children: [
       jsxs("div", { className: "dy-rt-row dy-rt-row-sel", children: [
         jsxs("select", {
           className: "dy-rt-select",
           "data-rt": "style",
-          "aria-label": "Text style",
+          "aria-label": "\u0421\u0442\u0438\u043B\u044C \u0442\u0435\u043A\u0441\u0442\u0430",
           value: state.style,
           onChange: (event) => {
             const v = event.target.value;
             run((el2) => setBlockStyle(el2, v));
           },
-          children: [["p", "Normal text"], ["h1", "Heading 1"], ["h2", "Heading 2"], ["h3", "Heading 3"]].map(([v, t]) => jsx("option", { value: v, children: t }, v))
+          children: [["p", "\u041E\u0431\u044B\u0447\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442"], ["h1", "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A 1"], ["h2", "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A 2"], ["h3", "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A 3"]].map(([v, t]) => jsx("option", { value: v, children: t }, v))
         }),
         jsxs("select", {
           className: "dy-rt-select",
           "data-rt": "size",
-          "aria-label": "Text size",
+          "aria-label": "\u0420\u0430\u0437\u043C\u0435\u0440 \u0442\u0435\u043A\u0441\u0442\u0430",
           value: state.size,
           onChange: (event) => {
             const v = event.target.value;
             run((el2) => applySize(el2, v));
           },
-          children: [["small", "Small"], ["normal", "Normal size"], ["large", "Large"], ["huge", "Huge"]].map(([v, t]) => jsx("option", { value: v, children: t }, v))
+          children: [["small", "Small"], ["normal", "\u041E\u0431\u044B\u0447\u043D\u044B\u0439 \u0440\u0430\u0437\u043C\u0435\u0440"], ["large", "Large"], ["huge", "Huge"]].map(([v, t]) => jsx("option", { value: v, children: t }, v))
         })
       ] }, "sel"),
       jsxs("div", { className: "dy-rt-row", children: [
@@ -11008,8 +11008,8 @@ function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOn
           type: "button",
           className: "dy-rt-btn",
           "data-rt": "clear",
-          title: "Clear formatting",
-          "aria-label": "Clear formatting",
+          title: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0444\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
+          "aria-label": "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0444\u043E\u0440\u043C\u0430\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
           disabled: readOnly,
           onMouseDown: (event) => event.preventDefault(),
           onClick: () => run((el2) => clearFormatting(el2)),
@@ -11054,7 +11054,7 @@ function RichTextEditor({ value, fallbackText, onChange, onProblem, rest, readOn
 // hermes_dockyard_plugin/desktop/src/project/canvas.js
 var CANVAS_OBJECT_KINDS = Object.freeze(["evidence", "claim", "question", "decision", "plan_block", "risk", "assumption", "note", "link", "media"]);
 var CANVAS_CONNECTOR_MEANINGS = Object.freeze(["supports", "contradicts", "derived_from", "clarifies", "depends_on", "implements", "raises_question"]);
-var CANVAS_KIND_LABELS = Object.freeze({ evidence: "Evidence", claim: "Claim", question: "Question", decision: "Decision", plan_block: "Plan block", risk: "Risk", assumption: "Assumption", note: "Note", link: "Link", media: "Media" });
+var CANVAS_KIND_LABELS = Object.freeze({ evidence: "\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", claim: "Claim", question: "\u0412\u043E\u043F\u0440\u043E\u0441", decision: "\u0420\u0435\u0448\u0435\u043D\u0438\u0435", plan_block: "\u0411\u043B\u043E\u043A \u043F\u043B\u0430\u043D\u0430", risk: "\u0420\u0438\u0441\u043A", assumption: "\u0414\u043E\u043F\u0443\u0449\u0435\u043D\u0438\u0435", note: "\u0417\u0430\u043C\u0435\u0442\u043A\u0430", link: "\u0421\u0432\u044F\u0437\u0430\u0442\u044C", media: "\u041C\u0435\u0434\u0438\u0430" });
 var CANVAS_STICKER_COLOURS = Object.freeze(["yellow", "orange", "coral", "pink", "purple", "indigo", "blue", "teal", "green", "lime", "clay", "slate"]);
 var CANVAS_STICKER_LABELS = Object.freeze({ yellow: "Sun", green: "Mint", blue: "Sky", pink: "Rose", purple: "Violet", orange: "Amber", coral: "Coral", teal: "Teal", lime: "Lime", clay: "Clay", slate: "Slate", indigo: "Indigo" });
 var CANVAS_KIND_ICONS = Object.freeze({
@@ -11071,18 +11071,18 @@ var CANVAS_KIND_ICONS = Object.freeze({
 });
 var LEVELS = ["low", "medium", "high"];
 var CANVAS_KIND_FIELDS = Object.freeze({
-  evidence: [["source", "text", "Source", null, 300], ["observed_on", "date", "Date observed"], ["confidence", "choice", "Confidence", LEVELS], ["quote", "area", "Quote", null, 5e3]],
-  claim: [["claim_status", "choice", "Status", ["unverified", "supported", "disputed", "refuted"]], ["confidence", "choice", "Confidence", LEVELS]],
-  question: [["question_status", "choice", "Status", ["open", "answered"]], ["owner", "member", "Owner"], ["answer", "area", "Answer", null, 5e3]],
-  decision: [["decision_status", "choice", "Status", ["proposed", "accepted", "rejected", "superseded"]], ["decided_by", "member", "Decided by"], ["decided_on", "date", "Decided on"], ["rationale", "area", "Rationale", null, 5e3], ["alternatives", "list", "Alternatives considered"]],
-  plan_block: [["plan_status", "choice", "Status", ["todo", "in_progress", "blocked", "done"]], ["owner", "member", "Owner"], ["due_on", "date", "Due"], ["estimate", "text", "Estimate", null, 50], ["checklist", "checklist", "Checklist"]],
-  risk: [["risk_status", "choice", "Status", ["open", "mitigating", "closed"]], ["likelihood", "choice", "Likelihood", LEVELS], ["impact", "choice", "Impact", LEVELS], ["owner", "member", "Owner"], ["mitigation", "area", "Mitigation", null, 5e3]],
-  assumption: [["assumption_status", "choice", "Status", ["untested", "validated", "invalidated"]], ["confidence", "choice", "Confidence", LEVELS], ["test", "area", "How we will test it", null, 2e3]],
-  media: [["content_id", "image", "Image"], ["alt", "text", "Alt text (describes the image)", null, 300], ["caption", "text", "Caption", null, 500]],
+  evidence: [["source", "text", "Source", null, 300], ["observed_on", "date", "\u0414\u0430\u0442\u0430 \u043D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u044F"], ["confidence", "choice", "\u0423\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C", LEVELS], ["quote", "area", "\u0426\u0438\u0442\u0430\u0442\u0430", null, 5e3]],
+  claim: [["claim_status", "choice", "\u0421\u0442\u0430\u0442\u0443\u0441", ["unverified", "supported", "disputed", "refuted"]], ["confidence", "choice", "\u0423\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C", LEVELS]],
+  question: [["question_status", "choice", "\u0421\u0442\u0430\u0442\u0443\u0441", ["open", "answered"]], ["owner", "member", "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446"], ["answer", "area", "\u041E\u0442\u0432\u0435\u0442", null, 5e3]],
+  decision: [["decision_status", "choice", "\u0421\u0442\u0430\u0442\u0443\u0441", ["proposed", "accepted", "rejected", "superseded"]], ["decided_by", "member", "\u041A\u0442\u043E \u0440\u0435\u0448\u0438\u043B"], ["decided_on", "date", "\u041A\u043E\u0433\u0434\u0430 \u0440\u0435\u0448\u0435\u043D\u043E"], ["rationale", "area", "\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435", null, 5e3], ["alternatives", "list", "\u0420\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u043D\u043D\u044B\u0435 \u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u044B"]],
+  plan_block: [["plan_status", "choice", "\u0421\u0442\u0430\u0442\u0443\u0441", ["todo", "in_progress", "blocked", "done"]], ["owner", "member", "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446"], ["due_on", "date", "\u0421\u0440\u043E\u043A"], ["estimate", "text", "\u041E\u0446\u0435\u043D\u043A\u0430", null, 50], ["checklist", "checklist", "\u0427\u0435\u043A-\u043B\u0438\u0441\u0442"]],
+  risk: [["risk_status", "choice", "\u0421\u0442\u0430\u0442\u0443\u0441", ["open", "mitigating", "closed"]], ["likelihood", "choice", "\u0412\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C", LEVELS], ["impact", "choice", "\u0412\u043B\u0438\u044F\u043D\u0438\u0435", LEVELS], ["owner", "member", "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446"], ["mitigation", "area", "\u041C\u0438\u0442\u0438\u0433\u0430\u0446\u0438\u044F", null, 5e3]],
+  assumption: [["assumption_status", "choice", "\u0421\u0442\u0430\u0442\u0443\u0441", ["untested", "validated", "invalidated"]], ["confidence", "choice", "\u0423\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C", LEVELS], ["test", "area", "\u041A\u0430\u043A \u043C\u044B \u044D\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u043C", null, 2e3]],
+  media: [["content_id", "image", "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435"], ["alt", "text", "\u0410\u043B\u044C\u0442-\u0442\u0435\u043A\u0441\u0442 (\u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F)", null, 300], ["caption", "text", "\u041F\u043E\u0434\u043F\u0438\u0441\u044C", null, 500]],
   link: [],
   note: []
 });
-var canvasChoiceLabel = (value) => ({ todo: "To do", in_progress: "In progress" })[value] ?? (value ? value.charAt(0).toUpperCase() + value.slice(1) : "");
+var canvasChoiceLabel = (value) => ({ todo: "\u0421\u0434\u0435\u043B\u0430\u0442\u044C", in_progress: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435" })[value] ?? (value ? value.charAt(0).toUpperCase() + value.slice(1) : "");
 var CANVAS_IMAGE_TYPES = Object.freeze({ "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" });
 var CANVAS_IMAGE_MAX = 5 * 1024 * 1024;
 var canvasSafeUrl = (value) => /^https?:\/\/[^\s/?#]+\.[^\s/?#]+(?:[/?#]\S*)?$/i.test(String(value ?? "").trim());
@@ -11133,11 +11133,11 @@ function CanvasImage({ projectId, contentId, alt, className }) {
       live = false;
     };
   }, [key]);
-  if (failed) return jsx("span", { className: "dy-pc-img-note", "data-canvas-image-missing": contentId, children: "Image unavailable" });
+  if (failed) return jsx("span", { className: "dy-pc-img-note", "data-canvas-image-missing": contentId, children: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E" });
   if (!src) return jsx("span", { className: "dy-pc-img-note", children: "Loading image\u2026" });
   return jsx("img", { className, src, alt: alt || "", draggable: false, "data-canvas-image": contentId });
 }
-var CANVAS_BOARD_STATUS_LABELS = Object.freeze({ draft: "Draft", submitted: "Submitted", planned: "Plan made", completed: "Completed", archived: "Archived" });
+var CANVAS_BOARD_STATUS_LABELS = Object.freeze({ draft: "\u0427\u0435\u0440\u043D\u043E\u0432\u0438\u043A", submitted: "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E", planned: "\u041F\u043B\u0430\u043D \u0441\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D", completed: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E", archived: "\u0412 \u0430\u0440\u0445\u0438\u0432\u0435" });
 var CANVAS_BOARD_MOVES = Object.freeze({ draft: ["submitted"], submitted: ["draft", "planned"], planned: ["submitted", "completed"], completed: ["planned"] });
 var CANVAS_READ_ONLY = Object.freeze(["completed", "archived"]);
 var CANVAS_MEANING_LABELS = Object.freeze({ supports: "supports", contradicts: "contradicts", derived_from: "derived from", clarifies: "clarifies", depends_on: "depends on", implements: "implements", raises_question: "raises a question" });
@@ -11442,7 +11442,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
   const submitBoardForm = async () => {
     const name = String(boardForm?.name ?? "").trim();
     if (!name) {
-      setNotice({ tone: "danger", text: "A board needs a name." });
+      setNotice({ tone: "danger", text: "\u0414\u043E\u0441\u043A\u0435 \u043D\u0443\u0436\u043D\u043E \u0438\u043C\u044F." });
       return;
     }
     setBoardBusy(true);
@@ -11560,7 +11560,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       const fresh = await api(boardPath(at), { method: "PATCH", body: { model } });
       if (boardRef.current !== at) return;
       mergeMeta(fresh);
-      setNotice({ tone: "ok", text: model ? `This board now asks ${model.model}.` : "This board now uses the Hermes main model." });
+      setNotice({ tone: "ok", text: model ? `This board now asks ${model.model}.` : "\u0414\u043E\u0441\u043A\u0430 \u0442\u0435\u043F\u0435\u0440\u044C \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u0443\u044E \u043C\u043E\u0434\u0435\u043B\u044C Hermes." });
     } catch (failure) {
       if (boardRef.current === at) setNotice({ tone: "danger", text: `Model could not be set: ${failureText2(failure)}` });
     } finally {
@@ -11843,11 +11843,11 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     if (!file || readOnly) return;
     const mediaType = CANVAS_IMAGE_TYPES[file.type] ? file.type : null;
     if (!mediaType) {
-      setNotice({ tone: "danger", text: "Choose a PNG, JPEG or WebP image. Video comes in a later stage." });
+      setNotice({ tone: "danger", text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 PNG, JPEG \u0438\u043B\u0438 WebP. \u0412\u0438\u0434\u0435\u043E \u2014 \u043D\u0430 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u043C \u044D\u0442\u0430\u043F\u0435." });
       return;
     }
     if (file.size <= 0 || file.size > CANVAS_IMAGE_MAX) {
-      setNotice({ tone: "danger", text: "Images must be under 5 MB." });
+      setNotice({ tone: "danger", text: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u044B \u0431\u044B\u0442\u044C \u043C\u0435\u043D\u044C\u0448\u0435 5 \u041C\u0411." });
       return;
     }
     setImageBusy(true);
@@ -11856,7 +11856,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       setField("content_id", created.content_id);
       const guess = String(file.name).replace(/\.[a-z0-9]+$/i, "").slice(0, 300);
       setDrawerFields((current) => current.alt ? current : { ...current, alt: guess });
-      setNotice({ tone: "ok", text: "Image uploaded \u2014 Apply, then Save canvas, to place it on the card." });
+      setNotice({ tone: "ok", text: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043E \u2014 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C\xBB, \u0437\u0430\u0442\u0435\u043C \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0445\u043E\u043B\u0441\u0442\xBB, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0435\u0433\u043E \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435." });
     } catch (failure) {
       setNotice({ tone: "danger", text: `Image could not be uploaded: ${failureText2(failure)}` });
     } finally {
@@ -11878,7 +11878,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       return;
     }
     if (links.length > 20) {
-      setNotice({ tone: "danger", text: "A card holds at most 20 links." });
+      setNotice({ tone: "danger", text: "\u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0432\u043C\u0435\u0449\u0430\u0435\u0442 \u043D\u0435 \u0431\u043E\u043B\u0435\u0435 20 \u0441\u0432\u044F\u0437\u0435\u0439." });
       return;
     }
     const fields = {
@@ -11893,7 +11893,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     setHistory((current) => [...current.slice(-49), before]);
     setFuture([]);
     setDirty(true);
-    setNotice({ tone: "ok", text: "Object updated \u2014 Save canvas to persist the change." });
+    setNotice({ tone: "ok", text: "\u041E\u0431\u044A\u0435\u043A\u0442 \u043E\u0431\u043D\u043E\u0432\u043B\u0451\u043D \u2014 \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0445\u043E\u043B\u0441\u0442\xBB, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043A\u0440\u0435\u043F\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435." });
   };
   const removeSelected = async () => {
     if (!selected || readOnly) return;
@@ -11908,7 +11908,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       setFuture([]);
       setDirty(true);
       setSelectedId(null);
-      setNotice({ tone: "ok", text: wasPersisted ? "Removed locally \u2014 Save canvas to persist the removal." : "Scratch object removed \u2014 it was never saved." });
+      setNotice({ tone: "ok", text: wasPersisted ? "\u0423\u0434\u0430\u043B\u0435\u043D\u043E \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u043E \u2014 \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0445\u043E\u043B\u0441\u0442\xBB, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043A\u0440\u0435\u043F\u0438\u0442\u044C \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435." : "\u0427\u0435\u0440\u043D\u043E\u0432\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0443\u0434\u0430\u043B\u0451\u043D \u2014 \u043E\u043D \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u043B\u0441\u044F." });
       return;
     }
     const at = boardRef.current;
@@ -11931,7 +11931,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
   };
   const addConnector = (source, target, meaning) => {
     if (!source || !target || source === target) {
-      setNotice({ tone: "danger", text: "A connector needs two different objects." });
+      setNotice({ tone: "danger", text: "\u0421\u043E\u0435\u0434\u0438\u043D\u0438\u0442\u0435\u043B\u044E \u043D\u0443\u0436\u043D\u044B \u0434\u0432\u0430 \u0440\u0430\u0437\u043D\u044B\u0445 \u043E\u0431\u044A\u0435\u043A\u0442\u0430." });
       return;
     }
     if (connectors.some((edge) => edge.source === source && edge.target === target && edge.meaning === meaning)) {
@@ -11957,12 +11957,12 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     if (mode === "connect") {
       if (!pendingConnect) {
         setPendingConnect(item.id);
-        setNotice({ tone: "ok", text: "Connect mode: pick the second object to link." });
+        setNotice({ tone: "ok", text: "\u0420\u0435\u0436\u0438\u043C \u0441\u0432\u044F\u0437\u0438: \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0442\u043E\u0440\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442." });
         return;
       }
       if (pendingConnect === item.id) {
         setPendingConnect(null);
-        setNotice({ tone: "ok", text: "Connect cancelled \u2014 the same object was picked twice (no self-connector)." });
+        setNotice({ tone: "ok", text: "\u0421\u0432\u044F\u0437\u044B\u0432\u0430\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E \u2014 \u043E\u0434\u0438\u043D \u0438 \u0442\u043E\u0442 \u0436\u0435 \u043E\u0431\u044A\u0435\u043A\u0442 \u0432\u044B\u0431\u0440\u0430\u043D \u0434\u0432\u0430\u0436\u0434\u044B (\u0431\u0435\u0437 \u0441\u0430\u043C\u043E\u0441\u0432\u044F\u0437\u0435\u0439)." });
         return;
       }
       addConnector(pendingConnect, item.id, linkMeaning);
@@ -11990,7 +11990,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       document.removeEventListener("pointerup", finish);
       if (moved) {
         setObjects((current) => canvasDeOverlap(current, item.id));
-        setNotice({ tone: "ok", text: "Moved \u2014 Save canvas to persist the new position." });
+        setNotice({ tone: "ok", text: "\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u043E \u2014 \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0445\u043E\u043B\u0441\u0442\xBB, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043A\u0440\u0435\u043F\u0438\u0442\u044C \u043D\u043E\u0432\u0443\u044E \u043F\u043E\u0437\u0438\u0446\u0438\u044E." });
       } else openDrawer(item);
     };
     document.addEventListener("pointermove", move);
@@ -12013,7 +12013,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       if (pendingConnect) {
         setPendingConnect(null);
         setConnectPointer(null);
-        setNotice({ tone: "ok", text: "Connect: link cancelled. Click a sticker to start again." });
+        setNotice({ tone: "ok", text: "\u0421\u0432\u044F\u0437\u044B\u0432\u0430\u043D\u0438\u0435: \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0441\u0442\u0438\u043A\u0435\u0440, \u0447\u0442\u043E\u0431\u044B \u043D\u0430\u0447\u0430\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E." });
       }
       return;
     }
@@ -12170,7 +12170,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     setHistory((current) => [...current.slice(-49), before]);
     setFuture([]);
     setDirty(true);
-    setNotice({ tone: "ok", text: "Tidied into a grid \u2014 Save canvas to persist the new positions." });
+    setNotice({ tone: "ok", text: "\u0423\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0435\u043D\u043E \u0432 \u0441\u0435\u0442\u043A\u0443 \u2014 \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0445\u043E\u043B\u0441\u0442\xBB, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043A\u0440\u0435\u043F\u0438\u0442\u044C \u043D\u043E\u0432\u044B\u0435 \u043F\u043E\u0437\u0438\u0446\u0438\u0438." });
   };
   const onStageKeyDown = (event) => {
     const key = event.key;
@@ -12349,7 +12349,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       const saved = await api(`/projects/${encoded}/plans/${encodeURIComponent(planPanel.plan_id)}/document/save`, { method: "POST", body: {} });
       if (boardRef.current !== at) return;
       setPlanPanel((current) => ({ ...current ?? {}, ...saved }));
-      setNotice({ tone: "ok", text: "Implementation document saved to the Content tab as Markdown." });
+      setNotice({ tone: "ok", text: "\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0440\u0435\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D \u043D\u0430 \u0432\u043A\u043B\u0430\u0434\u043A\u0435 \xAB\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\xBB \u0432 \u0444\u043E\u0440\u043C\u0430\u0442\u0435 Markdown." });
       onRefresh?.();
     } catch (failure) {
       if (boardRef.current === at) setNotice({ tone: "danger", text: `Document save failed: ${failureText2(failure)}` });
@@ -12380,7 +12380,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
   const saveSteps = async () => {
     if (!planPanel?.plan_id || !stepsDraft?.length) return;
     if (stepsDraft.some((row) => !row.title.trim())) {
-      setNotice({ tone: "danger", text: "Every step needs a title \u2014 remove empty steps before saving." });
+      setNotice({ tone: "danger", text: "\u041A\u0430\u0436\u0434\u043E\u043C\u0443 \u0448\u0430\u0433\u0443 \u043D\u0443\u0436\u0435\u043D \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u2014 \u0443\u0434\u0430\u043B\u0438\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u0435 \u0448\u0430\u0433\u0438 \u043F\u0435\u0440\u0435\u0434 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435\u043C." });
       return;
     }
     const at = boardRef.current;
@@ -12470,20 +12470,20 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       jsx("legend", { children: `Links${links.length ? ` (${links.length})` : ""}` }),
       ...links.map((link, index) => jsxs("div", { className: "dy-pc-row", "data-canvas-link-row": index, children: [
         jsx("input", { "data-canvas-link-url": index, type: "url", inputMode: "url", placeholder: "https://\u2026", maxLength: 2048, value: link.url, disabled: off, "aria-label": `Link ${index + 1} address`, "aria-invalid": link.url && !canvasSafeUrl(link.url) ? "true" : void 0, onChange: (event) => setField("links", links.map((l, i) => i === index ? { ...l, url: event.target.value } : l)) }),
-        jsx("input", { "data-canvas-link-label": index, placeholder: "Label (optional)", maxLength: 200, value: link.label, disabled: off, "aria-label": `Link ${index + 1} label`, onChange: (event) => setField("links", links.map((l, i) => i === index ? { ...l, label: event.target.value } : l)) }),
-        canvasSafeUrl(link.url) ? jsx("a", { className: "dy-pc-open", href: link.url.trim(), target: "_blank", rel: "noopener noreferrer nofollow", title: "Open link", "aria-label": `Open link ${index + 1}`, children: jsx(Icon, { name: "arrow-up-right" }) }) : null,
+        jsx("input", { "data-canvas-link-label": index, placeholder: "\u041C\u0435\u0442\u043A\u0430 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)", maxLength: 200, value: link.label, disabled: off, "aria-label": `Link ${index + 1} label`, onChange: (event) => setField("links", links.map((l, i) => i === index ? { ...l, label: event.target.value } : l)) }),
+        canvasSafeUrl(link.url) ? jsx("a", { className: "dy-pc-open", href: link.url.trim(), target: "_blank", rel: "noopener noreferrer nofollow", title: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0441\u0432\u044F\u0437\u044C", "aria-label": `Open link ${index + 1}`, children: jsx(Icon, { name: "arrow-up-right" }) }) : null,
         off ? null : jsx(Button, { small: true, action: "pc-link-remove", ariaLabel: `Remove link ${index + 1}`, onClick: () => setField("links", links.filter((_, i) => i !== index)), children: jsx(Icon, { name: "x" }) })
       ] }, `link-${index}`)),
-      off ? null : jsx(Button, { small: true, action: "pc-link-add", disabled: links.length >= 20, onClick: () => setField("links", [...links, { url: "", label: "" }]), children: [jsx(Icon, { name: "plus" }, "i"), "Add link"] })
+      off ? null : jsx(Button, { small: true, action: "pc-link-add", disabled: links.length >= 20, onClick: () => setField("links", [...links, { url: "", label: "" }]), children: [jsx(Icon, { name: "plus" }, "i"), "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0432\u044F\u0437\u044C"] })
     ] }));
     for (const [field, input, label, choices, max] of CANVAS_KIND_FIELDS[drawerKind] ?? []) {
       const value = f[field];
       let control;
-      if (input === "choice") control = jsx("select", { "data-canvas-field": field, value: value ?? "", disabled: off, onChange: (event) => setField(field, event.target.value), children: [jsx("option", { value: "", children: "Not set" }, ""), ...choices.map((c) => jsx("option", { value: c, children: canvasChoiceLabel(c) }, c))] });
+      if (input === "choice") control = jsx("select", { "data-canvas-field": field, value: value ?? "", disabled: off, onChange: (event) => setField(field, event.target.value), children: [jsx("option", { value: "", children: "\u041D\u0435 \u0437\u0430\u0434\u0430\u043D\u043E" }, ""), ...choices.map((c) => jsx("option", { value: c, children: canvasChoiceLabel(c) }, c))] });
       else if (input === "member") {
         const known = members.includes(value);
         control = jsx("select", { "data-canvas-field": field, value: value ?? "", disabled: off, onChange: (event) => setField(field, event.target.value), children: [
-          jsx("option", { value: "", children: "Unassigned" }, ""),
+          jsx("option", { value: "", children: "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" }, ""),
           ...members.map((m) => jsx("option", { value: m, children: m }, m)),
           value && !known ? jsx("option", { value, children: `${value} (no longer a member)` }, "former") : null
         ] });
@@ -12510,22 +12510,22 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
             jsx("input", { maxLength: 300, value: row.text ?? "", disabled: off, "aria-label": `Checklist item ${index + 1}`, onChange: (event) => setField(field, rows.map((r, i) => i === index ? { ...r, text: event.target.value } : r)) }),
             off ? null : jsx(Button, { small: true, ariaLabel: `Remove checklist item ${index + 1}`, onClick: () => setField(field, rows.filter((_, i) => i !== index)), children: jsx(Icon, { name: "x" }) })
           ] }, index)),
-          off ? null : jsx(Button, { small: true, action: "pc-checklist-add", disabled: rows.length >= 50, onClick: () => setField(field, [...rows, { text: "", done: false }]), children: [jsx(Icon, { name: "plus" }, "i"), "Add item"] })
+          off ? null : jsx(Button, { small: true, action: "pc-checklist-add", disabled: rows.length >= 50, onClick: () => setField(field, [...rows, { text: "", done: false }]), children: [jsx(Icon, { name: "plus" }, "i"), "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442"] })
         ] }));
         continue;
       } else if (input === "image") {
         out.push(jsxs("div", { className: "dy-pc-fieldset", "data-canvas-image-field": true, children: [
           jsx("span", { className: "dy-pc-field-label", children: label }),
-          value ? jsx("span", { className: "dy-pc-drawer-thumb", children: jsx(CanvasImage, { projectId: project.id, contentId: value, alt: f.alt }) }) : jsx("p", { className: "dy-pc-drawer-meta", children: "No image yet." }),
+          value ? jsx("span", { className: "dy-pc-drawer-thumb", children: jsx(CanvasImage, { projectId: project.id, contentId: value, alt: f.alt }) }) : jsx("p", { className: "dy-pc-drawer-meta", children: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u043F\u043E\u043A\u0430 \u043D\u0435\u0442." }),
           off ? null : jsxs("label", { className: "dy-pc-upload", children: [
-            jsx("span", { children: imageBusy ? "Uploading\u2026" : value ? "Replace image" : "Upload image (PNG, JPEG or WebP, up to 5 MB)" }),
+            jsx("span", { children: imageBusy ? "Uploading\u2026" : value ? "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435" : "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 (PNG, JPEG \u0438\u043B\u0438 WebP, \u0434\u043E 5 \u041C\u0411)" }),
             jsx("input", { type: "file", "data-canvas-image-upload": true, accept: "image/png,image/jpeg,image/webp", disabled: imageBusy, onChange: (event) => {
               const file = event.target.files?.[0];
               event.target.value = "";
               uploadImage(file);
             } })
           ] }),
-          off || !value ? null : jsx(Button, { small: true, action: "pc-image-clear", onClick: () => setField("content_id", ""), children: "Remove image from card" })
+          off || !value ? null : jsx(Button, { small: true, action: "pc-image-clear", onClick: () => setField("content_id", ""), children: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438" })
         ] }));
         continue;
       }
@@ -12553,7 +12553,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       children: [
         jsx("small", { children: `${label}${tag ? ` \xB7 ${tag}` : ""}` }),
         jsx("span", { className: "dy-pc-obj-kind-icon", "aria-hidden": true, children: jsx(Icon, { name: CANVAS_KIND_ICONS[item.kind] ?? "sticky-note" }) }),
-        jsx("strong", { children: canvasText(item) || "Untitled object" }),
+        jsx("strong", { children: canvasText(item) || "\u041E\u0431\u044A\u0435\u043A\u0442 \u0431\u0435\u0437 \u0438\u043C\u0435\u043D\u0438" }),
         item.kind === "media" && item.content?.content_id ? jsx("span", { className: "dy-pc-obj-thumb", children: jsx(CanvasImage, { projectId: project.id, contentId: item.content.content_id, alt: item.content.alt }) }) : null,
         canvasSummary(item) ? jsx("span", { className: "dy-pc-obj-sub", "data-canvas-summary": true, children: canvasSummary(item) }) : null,
         item.content?.description ? jsx("span", { className: "dy-pc-obj-desc", children: item.content.description }) : null,
@@ -12562,26 +12562,26 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     }, item.id);
   };
   const pendingProposals = (session?.proposals ?? []).filter((proposal) => (proposal.status ?? "pending") === "pending").length;
-  const assistantSummary = session?.current_question ? "Before I can propose anything I need one clarification. Nothing is applied automatically." : (session?.proposals ?? []).length ? `${number((session.proposals ?? []).length)} proposal(s) drafted as scratch \u2014 approve or dismiss each one. Nothing is applied to the canvas.` : "No curation session yet. Run Curate to review this canvas; every proposal lands as scratch and needs your decision.";
+  const assistantSummary = session?.current_question ? "\u041F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u0447\u0442\u043E-\u043B\u0438\u0431\u043E \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u044C, \u043C\u043D\u0435 \u043D\u0443\u0436\u043D\u043E \u043E\u0434\u043D\u043E \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435. \u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438." : (session?.proposals ?? []).length ? `${number((session.proposals ?? []).length)} proposal(s) drafted as scratch \u2014 approve or dismiss each one. Nothing is applied to the canvas.` : "No curation session yet. Run Curate to review this canvas; every proposal lands as scratch and needs your decision.";
   const questionBlock = session?.current_question ? jsxs("div", { className: "dy-pc-proposal", "data-canvas-question": session.current_question.id ?? "question", children: [
     jsx("strong", { children: `Question: ${session.current_question.question}` }),
-    jsx("textarea", { "data-canvas-answer": true, rows: 2, value: answer, placeholder: "Answer, or skip, defer or stop this clarification...", onChange: (event) => setAnswer(event.target.value) }),
+    jsx("textarea", { "data-canvas-answer": true, rows: 2, value: answer, placeholder: "\u041E\u0442\u0432\u0435\u0442\u044C\u0442\u0435 \u2014 \u0438\u043B\u0438 \u043F\u0440\u043E\u043F\u0443\u0441\u0442\u0438\u0442\u0435, \u043E\u0442\u043B\u043E\u0436\u0438\u0442\u0435 \u043B\u0438\u0431\u043E \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u044D\u0442\u043E \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435\u2026", onChange: (event) => setAnswer(event.target.value) }),
     jsxs("div", { className: "dockyard-form-actions", children: [
-      jsx(Button, { small: true, action: "skip-canvas-question", disabled: busy, onClick: () => answerQuestion2("skip"), children: "Skip" }),
-      jsx(Button, { small: true, action: "defer-canvas-question", disabled: busy, onClick: () => answerQuestion2("defer"), children: "Defer" }),
+      jsx(Button, { small: true, action: "skip-canvas-question", disabled: busy, onClick: () => answerQuestion2("skip"), children: "\u041F\u0440\u043E\u043F\u0443\u0441\u0442\u0438\u0442\u044C" }),
+      jsx(Button, { small: true, action: "defer-canvas-question", disabled: busy, onClick: () => answerQuestion2("defer"), children: "\u041E\u0442\u043B\u043E\u0436\u0438\u0442\u044C" }),
       jsx(Button, { small: true, action: "stop-canvas-session", disabled: busy, onClick: () => answerQuestion2("stop"), children: "Stop" }),
-      jsx(Button, { small: true, variant: "primary", action: "answer-canvas-question", disabled: busy || !answer.trim(), onClick: () => answerQuestion2("answer"), children: "Answer" })
+      jsx(Button, { small: true, variant: "primary", action: "answer-canvas-question", disabled: busy || !answer.trim(), onClick: () => answerQuestion2("answer"), children: "\u041E\u0442\u0432\u0435\u0442" })
     ] })
   ] }) : null;
   const proposalCards = (session?.proposals ?? []).map((proposal) => {
     const status = proposal.status ?? "pending";
     return jsxs("article", { className: "dy-pc-proposal", "data-canvas-proposal": proposal.proposal_id, "data-canvas-proposal-status": status, children: [
-      jsx("strong", { children: proposal.title ?? CANVAS_KIND_LABELS[proposal.kind] ?? proposal.kind ?? "Proposal" }),
+      jsx("strong", { children: proposal.title ?? CANVAS_KIND_LABELS[proposal.kind] ?? proposal.kind ?? "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435" }),
       jsx("small", { children: `${proposal.kind ?? "proposal"} \xB7 ${status} \xB7 scratch + suggested \xB7 ${number((proposal.source_object_ids ?? []).length)} source object(s)` }),
       status === "pending" ? jsxs("div", { className: "dockyard-form-actions", children: [
-        jsx(Button, { small: true, action: "dismiss-canvas-proposal", disabled: busy, onClick: () => decideProposal(proposal, false), children: "Dismiss" }),
-        jsx(Button, { small: true, variant: "primary", action: "approve-canvas-proposal", disabled: busy, onClick: () => decideProposal(proposal, true), children: "Approve" })
-      ] }) : status === "approved" && proposal.kind === "technical_plan" ? jsx(Button, { small: true, action: "plan-from-proposal", disabled: planBusy, onClick: () => synthesizePlan(proposal), children: "Plan from proposal" }) : jsx("small", { children: "Decision recorded \u2014 this proposal can no longer be decided again." })
+        jsx(Button, { small: true, action: "dismiss-canvas-proposal", disabled: busy, onClick: () => decideProposal(proposal, false), children: "\u041E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C" }),
+        jsx(Button, { small: true, variant: "primary", action: "approve-canvas-proposal", disabled: busy, onClick: () => decideProposal(proposal, true), children: "\u041E\u0434\u043E\u0431\u0440\u0438\u0442\u044C" })
+      ] }) : status === "approved" && proposal.kind === "technical_plan" ? jsx(Button, { small: true, action: "plan-from-proposal", disabled: planBusy, onClick: () => synthesizePlan(proposal), children: "\u041F\u043B\u0430\u043D \u0438\u0437 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F" }) : jsx("small", { children: "\u0420\u0435\u0448\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E \u2014 \u043F\u043E\u0432\u0442\u043E\u0440\u043D\u043E \u043F\u043E \u044D\u0442\u043E\u043C\u0443 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044E \u0440\u0435\u0448\u0438\u0442\u044C \u043D\u0435\u043B\u044C\u0437\u044F." })
     ] }, proposal.proposal_id);
   });
   const chatBody = () => [
@@ -12594,25 +12594,25 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     proposalCards.length ? jsx("div", { "data-canvas-proposals": true, children: proposalCards }, "proposals") : null,
     session?.answers?.length ? jsx("div", { className: "dy-pc-msg me", children: `${number(session.answers.length)} clarification answer(s) recorded.` }, "answers") : null,
     planPanel ? jsxs("div", { className: "dy-pc-proposal", "data-canvas-plan": planPanel.plan_id, children: [
-      jsx("strong", { children: "Plan ready for review" }),
+      jsx("strong", { children: "\u041F\u043B\u0430\u043D \u0433\u043E\u0442\u043E\u0432 \u043A \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435" }),
       jsx("small", { children: `${number((planPanel.steps ?? []).length)} step(s) \xB7 from proposal ${planPanel.proposal_id} \xB7 nothing applied to the board.` }),
       jsx("pre", { className: "dy-pc-plan-steps", children: (planPanel.steps ?? []).map((step) => `${step.order}. ${step.title}`).join("\n") }),
       jsxs("div", { className: "dockyard-form-actions", children: [
-        planEditable ? jsx(Button, { small: true, action: "pc-steps-edit", disabled: planBusy, onClick: startStepEdit, children: "Edit steps" }) : null,
-        jsx(Button, { small: true, variant: planDocSaved ? "" : "primary", action: "save-plan-document", disabled: planBusy || planDocSaved, onClick: savePlanDocument, children: planDocSaved ? "Doc saved to Content" : "Save doc to Content" }),
-        jsx(Button, { small: true, variant: planDocSaved && pendingSteps.length ? "primary" : "", action: "backlog-from-plan", disabled: planBusy || !planDocSaved || !pendingSteps.length || Boolean(backlogConfirm?.length), onClick: () => setBacklogConfirm(pendingSteps), children: planDocSaved && !pendingSteps.length ? "Backlog items created" : "Create backlog items" })
+        planEditable ? jsx(Button, { small: true, action: "pc-steps-edit", disabled: planBusy, onClick: startStepEdit, children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0448\u0430\u0433\u0438" }) : null,
+        jsx(Button, { small: true, variant: planDocSaved ? "" : "primary", action: "save-plan-document", disabled: planBusy || planDocSaved, onClick: savePlanDocument, children: planDocSaved ? "\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D \u0432 \xAB\u041A\u043E\u043D\u0442\u0435\u043D\u0442\xBB" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0432 \xAB\u041A\u043E\u043D\u0442\u0435\u043D\u0442\xBB" }),
+        jsx(Button, { small: true, variant: planDocSaved && pendingSteps.length ? "primary" : "", action: "backlog-from-plan", disabled: planBusy || !planDocSaved || !pendingSteps.length || Boolean(backlogConfirm?.length), onClick: () => setBacklogConfirm(pendingSteps), children: planDocSaved && !pendingSteps.length ? "\u0421\u043E\u0437\u0434\u0430\u043D\u043D\u044B\u0435 \u043F\u0443\u043D\u043A\u0442\u044B \u0431\u044D\u043A\u043B\u043E\u0433\u0430" : "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0431\u044D\u043A\u043B\u043E\u0433\u0430" })
       ] }),
       backlogConfirm?.length ? jsxs("div", { className: "dy-pc-proposal", "data-canvas-backlog-confirm": true, children: [
         jsx("small", { children: `Create ${number(backlogConfirm.length)} backlog item(s)? One confirm per batch, nothing auto-runs.` }),
-        jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "Goal (optional)" }), jsx("select", { "aria-label": "Goal", value: backlogGoal, onChange: (event) => setBacklogGoal(event.target.value), children: [
-          jsx("option", { value: "", children: "Not placed yet" }, "none"),
+        jsxs("label", { className: "dockyard-field", children: [jsx("span", { className: "field-optional-hint", children: "\u0426\u0435\u043B\u044C (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }), jsx("select", { "aria-label": "\u0426\u0435\u043B\u044C", value: backlogGoal, onChange: (event) => setBacklogGoal(event.target.value), children: [
+          jsx("option", { value: "", children: "\u0415\u0449\u0451 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E" }, "none"),
           ...backlogGoals.map((goal) => jsx("option", { value: String(goal.id), children: goal.title }, String(goal.id)))
         ] })] }),
-        jsx(Button, { small: true, variant: "primary", action: "confirm-backlog-from-plan", disabled: planBusy, onClick: createBacklogItems, children: "Confirm create" }),
+        jsx(Button, { small: true, variant: "primary", action: "confirm-backlog-from-plan", disabled: planBusy, onClick: createBacklogItems, children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0435" }),
         jsx(Button, { small: true, action: "cancel-backlog-from-plan", disabled: planBusy, onClick: () => {
           setBacklogConfirm(null);
           setBacklogGoal("");
-        }, children: "Cancel" })
+        }, children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
       ] }) : null
     ] }, "plan") : null
   ];
@@ -12631,7 +12631,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
   const modelValue = modelKey(canvas?.model);
   const modelChoices = (modelOptions?.providers ?? []).flatMap((provider) => (provider.models ?? []).map((model) => ({ value: `${provider.slug}::${model}`, label: `${provider.name ?? provider.slug} \xB7 ${model}` })));
   if (modelValue && !modelChoices.some((choice) => choice.value === modelValue)) modelChoices.unshift({ value: modelValue, label: `${canvas.model.provider} \xB7 ${canvas.model.model} (not configured)` });
-  const defaultModelLabel = modelOptions?.default?.model ? `Hermes main model (${modelOptions.default.model})` : "Hermes main model";
+  const defaultModelLabel = modelOptions?.default?.model ? `Hermes main model (${modelOptions.default.model})` : "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C Hermes";
   const effectiveTheme = theme ?? hostTheme;
   const chatState = chatPill ? "pill" : chatOpen ? "open" : "closed";
   const chatStyle = chatPos ? { left: `${chatPos.x}px`, top: `${chatPos.y}px`, right: "auto", bottom: "auto" } : void 0;
@@ -12679,16 +12679,16 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
     },
     children: [
       jsxs("div", { className: `dy-pc-board-bar${boardListOpen ? " open" : " collapsed"}`, children: [
-        jsx(Button, { small: true, action: "pc-board-toggle", ariaLabel: boardListOpen ? "Hide board list" : "Show board list", data: { title: boardListOpen ? "Hide board list" : "Show board list", "aria-expanded": boardListOpen ? "true" : "false", "data-canvas-board-toggle": boardListOpen ? "open" : "closed" }, onClick: () => setBoardListOpen((value) => !value), children: jsx(Icon, { name: boardListOpen ? "chevron-up" : "chevron-down" }) }),
+        jsx(Button, { small: true, action: "pc-board-toggle", ariaLabel: boardListOpen ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u043E\u043A" : "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u043E\u043A", data: { title: boardListOpen ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u043E\u043A" : "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u043E\u043A", "aria-expanded": boardListOpen ? "true" : "false", "data-canvas-board-toggle": boardListOpen ? "open" : "closed" }, onClick: () => setBoardListOpen((value) => !value), children: jsx(Icon, { name: boardListOpen ? "chevron-up" : "chevron-down" }) }),
         jsxs("div", { className: "dy-pc-board-title", children: [
           jsx("span", { className: "dockyard-card-label", children: "OPEN BOARD" }),
-          jsx("strong", { "data-canvas-board-name": true, children: canvas?.name ?? "Planning board" }),
+          jsx("strong", { "data-canvas-board-name": true, children: canvas?.name ?? "\u0414\u043E\u0441\u043A\u0430 \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F" }),
           jsxs("span", { className: "dy-pc-board-chip", "data-canvas-board-chip": boardStatus, children: [jsx("span", { className: "dy-pc-board-dot", "data-status": boardStatus }, "d"), CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus, readOnly ? " \xB7 read-only" : ""] }),
           jsx("span", { className: "dy-pc-board-count", children: `${listed.length || 1} board${(listed.length || 1) === 1 ? "" : "s"}` })
         ] }),
         boardScoped ? jsxs("label", { className: "dy-pc-board-status", children: [
           jsx("span", { className: "dy-pc-board-dot", "data-status": boardStatus }),
-          jsxs("select", { "data-canvas-board-status": true, "aria-label": "Board status", value: boardStatus, disabled: boardBusy || boardStatus === "archived", onChange: (event) => changeBoardStatus(event.target.value), children: [
+          jsxs("select", { "data-canvas-board-status": true, "aria-label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0434\u043E\u0441\u043A\u0438", value: boardStatus, disabled: boardBusy || boardStatus === "archived", onChange: (event) => changeBoardStatus(event.target.value), children: [
             jsx("option", { value: boardStatus, children: CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus }, boardStatus),
             ...statusMoves.map((status) => jsx("option", { value: status, children: `Move to ${CANVAS_BOARD_STATUS_LABELS[status]}` }, status))
           ] })
@@ -12697,78 +12697,78 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
       boardListOpen ? jsxs("div", { className: "dy-pc-board-panel", children: [
         // Actions sit ABOVE the list so they are found first.
         boardsApi ? boardForm ? jsxs("div", { className: "dy-pc-board-form", children: [
-          jsx("input", { "data-canvas-board-form": boardForm.mode, "aria-label": boardForm.mode === "rename" ? "New board name" : "Board name", maxLength: 120, value: boardForm.name, placeholder: "Board name", autoFocus: true, onChange: (event) => setBoardForm({ ...boardForm, name: event.target.value }), onKeyDown: (event) => {
+          jsx("input", { "data-canvas-board-form": boardForm.mode, "aria-label": boardForm.mode === "rename" ? "\u0418\u043C\u044F \u043D\u043E\u0432\u043E\u0439 \u0434\u043E\u0441\u043A\u0438" : "\u0418\u043C\u044F \u0434\u043E\u0441\u043A\u0438", maxLength: 120, value: boardForm.name, placeholder: "\u0418\u043C\u044F \u0434\u043E\u0441\u043A\u0438", autoFocus: true, onChange: (event) => setBoardForm({ ...boardForm, name: event.target.value }), onKeyDown: (event) => {
             if (event.key === "Enter") {
               event.preventDefault();
               submitBoardForm();
             }
             if (event.key === "Escape") setBoardForm(null);
           } }),
-          jsx(Button, { small: true, variant: "primary", action: "pc-board-form-save", disabled: boardBusy || !String(boardForm.name ?? "").trim(), onClick: submitBoardForm, children: boardForm.mode === "rename" ? "Rename" : "Create board" }),
-          jsx(Button, { small: true, action: "pc-board-form-cancel", onClick: () => setBoardForm(null), children: "Cancel" })
+          jsx(Button, { small: true, variant: "primary", action: "pc-board-form-save", disabled: boardBusy || !String(boardForm.name ?? "").trim(), onClick: submitBoardForm, children: boardForm.mode === "rename" ? "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C" : "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0434\u043E\u0441\u043A\u0443" }),
+          jsx(Button, { small: true, action: "pc-board-form-cancel", onClick: () => setBoardForm(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
         ] }) : jsxs("div", { className: "dy-pc-board-form", children: [
-          jsx(Button, { small: true, variant: "primary", action: "pc-board-new", disabled: boardBusy, onClick: () => setBoardForm({ mode: "create", name: "" }), children: [jsx(Icon, { name: "plus" }, "i"), "New board"] }),
-          jsx(Button, { small: true, action: "pc-board-rename", disabled: boardBusy || !boardScoped, onClick: () => setBoardForm({ mode: "rename", name: canvas?.name ?? "" }), children: [jsx(Icon, { name: "square-pen" }, "i"), "Rename open board"] }),
-          jsx(Button, { small: true, action: "pc-board-show-archived", disabled: boardBusy, data: { "aria-pressed": showArchived ? "true" : "false" }, onClick: toggleArchived, children: [jsx(Icon, { name: "archive" }, "i"), showArchived ? "Hide archived" : "Show archived"] })
+          jsx(Button, { small: true, variant: "primary", action: "pc-board-new", disabled: boardBusy, onClick: () => setBoardForm({ mode: "create", name: "" }), children: [jsx(Icon, { name: "plus" }, "i"), "\u041D\u043E\u0432\u0430\u044F \u0434\u043E\u0441\u043A\u0430"] }),
+          jsx(Button, { small: true, action: "pc-board-rename", disabled: boardBusy || !boardScoped, onClick: () => setBoardForm({ mode: "rename", name: canvas?.name ?? "" }), children: [jsx(Icon, { name: "square-pen" }, "i"), "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u0443\u044E \u0434\u043E\u0441\u043A\u0443"] }),
+          jsx(Button, { small: true, action: "pc-board-show-archived", disabled: boardBusy, data: { "aria-pressed": showArchived ? "true" : "false" }, onClick: toggleArchived, children: [jsx(Icon, { name: "archive" }, "i"), showArchived ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435" : "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435"] })
         ] }) : null,
-        jsxs("nav", { className: "dy-pc-board-list", "aria-label": "Planning boards", children: [
+        jsxs("nav", { className: "dy-pc-board-list", "aria-label": "\u0414\u043E\u0441\u043A\u0438 \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F", children: [
           ...listed.map((board) => {
             const active = board.canvas_id === canvas?.canvas_id;
             return jsxs("div", { className: `dy-pc-board-item${active ? " active" : ""}`, "data-canvas-board-row": board.canvas_id ?? "legacy", "data-canvas-board-active": active ? "true" : "false", children: [
               jsxs("button", { type: "button", className: `dy-pc-board-row${active ? " active" : ""}`, "aria-current": active ? "true" : void 0, "aria-label": active ? `${board.name ?? "Main board"} (open)` : `Open ${board.name ?? "board"}`, disabled: boardBusy, onClick: () => selectBoard(board), children: [
                 jsx("span", { className: "dy-pc-board-dot", "data-status": board.status ?? "draft" }),
-                jsxs("span", { className: "dy-pc-board-row-copy", children: [jsx("strong", { children: board.name ?? "Main board" }), jsx("small", { children: `${CANVAS_BOARD_STATUS_LABELS[board.status ?? "draft"] ?? board.status} \xB7 ${number(board.object_count ?? board.objects?.length ?? 0)} objects` })] }),
-                active ? jsx("span", { className: "dy-pc-board-open", "data-canvas-board-open": true, children: "Open" }) : null,
-                board.changed_since_plan ? jsx("span", { className: "dy-pc-board-warning", title: "Board changed since its plan was made", "aria-label": "Changed since plan", children: "!" }) : null
+                jsxs("span", { className: "dy-pc-board-row-copy", children: [jsx("strong", { children: board.name ?? "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u0434\u043E\u0441\u043A\u0430" }), jsx("small", { children: `${CANVAS_BOARD_STATUS_LABELS[board.status ?? "draft"] ?? board.status} \xB7 ${number(board.object_count ?? board.objects?.length ?? 0)} objects` })] }),
+                active ? jsx("span", { className: "dy-pc-board-open", "data-canvas-board-open": true, children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C" }) : null,
+                board.changed_since_plan ? jsx("span", { className: "dy-pc-board-warning", title: "\u0414\u043E\u0441\u043A\u0430 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0430\u0441\u044C \u043F\u043E\u0441\u043B\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043B\u0430\u043D\u0430", "aria-label": "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0441 \u043C\u043E\u043C\u0435\u043D\u0442\u0430 \u043F\u043B\u0430\u043D\u0430", children: "!" }) : null
               ] }),
-              boardsApi && board.canvas_id ? jsx(Button, { small: true, action: "pc-board-archive", ariaLabel: `Archive ${board.name}`, data: { title: liveBoards.length > 1 ? `Archive ${board.name}` : "The last live board cannot be archived \u2014 create another board first" }, disabled: boardBusy || liveBoards.length <= 1, onClick: () => archiveBoard(board), children: jsx(Icon, { name: "archive" }) }) : null
+              boardsApi && board.canvas_id ? jsx(Button, { small: true, action: "pc-board-archive", ariaLabel: `Archive ${board.name}`, data: { title: liveBoards.length > 1 ? `Archive ${board.name}` : "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0436\u0438\u0432\u0443\u044E \u0434\u043E\u0441\u043A\u0443 \u043D\u0435\u043B\u044C\u0437\u044F \u0430\u0440\u0445\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u2014 \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u0434\u0440\u0443\u0433\u0443\u044E" }, disabled: boardBusy || liveBoards.length <= 1, onClick: () => archiveBoard(board), children: jsx(Icon, { name: "archive" }) }) : null
             ] }, board.canvas_id ?? "legacy");
           }),
           boardsApi && showArchived ? archivedBoards.length ? archivedBoards.map((board) => jsxs("div", { className: "dy-pc-board-item archived", "data-canvas-board-row": board.canvas_id, "data-canvas-board-archived": true, children: [
             jsxs("span", { className: "dy-pc-board-row", children: [jsx("span", { className: "dy-pc-board-dot", "data-status": "archived" }), jsxs("span", { className: "dy-pc-board-row-copy", children: [jsx("strong", { children: board.name }), jsx("small", { children: `Archived \xB7 was ${CANVAS_BOARD_STATUS_LABELS[board.archived_from] ?? "Draft"}` })] })] }),
             jsx(Button, { small: true, action: "pc-board-restore", ariaLabel: `Restore ${board.name}`, data: { title: `Restore ${board.name}` }, disabled: boardBusy, onClick: () => restoreBoard(board), children: jsx(Icon, { name: "archive-restore" }) })
-          ] }, board.canvas_id)) : [jsx("p", { className: "dy-pc-board-archived", children: "No archived boards." }, "none")] : null
+          ] }, board.canvas_id)) : [jsx("p", { className: "dy-pc-board-archived", children: "\u041D\u0435\u0442 \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0445 \u0434\u043E\u0441\u043E\u043A." }, "none")] : null
         ] })
       ] }) : null,
       jsxs("div", { className: "dockyard-section-head", children: [
         jsxs("div", { children: [
           jsx("span", { className: "dockyard-card-label", children: "PLANNING CANVAS" }),
-          jsx("h2", { children: "Evidence to plan" }),
+          jsx("h2", { children: "\u041E\u0442 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432 \u043A \u043F\u043B\u0430\u043D\u0443" }),
           jsx("p", { children: `${number(objects.length)} object(s), ${number(connectors.length)} connector(s), revision ${number(revision)}${dirty ? " \xB7 unsaved edits" : " \xB7 saved"}${readOnly ? ` \xB7 ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} (read-only)` : ""}. The steward only proposes; nothing is applied automatically.` }),
           content.length ? jsx("p", { className: "dockyard-meta", children: `${number(content.length)} project content item(s) available to reference.` }) : null
         ] })
       ] }),
       jsxs("div", { className: `dy-pc${fullscreen ? " dy-pc-full" : ""}`, "data-canvas-theme": theme ?? void 0, "data-canvas-fullscreen": fullscreen ? "true" : "false", children: [
-        jsxs("div", { className: "dy-pc-toolbar dy-pc-ribbon", role: "toolbar", "aria-label": "Planning canvas tools", children: [
-          group("Edit", [
+        jsxs("div", { className: "dy-pc-toolbar dy-pc-ribbon", role: "toolbar", "aria-label": "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u043A\u0430\u043D\u0432\u0430\u0441\u0430", children: [
+          group("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C", [
             tool({ action: "pc-mode-select", icon: "mouse-pointer-2", name: "Select", tip: "Click to edit, drag a sticker to move it. Drag empty space or scroll to move around; Shift+drag to multi-select; Ctrl+scroll zooms.", variant: mode === "select" ? "primary" : "", onClick: () => {
               setMode("select");
               setPendingConnect(null);
             } }),
-            tool({ action: "pc-mode-connect", icon: "spline", name: "Connect", tip: "Click two stickers to link them with the chosen meaning.", variant: mode === "connect" ? "primary" : "", disabled: readOnly, onClick: () => {
+            tool({ action: "pc-mode-connect", icon: "spline", name: "\u0421\u043E\u0435\u0434\u0438\u043D\u0438\u0442\u044C", tip: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0434\u0432\u0430 \u0441\u0442\u0438\u043A\u0435\u0440\u0430, \u0447\u0442\u043E\u0431\u044B \u0441\u0432\u044F\u0437\u0430\u0442\u044C \u0438\u0445 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u043C \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C.", variant: mode === "connect" ? "primary" : "", disabled: readOnly, onClick: () => {
               setMode("connect");
               setPendingConnect(null);
               setNotice({ tone: "ok", text: "Connect mode: click a sticker, then the sticker to link it to. Dragging is off while connecting; scroll to move around, Esc cancels." });
             } }),
-            tool({ action: "pc-undo", icon: "undo-2", name: "Undo", tip: "Step back one board edit (Ctrl+Z).", disabled: !history.length || readOnly, onClick: undo }),
-            tool({ action: "pc-redo", icon: "redo-2", name: "Redo", tip: "Re-apply the edit you undid (Ctrl+Shift+Z).", disabled: !future.length || readOnly, onClick: redo }),
-            tool({ action: "pc-duplicate", icon: "copy-plus", name: "Duplicate", tip: "Copy the selected sticker(s) (Ctrl+D).", disabled: !(selectedIds.length || selectedId) || readOnly, onClick: duplicateSelection }),
-            tool({ action: "pc-tidy", icon: "layout-dashboard", name: "Tidy", tip: "Line every sticker up on a grid.", disabled: !objects.length || readOnly, onClick: tidy2 })
+            tool({ action: "pc-undo", icon: "undo-2", name: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C", tip: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0434\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0434\u043E\u0441\u043A\u0438 (Ctrl+Z).", disabled: !history.length || readOnly, onClick: undo }),
+            tool({ action: "pc-redo", icon: "redo-2", name: "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", tip: "\u041F\u043E\u0432\u0442\u043E\u0440\u043D\u043E \u043F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u043D\u0451\u043D\u043D\u0443\u044E \u043F\u0440\u0430\u0432\u043A\u0443 (Ctrl+Shift+Z).", disabled: !future.length || readOnly, onClick: redo }),
+            tool({ action: "pc-duplicate", icon: "copy-plus", name: "\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C", tip: "\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0442\u0438\u043A\u0435\u0440\u044B (Ctrl+D).", disabled: !(selectedIds.length || selectedId) || readOnly, onClick: duplicateSelection }),
+            tool({ action: "pc-tidy", icon: "layout-dashboard", name: "\u0410\u043A\u043A\u0443\u0440\u0430\u0442\u043D\u043E", tip: "\u0412\u044B\u0440\u043E\u0432\u043D\u044F\u0442\u044C \u0432\u0441\u0435 \u0441\u0442\u0438\u043A\u0435\u0440\u044B \u043F\u043E \u0441\u0435\u0442\u043A\u0435.", disabled: !objects.length || readOnly, onClick: tidy2 })
           ]),
           group("Add", [
             jsxs("div", { className: "dy-pc-add", children: [
-              jsx("select", { "data-canvas-kind-picker": true, "aria-label": "Object kind", value: kind, disabled: readOnly, onChange: (event) => setKind(event.target.value), children: CANVAS_OBJECT_KINDS.map((value) => jsx("option", { value, children: CANVAS_KIND_LABELS[value] }, value)) }),
-              jsx("input", { "data-canvas-draft": true, "aria-label": "New object text", value: draft, disabled: readOnly, maxLength: 4e3, placeholder: "Type a note, question or link\u2026", onChange: (event) => setDraft(event.target.value), onKeyDown: (event) => {
+              jsx("select", { "data-canvas-kind-picker": true, "aria-label": "\u0422\u0438\u043F \u043E\u0431\u044A\u0435\u043A\u0442\u0430", value: kind, disabled: readOnly, onChange: (event) => setKind(event.target.value), children: CANVAS_OBJECT_KINDS.map((value) => jsx("option", { value, children: CANVAS_KIND_LABELS[value] }, value)) }),
+              jsx("input", { "data-canvas-draft": true, "aria-label": "\u0422\u0435\u043A\u0441\u0442 \u043D\u043E\u0432\u043E\u0433\u043E \u043E\u0431\u044A\u0435\u043A\u0442\u0430", value: draft, disabled: readOnly, maxLength: 4e3, placeholder: "Type a note, question or link\u2026", onChange: (event) => setDraft(event.target.value), onKeyDown: (event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
                   addFromDraft();
                 }
               } }),
-              tool({ action: "add-canvas-object", icon: "plus", name: "Add object", tip: "Add the text above as a sticker of the chosen kind.", variant: "primary", disabled: !draft.trim() || readOnly, onClick: addFromDraft })
+              tool({ action: "add-canvas-object", icon: "plus", name: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0431\u044A\u0435\u043A\u0442", tip: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0442\u0435\u043A\u0441\u0442 \u0432\u044B\u0448\u0435 \u043A\u0430\u043A \u0441\u0442\u0438\u043A\u0435\u0440 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0442\u0438\u043F\u0430.", variant: "primary", disabled: !draft.trim() || readOnly, onClick: addFromDraft })
             ] }),
             jsxs("div", { className: "dy-pc-tool", ref: addMenuRef, children: [
-              jsx(Button, { small: true, action: "pc-add-menu", ariaLabel: "Add sticker", disabled: readOnly, data: { title: "Add sticker \u2014 pick a kind to drop a blank sticker", "aria-haspopup": "menu", "aria-expanded": addMenuOpen ? "true" : "false" }, onClick: () => setAddMenuOpen((value) => !value), children: [jsx(Icon, { name: "sticky-note" }, "i"), jsx(Icon, { name: "chevron-down" }, "c")] }),
-              jsx("div", { className: "dy-pc-addmenu", role: "menu", "aria-label": "Add sticker", hidden: !addMenuOpen, children: CANVAS_OBJECT_KINDS.map((value) => jsxs("button", {
+              jsx(Button, { small: true, action: "pc-add-menu", ariaLabel: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0442\u0438\u043A\u0435\u0440", disabled: readOnly, data: { title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0442\u0438\u043A\u0435\u0440 \u2014 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0438\u043F, \u0447\u0442\u043E\u0431\u044B \u0441\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0443\u0441\u0442\u043E\u0439 \u0441\u0442\u0438\u043A\u0435\u0440", "aria-haspopup": "menu", "aria-expanded": addMenuOpen ? "true" : "false" }, onClick: () => setAddMenuOpen((value) => !value), children: [jsx(Icon, { name: "sticky-note" }, "i"), jsx(Icon, { name: "chevron-down" }, "c")] }),
+              jsx("div", { className: "dy-pc-addmenu", role: "menu", "aria-label": "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0442\u0438\u043A\u0435\u0440", hidden: !addMenuOpen, children: CANVAS_OBJECT_KINDS.map((value) => jsxs("button", {
                 type: "button",
                 role: "menuitem",
                 "data-action": `add-canvas-${value}`,
@@ -12781,30 +12781,30 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
               }, `add-${value}`)) })
             ] })
           ]),
-          group("View", [
-            tool({ action: "pc-zoom-out", icon: "zoom-out", name: "Zoom out", tip: "Shrink the board view.", onClick: () => zoomBy(-CANVAS_ZOOM.step) }),
+          group("\u0412\u0438\u0434", [
+            tool({ action: "pc-zoom-out", icon: "zoom-out", name: "\u041E\u0442\u0434\u0430\u043B\u0438\u0442\u044C", tip: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u0432\u0438\u0434 \u0434\u043E\u0441\u043A\u0438.", onClick: () => zoomBy(-CANVAS_ZOOM.step) }),
             jsx("span", { className: "dy-pc-readout", "data-canvas-zoom-readout": String(Math.round(zoom * 100)), children: `${Math.round(zoom * 100)}%` }, "zoom"),
-            tool({ action: "pc-zoom-in", icon: "zoom-in", name: "Zoom in", tip: "Enlarge the board view.", onClick: () => zoomBy(CANVAS_ZOOM.step) }),
-            tool({ action: "pc-fit", icon: "scan", name: "Fit", tip: "Fit every sticker in view.", onClick: fit }),
-            tool({ action: "pc-fullscreen", icon: fullscreen ? "minimize-2" : "maximize-2", name: fullscreen ? "Exit full screen" : "Full screen", tip: fullscreen ? "Back to the normal page layout (Esc)." : "Give the board the whole window. Esc returns.", variant: fullscreen ? "primary" : "", onClick: () => setFullscreen((value) => !value), data: { "aria-pressed": fullscreen ? "true" : "false" } }),
-            tool({ action: "pc-theme-light", icon: "sun", name: "Light canvas", tip: "Light canvas for this board only. Click again to follow the app.", variant: theme === "light" ? "primary" : "", onClick: () => setBoardTheme("light"), data: { "aria-pressed": theme === "light" ? "true" : "false" } }),
-            tool({ action: "pc-theme-dark", icon: "moon", name: "Dark canvas", tip: "Dark glowing canvas for this board only. Click again to follow the app.", variant: theme === "dark" ? "primary" : "", onClick: () => setBoardTheme("dark"), data: { "aria-pressed": theme === "dark" ? "true" : "false" } })
+            tool({ action: "pc-zoom-in", icon: "zoom-in", name: "\u041F\u0440\u0438\u0431\u043B\u0438\u0437\u0438\u0442\u044C", tip: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u0432\u0438\u0434 \u0434\u043E\u0441\u043A\u0438.", onClick: () => zoomBy(CANVAS_ZOOM.step) }),
+            tool({ action: "pc-fit", icon: "scan", name: "\u0412\u043F\u0438\u0441\u0430\u0442\u044C", tip: "\u0412\u043F\u0438\u0441\u0430\u0442\u044C \u0432\u0441\u0435 \u0441\u0442\u0438\u043A\u0435\u0440\u044B \u0432 \u0432\u0438\u0434.", onClick: fit }),
+            tool({ action: "pc-fullscreen", icon: fullscreen ? "minimize-2" : "maximize-2", name: fullscreen ? "\u0412\u044B\u0439\u0442\u0438 \u0438\u0437 \u043F\u043E\u043B\u043D\u043E\u044D\u043A\u0440\u0430\u043D\u043D\u043E\u0433\u043E" : "\u041D\u0430 \u0432\u0435\u0441\u044C \u044D\u043A\u0440\u0430\u043D", tip: fullscreen ? "\u041D\u0430\u0437\u0430\u0434 \u043A \u043E\u0431\u044B\u0447\u043D\u043E\u0439 \u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0435 (Esc)." : "\u041E\u0442\u0434\u0430\u0442\u044C \u0434\u043E\u0441\u043A\u0435 \u0432\u0441\u0451 \u043E\u043A\u043D\u043E. Esc \u2014 \u043D\u0430\u0437\u0430\u0434.", variant: fullscreen ? "primary" : "", onClick: () => setFullscreen((value) => !value), data: { "aria-pressed": fullscreen ? "true" : "false" } }),
+            tool({ action: "pc-theme-light", icon: "sun", name: "\u0421\u0432\u0435\u0442\u043B\u044B\u0439 \u043A\u0430\u043D\u0432\u0430\u0441", tip: "\u0421\u0432\u0435\u0442\u043B\u044B\u0439 \u0445\u043E\u043B\u0441\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0438. \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437, \u0447\u0442\u043E\u0431\u044B \u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u044C \u0437\u0430 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435\u043C.", variant: theme === "light" ? "primary" : "", onClick: () => setBoardTheme("light"), data: { "aria-pressed": theme === "light" ? "true" : "false" } }),
+            tool({ action: "pc-theme-dark", icon: "moon", name: "\u0422\u0451\u043C\u043D\u044B\u0439 \u043A\u0430\u043D\u0432\u0430\u0441", tip: "\u0422\u0451\u043C\u043D\u044B\u0439 \u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0439\u0441\u044F \u0445\u043E\u043B\u0441\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0438. \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437, \u0447\u0442\u043E\u0431\u044B \u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u044C \u0437\u0430 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435\u043C.", variant: theme === "dark" ? "primary" : "", onClick: () => setBoardTheme("dark"), data: { "aria-pressed": theme === "dark" ? "true" : "false" } })
           ]),
           group("AI", [
-            tool({ action: "pc-curate", icon: "sparkles", name: "Curate", tip: "Ask the steward to turn this board into proposals.", disabled: busy || readOnly, onClick: () => curate() }),
-            tool({ action: "pc-review", icon: "list-checks", name: "Review", tip: "Count what is on this board; nothing is sent to AI.", disabled: busy, onClick: reviewCanvas })
+            tool({ action: "pc-curate", icon: "sparkles", name: "Curate", tip: "\u041F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0441\u0442\u044E\u0430\u0440\u0434\u0430 \u043F\u0440\u0435\u0432\u0440\u0430\u0442\u0438\u0442\u044C \u044D\u0442\u0443 \u0434\u043E\u0441\u043A\u0443 \u0432 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F.", disabled: busy || readOnly, onClick: () => curate() }),
+            tool({ action: "pc-review", icon: "list-checks", name: "\u041E\u0431\u0437\u043E\u0440", tip: "\u041F\u043E\u0434\u0441\u0447\u0451\u0442 \u0442\u043E\u0433\u043E, \u0447\u0442\u043E \u0435\u0441\u0442\u044C \u043D\u0430 \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0435; \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0418\u0418.", disabled: busy, onClick: reviewCanvas })
           ]),
           jsx("div", { className: "dy-pc-ribbon-fill", "aria-hidden": true }, "fill"),
-          group("Save", [
-            tool({ action: "pc-reload", icon: "refresh-cw", name: "Reload", tip: "Re-read the saved board; discards unsaved edits.", disabled: busy, onClick: reload }),
-            tool({ action: "pc-save", icon: "save", name: "Save canvas", tip: "Save this board as a new revision.", variant: "primary", label: busy ? "Working..." : "Save", disabled: busy || readOnly, onClick: save2 })
+          group("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", [
+            tool({ action: "pc-reload", icon: "refresh-cw", name: "\u041F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C", tip: "\u041F\u0435\u0440\u0435\u0447\u0438\u0442\u0430\u0442\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u0443\u044E \u0434\u043E\u0441\u043A\u0443; \u043D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043F\u0440\u0430\u0432\u043A\u0438 \u043E\u0442\u0431\u0440\u0430\u0441\u044B\u0432\u0430\u044E\u0442\u0441\u044F.", disabled: busy, onClick: reload }),
+            tool({ action: "pc-save", icon: "save", name: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043D\u0432\u0430\u0441", tip: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u0434\u043E\u0441\u043A\u0443 \u043A\u0430\u043A \u043D\u043E\u0432\u0443\u044E \u0440\u0435\u0432\u0438\u0437\u0438\u044E.", variant: "primary", label: busy ? "\u0420\u0430\u0431\u043E\u0442\u0430\u0435\u043C\u2026" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C", disabled: busy || readOnly, onClick: save2 })
           ])
         ] }),
         objects.length >= 2 && !readOnly ? jsxs("div", { className: "dy-pc-linkbar", "data-canvas-connector-editor": true, children: [
-          jsxs("label", { children: [jsx("span", { children: "From" }), jsx("select", { value: linkSource, onChange: (event) => setLinkSource(event.target.value), children: [jsx("option", { value: "", children: "Choose source" }, "none"), ...objects.map((item) => jsx("option", { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
-          jsxs("label", { children: [jsx("span", { children: "Relationship" }), jsx("select", { value: linkMeaning, onChange: (event) => setLinkMeaning(event.target.value), children: CANVAS_CONNECTOR_MEANINGS.map((value) => jsx("option", { value, children: value }, value)) })] }),
-          jsxs("label", { children: [jsx("span", { children: "To" }), jsx("select", { value: linkTarget, onChange: (event) => setLinkTarget(event.target.value), children: [jsx("option", { value: "", children: "Choose target" }, "none"), ...objects.map((item) => jsx("option", { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
-          jsx(Button, { small: true, action: "connect-canvas-objects", disabled: !linkSource || !linkTarget || linkSource === linkTarget, onClick: connectFromEditor, children: "Connect objects" })
+          jsxs("label", { children: [jsx("span", { children: "From" }), jsx("select", { value: linkSource, onChange: (event) => setLinkSource(event.target.value), children: [jsx("option", { value: "", children: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A" }, "none"), ...objects.map((item) => jsx("option", { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
+          jsxs("label", { children: [jsx("span", { children: "\u0421\u0432\u044F\u0437\u044C" }), jsx("select", { value: linkMeaning, onChange: (event) => setLinkMeaning(event.target.value), children: CANVAS_CONNECTOR_MEANINGS.map((value) => jsx("option", { value, children: value }, value)) })] }),
+          jsxs("label", { children: [jsx("span", { children: "To" }), jsx("select", { value: linkTarget, onChange: (event) => setLinkTarget(event.target.value), children: [jsx("option", { value: "", children: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435" }, "none"), ...objects.map((item) => jsx("option", { value: item.id, children: canvasText(item) || item.id }, item.id))] })] }),
+          jsx(Button, { small: true, action: "connect-canvas-objects", disabled: !linkSource || !linkTarget || linkSource === linkTarget, onClick: connectFromEditor, children: "\u0421\u043E\u0435\u0434\u0438\u043D\u0438\u0442\u044C \u043E\u0431\u044A\u0435\u043A\u0442\u044B" })
         ] }) : null,
         jsxs("div", {
           ref: stageRef,
@@ -12813,7 +12813,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
           "data-pc-mode": mode,
           "data-pc-panning": panning ? "true" : "false",
           role: "group",
-          "aria-label": "Planning canvas stage",
+          "aria-label": "\u042D\u0442\u0430\u043F \u043A\u0430\u043D\u0432\u0430\u0441\u0430 \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
           tabIndex: 0,
           onPointerDown: beginPan,
           onPointerMove: mode === "connect" && pendingConnect ? (event) => {
@@ -12834,13 +12834,13 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
                 ...renderFrames(),
                 ...objects.map(renderObject),
                 marquee ? jsx("div", { className: "dy-pc-marquee", "data-pc-marquee": true, style: { left: `${marquee.x}px`, top: `${marquee.y}px`, width: `${marquee.width}px`, height: `${marquee.height}px` } }) : null,
-                objects.length === 0 ? jsx("p", { className: "dy-pc-empty", children: "No canvas objects yet. Capture a note or evidence above, then drag it into place." }) : null
+                objects.length === 0 ? jsx("p", { className: "dy-pc-empty", children: "\u041E\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u043D\u0430 \u0445\u043E\u043B\u0441\u0442\u0435 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0417\u0430\u0445\u0432\u0430\u0442\u0438\u0442\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0443 \u0438\u043B\u0438 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u0432\u044B\u0448\u0435 \u0438 \u043F\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u043D\u0430 \u043C\u0435\u0441\u0442\u043E." }) : null
               ]
             }),
             jsx("div", { className: `dy-pc-backdrop${selected ? " open" : ""}`, "data-pc-backdrop": true, onClick: () => setSelectedId(null) }),
-            jsxs("aside", { ref: chatRef, className: `dy-pc-chat ${chatState}${chatDragging ? " dragging" : ""}${selected ? " behind-drawer" : ""}`, "data-canvas-assistant": true, "data-canvas-chat-state": chatState, style: chatStyle, "aria-label": "Steward chat", children: [
+            jsxs("aside", { ref: chatRef, className: `dy-pc-chat ${chatState}${chatDragging ? " dragging" : ""}${selected ? " behind-drawer" : ""}`, "data-canvas-assistant": true, "data-canvas-chat-state": chatState, style: chatStyle, "aria-label": "\u0427\u0430\u0442 \u0441\u043E \u0441\u0442\u044E\u0430\u0440\u0434\u043E\u043C", children: [
               jsxs("div", { className: "dy-pc-chat-bar", children: [
-                jsx("span", { className: "dy-pc-chat-grip", "data-canvas-chat-grip": true, role: "button", tabIndex: 0, "aria-label": "Move chat window (arrow keys; Home resets)", title: "Drag to move \xB7 arrow keys move \xB7 Home resets", onPointerDown: beginChatDrag, onKeyDown: nudgeChat, children: jsx(Icon, { name: "grip-horizontal" }) }),
+                jsx("span", { className: "dy-pc-chat-grip", "data-canvas-chat-grip": true, role: "button", tabIndex: 0, "aria-label": "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u043E\u043A\u043D\u043E \u0447\u0430\u0442\u0430 (\u0441\u0442\u0440\u0435\u043B\u043A\u0438; Home \u2014 \u0441\u0431\u0440\u043E\u0441)", title: "Drag to move \xB7 arrow keys move \xB7 Home resets", onPointerDown: beginChatDrag, onKeyDown: nudgeChat, children: jsx(Icon, { name: "grip-horizontal" }) }),
                 jsxs("button", { type: "button", className: "dy-pc-chat-h", "data-action": "pc-chat-toggle", "aria-expanded": chatOpen && !chatPill ? "true" : "false", onClick: toggleChat, children: [
                   jsx("span", { className: "av", "aria-hidden": true, children: jsx(Icon, { name: "bot" }) }),
                   jsxs("span", { style: { flex: "1 1 auto", minWidth: 0 }, children: [
@@ -12849,26 +12849,26 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
                   ] }),
                   chatPill ? null : jsx("span", { className: "tog", "aria-hidden": true, children: chatOpen ? "\u25BC" : "\u25B2" })
                 ] }),
-                chatPill ? null : jsx(Button, { small: true, action: "pc-chat-minimise", ariaLabel: "Minimise chat to a pill", data: { title: "Minimise to a pill" }, onClick: minimiseChat, children: jsx(Icon, { name: "minimize-2" }) }),
-                chatPill ? null : jsx(Button, { small: true, action: "pc-chat-expand", ariaLabel: "Expand chat into a large view", data: { title: "Expand for reading and editing plans" }, onClick: openExpanded, children: jsx(Icon, { name: "maximize-2" }) })
+                chatPill ? null : jsx(Button, { small: true, action: "pc-chat-minimise", ariaLabel: "\u0421\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u0447\u0430\u0442 \u0432 \u043F\u0438\u043B\u044E\u043B\u044E", data: { title: "\u0421\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u0432 \u043F\u0438\u043B\u044E\u043B\u044E" }, onClick: minimiseChat, children: jsx(Icon, { name: "minimize-2" }) }),
+                chatPill ? null : jsx(Button, { small: true, action: "pc-chat-expand", ariaLabel: "\u0420\u0430\u0437\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u0447\u0430\u0442 \u0432 \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0432\u0438\u0434", data: { title: "\u0420\u0430\u0437\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F \u0438 \u043F\u0440\u0430\u0432\u043A\u0438 \u043F\u043B\u0430\u043D\u043E\u0432" }, onClick: openExpanded, children: jsx(Icon, { name: "maximize-2" }) })
               ] }),
               boardScoped ? jsxs("label", { className: "dy-pc-chat-model", children: [
-                jsx("span", { children: "Model" }),
-                jsxs("select", { "data-canvas-model": true, "aria-label": "Model for this board", value: modelValue, disabled: boardBusy || readOnly, onChange: (event) => setBoardModel(event.target.value), children: [
+                jsx("span", { children: "\u041C\u043E\u0434\u0435\u043B\u044C" }),
+                jsxs("select", { "data-canvas-model": true, "aria-label": "\u041C\u043E\u0434\u0435\u043B\u044C \u0434\u043B\u044F \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0438", value: modelValue, disabled: boardBusy || readOnly, onChange: (event) => setBoardModel(event.target.value), children: [
                   jsx("option", { value: "", children: defaultModelLabel }, "default"),
                   ...modelChoices.map((choice) => jsx("option", { value: choice.value, children: choice.label }, choice.value))
                 ] })
               ] }) : null,
               jsxs("div", { className: "dy-pc-chat-b", children: chatBody() }),
               jsxs("div", { className: "dy-pc-chat-f", children: [
-                jsx("span", { className: "dy-pc-readout", children: readOnly ? `Board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} \u2014 reopen it to chat.` : "Approval contract: scratch + suggested only." }),
-                jsx("input", { "data-canvas-chat-input": true, "aria-label": "Message the steward", value: chatDraft, maxLength: 4e3, disabled: readOnly, placeholder: "Ask the steward about this board...", onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => {
+                jsx("span", { className: "dy-pc-readout", children: readOnly ? `Board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} \u2014 reopen it to chat.` : "\u041A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F: \u0442\u043E\u043B\u044C\u043A\u043E \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A + \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435." }),
+                jsx("input", { "data-canvas-chat-input": true, "aria-label": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0441\u0442\u044E\u0430\u0440\u0434\u0443", value: chatDraft, maxLength: 4e3, disabled: readOnly, placeholder: "\u0421\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0441\u0442\u044E\u0430\u0440\u0434\u0430 \u043E\u0431 \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0435\u2026", onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
                     sendChat();
                   }
                 } }),
-                jsx(Button, { small: true, action: "pc-chat-send", ariaLabel: "Send", disabled: chatBusy || !chatDraft.trim() || readOnly, onClick: sendChat, children: [jsx(Icon, { name: "send" }, "i"), "Send"] }),
+                jsx(Button, { small: true, action: "pc-chat-send", ariaLabel: "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C", disabled: chatBusy || !chatDraft.trim() || readOnly, onClick: sendChat, children: [jsx(Icon, { name: "send" }, "i"), "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C"] }),
                 jsx(Button, { small: true, action: "pc-chat-stop", ariaLabel: "Stop", disabled: !chatBusy, onClick: stopChat, children: [jsx(Icon, { name: "square" }, "i"), "Stop"] })
               ] })
             ] }),
@@ -12879,18 +12879,18 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
                 event.stopPropagation();
                 setExpanded(false);
               }
-            }, children: jsxs("div", { className: `dy-pc-overlay-card${stepsDraft ? " steps" : " chat"}`, role: "dialog", "aria-modal": "true", "aria-label": stepsDraft ? "Edit plan steps" : "Steward chat \u2014 large view", children: [
+            }, children: jsxs("div", { className: `dy-pc-overlay-card${stepsDraft ? " steps" : " chat"}`, role: "dialog", "aria-modal": "true", "aria-label": stepsDraft ? "\u0428\u0430\u0433\u0438 \u043F\u043B\u0430\u043D\u0430" : "\u0427\u0430\u0442 \u0441\u043E \u0441\u0442\u044E\u0430\u0440\u0434\u043E\u043C \u2014 \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0432\u0438\u0434", children: [
               jsxs("div", { className: "dy-pc-overlay-h", children: [
                 jsx("span", { className: "dy-pc-overlay-av", "aria-hidden": true, children: jsx(Icon, { name: "bot" }) }),
                 jsxs("div", { className: "dy-pc-overlay-title", children: [
-                  jsx("strong", { children: stepsDraft ? "Edit plan steps" : "Steward" }),
+                  jsx("strong", { children: stepsDraft ? "\u0428\u0430\u0433\u0438 \u043F\u043B\u0430\u043D\u0430" : "Steward" }),
                   jsx("span", { children: `${canvas?.name ?? "Planning board"} \xB7 ${CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus}` })
                 ] }),
-                jsx(Button, { small: true, action: "pc-expanded-close", ariaLabel: "Close large view", data: { title: "Back to the canvas (Esc)" }, onClick: () => setExpanded(false), children: jsx(Icon, { name: "minimize-2" }) })
+                jsx(Button, { small: true, action: "pc-expanded-close", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u0432\u0438\u0434", data: { title: "\u041D\u0430\u0437\u0430\u0434 \u043A \u043A\u0430\u043D\u0432\u0430\u0441\u0443 (Esc)" }, onClick: () => setExpanded(false), children: jsx(Icon, { name: "minimize-2" }) })
               ] }),
               !stepsDraft && boardScoped ? jsxs("label", { className: "dy-pc-chat-model dy-pc-overlay-model", children: [
-                jsx("span", { children: "Model" }),
-                jsxs("select", { "aria-label": "Model for this board (large view)", value: modelValue, disabled: boardBusy || readOnly, onChange: (event) => setBoardModel(event.target.value), children: [
+                jsx("span", { children: "\u041C\u043E\u0434\u0435\u043B\u044C" }),
+                jsxs("select", { "aria-label": "\u041C\u043E\u0434\u0435\u043B\u044C \u0434\u043E\u0441\u043A\u0438 (\u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u043E\u043A\u043D\u043E)", value: modelValue, disabled: boardBusy || readOnly, onChange: (event) => setBoardModel(event.target.value), children: [
                   jsx("option", { value: "", children: defaultModelLabel }, "default"),
                   ...modelChoices.map((choice) => jsx("option", { value: choice.value, children: choice.label }, choice.value))
                 ] })
@@ -12909,11 +12909,11 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
                 ] }) : null
               ] }),
               stepsDraft ? jsxs("div", { className: "dy-pc-overlay-f", children: [
-                jsx(Button, { small: true, action: "pc-step-add", onClick: addStep, disabled: stepsDraft.length >= 50, children: [jsx(Icon, { name: "plus" }, "i"), "Add step"] }),
-                jsx(Button, { small: true, action: "pc-steps-cancel", onClick: () => setStepsDraft(null), children: "Cancel" }),
-                jsx(Button, { small: true, variant: "primary", action: "pc-steps-save", disabled: planBusy, onClick: saveSteps, children: "Save steps" })
+                jsx(Button, { small: true, action: "pc-step-add", onClick: addStep, disabled: stepsDraft.length >= 50, children: [jsx(Icon, { name: "plus" }, "i"), "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0448\u0430\u0433"] }),
+                jsx(Button, { small: true, action: "pc-steps-cancel", onClick: () => setStepsDraft(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+                jsx(Button, { small: true, variant: "primary", action: "pc-steps-save", disabled: planBusy, onClick: saveSteps, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0448\u0430\u0433\u0438" })
               ] }) : jsxs("div", { className: "dy-pc-overlay-f dy-pc-overlay-composer", children: [
-                jsx("textarea", { "data-canvas-chat-input-large": true, "aria-label": "Message the steward (large view)", value: chatDraft, maxLength: 4e3, rows: 3, disabled: readOnly, placeholder: readOnly ? `Board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} \u2014 reopen it to chat.` : "Ask the steward about this board... (Enter sends, Shift+Enter new line)", onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => {
+                jsx("textarea", { "data-canvas-chat-input-large": true, "aria-label": "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0441\u0442\u044E\u0430\u0440\u0434\u0443 (\u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u043E\u043A\u043D\u043E)", value: chatDraft, maxLength: 4e3, rows: 3, disabled: readOnly, placeholder: readOnly ? `Board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} \u2014 reopen it to chat.` : "\u0421\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0441\u0442\u044E\u0430\u0440\u0434\u0430 \u043E\u0431 \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0435\u2026 (Enter \u2014 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C, Shift+Enter \u2014 \u043D\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u043E\u043A\u0430)", onChange: (event) => setChatDraft(event.target.value), onKeyDown: (event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
                     sendChat();
@@ -12921,7 +12921,7 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
                 } }),
                 jsxs("div", { className: "dy-pc-overlay-actions", children: [
                   jsx(Button, { small: true, action: "pc-chat-stop-large", ariaLabel: "Stop", disabled: !chatBusy, onClick: stopChat, children: [jsx(Icon, { name: "square" }, "i"), "Stop"] }),
-                  jsx(Button, { small: true, variant: "primary", action: "pc-chat-send-large", ariaLabel: "Send", disabled: chatBusy || !chatDraft.trim() || readOnly, onClick: sendChat, children: [jsx(Icon, { name: "send" }, "i"), "Send"] })
+                  jsx(Button, { small: true, variant: "primary", action: "pc-chat-send-large", ariaLabel: "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C", disabled: chatBusy || !chatDraft.trim() || readOnly, onClick: sendChat, children: [jsx(Icon, { name: "send" }, "i"), "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C"] })
                 ] })
               ] })
             ] }) }) : null,
@@ -12933,11 +12933,11 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
             }, children: [
               jsxs("div", { className: "dy-pc-overlay-h", children: [
                 jsx("span", { className: "dy-pc-overlay-av", "aria-hidden": true, children: jsx(Icon, { name: "list-checks" }) }),
-                jsx("strong", { id: "dy-pc-status-title", children: "Change board status?" })
+                jsx("strong", { id: "dy-pc-status-title", children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441 \u0434\u043E\u0441\u043A\u0438?" })
               ] }),
               jsx("p", { className: "dy-pc-leave-body", id: "dy-pc-status-body", children: `Move ${canvas?.name ?? "this board"} from ${CANVAS_BOARD_STATUS_LABELS[boardStatus] ?? boardStatus} to ${CANVAS_BOARD_STATUS_LABELS[pendingStatus] ?? pendingStatus}?${CANVAS_READ_ONLY.includes(pendingStatus) ? " The board becomes read-only until you move it back." : ""}` }),
               jsxs("div", { className: "dy-pc-overlay-f", children: [
-                jsx(Button, { small: true, action: "pc-status-cancel", onClick: () => setPendingStatus(null), children: "Cancel" }),
+                jsx(Button, { small: true, action: "pc-status-cancel", onClick: () => setPendingStatus(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
                 jsx(Button, { small: true, variant: "primary", action: "pc-status-confirm", disabled: boardBusy, onClick: confirmBoardStatus, children: `Move to ${CANVAS_BOARD_STATUS_LABELS[pendingStatus] ?? pendingStatus}` })
               ] })
             ] }) }) : null,
@@ -12949,13 +12949,13 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
             }, children: [
               jsxs("div", { className: "dy-pc-overlay-h", children: [
                 jsx("span", { className: "dy-pc-overlay-av warn", "aria-hidden": true, children: jsx(Icon, { name: "save" }) }),
-                jsx("strong", { id: "dy-pc-leave-title", children: "Unsaved changes" })
+                jsx("strong", { id: "dy-pc-leave-title", children: "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
               ] }),
               jsx("p", { className: "dy-pc-leave-body", id: "dy-pc-leave-body", children: `${canvas?.name ?? "This board"} has unsaved edits. Save them before you ${pendingLeave.label}?` }),
               jsxs("div", { className: "dy-pc-overlay-f", children: [
-                jsx(Button, { small: true, action: "pc-leave-cancel", autoFocus: true, onClick: () => setPendingLeave(null), children: "Cancel" }),
-                jsx(Button, { small: true, variant: "danger", action: "pc-leave-discard", disabled: busy, onClick: leaveDiscarding, children: "Discard changes" }),
-                jsx(Button, { small: true, variant: "primary", action: "pc-leave-save", disabled: busy || readOnly, onClick: leaveSaving, children: busy ? "Saving..." : "Save and continue" })
+                jsx(Button, { small: true, action: "pc-leave-cancel", autoFocus: true, onClick: () => setPendingLeave(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+                jsx(Button, { small: true, variant: "danger", action: "pc-leave-discard", disabled: busy, onClick: leaveDiscarding, children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" }),
+                jsx(Button, { small: true, variant: "primary", action: "pc-leave-save", disabled: busy || readOnly, onClick: leaveSaving, children: busy ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C" })
               ] })
             ] }) }) : null,
             jsxs("aside", { className: `dy-pc-drawer${selected ? " open" : ""}`, "data-canvas-drawer": selected?.id ?? "none", "aria-hidden": selected ? void 0 : "true", onKeyDown: (event) => {
@@ -12967,15 +12967,15 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
             }, children: [
               jsxs("div", { className: "dy-pc-drawer-h", children: [
                 jsxs("div", { children: [
-                  jsx("strong", { children: selected ? `${CANVAS_KIND_LABELS[selected.kind] ?? selected.kind} \xB7 selected` : "Selected object" }),
-                  jsx("span", { className: "dy-pc-drawer-meta", children: selected ? `x ${Math.round(canvasNumber(selected.x))} \xB7 y ${Math.round(canvasNumber(selected.y))}` : "Nothing selected" })
+                  jsx("strong", { children: selected ? `${CANVAS_KIND_LABELS[selected.kind] ?? selected.kind} \xB7 selected` : "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u043E\u0431\u044A\u0435\u043A\u0442" }),
+                  jsx("span", { className: "dy-pc-drawer-meta", children: selected ? `x ${Math.round(canvasNumber(selected.x))} \xB7 y ${Math.round(canvasNumber(selected.y))}` : "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E" })
                 ] }),
-                jsx(Button, { small: true, action: "pc-close-drawer", ariaLabel: "Close selection drawer", onClick: () => setSelectedId(null), children: "\u2715" })
+                jsx(Button, { small: true, action: "pc-close-drawer", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043D\u0435\u043B\u044C \u0432\u044B\u0431\u043E\u0440\u0430", onClick: () => setSelectedId(null), children: "\u2715" })
               ] }),
               selected ? jsxs("div", { className: "dy-pc-drawer-b", children: [
                 readOnly ? jsx("p", { className: "dy-pc-drawer-meta", "data-canvas-drawer-readonly": true, children: `This board is ${CANVAS_BOARD_STATUS_LABELS[boardStatus]} \u2014 details are view-only.` }) : null,
-                jsxs("label", { children: [jsx("span", { children: "Title" }), jsx("input", { "data-canvas-object-title": true, maxLength: 4e3, value: drawerText, readOnly, disabled: readOnly, onChange: (event) => setDrawerText(event.target.value) })] }),
-                jsxs("label", { children: [jsx("span", { children: "Kind" }), jsx("select", { "data-canvas-object-kind": true, value: drawerKind, disabled: readOnly, onChange: (event) => setDrawerKind(event.target.value), children: CANVAS_OBJECT_KINDS.map((value) => jsx("option", { value, children: CANVAS_KIND_LABELS[value] }, value)) })] }),
+                jsxs("label", { children: [jsx("span", { children: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A" }), jsx("input", { "data-canvas-object-title": true, maxLength: 4e3, value: drawerText, readOnly, disabled: readOnly, onChange: (event) => setDrawerText(event.target.value) })] }),
+                jsxs("label", { children: [jsx("span", { children: "\u0422\u0438\u043F" }), jsx("select", { "data-canvas-object-kind": true, value: drawerKind, disabled: readOnly, onChange: (event) => setDrawerKind(event.target.value), children: CANVAS_OBJECT_KINDS.map((value) => jsx("option", { value, children: CANVAS_KIND_LABELS[value] }, value)) })] }),
                 jsxs("div", { className: "dy-pc-colours-field", children: [
                   jsx("span", { className: "dy-pc-field-label", id: "dy-pc-colour-label", children: `Sticker colour \xB7 ${selectedColour ? CANVAS_STICKER_LABELS[selectedColour] : "Default for kind"}` }),
                   // Owner 01/10: a coloured dot per choice so the colour is visible before
@@ -12986,19 +12986,19 @@ function PlanningCanvasPanel({ project, canvas: initialCanvas, content = [], onR
                     "data-canvas-colour-option": value ?? "default",
                     disabled: readOnly,
                     "aria-pressed": (selectedColour ?? null) === value ? "true" : "false",
-                    "aria-label": value ? CANVAS_STICKER_LABELS[value] : "Default for kind",
-                    title: value ? CANVAS_STICKER_LABELS[value] : "Default for kind",
+                    "aria-label": value ? CANVAS_STICKER_LABELS[value] : "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E \u0434\u043B\u044F \u0442\u0438\u043F\u0430",
+                    title: value ? CANVAS_STICKER_LABELS[value] : "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E \u0434\u043B\u044F \u0442\u0438\u043F\u0430",
                     onClick: () => setSelectedColour(value),
                     children: jsx("span", { className: `dy-pc-colour-dot${value ? "" : " default"}`, style: { background: value ? `var(--dy-pc-sticker-${value})` : `var(--dy-pc-fill-${selected.kind})` } })
                   }, value ?? "default")) })
                 ] }),
                 ...renderFieldEditors(),
-                jsx("p", { className: "dy-pc-drawer-meta", children: selected.evidence_ref ? `Evidence reference: ${selected.evidence_ref}` : "No evidence reference on this object." }),
+                jsx("p", { className: "dy-pc-drawer-meta", children: selected.evidence_ref ? `Evidence reference: ${selected.evidence_ref}` : "\u0423 \u043E\u0431\u044A\u0435\u043A\u0442\u0430 \u043D\u0435\u0442 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430." }),
                 readOnly ? null : jsxs("div", { className: "dockyard-form-actions", children: [
-                  jsx(Button, { small: true, variant: "danger", action: "remove-canvas-object", disabled: busy, onClick: removeSelected, children: "Remove object" }),
+                  jsx(Button, { small: true, variant: "danger", action: "remove-canvas-object", disabled: busy, onClick: removeSelected, children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043E\u0431\u044A\u0435\u043A\u0442" }),
                   jsx(Button, { small: true, variant: "primary", action: "apply-canvas-object", disabled: busy || !drawerText.trim() || Boolean(richProblem), onClick: applyDrawer, children: "Apply" })
                 ] })
-              ] }) : jsx("p", { className: "dy-pc-drawer-meta", children: "Select an object on the canvas to edit its title, kind or removal." })
+              ] }) : jsx("p", { className: "dy-pc-drawer-meta", children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0431\u044A\u0435\u043A\u0442 \u043D\u0430 \u0445\u043E\u043B\u0441\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A, \u0442\u0438\u043F \u0438\u043B\u0438 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0435\u0433\u043E." })
             ] })
           ]
         }),
@@ -13150,7 +13150,7 @@ var INBOX_CSS = `
 `;
 
 // hermes_dockyard_plugin/desktop/src/views/dashboard.js
-function DiscoveredProfilePicker({ profiles = [], value = "", onChange, name, label = "Hermes profile", disabled = false }) {
+function DiscoveredProfilePicker({ profiles = [], value = "", onChange, name, label = "\u041F\u0440\u043E\u0444\u0438\u043B\u044C Hermes", disabled = false }) {
   const [search, setSearch] = useState("");
   const normalised = profiles.map((profile) => ({
     ...profile,
@@ -13164,14 +13164,14 @@ function DiscoveredProfilePicker({ profiles = [], value = "", onChange, name, la
   const visible = normalised.filter((profile) => !query || profile.label.toLowerCase().includes(query) || profile.value.toLowerCase().includes(query));
   return jsxs("div", { className: "dockyard-field dockyard-profile-picker", "data-profile-picker": name, children: [
     jsx("label", { htmlFor: `dockyard-profile-search-${name}`, children: `${label} search` }),
-    jsx("input", { id: `dockyard-profile-search-${name}`, "data-profile-search": true, value: search, placeholder: "Search discovered profiles", disabled, onInput: (event) => setSearch(event.target.value), onChange: (event) => setSearch(event.target.value) }),
+    jsx("input", { id: `dockyard-profile-search-${name}`, "data-profile-search": true, value: search, placeholder: "\u041F\u043E\u0438\u0441\u043A \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0444\u0438\u043B\u0435\u0439", disabled, onInput: (event) => setSearch(event.target.value), onChange: (event) => setSearch(event.target.value) }),
     jsx("select", { value, disabled, "aria-label": label, onChange: (event) => onChange?.(event.target.value), children: [
-      jsx("option", { value: "", children: "Choose an available profile" }, "none"),
+      jsx("option", { value: "", children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C" }, "none"),
       ...visible.map((profile) => jsx("option", { value: profile.value, disabled: profile.available === false || profile.selectable === false, children: `${profile.label}${profile.available === false || profile.selectable === false ? " (unavailable)" : ""}` }, profile.value))
     ] })
   ] });
 }
-function WorkBar({ work, project = false, label = "Work distribution" }) {
+function WorkBar({ work, project = false, label = "\u0420\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442" }) {
   const backlog = Number(work?.backlog ?? 0);
   const active = Number(work?.active ?? 0);
   const done = Number(work?.done ?? 0);
@@ -13189,24 +13189,24 @@ function WorkBar({ work, project = false, label = "Work distribution" }) {
   });
 }
 var ISSUE_CAUSES = Object.freeze({
-  blocked_item: { tag: "Blocked", tone: "blocker", impact: "Work blocked" },
-  overdue_item: { tag: "Overdue", tone: "blocker", impact: "Work overdue" },
-  evidence_stale: { tag: "Stale evidence", tone: "notice", impact: "Evidence out of date" },
-  unlinked_project: { tag: UNLINKED_LABEL, tone: "notice", impact: "Work cannot be shown" },
-  project_attention: { tag: "Project state", tone: "notice", impact: "Needs a decision" }
+  blocked_item: { tag: "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E", tone: "blocker", impact: "\u0420\u0430\u0431\u043E\u0442\u0430 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u0430" },
+  overdue_item: { tag: "\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E", tone: "blocker", impact: "\u0420\u0430\u0431\u043E\u0442\u0430 \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u0430" },
+  evidence_stale: { tag: "\u0423\u0441\u0442\u0430\u0440\u0435\u0432\u0448\u0438\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", tone: "notice", impact: "\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u0443\u0441\u0442\u0430\u0440\u0435\u043B\u0438" },
+  unlinked_project: { tag: UNLINKED_LABEL, tone: "notice", impact: "\u0420\u0430\u0431\u043E\u0442\u0430 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u0430" },
+  project_attention: { tag: "\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430", tone: "notice", impact: "\u041D\u0443\u0436\u043D\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u0435" }
 });
 var ISSUE_FILTERS = Object.freeze([
-  ["all", "All issues"],
-  ["decision", "Decisions"],
+  ["all", "\u0412\u0441\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B"],
+  ["decision", "\u0420\u0435\u0448\u0435\u043D\u0438\u044F"],
   ...Object.entries(ISSUE_CAUSES).map(([cause, { tag }]) => [cause, tag])
 ]);
 var HEALTH_STATES = Object.freeze(["on_track", "at_risk", "stalled", "idle", "unlinked"]);
 function issueLabels(item) {
   if (item?.kind === "initiative_approval") {
-    return { tag: "Approval", tone: "approval", impact: `Risk: ${readableLabel(item.risk)}`, open: "Review approval" };
+    return { tag: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435", tone: "approval", impact: `Risk: ${readableLabel(item.risk)}`, open: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435 \u0440\u0435\u0432\u044C\u044E" };
   }
-  const known = ISSUE_CAUSES[item?.cause] ?? { tag: readableLabel(item?.cause, "Issue"), tone: "notice", impact: "Needs attention" };
-  return { ...known, open: String(item?.deep_link ?? "").startsWith("s2:work/") ? "Open work item" : "Open project" };
+  const known = ISSUE_CAUSES[item?.cause] ?? { tag: readableLabel(item?.cause, "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u0430"), tone: "notice", impact: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F" };
+  return { ...known, open: String(item?.deep_link ?? "").startsWith("s2:work/") ? "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442" };
 }
 function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
   const STATUS_PRIORITY = { at_risk: 0, unlinked: 1, stalled: 2, on_track: 3, idle: 4 };
@@ -13234,7 +13234,7 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
     setCollapsed(next);
     api("/settings/ui", { method: "PUT", body: { collapsed: next }, quiet: true }).catch(() => {
       setCollapsed(before);
-      emitToast("danger", "That change was not saved. Try again.");
+      emitToast("danger", "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.");
     });
   };
   const needsFolded = isFolded("needs-you-now");
@@ -13265,7 +13265,7 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
   const evidenceFiles = view.portfolio?.evidence_files;
   const workActive = Number(view.totals?.active_work ?? 0);
   const waiting = Number(view.inbox?.count ?? 0);
-  const statusName = { on_track: "On track", at_risk: "At risk", stalled: "Stalled", idle: "Idle", unlinked: UNLINKED_LABEL };
+  const statusName = { on_track: "\u0412 \u0433\u0440\u0430\u0444\u0438\u043A\u0435", at_risk: "\u041F\u043E\u0434 \u0443\u0433\u0440\u043E\u0437\u043E\u0439", stalled: "\u0417\u0430\u0441\u0442\u0440\u044F\u043B\u043E", idle: "\u041F\u0440\u043E\u0441\u0442\u043E\u0439", unlinked: UNLINKED_LABEL };
   const metric = (label, value, detail, icon, tone, onClick) => jsxs(onClick ? "button" : "div", {
     type: onClick ? "button" : void 0,
     onClick,
@@ -13280,7 +13280,7 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
   const renderProjectRow = (project) => {
     const total = Number(project.items?.total ?? 0);
     const done = Number(project.items?.done ?? 0);
-    const status = statusName[project.status] ?? readableLabel(project.status, "Unknown");
+    const status = statusName[project.status] ?? readableLabel(project.status, "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E");
     const unreadable = project.status === "unlinked";
     return jsxs("div", {
       role: "row",
@@ -13288,14 +13288,14 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
       "data-project-row": project.project_id,
       children: [
         jsx("span", { role: "cell", children: jsx("button", { type: "button", className: "dockyard-button small", onClick: () => onOpen?.(`s1:project/${project.project_id}`), children: project.project_id }) }),
-        jsx("span", { role: "cell", children: project.owner || "Not assigned" }),
+        jsx("span", { role: "cell", children: project.owner || "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" }),
         jsx("span", { role: "cell", className: `dockyard-command-health ${project.status}`, children: status }),
         jsxs("span", { role: "cell", className: "dockyard-command-progress", children: [
-          jsx("span", { children: unreadable ? "Unknown (not linked)" : total ? `${number(done)} / ${number(total)} work items` : "No work items" }),
+          jsx("span", { children: unreadable ? "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E (\u043D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D)" : total ? `${number(done)} / ${number(total)} work items` : "\u0420\u0430\u0431\u043E\u0447\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0435\u0442" }),
           jsx("span", { className: "dockyard-command-progress-track", children: jsx("span", { style: { width: `${total ? Math.round(done / total * 100) : 0}%` } }) })
         ] }),
-        jsx("span", { role: "cell", children: project.next_milestone ? `${project.next_milestone.name} \xB7 ${project.next_milestone.due || "No due date"}` : "Not scheduled" }),
-        jsx("span", { role: "cell", children: unreadable ? "Unknown (not linked)" : project.items?.blocked || project.items?.overdue ? `${number(project.items.blocked || 0)} blocked \xB7 ${number(project.items.overdue || 0)} overdue` : "No open blockers" })
+        jsx("span", { role: "cell", children: project.next_milestone ? `${project.next_milestone.name} \xB7 ${project.next_milestone.due || "No due date"}` : "\u041D\u0435 \u0437\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u043E" }),
+        jsx("span", { role: "cell", children: unreadable ? "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E (\u043D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D)" : project.items?.blocked || project.items?.overdue ? `${number(project.items.blocked || 0)} blocked \xB7 ${number(project.items.overdue || 0)} overdue` : "\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0431\u043B\u043E\u043A\u0435\u0440\u043E\u0432 \u043D\u0435\u0442" })
       ]
     }, project.project_id);
   };
@@ -13308,7 +13308,7 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
       jsxs("div", { className: "dockyard-command-head", children: [
         jsxs("div", { children: [
           jsx("span", { className: "dockyard-command-eyebrow", children: "FLEET DIRECTORY" }),
-          jsx("h1", { children: "All projects" }),
+          jsx("h1", { children: "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" }),
           jsx("p", { children: `${number(projects.length)} ${plural2(projects.length, "project")} under watch. Select one for its Overview.` })
         ] }),
         jsx("input", {
@@ -13316,13 +13316,13 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
           className: "dockyard-command-directory-search",
           value: directoryQuery,
           onChange: (event) => setDirectoryQuery(event.target.value),
-          placeholder: "Filter by project, owner or status",
-          "aria-label": "Filter projects"
+          placeholder: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0443, \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0443 \u0438\u043B\u0438 \u0441\u0442\u0430\u0442\u0443\u0441\u0443",
+          "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442\u044B"
         })
       ] }),
-      jsxs("section", { className: "dockyard-command-section dockyard-command-directory-list", role: "table", "aria-label": "Project fleet", children: [
-        jsx("div", { className: "dockyard-command-row dockyard-command-project-head", role: "row", children: ["Project", "Owner", "Health", "Progress", "Next milestone", "Delivery risk"].map((label) => jsx("span", { role: "columnheader", children: label }, label)) }),
-        filtered.length ? filtered.map(renderProjectRow) : jsx("p", { className: "dockyard-command-empty", children: "No projects match this filter." })
+      jsxs("section", { className: "dockyard-command-section dockyard-command-directory-list", role: "table", "aria-label": "\u0424\u043B\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u0430", children: [
+        jsx("div", { className: "dockyard-command-row dockyard-command-project-head", role: "row", children: ["\u041F\u0440\u043E\u0435\u043A\u0442", "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446", "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435", "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0430\u044F \u0432\u0435\u0445\u0430", "\u0420\u0438\u0441\u043A \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438"].map((label) => jsx("span", { role: "columnheader", children: label }, label)) }),
+        filtered.length ? filtered.map(renderProjectRow) : jsx("p", { className: "dockyard-command-empty", children: "\u041D\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432 \u043F\u043E \u044D\u0442\u043E\u043C\u0443 \u0444\u0438\u043B\u044C\u0442\u0440\u0443." })
       ] })
     ] });
   }
@@ -13334,15 +13334,15 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
       jsxs("div", { className: "dockyard-command-head", children: [
         jsxs("div", { children: [
           jsx("span", { className: "dockyard-command-eyebrow", children: "FLEET ATTENTION" }),
-          jsx("h1", { children: "All issues" }),
+          jsx("h1", { children: "\u0412\u0441\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B" }),
           jsx("p", { children: `${number(rows.length)} ${plural2(rows.length, "item")} need a decision or intervention across the fleet.` })
         ] }),
-        jsx(Button, { onClick: onInbox, children: "Open Approval Inbox" })
+        jsx(Button, { onClick: onInbox, children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \xAB\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F\xBB" })
       ] }),
       jsx("div", {
         className: "dockyard-command-issue-filters",
         role: "group",
-        "aria-label": "Filter issues",
+        "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u0440\u043E\u0431\u043B\u0435\u043C",
         children: options.map(([key, label]) => jsx("button", {
           type: "button",
           className: issueFilter === key ? "is-active" : "",
@@ -13352,7 +13352,7 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
         }, key))
       }),
       jsxs("section", { className: "dockyard-command-section dockyard-command-directory-list", children: [
-        jsx("div", { className: "dockyard-command-row dockyard-command-attention-head", children: ["Type", "Item", "Project", "Owner / risk", "Waiting"].map((label) => jsx("span", { children: label }, label)) }),
+        jsx("div", { className: "dockyard-command-row dockyard-command-attention-head", children: ["\u0422\u0438\u043F", "\u042D\u043B\u0435\u043C\u0435\u043D\u0442", "\u041F\u0440\u043E\u0435\u043A\u0442", "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446 / \u0440\u0438\u0441\u043A", "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435"].map((label) => jsx("span", { children: label }, label)) }),
         filtered.length ? filtered.map((item, index) => jsxs("button", {
           type: "button",
           className: "dockyard-command-row dockyard-command-attention-row",
@@ -13367,10 +13367,10 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
               jsx("small", { children: item.ref || item.detail || "" })
             ] }),
             jsx("span", { children: item.project }),
-            jsx("span", { children: item.owner || readableLabel(item.risk, "Not assigned") }),
-            jsx("span", { children: typeof item.age_days === "number" ? `${number(item.age_days)}d` : "Not recorded" })
+            jsx("span", { children: item.owner || readableLabel(item.risk, "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D") }),
+            jsx("span", { children: typeof item.age_days === "number" ? `${number(item.age_days)}d` : "\u041D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E" })
           ]
-        }, `${item.kind}:${item.ref || index}`)) : jsx("p", { className: "dockyard-command-empty", children: "No issues match this filter." })
+        }, `${item.kind}:${item.ref || index}`)) : jsx("p", { className: "dockyard-command-empty", children: "\u041D\u0435\u0442 \u043F\u0440\u043E\u0431\u043B\u0435\u043C \u043F\u043E \u044D\u0442\u043E\u043C\u0443 \u0444\u0438\u043B\u044C\u0442\u0440\u0443." })
       ] })
     ] });
   }
@@ -13378,21 +13378,21 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
     jsxs("div", { className: "dockyard-command-head", children: [
       jsxs("div", { children: [
         jsx("span", { className: "dockyard-command-eyebrow", children: "FLEET OVERVIEW" }),
-        jsx("h1", { children: "Command Center" }),
-        jsx("p", { children: "Stewardship at a glance. Evidence over assumptions." })
+        jsx("h1", { children: "\u041A\u043E\u043C\u0430\u043D\u0434\u043D\u044B\u0439 \u0446\u0435\u043D\u0442\u0440" }),
+        jsx("p", { children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u043C \u0441 \u043E\u0434\u043D\u043E\u0433\u043E \u0432\u0437\u0433\u043B\u044F\u0434\u0430. \u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u0432\u0430\u0436\u043D\u0435\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0439." })
       ] }),
       jsxs("div", { className: "dockyard-command-head-actions", children: [
-        jsx(Button, { action: "refresh", onClick: onRefresh, children: "Refresh" }),
-        jsx(Button, { action: "open-bot-teams", onClick: () => onOpen?.("s5:teams"), children: "Bot teams" }),
+        jsx(Button, { action: "refresh", onClick: onRefresh, children: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C" }),
+        jsx(Button, { action: "open-bot-teams", onClick: () => onOpen?.("s5:teams"), children: "\u041A\u043E\u043C\u0430\u043D\u0434\u044B \u0431\u043E\u0442\u043E\u0432" }),
         waiting > 0 ? jsx(Button, { variant: "primary", onClick: onInbox, children: `Review ${number(waiting)} ${plural2(waiting, "decision")}` }) : null
       ] })
     ] }),
-    empty ? jsx(EmptyState, { title: "No projects under watch", description: "Use New project or Onboard existing project above to bring in your first project.", icon: "project" }) : jsxs(Fragment, { children: [
-      jsxs("section", { className: "dockyard-command-metrics", "aria-label": "Fleet summary", children: [
+    empty ? jsx(EmptyState, { title: "\u041D\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432 \u043F\u043E\u0434 \u043D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435\u043C", description: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \xAB\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442\xBB \u0438\u043B\u0438 \xAB\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442\xBB \u0432\u044B\u0448\u0435, \u0447\u0442\u043E\u0431\u044B \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442.", icon: "project" }) : jsxs(Fragment, { children: [
+      jsxs("section", { className: "dockyard-command-metrics", "aria-label": "\u0421\u0432\u043E\u0434\u043A\u0430 \u0444\u043B\u043E\u0442\u0430", children: [
         metric("PROJECTS", number(projects.length), `${number(projects.filter((p) => p.status === "at_risk").length)} at risk`, "folders", "info", () => setSubview("projects")),
         metric("NEEDS YOUR REVIEW", number(waiting), `${number(interventions.length)} other ${plural2(interventions.length, "intervention")}`, "triangle-alert", "warning", () => setSubview("issues")),
-        metric("ON TRACK", `${number(onTrack)} / ${number(projects.length)}`, "Project delivery status", "activity", onTrack ? "success" : "neutral", () => setSubview("projects")),
-        metric("EVIDENCE FILES", evidenceFiles == null ? "Unavailable" : number(evidenceFiles), "Files attached to tracked projects", "file-text", "accent")
+        metric("ON TRACK", `${number(onTrack)} / ${number(projects.length)}`, "\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0430", "activity", onTrack ? "success" : "neutral", () => setSubview("projects")),
+        metric("EVIDENCE FILES", evidenceFiles == null ? "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E" : number(evidenceFiles), "\u0424\u0430\u0439\u043B\u044B, \u043F\u0440\u0438\u043A\u0440\u0435\u043F\u043B\u0451\u043D\u043D\u044B\u0435 \u043A \u043E\u0442\u0441\u043B\u0435\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C", "file-text", "accent")
       ] }),
       jsxs("div", { className: "dockyard-command-health-summary", children: [
         jsx("span", { children: "FLEET HEALTH" }),
@@ -13406,12 +13406,12 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
           })
         }),
         jsx("div", { className: "dockyard-command-health-legend", children: [
-          ["on_track", "On track"],
-          ["at_risk", "At risk"],
-          ["stalled", "Stalled"],
-          ["idle", "Idle"],
+          ["on_track", "\u0412 \u0433\u0440\u0430\u0444\u0438\u043A\u0435"],
+          ["at_risk", "\u041F\u043E\u0434 \u0443\u0433\u0440\u043E\u0437\u043E\u0439"],
+          ["stalled", "\u0417\u0430\u0441\u0442\u0440\u044F\u043B\u043E"],
+          ["idle", "\u041F\u0440\u043E\u0441\u0442\u043E\u0439"],
           ["unlinked", UNLINKED_LABEL],
-          ["unknown", "Unverified"]
+          ["unknown", "\u041D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u043E"]
         ].map(([state, label]) => jsxs("span", { children: [jsx("i", { className: `dockyard-health-dot ${state}`, "aria-hidden": true }), label] }, state)) })
       ] }),
       unassignedTotal ? jsxs("div", { className: "dockyard-soft-alert", "data-unassigned-alert": "fleet", role: "status", children: [
@@ -13442,25 +13442,25 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
                   children: [
                     jsx(Icon, { name: needsFolded ? "chevron-right" : "chevron-down" }),
                     jsx(Icon, { name: "triangle-alert" }),
-                    jsx("span", { children: "Needs you now" }),
+                    jsx("span", { children: "\u041D\u0443\u0436\u043D\u043E \u0442\u0432\u043E\u0451 \u0440\u0435\u0448\u0435\u043D\u0438\u0435" }),
                     jsx("span", { className: "dockyard-section-count", "data-section-count": "needs-you-now", "aria-hidden": true, children: number(rows.length) }),
                     jsx("span", { className: "dockyard-sr-only", children: `, ${number(rows.length)} ${plural2(rows.length, "item")}` })
                   ]
                 }) }),
-                needsFolded ? null : jsx("p", { children: "Decisions and blocked work, ranked by waiting age." })
+                needsFolded ? null : jsx("p", { children: "\u0420\u0435\u0448\u0435\u043D\u0438\u044F \u0438 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430, \u043E\u0442\u0441\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u043F\u043E \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u044F." })
               ] }),
               jsxs("div", { className: "dockyard-command-section-actions", children: [
-                jsx(Button, { small: true, onClick: () => setSubview("issues"), children: "View all issues" }),
+                jsx(Button, { small: true, onClick: () => setSubview("issues"), children: "\u0412\u0441\u0435 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B" }),
                 jsx(Button, { small: true, onClick: onInbox, children: `View approvals (${number(waiting)})` })
               ] })
             ] }),
             jsxs("div", { className: "dockyard-command-table-wrap", id: "dy-needs-you-now", hidden: needsFolded, children: [
               jsxs("div", { className: "dockyard-command-row dockyard-command-attention-head", role: "row", children: [
-                jsx("span", { children: "Type" }),
-                jsx("span", { children: "Item" }),
-                jsx("span", { children: "Project" }),
-                jsx("span", { children: "Impact" }),
-                jsx("span", { children: "Waiting" })
+                jsx("span", { children: "\u0422\u0438\u043F" }),
+                jsx("span", { children: "\u042D\u043B\u0435\u043C\u0435\u043D\u0442" }),
+                jsx("span", { children: "\u041F\u0440\u043E\u0435\u043A\u0442" }),
+                jsx("span", { children: "\u0412\u043B\u0438\u044F\u043D\u0438\u0435" }),
+                jsx("span", { children: "\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435" })
               ] }),
               rows.length ? rows.map((item, index) => jsxs("button", {
                 type: "button",
@@ -13472,49 +13472,49 @@ function DashboardView({ view, onInbox, onRefresh, onOpen, resetView }) {
                   jsxs("span", { className: "dockyard-command-title", children: [jsx("strong", { children: item.title }), jsx("small", { children: item.ref || item.detail || "" })] }),
                   jsx("span", { children: item.project }),
                   jsx("span", { children: issueLabels(item).impact }),
-                  jsx("span", { children: typeof item.age_days === "number" ? `${number(item.age_days)}d` : "Not recorded" })
+                  jsx("span", { children: typeof item.age_days === "number" ? `${number(item.age_days)}d` : "\u041D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E" })
                 ]
-              }, `${item.kind}:${item.ref || index}`)) : jsx("p", { className: "dockyard-command-empty", children: "No decisions or blocked work need attention." })
+              }, `${item.kind}:${item.ref || index}`)) : jsx("p", { className: "dockyard-command-empty", children: "\u0420\u0435\u0448\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F." })
             ] })
           ] }),
           jsxs("section", { className: "dockyard-command-section", children: [
             jsxs("div", { className: "dockyard-section-head", children: [
-              jsxs("div", { children: [jsxs("h2", { children: [jsx(Icon, { name: "folder-kanban" }), "Project health"] }), jsx("p", { children: `Portfolio status across ${number(projects.length)} ${plural2(projects.length, "project")}.` })] }),
-              jsx(Button, { small: true, onClick: () => setSubview("projects"), children: "View all projects" })
+              jsxs("div", { children: [jsxs("h2", { children: [jsx(Icon, { name: "folder-kanban" }), "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"] }), jsx("p", { children: `Portfolio status across ${number(projects.length)} ${plural2(projects.length, "project")}.` })] }),
+              jsx(Button, { small: true, onClick: () => setSubview("projects"), children: "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" })
             ] }),
-            jsxs("div", { className: "dockyard-command-table-wrap", role: "table", "aria-label": "Project fleet", children: [
+            jsxs("div", { className: "dockyard-command-table-wrap", role: "table", "aria-label": "\u0424\u043B\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u0430", children: [
               jsxs("div", { className: "dockyard-command-row dockyard-command-project-head", role: "row", children: [
-                ...["Project", "Owner", "Health", "Progress", "Next milestone", "Delivery risk"].map((label) => jsx("span", { role: "columnheader", children: label }, label))
+                ...["\u041F\u0440\u043E\u0435\u043A\u0442", "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446", "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435", "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0430\u044F \u0432\u0435\u0445\u0430", "\u0420\u0438\u0441\u043A \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438"].map((label) => jsx("span", { role: "columnheader", children: label }, label))
               ] }),
               projects.map(renderProjectRow)
             ] })
           ] })
         ] }),
-        jsxs("aside", { className: "dockyard-command-detail", "aria-label": "Selected item details", children: [
-          jsxs("div", { className: "dockyard-command-detail-head", children: [jsx("h2", { children: focusItem?.kind === "initiative_approval" ? "Approval" : "Item details" }), focusItem ? jsx(Button, { small: true, onClick: () => setSelected(false), children: "Close" }) : null] }),
+        jsxs("aside", { className: "dockyard-command-detail", "aria-label": "\u0414\u0435\u0442\u0430\u043B\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430", children: [
+          jsxs("div", { className: "dockyard-command-detail-head", children: [jsx("h2", { children: focusItem?.kind === "initiative_approval" ? "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435" : "\u0414\u0435\u0442\u0430\u043B\u0438 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430" }), focusItem ? jsx(Button, { small: true, onClick: () => setSelected(false), children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" }) : null] }),
           focusItem ? jsxs(Fragment, { children: [
             jsx("h3", { children: focusItem.title }),
             jsx("p", { className: "dockyard-meta", children: `${focusItem.project} \xB7 ${focusItem.ref || ""} \xB7 ${number(focusItem.age_days ?? 0)} ${plural2(focusItem.age_days ?? 0, "day")} waiting` }),
             detailError ? jsx("p", { role: "alert", children: detailError }) : null,
             focusItem.kind === "initiative_approval" && decision ? jsxs(Fragment, { children: [
-              jsx("h4", { children: "Summary" }),
-              jsx("p", { children: decision.reason || "No rationale supplied." }),
-              jsx("h4", { children: "Expected outcome" }),
-              jsx("p", { children: decision.expected_outcome || "Not supplied." }),
-              jsx("h4", { children: "Decision context" }),
+              jsx("h4", { children: "\u0421\u0432\u043E\u0434\u043A\u0430" }),
+              jsx("p", { children: decision.reason || "\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E." }),
+              jsx("h4", { children: "\u041E\u0436\u0438\u0434\u0430\u0435\u043C\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442" }),
+              jsx("p", { children: decision.expected_outcome || "\u041D\u0435 \u0437\u0430\u0434\u0430\u043D\u043E." }),
+              jsx("h4", { children: "\u041A\u043E\u043D\u0442\u0435\u043A\u0441\u0442 \u0440\u0435\u0448\u0435\u043D\u0438\u044F" }),
               jsxs("dl", { children: [
-                jsx("dt", { children: "Risk" }),
+                jsx("dt", { children: "\u0420\u0438\u0441\u043A" }),
                 jsx("dd", { children: readableLabel(decision.risk) }),
-                jsx("dt", { children: "Proposer" }),
+                jsx("dt", { children: "\u0410\u0432\u0442\u043E\u0440 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F" }),
                 jsx("dd", { children: String(decision.proposer || "Stewardship") }),
-                jsx("dt", { children: "Evidence contract" }),
+                jsx("dt", { children: "\u041A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432" }),
                 jsx("dd", { children: validationSummary(decision.validation?.contract) })
               ] })
             ] }) : null,
-            jsx("h4", { children: "Recent activity" }),
+            jsx("h4", { children: "\u041D\u0435\u0434\u0430\u0432\u043D\u044F\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C" }),
             jsx("div", { className: "dockyard-command-detail-activity", children: (view.notifications?.notifications ?? []).filter((note) => note.project === focusItem.project).slice(0, 3).map((note) => jsx("p", { children: `${note.title} \xB7 ${formatWhen(note.created_at)}` }, note.id)) }),
             jsx(Button, { variant: "primary", onClick: () => focusItem.kind === "initiative_approval" ? onInbox?.() : onOpen?.(focusItem.deep_link), children: issueLabels(focusItem).open })
-          ] }) : jsx("p", { children: "Select an item to see its details." })
+          ] }) : jsx("p", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438." })
         ] })
       ] })
     ] })
@@ -13549,7 +13549,7 @@ function InitiativeRevisionRow({ initiative, onResubmitted }) {
         body: { rationale: rationale.trim() },
         suppressErrorToast: true
       });
-      emitToast("success", "Resubmitted for approval");
+      emitToast("success", "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043D\u0430 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435 \u0437\u0430\u043D\u043E\u0432\u043E");
       onResubmitted?.(initiative.ref);
     } catch (failure) {
       setError(`Resubmission was not recorded. ${String(failure?.message ?? failure)}`);
@@ -13559,7 +13559,7 @@ function InitiativeRevisionRow({ initiative, onResubmitted }) {
   };
   return jsxs("article", { "data-initiative-row": initiative.ref, "data-initiative-status": initiative.status, children: [
     jsxs("span", { children: [jsx("strong", { children: initiative.title }), jsx("small", { children: initiative.expected_outcome || initiative.rationale || initiative.ref })] }),
-    returned ? jsx(Button, { small: true, onClick: () => setOpen((v) => !v), children: open ? "Hide revision" : "Revise & resubmit" }) : jsx(StatusTag, { tone: initiative.status === "pending_approval" ? "warning" : "info", label: String(initiative.status || "unknown").replaceAll("_", " ") }),
+    returned ? jsx(Button, { small: true, onClick: () => setOpen((v) => !v), children: open ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0440\u0435\u0432\u0438\u0437\u0438\u044E" : "\u0414\u043E\u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C" }) : jsx(StatusTag, { tone: initiative.status === "pending_approval" ? "warning" : "info", label: String(initiative.status || "unknown").replaceAll("_", " ") }),
     returned && open ? jsxs("div", { className: "dockyard-initiative-revision", "data-resubmit-form": true, children: [
       feedback.length ? jsxs("div", {
         className: "dockyard-comment-thread",
@@ -13571,10 +13571,10 @@ function InitiativeRevisionRow({ initiative, onResubmitted }) {
       jsx("input", {
         value: rationale,
         onChange: (event) => setRationale(event.target.value),
-        placeholder: "Revised rationale (address the feedback)",
-        "aria-label": "Revised rationale"
+        placeholder: "\u041E\u0431\u043D\u043E\u0432\u043B\u0451\u043D\u043D\u043E\u0435 \u043E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 (\u0443\u0447\u0442\u0438\u0442\u0435 \u043E\u0442\u0437\u044B\u0432)",
+        "aria-label": "\u041E\u0431\u043D\u043E\u0432\u043B\u0451\u043D\u043D\u043E\u0435 \u043E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435"
       }),
-      jsx(Button, { small: true, variant: "primary", onClick: resubmit, disabled: busy || !rationale.trim(), children: busy ? "Resubmitting\u2026" : "Resubmit" }),
+      jsx(Button, { small: true, variant: "primary", onClick: resubmit, disabled: busy || !rationale.trim(), children: busy ? "\u041F\u043E\u0432\u0442\u043E\u0440\u043D\u0430\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430\u2026" : "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E" }),
       error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null
     ] }) : null
   ] });
@@ -13600,7 +13600,7 @@ function FirstAssessmentCard({ projectId }) {
   return jsxs("section", { className: "dockyard-feature-card dockyard-first-assessment", "data-first-assessment": true, children: [
     jsxs("div", { className: "dockyard-section-head", children: [
       jsxs("div", { children: [
-        jsx("h2", { children: "First read-only assessment" }),
+        jsx("h2", { children: "\u041F\u0435\u0440\u0432\u0430\u044F \u043E\u0446\u0435\u043D\u043A\u0430 (\u0442\u043E\u043B\u044C\u043A\u043E \u0447\u0442\u0435\u043D\u0438\u0435)" }),
         jsx("p", { children: "One manual cycle: verifies the repo, records health and objective evidence. Enables no schedules." })
       ] }),
       jsx(Button, {
@@ -13609,21 +13609,21 @@ function FirstAssessmentCard({ projectId }) {
         small: true,
         disabled: busy,
         onClick: run,
-        children: busy ? "Assessing\u2026" : "Run first assessment"
+        children: busy ? "\u041E\u0446\u0435\u043D\u043A\u0430\u2026" : "\u0417\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u0443\u044E \u043E\u0446\u0435\u043D\u043A\u0443"
       })
     ] }),
     error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null,
     result ? jsxs("dl", { className: "dockyard-onboarding-review", "data-assessment-result": true, children: [
-      jsx("dt", { children: "Verification" }),
-      jsx("dd", { children: result.assessment?.verification_ok ? "Passed" : "Not passed" }),
-      jsx("dt", { children: "Health" }),
+      jsx("dt", { children: "\u0412\u0435\u0440\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u044F" }),
+      jsx("dd", { children: result.assessment?.verification_ok ? "\u041F\u0440\u043E\u0439\u0434\u0435\u043D\u043E" : "\u041D\u0435 \u043F\u0440\u043E\u0439\u0434\u0435\u043D\u043E" }),
+      jsx("dt", { children: "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435" }),
       jsx("dd", { children: result.assessment?.health_state ?? "unknown" }),
-      jsx("dt", { children: "Objectives assessed" }),
+      jsx("dt", { children: "\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438 \u043E\u0446\u0435\u043D\u0435\u043D\u044B" }),
       jsx("dd", { children: number((result.assessment?.objective_results ?? []).length) }),
-      jsx("dt", { children: "Initiatives created" }),
+      jsx("dt", { children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B \u0441\u043E\u0437\u0434\u0430\u043D\u044B" }),
       jsx("dd", { children: number(result.assessment?.initiatives_created ?? 0) }),
-      jsx("dt", { children: "Schedules" }),
-      jsx("dd", { children: result.schedules_enabled ? "enabled" : "disabled (onboarding never enables automation)" })
+      jsx("dt", { children: "\u0420\u0430\u0441\u043F\u0438\u0441\u0430\u043D\u0438\u044F" }),
+      jsx("dd", { children: result.schedules_enabled ? "enabled" : "\u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u043E (\u043E\u043D\u0431\u043E\u0440\u0434\u0438\u043D\u0433 \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0432\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044E)" })
     ] }) : null
   ] });
 }
@@ -15609,7 +15609,7 @@ function readWorkflowSettings(project, workflow) {
 function writeWorkflowSettings(project, workflow, value) {
   workflowSettings.set(`${project}\0${workflow}`, value);
 }
-var CHECK_WORDS = Object.freeze({ none: "No check", judge: "AI judge", person: "You sign off", step: "A check step" });
+var CHECK_WORDS = Object.freeze({ none: "\u0411\u0435\u0437 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438", judge: "\u0418\u0418-\u0441\u0443\u0434\u044C\u044F", person: "\u0422\u044B \u043F\u043E\u0434\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0448\u044C", step: "\u0428\u0430\u0433 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438" });
 var task = (id, title, dependsOn, extra = {}) => ({ id, title, depends_on: dependsOn, human_gate: false, kind: "task", ...extra });
 var signOff = (id, title, dependsOn) => ({ id, title, depends_on: dependsOn, human_gate: true, kind: "gate" });
 var slug = (text2) => String(text2 ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "workflow";
@@ -15627,17 +15627,17 @@ var RECIPES = [
     match: /\b(bug|fix|failing|broken|crash|error)\b/i,
     name: "fix-a-bug",
     nodes: () => [
-      task("reproduce", "Reproduce the bug", [], { body: "Write a test that fails because of the bug." }),
-      task("fix", "Fix the code", ["reproduce"], { body: "Change the code until the new test passes and the other tests still pass.", loop: { max_iterations: 5, until: { status: "done" } } }),
-      signOff("check-fix", "Check the fix", ["fix"]),
-      task("merge", "Merge the fix", ["check-fix"])
+      task("reproduce", "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438 \u0431\u0430\u0433", [], { body: "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442, \u043F\u0430\u0434\u0430\u044E\u0449\u0438\u0439 \u0438\u0437-\u0437\u0430 \u0431\u0430\u0433\u0430." }),
+      task("fix", "\u0418\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043A\u043E\u0434", ["reproduce"], { body: "\u041C\u0435\u043D\u044F\u0439\u0442\u0435 \u043A\u043E\u0434, \u043F\u043E\u043A\u0430 \u043D\u043E\u0432\u044B\u0439 \u0442\u0435\u0441\u0442 \u043D\u0435 \u043F\u0440\u043E\u0439\u0434\u0451\u0442 \u0438 \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0442\u0435\u0441\u0442\u044B \u043D\u0435 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0442 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442\u044C.", loop: { max_iterations: 5, until: { status: "done" } } }),
+      signOff("check-fix", "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", ["fix"]),
+      task("merge", "\u0412\u043B\u0438\u0442\u044C \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", ["check-fix"])
     ],
-    checks: { fix: { by: "judge", doneWhen: "The new test passes and every other test still passes." } },
+    checks: { fix: { by: "judge", doneWhen: "\u041D\u043E\u0432\u044B\u0439 \u0442\u0435\u0441\u0442 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442, \u0438 \u0432\u0441\u0435 \u043E\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0442\u0435\u0441\u0442\u044B \u043F\u043E-\u043F\u0440\u0435\u0436\u043D\u0435\u043C\u0443 \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442." } },
     explain: [
-      "A bot first writes a test that fails because of the bug, so we know the bug is real.",
+      "\u0411\u043E\u0442 \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0438\u0448\u0435\u0442 \u0442\u0435\u0441\u0442, \u043F\u0430\u0434\u0430\u044E\u0449\u0438\u0439 \u0438\u0437-\u0437\u0430 \u0431\u0430\u0433\u0430, \u2014 \u0442\u0430\u043A \u043C\u044B \u0437\u043D\u0430\u0435\u043C, \u0447\u0442\u043E \u0431\u0430\u0433 \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0438\u0439.",
       "Then it fixes the code. If a round gets stuck it tries again, up to 5 rounds, then asks you.",
       'An AI judge checks each round against "the new test passes and every other test still passes".',
-      "You check the fix before anything is merged, then it is merged."
+      "\u0412\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0435 \u0438\u0441\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043E \u0432\u043B\u0438\u0432\u0430\u043D\u0438\u044F, \u0437\u0430\u0442\u0435\u043C \u043E\u043D\u043E \u0432\u043B\u0438\u0432\u0430\u0435\u0442\u0441\u044F."
     ],
     loopStep: "fix",
     workSteps: ["reproduce", "fix"]
@@ -15646,16 +15646,16 @@ var RECIPES = [
     match: /\b(release|ship|deploy|launch|publish)\b/i,
     name: "release-check",
     nodes: () => [
-      task("tests", "Run the full test suite", []),
-      task("notes", "Write the release notes", ["tests"], { body: "List what changed since the last release, in plain words." }),
-      signOff("sign-off", "Sign off the release", ["notes"]),
-      task("publish", "Publish the release", ["sign-off"])
+      task("tests", "\u0417\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u043F\u043E\u043B\u043D\u044B\u0439 \u043D\u0430\u0431\u043E\u0440 \u0442\u0435\u0441\u0442\u043E\u0432", []),
+      task("notes", "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u043E \u0440\u0435\u043B\u0438\u0437\u0435", ["tests"], { body: "\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0438\u0442\u044C \u043F\u0440\u043E\u0441\u0442\u044B\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438, \u0447\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u043E\u0441\u044C \u0441 \u043F\u0440\u043E\u0448\u043B\u043E\u0433\u043E \u0440\u0435\u043B\u0438\u0437\u0430." }),
+      signOff("sign-off", "\u041F\u043E\u0434\u043F\u0438\u0441\u0430\u0442\u044C \u0440\u0435\u043B\u0438\u0437", ["notes"]),
+      task("publish", "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0440\u0435\u043B\u0438\u0437", ["sign-off"])
     ],
     checks: {},
     explain: [
-      "A bot runs the full test suite first; nothing else starts if it fails.",
-      "Then it writes the release notes in plain words.",
-      "You sign off the release, then it is published."
+      "\u0411\u043E\u0442 \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u043F\u0440\u043E\u0433\u043E\u043D\u044F\u0435\u0442 \u0432\u0435\u0441\u044C \u043D\u0430\u0431\u043E\u0440 \u0442\u0435\u0441\u0442\u043E\u0432; \u0435\u0441\u043B\u0438 \u043E\u043D \u043F\u0430\u0434\u0430\u0435\u0442, \u0434\u0430\u043B\u044C\u0448\u0435 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F.",
+      "\u0417\u0430\u0442\u0435\u043C \u043E\u043D \u043F\u0438\u0448\u0435\u0442 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u043E \u0440\u0435\u043B\u0438\u0437\u0435 \u043F\u0440\u043E\u0441\u0442\u044B\u043C\u0438 \u0441\u043B\u043E\u0432\u0430\u043C\u0438.",
+      "\u0412\u044B \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442\u0435 \u0440\u0435\u043B\u0438\u0437, \u0437\u0430\u0442\u0435\u043C \u043E\u043D \u043F\u0443\u0431\u043B\u0438\u043A\u0443\u0435\u0442\u0441\u044F."
     ],
     loopStep: null,
     workSteps: ["tests", "notes"]
@@ -15664,15 +15664,15 @@ var RECIPES = [
     match: /\b(research|report|summar|digest|investigate|look into)/i,
     name: "research-summary",
     nodes: () => [
-      task("sources", "Find the sources", [], { body: "Find recent, first-hand sources on the topic." }),
-      task("write", "Write the summary", ["sources"], { loop: { max_iterations: 3, until: { status: "done" } } }),
-      signOff("review", "Review the summary", ["write"])
+      task("sources", "\u041D\u0430\u0439\u0442\u0438 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", [], { body: "\u041D\u0430\u0439\u0442\u0438 \u0441\u0432\u0435\u0436\u0438\u0435 \u043F\u0435\u0440\u0432\u043E\u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043F\u043E \u0442\u0435\u043C\u0435." }),
+      task("write", "\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0441\u0432\u043E\u0434\u043A\u0443", ["sources"], { loop: { max_iterations: 3, until: { status: "done" } } }),
+      signOff("review", "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0441\u0432\u043E\u0434\u043A\u0443", ["write"])
     ],
-    checks: { write: { by: "judge", doneWhen: "Every claim names its source." } },
+    checks: { write: { by: "judge", doneWhen: "\u041A\u0430\u0436\u0434\u043E\u0435 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0441\u0432\u043E\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A." } },
     explain: [
-      "A bot finds recent, first-hand sources.",
+      "\u0411\u043E\u0442 \u043D\u0430\u0445\u043E\u0434\u0438\u0442 \u0441\u0432\u0435\u0436\u0438\u0435 \u043F\u0435\u0440\u0432\u043E\u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438.",
       "Then it writes the summary. An AI judge sends it back until every claim names its source, up to 3 rounds, then asks you.",
-      "You review the summary at the end."
+      "\u0412 \u043A\u043E\u043D\u0446\u0435 \u0432\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0435 \u0441\u0432\u043E\u0434\u043A\u0443."
     ],
     loopStep: "write",
     workSteps: ["sources", "write"]
@@ -15681,29 +15681,29 @@ var RECIPES = [
 var GENERIC = {
   name: "new-workflow",
   nodes: () => [
-    task("plan", "Plan the work", []),
-    task("do", "Do the work", ["plan"], { loop: { max_iterations: 3, until: { status: "done" } } }),
-    signOff("check", "Check the result", ["do"])
+    task("plan", "\u0421\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443", []),
+    task("do", "\u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443", ["plan"], { loop: { max_iterations: 3, until: { status: "done" } } }),
+    signOff("check", "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", ["do"])
   ],
   checks: {},
   explain: [
-    "I couldn't tell exactly what this is for, so I drafted a simple plan, do, check workflow.",
-    "The work step tries again if it gets stuck, up to 3 rounds, then asks you.",
-    "Tell me more and I will adjust it."
+    "\u042F \u043D\u0435 \u0441\u043C\u043E\u0433 \u0442\u043E\u0447\u043D\u043E \u043F\u043E\u043D\u044F\u0442\u044C, \u0434\u043B\u044F \u0447\u0435\u0433\u043E \u044D\u0442\u043E, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u043D\u0430\u0431\u0440\u043E\u0441\u0430\u043B \u043F\u0440\u043E\u0441\u0442\u043E\u0439 \u043F\u0440\u043E\u0446\u0435\u0441\u0441: \u043F\u043B\u0430\u043D, \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435, \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430.",
+    "\u0428\u0430\u0433 \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442\u0441\u044F \u043F\u0440\u0438 \u0437\u0430\u0441\u0442\u0440\u0435\u0432\u0430\u043D\u0438\u0438 \u2014 \u0434\u043E 3 \u0440\u0430\u0443\u043D\u0434\u043E\u0432, \u0437\u0430\u0442\u0435\u043C \u0441\u043F\u0440\u043E\u0441\u0438\u0442 \u0432\u0430\u0441.",
+    "\u0420\u0430\u0441\u0441\u043A\u0430\u0436\u0438 \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u2014 \u044F \u043F\u043E\u043F\u0440\u0430\u0432\u043B\u044E."
   ],
   loopStep: "do",
   workSteps: ["plan", "do"]
 };
 function practiceDraft(description, members = []) {
   const text2 = String(description ?? "").trim();
-  if (!text2) return { error: "Say what the workflow should do first." };
+  if (!text2) return { error: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043A\u0430\u0436\u0438, \u0447\u0442\u043E \u0434\u043E\u043B\u0436\u0435\u043D \u0434\u0435\u043B\u0430\u0442\u044C \u043F\u0440\u043E\u0446\u0435\u0441\u0441." };
   const recipe = RECIPES.find((r) => r.match.test(text2)) ?? GENERIC;
   const nodes = recipe.nodes();
   const questions = [];
-  if (recipe.loopStep) questions.push({ id: "rounds", text: "How many rounds before it asks you?", options: [3, 5, 10].map((n) => ({ label: `${n} rounds`, value: n })), current: loopRounds(nodes.find((n) => n.id === recipe.loopStep)) });
-  if (members.length) questions.push({ id: "who", text: "Who should do the work?", options: [{ label: "Whoever the project picks", value: "" }, ...members.map((m) => ({ label: m, value: m }))], current: "" });
-  if (nodes.some((n) => n.human_gate)) questions.push({ id: "signoff", text: "Do you want to sign off before it finishes?", options: [{ label: "Yes", value: true }, { label: "No", value: false }], current: true });
-  return { name: recipe.name, explain: recipe.explain, nodes, checks: recipe.checks, questions, recipe, did: [`Added ${nodes.length} steps`, ...recipe.loopStep ? [`Made "${nodes.find((n) => n.id === recipe.loopStep).title}" repeat`] : [], ...Object.keys(recipe.checks).length ? ["Set an AI judge as the check (preview)"] : []] };
+  if (recipe.loopStep) questions.push({ id: "rounds", text: "\u0421\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0430\u0443\u043D\u0434\u043E\u0432 \u0434\u043E \u0432\u043E\u043F\u0440\u043E\u0441\u0430 \u0432\u0430\u043C?", options: [3, 5, 10].map((n) => ({ label: `${n} rounds`, value: n })), current: loopRounds(nodes.find((n) => n.id === recipe.loopStep)) });
+  if (members.length) questions.push({ id: "who", text: "\u041A\u0442\u043E \u0434\u043E\u043B\u0436\u0435\u043D \u0432\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443?", options: [{ label: "\u041A\u043E\u0433\u043E \u0432\u044B\u0431\u0435\u0440\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442", value: "" }, ...members.map((m) => ({ label: m, value: m }))], current: "" });
+  if (nodes.some((n) => n.human_gate)) questions.push({ id: "signoff", text: "\u0425\u043E\u0447\u0435\u0448\u044C \u043F\u043E\u0434\u043F\u0438\u0441\u0430\u0442\u044C \u0434\u043E \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u044F?", options: [{ label: "\u0414\u0430", value: true }, { label: "\u041D\u0435\u0442", value: false }], current: true });
+  return { name: recipe.name, explain: recipe.explain, nodes, checks: recipe.checks, questions, recipe, did: [`Added ${nodes.length} steps`, ...recipe.loopStep ? [`Made "${nodes.find((n) => n.id === recipe.loopStep).title}" repeat`] : [], ...Object.keys(recipe.checks).length ? ["\u041D\u0430\u0437\u043D\u0430\u0447\u0438\u0442\u044C \u0418\u0418-\u0441\u0443\u0434\u044C\u044E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u043E\u0439 (\u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440)"] : []] };
 }
 function answerQuestion(draft, questionId, value) {
   const recipe = draft.recipe ?? GENERIC;
@@ -15835,7 +15835,7 @@ function fromActions(raw) {
   if (!titles.length) return { kind: "invalid", reason: "This looks like a GitHub Actions file, but it has no named steps to carry over." };
   const nodes = titles.map((title, i) => task(`step-${i + 1}`, title, i ? [`step-${i}`] : []));
   const name = raw.match(/^name\s*:\s*['"]?(.+?)['"]?\s*$/m)?.[1];
-  return { kind: "other", format: "a GitHub Actions file", name: slug(name ?? "imported-workflow"), nodes, notCarried: ["the commands each step runs", "secrets", "when it runs (the on: section)"] };
+  return { kind: "other", format: "\u0444\u0430\u0439\u043B GitHub Actions", name: slug(name ?? "imported-workflow"), nodes, notCarried: ["the commands each step runs", "secrets", "\u043A\u043E\u0433\u0434\u0430 \u043E\u043D \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F (\u0441\u0435\u043A\u0446\u0438\u044F on:)"] };
 }
 
 // hermes_dockyard_plugin/desktop/src/project/workflow-design/step-settings.js
@@ -15845,7 +15845,7 @@ var el = (tag, className, text2) => {
   if (text2 !== void 0) node.textContent = text2;
   return node;
 };
-var previewTag = () => el("span", "dy-wfd-preview-tag", "Preview");
+var previewTag = () => el("span", "dy-wfd-preview-tag", "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440");
 var section = (title, { preview = false, help } = {}) => {
   const box = el("section", "dy-wfx-section");
   const head = el("h5", "", title);
@@ -15864,46 +15864,46 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
   const current = readStepSettings(...settingsKey(node.node_id));
   const root = el("div", "dy-wfx");
   if (node.human_gate) {
-    const who2 = section("Who does it");
-    who2.appendChild(el("p", "dy-wfx-help", "You. The workflow waits here until you approve or send it back."));
+    const who2 = section("\u041A\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442");
+    who2.appendChild(el("p", "dy-wfx-help", "\u0412\u044B. \u041F\u0440\u043E\u0446\u0435\u0441\u0441 \u0436\u0434\u0451\u0442 \u0437\u0434\u0435\u0441\u044C, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u043E\u0434\u043E\u0431\u0440\u0438\u0442\u0435 \u0438\u043B\u0438 \u043D\u0435 \u0432\u0435\u0440\u043D\u0451\u0442\u0435 \u0435\u0433\u043E."));
     root.appendChild(who2);
     return { el: root, apply: (next) => next };
   }
-  const who = section("Who does it");
+  const who = section("\u041A\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442");
   const pick = el("select", "dy-wfx-select");
   pick.setAttribute("data-wfx-who", "");
-  pick.setAttribute("aria-label", "Who does it");
+  pick.setAttribute("aria-label", "\u041A\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442");
   const choices = ["", ...members];
   if (stored?.phase_team && !members.includes(stored.phase_team)) choices.push(stored.phase_team);
   for (const value of choices) {
-    const o = el("option", "", value || "Whoever the project picks");
+    const o = el("option", "", value || "\u041A\u043E\u0433\u043E \u0432\u044B\u0431\u0435\u0440\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442");
     o.value = value;
     pick.appendChild(o);
   }
   pick.value = stored?.phase_team ?? node.phase_team ?? "";
   who.appendChild(pick);
-  const what = section("What to do");
+  const what = section("\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C");
   const body = el("textarea", "dy-wfx-textarea");
   body.rows = 3;
   body.setAttribute("data-wfx-body", "");
-  body.setAttribute("aria-label", "What to do");
-  body.placeholder = "The instructions the bot gets for this step.";
+  body.setAttribute("aria-label", "\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C");
+  body.placeholder = "\u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u043E\u0442 \u043D\u0430 \u044D\u0442\u043E\u043C \u0448\u0430\u0433\u0435.";
   body.value = stored?.body ?? "";
   what.appendChild(body);
   root.append(who, what);
   const repeats = Boolean(stored?.loop ?? node.loop);
   const roundsNow = Number((stored?.loop ?? node.loop)?.max_iterations ?? 3);
   let repeatBox = null;
-  const repeat = section("Repeat");
+  const repeat = section("\u041F\u043E\u0432\u0442\u043E\u0440");
   if (repeats) {
     repeat.appendChild(el("p", "dy-wfx-help", `${roundsWords(roundsNow)}. The repeat settings are on this step's frame on the canvas.`));
-    const open = el("button", "dy-btn", "Edit the repeat");
+    const open = el("button", "dy-btn", "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u043E\u0432\u0442\u043E\u0440\u0435\u043D\u0438\u0435");
     open.type = "button";
     open.setAttribute("data-wfx-edit-frame", node.node_id);
     open.addEventListener("click", () => onEditFrame?.(node.node_id, open.getBoundingClientRect()));
     repeat.appendChild(open);
   } else if (!(node.depends_on ?? []).length) {
-    const why = el("p", "dy-wfx-help", "This step comes first, so it can't repeat: each round waits on a step before it.");
+    const why = el("p", "dy-wfx-help", "\u042D\u0442\u043E\u0442 \u0448\u0430\u0433 \u043F\u0435\u0440\u0432\u044B\u0439, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u043E\u043D \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0442\u044C\u0441\u044F: \u043A\u0430\u0436\u0434\u044B\u0439 \u0440\u0430\u0443\u043D\u0434 \u0436\u0434\u0451\u0442 \u043F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0439 \u0448\u0430\u0433.");
     why.setAttribute("data-wfx-no-repeat", "");
     repeat.appendChild(why);
   } else {
@@ -15912,19 +15912,19 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
     repeatBox.checked = false;
     repeatBox.setAttribute("data-wfx-repeat", "");
     const repeatLabel = el("label", "dy-wfx-check");
-    repeatLabel.append(repeatBox, el("span", "", "Try again if a round gets stuck (up to 3 rounds; change it on the frame)"));
+    repeatLabel.append(repeatBox, el("span", "", "\u041F\u043E\u0432\u0442\u043E\u0440, \u0435\u0441\u043B\u0438 \u0440\u0430\u0443\u043D\u0434 \u0437\u0430\u0441\u0442\u0440\u044F\u043B (\u0434\u043E 3 \u0440\u0430\u0443\u043D\u0434\u043E\u0432; \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043D\u0430 \u0440\u0430\u043C\u043A\u0435)"));
     repeat.appendChild(repeatLabel);
   }
   root.appendChild(repeat);
-  const ask = section("Ask me first", { help: "When its turn comes, it waits for you: move it to Doing to start it." });
+  const ask = section("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043F\u0440\u043E\u0441\u0438 \u043C\u0435\u043D\u044F", { help: "\u041A\u043E\u0433\u0434\u0430 \u043F\u0440\u0438\u0434\u0451\u0442 \u0435\u0433\u043E \u043E\u0447\u0435\u0440\u0435\u0434\u044C, \u043E\u043D\u043E \u0436\u0434\u0451\u0442 \u0432\u0430\u0441: \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u0435 \u0432 \xAB\u0412 \u0440\u0430\u0431\u043E\u0442\u0435\xBB, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C." });
   const askBox = el("input");
   askBox.type = "checkbox";
   askBox.checked = Boolean(stored?.ask_first ?? node.ask_first);
   askBox.setAttribute("data-wfx-ask-first", "");
   const askLabel = el("label", "dy-wfx-check");
-  askLabel.append(askBox, el("span", "", "Ask me before this step starts"));
+  askLabel.append(askBox, el("span", "", "\u0421\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u043C\u0435\u043D\u044F \u043F\u0435\u0440\u0435\u0434 \u044D\u0442\u0438\u043C \u0448\u0430\u0433\u043E\u043C"));
   ask.appendChild(askLabel);
-  const limits = section("Limits", { preview: true, help: "Not sent to the bot yet." });
+  const limits = section("Limits", { preview: true, help: "\u0411\u043E\u0442\u0443 \u043F\u043E\u043A\u0430 \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E." });
   const turns = el("input", "dy-wfx-input");
   turns.type = "number";
   turns.min = "1";
@@ -15940,8 +15940,8 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
   skills.placeholder = "e.g. github-pr-workflow";
   skills.setAttribute("data-wfx-skills", "");
   const pair = el("div", "dy-wfx-pair");
-  pair.append(labelled("At most turns", turns), labelled("At most minutes", minutes));
-  limits.append(pair, labelled("Tools (skills)", skills));
+  pair.append(labelled("\u041D\u0435 \u0431\u043E\u043B\u0435\u0435 \u0445\u043E\u0434\u043E\u0432", turns), labelled("\u041D\u0435 \u0431\u043E\u043B\u0435\u0435 \u043C\u0438\u043D\u0443\u0442", minutes));
+  limits.append(pair, labelled("\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B (\u043D\u0430\u0432\u044B\u043A\u0438)", skills));
   root.append(ask, limits);
   const apply = (next) => {
     writeStepSettings(...settingsKey(node.node_id), {
@@ -15962,14 +15962,14 @@ function canvasDesignHooks({ draft, members, storedNode, settingsKey, onEditFram
   };
   const team = () => (typeof members === "function" ? members() : members) ?? [];
   return {
-    labels: { heading: "This step", title: "Step name", deps: "Comes after (step IDs)", team: "", save: draft ? "Apply to draft" : "Save version" },
+    labels: { heading: "\u042D\u0442\u043E\u0442 \u0448\u0430\u0433", title: "\u0418\u043C\u044F \u0448\u0430\u0433\u0430", deps: "\u0418\u0434\u0451\u0442 \u043F\u043E\u0441\u043B\u0435 (ID \u0448\u0430\u0433\u043E\u0432)", team: "", save: draft ? "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C \u043A \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0443" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u044E" },
     compactFacts: true,
     panelExtras: (node) => panelExtras({ node, stored: storedNode(node.node_id), members: team(), settingsKey, onEditFrame }),
     cardNote: (node) => {
       if (node.loop) return "\u21BB Repeats";
       if (node.when) return `If ${shortName(node.when.node)} ${node.when.status === "blocked" ? "gets stuck" : "is done"}`;
-      if (node.human_gate) return "Sign-off";
-      if (node.ask_first) return "Asks you first";
+      if (node.human_gate) return "\u041F\u043E\u0434\u043F\u0438\u0441\u0430\u043D\u0438\u0435";
+      if (node.ask_first) return "\u0421\u043F\u0440\u0430\u0448\u0438\u0432\u0430\u0435\u0442 \u0442\u0435\u0431\u044F \u043F\u0435\u0440\u0432\u044B\u043C";
       return null;
     },
     frames: (nodes) => nodes.filter((n) => n.loop).map((n) => {
@@ -15986,9 +15986,9 @@ function canvasDesignHooks({ draft, members, storedNode, settingsKey, onEditFram
 }
 
 // hermes_dockyard_plugin/desktop/src/project/workflow-design/shared.js
-var PreviewTag = ({ children = "Preview" }) => jsx("span", { className: "dy-wfd-preview-tag", children });
+var PreviewTag = ({ children = "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440" }) => jsx("span", { className: "dy-wfd-preview-tag", children });
 var PracticeAiNote = () => jsxs("p", { className: "dy-wfd-ai-note", "data-wfd-practice-ai": true, children: [
-  jsx(PreviewTag, { children: "Practice AI" }),
+  jsx(PreviewTag, { children: "\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u0418\u0418" }),
   " Canned answers for this review; no model is called."
 ] });
 function runOrder(nodes) {
@@ -16025,7 +16025,7 @@ var matches = (words2, ...fields) => !words2 || fields.some((f) => String(f ?? "
 function TemplatePicker({ builtins, groups, saved, value, onPick }) {
   const tabs = [
     ...groups.map((group) => ({ id: group.id, label: group.tab ?? group.title, title: group.title, items: builtins.filter((t) => t.group === group.id) })),
-    { id: "library", label: "Saved", title: "Saved in your library" }
+    { id: "library", label: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E", title: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0432 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435" }
   ];
   const [filter, setFilter] = useState("");
   const [open, setOpen] = useState(() => value ? value.source === "library" ? "library" : value.item.group : tabs[0].id);
@@ -16072,17 +16072,17 @@ function TemplatePicker({ builtins, groups, saved, value, onPick }) {
     if (!items.length) note = jsx("span", { className: "dockyard-meta", role: "status", children: `No templates match "${filter.trim()}".` });
   } else if (current.id === "library") {
     if (saved === null) note = jsx("span", { className: "dockyard-meta", role: "status", children: "Loading saved templates\u2026" });
-    else if (!saved.length) note = jsx("span", { className: "dockyard-meta", "data-wfd-no-templates": true, children: "None saved yet. In the library, save a workflow for every project to make it a template." });
+    else if (!saved.length) note = jsx("span", { className: "dockyard-meta", "data-wfd-no-templates": true, children: "\u041F\u043E\u043A\u0430 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u0427\u0442\u043E\u0431\u044B \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u043F\u0440\u043E\u0446\u0435\u0441\u0441 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u043C, \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0435\u0433\u043E \u0434\u043B\u044F \u0432\u0441\u0435\u0445 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432 \u0432 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435." });
     else items = saved.map((t) => item("library", t, false));
   } else {
     items = current.items.map((t) => item("builtin", t, false));
   }
   return jsxs("div", { className: "dy-wfd-tpl", children: [
     jsxs("label", { className: "dy-wfd-field", children: [
-      jsx("span", { children: "Find a template" }),
-      jsx("input", { type: "search", value: filter, "data-wfd-template-filter": true, placeholder: "Search all templates, e.g. bug, release, research", onChange: (e) => setFilter(e.target.value) })
+      jsx("span", { children: "\u041D\u0430\u0439\u0442\u0438 \u0448\u0430\u0431\u043B\u043E\u043D" }),
+      jsx("input", { type: "search", value: filter, "data-wfd-template-filter": true, placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0432\u0441\u0435\u043C \u0448\u0430\u0431\u043B\u043E\u043D\u0430\u043C, \u043D\u0430\u043F\u0440. \u0431\u0430\u0433, \u0440\u0435\u043B\u0438\u0437, \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u0435", onChange: (e) => setFilter(e.target.value) })
     ] }),
-    jsx("div", { className: "dy-wfd-tpl-tabs", role: "tablist", "aria-label": "Template groups", onKeyDown: onTabKey, children: tabs.map((tab, index) => {
+    jsx("div", { className: "dy-wfd-tpl-tabs", role: "tablist", "aria-label": "\u0413\u0440\u0443\u043F\u043F\u044B \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432", onKeyDown: onTabKey, children: tabs.map((tab, index) => {
       const selected = current?.id === tab.id;
       const count = countOf(tab);
       return jsxs("button", {
@@ -16107,7 +16107,7 @@ function TemplatePicker({ builtins, groups, saved, value, onPick }) {
       "aria-labelledby": current ? `wfd-tpl-tab-${current.id}` : void 0,
       "aria-label": current ? void 0 : `Templates matching ${filter.trim()}`,
       children: [
-        items.length ? jsx("div", { className: "dy-wfd-tpl-list", role: "radiogroup", "aria-label": current ? current.title : "Matching templates", children: items }) : null,
+        items.length ? jsx("div", { className: "dy-wfd-tpl-list", role: "radiogroup", "aria-label": current ? current.title : "\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0448\u0430\u0431\u043B\u043E\u043D\u044B", children: items }) : null,
         note
       ]
     })
@@ -16130,20 +16130,20 @@ function ImportResult({ result }) {
 }
 function AiPlan({ draft, onAnswer, readOnly = false }) {
   return jsxs("div", { className: "dy-wfd-ai-plan", "data-wfd-ai-plan": draft.name, children: [
-    jsx("h4", { children: "Here's my plan" }),
+    jsx("h4", { children: "\u0412\u043E\u0442 \u043C\u043E\u0439 \u043F\u043B\u0430\u043D" }),
     jsx("ol", { className: "dy-wfd-ai-explain", children: draft.explain.map((line) => jsx("li", { children: line }, line)) }),
-    jsx("h4", { children: "Steps" }),
+    jsx("h4", { children: "\u0428\u0430\u0433\u0438" }),
     jsx(StepsPreview, { nodes: draft.nodes }),
-    draft.questions.length ? jsx("h4", { children: "Questions for you" }) : null,
+    draft.questions.length ? jsx("h4", { children: "\u0412\u043E\u043F\u0440\u043E\u0441\u044B \u043A \u0442\u0435\u0431\u0435" }) : null,
     ...draft.questions.map((q) => jsxs("div", { className: "dy-wfd-question", role: "group", "aria-label": q.text, "data-wfd-question": q.id, children: [
       jsx("span", { children: q.text }),
       jsx("span", { className: "dy-wfd-chips", children: q.options.map((o) => jsx("button", { type: "button", "aria-pressed": q.current === o.value, "data-wfd-answer": `${q.id}:${o.value}`, disabled: readOnly, onClick: () => onAnswer(q.id, o.value), children: o.label }, String(o.value))) })
     ] }, q.id))
   ] });
 }
-var TRIGGERS = [["manual", "By hand: I press Start"], ["schedule", "On a schedule"], ["event", "When something happens"]];
-var SCHEDULES = [["weekdays", "Every weekday"], ["daily", "Every day"], ["mondays", "Every Monday"]];
-var EVENTS = [["task-done", "A task in this project finishes"], ["task-blocked", "A task in this project gets stuck"], ["run-done", "A run of this workflow finishes"]];
+var TRIGGERS = [["manual", "\u0412\u0440\u0443\u0447\u043D\u0443\u044E: \u044F \u043D\u0430\u0436\u0438\u043C\u0430\u044E \xAB\u0421\u0442\u0430\u0440\u0442\xBB"], ["schedule", "\u041F\u043E \u0440\u0430\u0441\u043F\u0438\u0441\u0430\u043D\u0438\u044E"], ["event", "\u041A\u043E\u0433\u0434\u0430 \u0447\u0442\u043E-\u0442\u043E \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442"]];
+var SCHEDULES = [["weekdays", "\u041F\u043E \u0431\u0443\u0434\u043D\u044F\u043C"], ["daily", "\u041A\u0430\u0436\u0434\u044B\u0439 \u0434\u0435\u043D\u044C"], ["mondays", "\u041A\u0430\u0436\u0434\u044B\u0439 \u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A"]];
+var EVENTS = [["task-done", "\u0417\u0430\u0434\u0430\u0447\u0430 \u0432 \u044D\u0442\u043E\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0430\u0435\u0442\u0441\u044F"], ["task-blocked", "\u0417\u0430\u0434\u0430\u0447\u0430 \u0432 \u044D\u0442\u043E\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0435 \u0437\u0430\u0441\u0442\u0440\u0435\u0432\u0430\u0435\u0442"], ["run-done", "\u0417\u0430\u043F\u0443\u0441\u043A \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0430\u0435\u0442\u0441\u044F"]];
 function WorkflowSettingsDialog({ project, workflow, title, members, onClose }) {
   const saved = readWorkflowSettings(project, workflow);
   const [trigger, setTrigger] = useState(saved.trigger);
@@ -16160,11 +16160,11 @@ function WorkflowSettingsDialog({ project, workflow, title, members, onClose }) 
   const save2 = () => {
     const runs = Number(improve.afterRuns);
     if (improve.on && !(Number.isInteger(runs) && runs >= 1 && runs <= 50)) {
-      setError("After how many runs: a whole number from 1 to 50.");
+      setError("\u0427\u0435\u0440\u0435\u0437 \u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0437\u0430\u043F\u0443\u0441\u043A\u043E\u0432: \u0446\u0435\u043B\u043E\u0435 \u0447\u0438\u0441\u043B\u043E \u043E\u0442 1 \u0434\u043E 50.");
       return;
     }
     if (trigger.kind === "schedule" && !/^([01]\d|2[0-3]):[0-5]\d$/.test(trigger.time)) {
-      setError("Time: use 24-hour time, e.g. 09:00.");
+      setError("\u0412\u0440\u0435\u043C\u044F: 24-\u0447\u0430\u0441\u043E\u0432\u043E\u0439 \u0444\u043E\u0440\u043C\u0430\u0442, \u043D\u0430\u043F\u0440. 09:00.");
       return;
     }
     writeWorkflowSettings(project, workflow, { trigger, improve: { ...improve, afterRuns: runs || 5 } });
@@ -16178,34 +16178,34 @@ function WorkflowSettingsDialog({ project, workflow, title, members, onClose }) 
     if (event.target === event.currentTarget) onClose();
   }, children: jsxs("div", { className: "dockyard-modal dy-wfd-modal", role: "dialog", "aria-modal": true, "aria-labelledby": "wfd-settings-title", children: [
     jsxs("div", { className: "dockyard-modal-head", children: [
-      jsxs("div", { children: [jsx("h2", { id: "wfd-settings-title", children: "Workflow settings" }), jsx("p", { children: title })] }),
-      jsx(Button, { small: true, action: "wfd-settings-close", ariaLabel: "Close settings", onClick: onClose, children: "\xD7" })
+      jsxs("div", { children: [jsx("h2", { id: "wfd-settings-title", children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430" }), jsx("p", { children: title })] }),
+      jsx(Button, { small: true, action: "wfd-settings-close", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438", onClick: onClose, children: "\xD7" })
     ] }),
     jsxs("fieldset", { className: "dy-wfd-fieldset", children: [
-      jsxs("legend", { children: ["When it runs ", jsx(PreviewTag, {})] }),
+      jsxs("legend", { children: ["\u041A\u043E\u0433\u0434\u0430 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F ", jsx(PreviewTag, {})] }),
       ...TRIGGERS.map(([value, words2]) => radio(value, words2)),
       trigger.kind === "schedule" ? jsxs("div", { className: "dy-wfd-row", children: [
-        jsxs("label", { children: [jsx("span", { children: "How often" }), jsx("select", { value: trigger.schedule, "data-wfd-schedule": true, onChange: (e) => setTrigger({ ...trigger, schedule: e.target.value }), children: SCHEDULES.map(([v, w]) => jsx("option", { value: v, children: w }, v)) })] }),
-        jsxs("label", { children: [jsx("span", { children: "At (UK time)" }), jsx("input", { value: trigger.time, "data-wfd-time": true, inputMode: "numeric", onChange: (e) => setTrigger({ ...trigger, time: e.target.value }) })] })
+        jsxs("label", { children: [jsx("span", { children: "\u041A\u0430\u043A \u0447\u0430\u0441\u0442\u043E" }), jsx("select", { value: trigger.schedule, "data-wfd-schedule": true, onChange: (e) => setTrigger({ ...trigger, schedule: e.target.value }), children: SCHEDULES.map(([v, w]) => jsx("option", { value: v, children: w }, v)) })] }),
+        jsxs("label", { children: [jsx("span", { children: "\u0412 (\u0432\u0440\u0435\u043C\u044F UK)" }), jsx("input", { value: trigger.time, "data-wfd-time": true, inputMode: "numeric", onChange: (e) => setTrigger({ ...trigger, time: e.target.value }) })] })
       ] }) : null,
-      trigger.kind === "event" ? jsxs("label", { className: "dy-wfd-row", children: [jsx("span", { children: "When" }), jsx("select", { value: trigger.event, "data-wfd-event": true, onChange: (e) => setTrigger({ ...trigger, event: e.target.value }), children: EVENTS.map(([v, w]) => jsx("option", { value: v, children: w }, v)) })] }) : null
+      trigger.kind === "event" ? jsxs("label", { className: "dy-wfd-row", children: [jsx("span", { children: "\u041A\u043E\u0433\u0434\u0430" }), jsx("select", { value: trigger.event, "data-wfd-event": true, onChange: (e) => setTrigger({ ...trigger, event: e.target.value }), children: EVENTS.map(([v, w]) => jsx("option", { value: v, children: w }, v)) })] }) : null
     ] }),
     jsxs("fieldset", { className: "dy-wfd-fieldset", children: [
-      jsxs("legend", { children: ["Improve over time ", jsx(PreviewTag, {})] }),
+      jsxs("legend", { children: ["\u0423\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u0441\u043E \u0432\u0440\u0435\u043C\u0435\u043D\u0435\u043C ", jsx(PreviewTag, {})] }),
       jsxs("label", { className: "dy-wfd-radio", children: [
         jsx("input", { type: "checkbox", checked: improve.on, "data-wfd-improve": true, onChange: (e) => setImprove({ ...improve, on: e.target.checked }) }),
-        jsx("span", { children: "After a number of runs, a reviewer bot suggests changes" })
+        jsx("span", { children: "\u041F\u043E\u0441\u043B\u0435 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u0438\u0445 \u0437\u0430\u043F\u0443\u0441\u043A\u043E\u0432 \u0431\u043E\u0442-\u0440\u0435\u0432\u044C\u044E\u0435\u0440 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u0442 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" })
       ] }),
       improve.on ? jsxs("div", { className: "dy-wfd-row", children: [
-        jsxs("label", { children: [jsx("span", { children: "After this many runs" }), jsx("input", { type: "number", min: 1, max: 50, value: improve.afterRuns, "data-wfd-improve-runs": true, onChange: (e) => setImprove({ ...improve, afterRuns: e.target.value }) })] }),
-        jsxs("label", { children: [jsx("span", { children: "Reviewer" }), jsx("select", { value: improve.reviewer, "data-wfd-improve-reviewer": true, onChange: (e) => setImprove({ ...improve, reviewer: e.target.value }), children: [jsx("option", { value: "", children: "Whoever the project picks" }, ""), ...members.map((m) => jsx("option", { value: m, children: m }, m))] })] })
+        jsxs("label", { children: [jsx("span", { children: "\u041F\u043E\u0441\u043B\u0435 \u0441\u0442\u043E\u043B\u044C\u043A\u0438\u0445 \u0437\u0430\u043F\u0443\u0441\u043A\u043E\u0432" }), jsx("input", { type: "number", min: 1, max: 50, value: improve.afterRuns, "data-wfd-improve-runs": true, onChange: (e) => setImprove({ ...improve, afterRuns: e.target.value }) })] }),
+        jsxs("label", { children: [jsx("span", { children: "\u041F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0449\u0438\u0439" }), jsx("select", { value: improve.reviewer, "data-wfd-improve-reviewer": true, onChange: (e) => setImprove({ ...improve, reviewer: e.target.value }), children: [jsx("option", { value: "", children: "\u041A\u043E\u0433\u043E \u0432\u044B\u0431\u0435\u0440\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442" }, ""), ...members.map((m) => jsx("option", { value: m, children: m }, m))] })] })
       ] }) : null,
-      jsx("p", { className: "dockyard-meta", children: "Nothing changes until you approve the suggestion." })
+      jsx("p", { className: "dockyard-meta", children: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u043E\u0434\u043E\u0431\u0440\u0438\u0442\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435." })
     ] }),
     error ? jsx("p", { className: "dy-wfd-error", role: "alert", children: error }) : null,
     jsxs("div", { className: "dockyard-modal-actions", children: [
-      jsx(Button, { action: "wfd-settings-cancel", onClick: onClose, children: "Cancel" }),
-      jsx(Button, { action: "wfd-settings-save", variant: "primary", onClick: save2, children: "Save settings" })
+      jsx(Button, { action: "wfd-settings-cancel", onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+      jsx(Button, { action: "wfd-settings-save", variant: "primary", onClick: save2, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438" })
     ] })
   ] }) });
 }
@@ -16243,22 +16243,22 @@ function RepeatPopover({ node, anchor, check: savedCheck, onSave, onStop, onClos
   const save2 = () => {
     const n = Number(rounds);
     if (!(Number.isInteger(n) && n >= 1 && n <= 10)) {
-      setError("Rounds must be a whole number from 1 to 10.");
+      setError("\u0420\u0430\u0443\u043D\u0434\u043E\u0432 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0446\u0435\u043B\u043E\u0435 \u0447\u0438\u0441\u043B\u043E \u043E\u0442 1 \u0434\u043E 10.");
       return;
     }
     run(() => onSave({ rounds: n, check }));
   };
   return jsxs("div", { className: "dy-wfd-repeat", role: "dialog", "aria-modal": true, "aria-labelledby": "wfd-repeat-title", "data-wfd-repeat": node.node_id ?? node.id, style: { left: `${left}px`, top: `${top}px`, width: `${width}px` }, children: [
     jsx("h3", { id: "wfd-repeat-title", children: `Repeat "${node.title}"` }),
-    jsxs("label", { children: [jsx("span", { children: "At most this many rounds, then it asks you" }), jsx("input", { type: "number", min: 1, max: 10, value: rounds, "aria-invalid": error ? "true" : "false", "data-wfd-repeat-rounds": true, onChange: (e) => setRounds(e.target.value) })] }),
-    jsxs("label", { children: [jsxs("span", { children: ["How it's checked ", jsx(PreviewTag, {})] }), jsx("select", { value: check.by, "data-wfd-repeat-check": true, onChange: (e) => setCheck({ ...check, by: e.target.value }), children: Object.entries(CHECK_WORDS).map(([v, w]) => jsx("option", { value: v, children: w }, v)) })] }),
-    check.by === "judge" ? jsxs("label", { children: [jsx("span", { children: "Done when" }), jsx("input", { value: check.doneWhen, placeholder: "e.g. every test passes", "data-wfd-repeat-done-when": true, onChange: (e) => setCheck({ ...check, doneWhen: e.target.value }) })] }) : null,
-    jsx("p", { className: "dockyard-meta", children: "A round that gets stuck starts again; after the last round it asks you." }),
+    jsxs("label", { children: [jsx("span", { children: "\u041D\u0435 \u0431\u043E\u043B\u0435\u0435 \u0441\u0442\u043E\u043B\u044C\u043A\u043E \u0440\u0430\u0443\u043D\u0434\u043E\u0432, \u0437\u0430\u0442\u0435\u043C \u043E\u043D\u043E \u0441\u043F\u0440\u043E\u0441\u0438\u0442 \u0432\u0430\u0441" }), jsx("input", { type: "number", min: 1, max: 10, value: rounds, "aria-invalid": error ? "true" : "false", "data-wfd-repeat-rounds": true, onChange: (e) => setRounds(e.target.value) })] }),
+    jsxs("label", { children: [jsxs("span", { children: ["\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442\u0441\u044F ", jsx(PreviewTag, {})] }), jsx("select", { value: check.by, "data-wfd-repeat-check": true, onChange: (e) => setCheck({ ...check, by: e.target.value }), children: Object.entries(CHECK_WORDS).map(([v, w]) => jsx("option", { value: v, children: w }, v)) })] }),
+    check.by === "judge" ? jsxs("label", { children: [jsx("span", { children: "\u0413\u043E\u0442\u043E\u0432\u043E, \u043A\u043E\u0433\u0434\u0430" }), jsx("input", { value: check.doneWhen, placeholder: "e.g. every test passes", "data-wfd-repeat-done-when": true, onChange: (e) => setCheck({ ...check, doneWhen: e.target.value }) })] }) : null,
+    jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0441\u0442\u0440\u044F\u0432\u0448\u0438\u0439 \u0440\u0430\u0443\u043D\u0434 \u043D\u0430\u0447\u043D\u0451\u0442\u0441\u044F \u0437\u0430\u043D\u043E\u0432\u043E; \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0433\u043E \u2014 \u0441\u043F\u0440\u043E\u0441\u0438\u0442 \u0442\u0435\u0431\u044F." }),
     error ? jsx("p", { className: "dy-wfd-error", role: "alert", children: error }) : null,
     jsxs("div", { className: "dy-wfd-repeat-actions", children: [
-      jsx(Button, { small: true, variant: "primary", action: "wfd-repeat-save", disabled: busy, onClick: save2, children: busy ? "Saving\u2026" : draft ? "Apply to draft" : "Save version" }),
-      jsx(Button, { small: true, action: "wfd-repeat-stop", disabled: busy, onClick: () => run(onStop), children: "Stop repeating" }),
-      jsx(Button, { small: true, action: "wfd-repeat-cancel", disabled: busy, onClick: onClose, children: "Cancel" })
+      jsx(Button, { small: true, variant: "primary", action: "wfd-repeat-save", disabled: busy, onClick: save2, children: busy ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435\u2026" : draft ? "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C \u043A \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0443" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u044E" }),
+      jsx(Button, { small: true, action: "wfd-repeat-stop", disabled: busy, onClick: () => run(onStop), children: "\u041F\u0440\u0435\u043A\u0440\u0430\u0442\u0438\u0442\u044C \u043F\u043E\u0432\u0442\u043E\u0440" }),
+      jsx(Button, { small: true, action: "wfd-repeat-cancel", disabled: busy, onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
     ] })
   ] });
 }
@@ -18220,19 +18220,19 @@ var builtin_templates_default = {
 
 // hermes_dockyard_plugin/desktop/src/project/workflow-design/start-dialog.js
 var WAYS = Object.freeze([
-  { way: "blank", title: "Start blank", text: "An empty workflow with one step." },
-  { way: "template", title: "Use a template", text: "Start from one of 30 built-in templates, or one saved in your library." },
-  { way: "import", title: "Import", text: "Paste a workflow, or choose a file." },
-  { way: "ai", title: "Describe it to the AI", text: "Say what you want. The AI explains its plan and drafts the steps." }
+  { way: "blank", title: "\u041D\u0430\u0447\u0430\u0442\u044C \u0441 \u043F\u0443\u0441\u0442\u043E\u0433\u043E", text: "\u041F\u0443\u0441\u0442\u043E\u0439 \u043F\u0440\u043E\u0446\u0435\u0441\u0441 \u0441 \u043E\u0434\u043D\u0438\u043C \u0448\u0430\u0433\u043E\u043C." },
+  { way: "template", title: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D", text: "\u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 30 \u0432\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u044B\u0445 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u0433\u043E \u0432 \u0432\u0430\u0448\u0435\u0439 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435." },
+  { way: "import", title: "Import", text: "\u0412\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0440\u043E\u0446\u0435\u0441\u0441 \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043B." },
+  { way: "ai", title: "\u041E\u043F\u0438\u0441\u0430\u0442\u044C \u0418\u0418", text: "\u0421\u043A\u0430\u0436\u0438\u0442\u0435, \u0447\u0442\u043E \u043D\u0443\u0436\u043D\u043E. \u0418\u0418 \u043E\u0431\u044A\u044F\u0441\u043D\u0438\u0442 \u0441\u0432\u043E\u0439 \u043F\u043B\u0430\u043D \u0438 \u043D\u0430\u0431\u0440\u043E\u0441\u0430\u0435\u0442 \u0448\u0430\u0433\u0438." }
 ]);
 var SCOPES = Object.freeze([
-  { scope: "project", title: "This project", text: "Only this project uses it. It opens on the canvas, ready to build." },
-  { scope: "global", title: "Global", text: "Every project can use it, once turned on there. It is kept on the Workflows tab." }
+  { scope: "project", title: "\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442", text: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u044D\u0442\u0438\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u043C. \u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u0445\u043E\u043B\u0441\u0442\u0435, \u0433\u043E\u0442\u043E\u0432\u044B\u0439 \u043A \u0441\u0431\u043E\u0440\u043A\u0435." },
+  { scope: "global", title: "Global", text: "\u041B\u044E\u0431\u043E\u0439 \u043F\u0440\u043E\u0435\u043A\u0442 \u043C\u043E\u0436\u0435\u0442 \u0435\u0433\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C, \u043A\u0430\u043A \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u043A\u043B\u044E\u0447\u0438\u0442. \u041E\u043D \u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u043D\u0430 \u0432\u043A\u043B\u0430\u0434\u043A\u0435 \xAB\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u044B\xBB." }
 ]);
-var AI_EXAMPLES = Object.freeze(["Fix a bug until the tests pass", "Prepare a weekly release", "Research a topic and write a summary"]);
+var AI_EXAMPLES = Object.freeze(["\u0418\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0431\u0430\u0433, \u043F\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u044B \u043D\u0435 \u043F\u0440\u043E\u0439\u0434\u0443\u0442", "\u041F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u043D\u0435\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u043B\u0438\u0437", "\u0418\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u044C \u0442\u0435\u043C\u0443 \u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u0442\u044C \u0441\u0432\u043E\u0434\u043A\u0443"]);
 function NameField({ value, onChange, error }) {
   return jsxs("label", { className: "dy-wfd-field", children: [
-    jsx("span", { children: "Workflow name" }),
+    jsx("span", { children: "\u0418\u043C\u044F \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430" }),
     jsx("input", { value, "data-wfd-name": true, "aria-invalid": error ? "true" : "false", "aria-describedby": error ? "wfd-name-error" : void 0, onChange: (e) => onChange(e.target.value) }),
     error ? jsx("span", { className: "dy-wfd-error", id: "wfd-name-error", "data-wfd-name-error": true, children: error }) : null
   ] });
@@ -18265,7 +18265,7 @@ function TemplateDetail({ pick, members, whoWorks, whoChecks, onWorks, onChecks 
   const roleOf = (n) => checks.has(n.id) ? "checker" : "worker";
   const choose = (label, value, onChange, attr) => jsxs("label", { children: [
     jsx("span", { children: label }),
-    jsx("select", { value, [attr]: true, onChange: (e) => onChange(e.target.value), children: [jsx("option", { value: "", children: "Decide later" }, ""), ...members.map((m) => jsx("option", { value: m, children: m }, m))] })
+    jsx("select", { value, [attr]: true, onChange: (e) => onChange(e.target.value), children: [jsx("option", { value: "", children: "\u0420\u0435\u0448\u0438\u0442\u044C \u043F\u043E\u0437\u0436\u0435" }, ""), ...members.map((m) => jsx("option", { value: m, children: m }, m))] })
   ] });
   const same = Boolean(whoWorks) && whoWorks === whoChecks && checks.size > 0;
   return jsxs("div", { className: "dy-wfd-tpl-detail", "data-wfd-template-detail": t.name, children: [
@@ -18273,16 +18273,16 @@ function TemplateDetail({ pick, members, whoWorks, whoChecks, onWorks, onChecks 
     jsx(StepsPreview, { nodes: t.nodes, roleOf }),
     jsx("span", { className: "dy-wfd-based-on", "data-wfd-based-on": true, children: `Based on ${t.based_on}.` }),
     jsxs("div", { className: "dy-wfd-row", children: [
-      choose("Who does the work?", whoWorks, onWorks, "data-wfd-who-works"),
-      checks.size ? choose("Who checks it?", whoChecks, onChecks, "data-wfd-who-checks") : null
+      choose("\u041A\u0442\u043E \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0443?", whoWorks, onWorks, "data-wfd-who-works"),
+      checks.size ? choose("\u041A\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442?", whoChecks, onChecks, "data-wfd-who-checks") : null
     ] }),
     same ? jsx("span", { className: "dy-wfd-warning", role: "status", "data-wfd-same-bot": true, children: `${whoWorks} checks its own work here. A different checker catches more, so pick another bot if you can.` }) : null
   ] });
 }
 function ScopeLine({ scope, project, disabled, onChange }) {
   return jsxs("div", { className: "dy-wfd-scope-line", "data-wfd-scope-chosen": scope, children: [
-    jsx("span", { children: "Saving to" }),
-    jsx("strong", { children: scope === "global" ? "Global: every project can use it" : `This project: ${project?.name ?? project?.id ?? ""}` }),
+    jsx("span", { children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435 \u0432" }),
+    jsx("strong", { children: scope === "global" ? "\u0413\u043B\u043E\u0431\u0430\u043B\u044C\u043D\u043E: \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u0432\u0441\u0435\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C" : `This project: ${project?.name ?? project?.id ?? ""}` }),
     jsx(Button, { small: true, action: "wfd-scope-change", disabled, onClick: onChange, children: "Change" })
   ] });
 }
@@ -18290,7 +18290,7 @@ function NewWorkflowDialog({ project, taken, templates, members, onCreate, onClo
   const [scope, setScope] = useState(null);
   const [way, setWay] = useState("scope");
   const [name, setName] = useState("");
-  const [first, setFirst] = useState("Step 1");
+  const [first, setFirst] = useState("\u0428\u0430\u0433 1");
   const [template, setTemplate] = useState(null);
   const [whoWorks, setWhoWorks] = useState("");
   const [whoChecks, setWhoChecks] = useState("");
@@ -18326,7 +18326,7 @@ function NewWorkflowDialog({ project, taken, templates, members, onCreate, onClo
   };
   const checkName = () => {
     const clean = name.trim();
-    const problem = !clean ? "Give the workflow a name." : takenNames.includes(clean) ? `"${clean}" already exists. Pick another name.` : null;
+    const problem = !clean ? "\u0414\u0430\u0439\u0442\u0435 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0443 \u0438\u043C\u044F." : takenNames.includes(clean) ? `"${clean}" already exists. Pick another name.` : null;
     setNameError(problem);
     return problem ? null : clean;
   };
@@ -18338,14 +18338,14 @@ function NewWorkflowDialog({ project, taken, templates, members, onCreate, onClo
     return null;
   };
   const create = async () => {
-    const missing = way === "template" && !template ? "Pick a template first." : way === "import" && !(imported && imported.kind !== "invalid") ? imported ? "This text cannot be imported. Fix it, or describe it to the AI instead." : "Press Check it first." : way === "ai" && !aiDraft ? "Press Draft it first." : null;
+    const missing = way === "template" && !template ? "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0448\u0430\u0431\u043B\u043E\u043D." : way === "import" && !(imported && imported.kind !== "invalid") ? imported ? "\u042D\u0442\u043E\u0442 \u0442\u0435\u043A\u0441\u0442 \u043D\u0435\u043B\u044C\u0437\u044F \u0438\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C. \u0418\u0441\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u0435\u0433\u043E \u0438\u043B\u0438 \u043E\u043F\u0438\u0448\u0438\u0442\u0435 \u0418\u0418." : "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C\xBB." : way === "ai" && !aiDraft ? "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u0421\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\xBB." : null;
     setWayError(missing);
     if (missing) return;
     if (!taken?.[scope]) {
-      setWayError("Still checking which names are in use. Try again in a moment.");
+      setWayError("\u0415\u0449\u0451 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C, \u043A\u0430\u043A\u0438\u0435 \u0438\u043C\u0435\u043D\u0430 \u0437\u0430\u043D\u044F\u0442\u044B. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0447\u0435\u0440\u0435\u0437 \u043C\u043E\u043C\u0435\u043D\u0442.");
       return;
     }
-    if (way === "blank" && !first.trim()) setStepError("Name the first step.");
+    if (way === "blank" && !first.trim()) setStepError("\u041D\u0430\u0437\u043E\u0432\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433.");
     else setStepError(null);
     const clean = checkName();
     const nodes = nodesNow();
@@ -18383,21 +18383,21 @@ function NewWorkflowDialog({ project, taken, templates, members, onCreate, onClo
     setName(uniqueName(result.name, takenNames));
   };
   const body = () => {
-    if (way === "scope") return jsx("div", { className: "dy-wfd-ways dy-wfd-scopes", role: "group", "aria-label": "Where it lives", children: SCOPES.map((s) => {
+    if (way === "scope") return jsx("div", { className: "dy-wfd-ways dy-wfd-scopes", role: "group", "aria-label": "\u0413\u0434\u0435 \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F", children: SCOPES.map((s) => {
       const off = s.scope === "project" && !project;
       return jsxs("button", { type: "button", "data-wfd-scope": s.scope, disabled: off, onClick: () => pickScope(s.scope), children: [
         jsxs("strong", { children: [s.title, s.scope === "project" && project ? jsx("span", { className: "dy-wfd-scope-name", children: project.name ?? project.id }) : null] }),
-        jsx("span", { children: off ? "Pick a project in the switcher first." : s.text })
+        jsx("span", { children: off ? "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442 \u0432 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435." : s.text })
       ] }, s.scope);
     }) });
     if (way === "choose") return jsx("div", { className: "dy-wfd-ways", children: WAYS.map((w) => jsxs("button", { type: "button", "data-wfd-way": w.way, onClick: () => go(w.way), children: [
-      jsxs("strong", { children: [w.title, w.way === "ai" ? jsx(PreviewTag, { children: "Practice AI" }) : null] }),
+      jsxs("strong", { children: [w.title, w.way === "ai" ? jsx(PreviewTag, { children: "\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430 \u0418\u0418" }) : null] }),
       jsx("span", { children: w.text })
     ] }, w.way)) });
     if (way === "blank") return jsxs("div", { className: "dy-wfd-way-body", children: [
       jsx(NameField, { value: name, onChange: setName, error: nameError }),
       jsxs("label", { className: "dy-wfd-field", children: [
-        jsx("span", { children: "First step" }),
+        jsx("span", { children: "\u041F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433" }),
         jsx("input", { value: first, "data-wfd-first-step": true, "aria-invalid": stepError ? "true" : "false", onChange: (e) => setFirst(e.target.value) }),
         stepError ? jsx("span", { className: "dy-wfd-error", "data-wfd-step-error": true, children: stepError }) : null
       ] })
@@ -18409,8 +18409,8 @@ function NewWorkflowDialog({ project, taken, templates, members, onCreate, onClo
     ] }, "picked") : jsx("div", { className: "dy-wfd-way-body", children: jsx(TemplatePicker, { builtins: builtin_templates_default.templates, groups: builtin_templates_default.groups, saved: templates, value: template, onPick: pickTemplate }) }, "browse");
     if (way === "import") return jsxs("div", { className: "dy-wfd-way-body", children: [
       jsxs("label", { className: "dy-wfd-field", children: [
-        jsx("span", { children: "Paste the workflow" }),
-        jsx("textarea", { rows: 5, value: importText, "data-wfd-import-text": true, placeholder: "A Project Stewardship export (JSON). Other formats go through the AI.", onChange: (e) => {
+        jsx("span", { children: "\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043F\u0440\u043E\u0446\u0435\u0441\u0441" }),
+        jsx("textarea", { rows: 5, value: importText, "data-wfd-import-text": true, placeholder: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442 Project Stewardship (JSON). \u0414\u0440\u0443\u0433\u0438\u0435 \u0444\u043E\u0440\u043C\u0430\u0442\u044B \u2014 \u0447\u0435\u0440\u0435\u0437 \u0418\u0418.", onChange: (e) => {
           setImportText(e.target.value);
           setImported(null);
         } })
@@ -18421,46 +18421,46 @@ function NewWorkflowDialog({ project, taken, templates, members, onCreate, onClo
           setImportText(text2);
           check(text2);
         } })] }),
-        jsx(Button, { small: true, action: "wfd-import-check", onClick: () => check(importText), children: "Check it" })
+        jsx(Button, { small: true, action: "wfd-import-check", onClick: () => check(importText), children: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C" })
       ] }),
       jsx(ImportResult, { result: imported }),
       imported?.kind === "invalid" ? jsx(Button, { small: true, action: "wfd-import-to-ai", onClick: () => {
         go("ai");
         setDescribe(importText.slice(0, 400));
-      }, children: "Describe it to the AI instead" }) : null,
+      }, children: "\u0412\u043C\u0435\u0441\u0442\u043E \u044D\u0442\u043E\u0433\u043E \u043E\u043F\u0438\u0441\u0430\u0442\u044C \u0418\u0418" }) : null,
       imported && imported.kind !== "invalid" ? jsx(NameField, { value: name, onChange: setName, error: nameError }) : null
     ] });
     return jsxs("div", { className: "dy-wfd-way-body", children: [
       jsx(PracticeAiNote, {}),
       aiDraft ? null : jsxs("label", { className: "dy-wfd-field", children: [
-        jsx("span", { children: "What should this workflow do?" }),
+        jsx("span", { children: "\u0427\u0442\u043E \u0434\u043E\u043B\u0436\u0435\u043D \u0434\u0435\u043B\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u043F\u0440\u043E\u0446\u0435\u0441\u0441?" }),
         jsx("textarea", { rows: 3, value: describe, "data-wfd-ai-describe": true, "aria-invalid": aiError ? "true" : "false", placeholder: "e.g. When a test fails, find the bug, fix it until the tests pass, and ask me before merging.", onChange: (e) => setDescribe(e.target.value) }),
         aiError ? jsx("span", { className: "dy-wfd-error", "data-wfd-ai-error": true, children: aiError }) : null
       ] }),
-      aiDraft ? null : jsx("div", { className: "dy-wfd-chips", role: "group", "aria-label": "Examples", children: AI_EXAMPLES.map((text2) => jsx("button", { type: "button", "data-wfd-ai-example": text2, onClick: () => setDescribe(text2), children: text2 }, text2)) }),
-      aiDraft ? null : jsx(Button, { action: "wfd-ai-draft", variant: "primary", onClick: () => draft(describe), children: "Draft it" }),
+      aiDraft ? null : jsx("div", { className: "dy-wfd-chips", role: "group", "aria-label": "\u041F\u0440\u0438\u043C\u0435\u0440\u044B", children: AI_EXAMPLES.map((text2) => jsx("button", { type: "button", "data-wfd-ai-example": text2, onClick: () => setDescribe(text2), children: text2 }, text2)) }),
+      aiDraft ? null : jsx(Button, { action: "wfd-ai-draft", variant: "primary", onClick: () => draft(describe), children: "\u0421\u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A" }),
       aiDraft ? jsx(AiPlan, { draft: aiDraft, onAnswer: (id, value) => setAiDraft(answerQuestion(aiDraft, id, value)) }) : null,
-      aiDraft ? jsx(Button, { small: true, action: "wfd-ai-redescribe", onClick: () => setAiDraft(null), children: "Change the description" }) : null,
+      aiDraft ? jsx(Button, { small: true, action: "wfd-ai-redescribe", onClick: () => setAiDraft(null), children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435" }) : null,
       aiDraft ? jsx(NameField, { value: name, onChange: setName, error: nameError }) : null
     ] });
   };
-  const heading = way === "scope" ? "Where should it live?" : way === "choose" ? "How do you want to start?" : WAYS.find((w) => w.way === way).title;
+  const heading = way === "scope" ? "\u0413\u0434\u0435 \u044D\u0442\u043E \u0434\u043E\u043B\u0436\u043D\u043E \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u044C\u0441\u044F?" : way === "choose" ? "\u041A\u0430\u043A \u0432\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u043D\u0430\u0447\u0430\u0442\u044C?" : WAYS.find((w) => w.way === way).title;
   const atStart = way === "scope" || way === "choose";
   return jsx("section", { className: "dockyard-modal-layer", "data-wfd-new-dialog": way, onClick: (event) => {
     if (event.target === event.currentTarget && !busy) onClose();
   }, children: jsxs("div", { className: "dockyard-modal dy-wfd-modal dy-wfd-new", role: "dialog", "aria-modal": true, "aria-labelledby": "wfd-new-title", children: [
     jsxs("div", { className: "dockyard-modal-head", children: [
-      jsxs("div", { children: [jsx("h2", { id: "wfd-new-title", children: "New workflow" }), jsx("p", { children: heading })] }),
-      jsx(Button, { small: true, action: "wfd-new-close", ariaLabel: "Close", disabled: busy, onClick: onClose, children: "\xD7" })
+      jsxs("div", { children: [jsx("h2", { id: "wfd-new-title", children: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0446\u0435\u0441\u0441" }), jsx("p", { children: heading })] }),
+      jsx(Button, { small: true, action: "wfd-new-close", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C", disabled: busy, onClick: onClose, children: "\xD7" })
     ] }),
     way === "scope" ? null : jsx(ScopeLine, { scope, project, disabled: busy, onChange: () => go("scope") }),
     body(),
     serverError ? jsx("p", { className: "dy-wfd-error", role: "alert", "data-wfd-create-error": true, children: serverError }) : null,
     wayError ? jsx("p", { className: "dy-wfd-error", role: "alert", "data-wfd-way-error": true, children: wayError }) : null,
-    atStart ? null : jsx("p", { className: "dockyard-meta", children: "Nothing is saved until you press Create workflow." }),
+    atStart ? null : jsx("p", { className: "dockyard-meta", children: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u043D\u0430\u0436\u043C\u0451\u0442\u0435 \xAB\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0440\u043E\u0446\u0435\u0441\u0441\xBB." }),
     jsxs("div", { className: "dockyard-modal-actions", children: [
-      atStart ? jsx(Button, { action: "wfd-new-cancel", onClick: onClose, children: "Cancel" }) : jsx(Button, { action: "wfd-new-back", disabled: busy, onClick: () => go("choose"), children: "\u2190 All ways in" }),
-      atStart ? null : jsx(Button, { action: "wfd-create", variant: "primary", disabled: busy, onClick: create, children: busy ? "Creating\u2026" : "Create workflow" })
+      atStart ? jsx(Button, { action: "wfd-new-cancel", onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }) : jsx(Button, { action: "wfd-new-back", disabled: busy, onClick: () => go("choose"), children: "\u2190 All ways in" }),
+      atStart ? null : jsx(Button, { action: "wfd-create", variant: "primary", disabled: busy, onClick: create, children: busy ? "Creating\u2026" : "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0440\u043E\u0446\u0435\u0441\u0441" })
     ] })
   ] }) });
 }
@@ -18493,26 +18493,26 @@ var focusToggle = () => {
   window.setTimeout(() => document.querySelector(TOGGLE)?.focus(), 0);
 };
 var STATUS_WORDS = {
-  pending: "Nothing changes on the canvas until you press Apply.",
-  parked: "Not applied.",
-  replaced: "Replaced by the suggestion below, which includes these changes.",
-  stale: "The canvas has changed since this suggestion. Ask again for an up-to-date one.",
-  applied: "Applied to the canvas."
+  pending: "\u041D\u0430 \u0445\u043E\u043B\u0441\u0442\u0435 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u043D\u0430\u0436\u043C\u0451\u0442\u0435 \xAB\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C\xBB.",
+  parked: "\u041D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u043E.",
+  replaced: "\u0417\u0430\u043C\u0435\u043D\u0435\u043D\u043E \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435\u043C \u043D\u0438\u0436\u0435, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0432\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u044D\u0442\u0438 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F.",
+  stale: "\u0425\u043E\u043B\u0441\u0442 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0441\u044F \u0441 \u043C\u043E\u043C\u0435\u043D\u0442\u0430 \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u0417\u0430\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0435.",
+  applied: "\u041F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u043E \u043D\u0430 \u0445\u043E\u043B\u0441\u0442\u0435."
 };
-var SETTLED_WORDS = { saved: "Saved.", discarded: "Discarded." };
+var SETTLED_WORDS = { saved: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E.", discarded: "\u041E\u0442\u043C\u0435\u043D\u0435\u043D\u043E." };
 function SuggestionCard({ entry, status, onApply, onNotYet, onUndo }) {
   const s = entry.suggestion;
   return jsxs("div", { className: `dy-wfd-ai-suggestion is-${status}`, "data-wfd-ai-suggestion": status, children: [
-    jsx("h4", { children: s.kind === "draft" ? "Suggested steps" : "Suggested change" }),
+    jsx("h4", { children: s.kind === "draft" ? "\u041F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u043C\u044B\u0435 \u0448\u0430\u0433\u0438" : "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u043D\u043E\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435" }),
     entry.did?.length ? jsx("ul", { className: "dy-wfd-ai-changes", "data-wfd-ai-changes": true, children: entry.did.map((d, i) => jsx("li", { children: d }, `${i}-${d}`)) }) : null,
-    s.kind === "change" ? jsxs("details", { children: [jsx("summary", { children: "All the steps after this change" }), jsx(StepsPreview, { nodes: s.nodes })] }) : null,
+    s.kind === "change" ? jsxs("details", { children: [jsx("summary", { children: "\u0412\u0441\u0435 \u0448\u0430\u0433\u0438 \u043F\u043E\u0441\u043B\u0435 \u044D\u0442\u043E\u0433\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" }), jsx(StepsPreview, { nodes: s.nodes })] }) : null,
     entry.undone ? jsx("p", { className: "dockyard-meta", children: "Undone." }) : entry.settled ? jsx("p", { className: "dockyard-meta", "data-wfd-ai-settled": entry.settled, children: `${STATUS_WORDS.applied} ${SETTLED_WORDS[entry.settled]}` }) : jsx("p", { className: "dockyard-meta", children: STATUS_WORDS[status] }),
     status === "pending" ? jsxs("div", { className: "dy-wfd-ai-suggestion-actions", children: [
       jsx(Button, { small: true, variant: "primary", action: "wfd-ai-apply", onClick: onApply, children: "Apply" }),
-      jsx(Button, { small: true, action: "wfd-ai-not-yet", onClick: onNotYet, children: "Not yet" })
+      jsx(Button, { small: true, action: "wfd-ai-not-yet", onClick: onNotYet, children: "\u041F\u043E\u043A\u0430 \u043D\u0435\u0442" })
     ] }) : null,
-    status === "parked" ? jsx("div", { className: "dy-wfd-ai-suggestion-actions", children: jsx(Button, { small: true, action: "wfd-ai-apply", onClick: onApply, children: "Apply after all" }) }) : null,
-    status === "applied" && !entry.undone && !entry.settled ? jsx("div", { className: "dy-wfd-ai-suggestion-actions", children: jsx(Button, { small: true, action: "wfd-ai-undo", onClick: onUndo, children: "Undo this change" }) }) : null
+    status === "parked" ? jsx("div", { className: "dy-wfd-ai-suggestion-actions", children: jsx(Button, { small: true, action: "wfd-ai-apply", onClick: onApply, children: "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435 \u0432\u0441\u0435\u0445" }) }) : null,
+    status === "applied" && !entry.undone && !entry.settled ? jsx("div", { className: "dy-wfd-ai-suggestion-actions", children: jsx(Button, { small: true, action: "wfd-ai-undo", onClick: onUndo, children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u044D\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435" }) }) : null
   ] });
 }
 function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pinned, onPin, onApply, onClose, unsaved = false, saveError = null, onSave, onDiscard }) {
@@ -18563,7 +18563,7 @@ function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pinned, on
   const send = (message = text2) => {
     const clean = message.trim();
     if (!clean) {
-      setError("Type what you want first.");
+      setError("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u0432\u0435\u0434\u0438, \u0447\u0442\u043E \u0445\u043E\u0447\u0435\u0448\u044C.");
       return;
     }
     setError(null);
@@ -18609,17 +18609,17 @@ function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pinned, on
       ...(entry.reply ?? []).map((line, i) => jsx("p", { children: line }, `r${i}`)),
       entry.steps ? jsx(StepsPreview, { nodes: entry.steps }) : null,
       ...(entry.after ?? []).map((line, i) => jsx("p", { children: line }, `a${i}`)),
-      entry.suggestion ? jsx(SuggestionCard, { entry, status, onApply: () => apply(entry), onNotYet: () => notYet(entry), onUndo: () => undo(entry) }) : entry.did?.length ? jsxs("details", { children: [jsx("summary", { children: "What I changed" }), jsx("ul", { children: entry.did.map((d, i) => jsx("li", { children: d }, `${i}-${d}`)) })] }) : null
+      entry.suggestion ? jsx(SuggestionCard, { entry, status, onApply: () => apply(entry), onNotYet: () => notYet(entry), onUndo: () => undo(entry) }) : entry.did?.length ? jsxs("details", { children: [jsx("summary", { children: "\u0427\u0442\u043E \u044F \u0438\u0437\u043C\u0435\u043D\u0438\u043B" }), jsx("ul", { children: entry.did.map((d, i) => jsx("li", { children: d }, `${i}-${d}`)) })] }) : null
     ] }, entry.id);
   };
   return jsxs("aside", { ref: panelRef, id: "wfd-ai-sidebar", className: "dy-wfd-ai", "aria-labelledby": "wfd-ai-title", "data-wfd-ai-sidebar": true, "data-pinned": pinned ? "true" : "false", children: [
     jsxs("header", { className: "dy-wfd-ai-head", children: [
       jsxs("div", { children: [
-        jsx("h2", { id: "wfd-ai-title", children: "Ask AI" }),
+        jsx("h2", { id: "wfd-ai-title", children: "\u0421\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0418\u0418" }),
         jsx("p", { className: "dy-wfd-ai-sub", children: workflowTitle })
       ] }),
-      jsx(Button, { small: true, action: "wfd-ai-pin", variant: pinned ? "primary" : "", data: { "aria-pressed": pinned ? "true" : "false", title: pinned ? "Let it float over the page again" : "Keep it open beside the page" }, onClick: () => onPin(!pinned), children: pinned ? "Unpin" : "Pin" }),
-      jsx(Button, { small: true, action: "wfd-ai-close", ariaLabel: "Close the AI chat", onClick: () => {
+      jsx(Button, { small: true, action: "wfd-ai-pin", variant: pinned ? "primary" : "", data: { "aria-pressed": pinned ? "true" : "false", title: pinned ? "\u0421\u043D\u043E\u0432\u0430 \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u043F\u043B\u0430\u0432\u0430\u044E\u0449\u0438\u043C \u043D\u0430\u0434 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435\u0439" : "\u0414\u0435\u0440\u0436\u0430\u0442\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u043C \u0440\u044F\u0434\u043E\u043C \u0441\u043E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435\u0439" }, onClick: () => onPin(!pinned), children: pinned ? "\u041E\u0442\u043A\u0440\u0435\u043F\u0438\u0442\u044C" : "\u0417\u0430\u043A\u0440\u0435\u043F\u0438\u0442\u044C" }),
+      jsx(Button, { small: true, action: "wfd-ai-close", ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0447\u0430\u0442 \u0441 \u0418\u0418", onClick: () => {
         closeRef.current();
         focusToggle();
       }, children: "\xD7" })
@@ -18629,26 +18629,26 @@ function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pinned, on
       thread.length ? null : jsx("p", { className: "dockyard-meta", children: empty ? "Say what the workflow should do. I suggest the steps here first; nothing goes on the canvas until you press Apply." : `Ask about "${workflowTitle}" or ask for a change. I suggest each change here first; nothing changes until you press Apply.` }),
       ...thread.map((entry) => entry.role === "user" ? jsx("p", { className: "dy-wfd-ai-user", "data-wfd-ai-user": true, children: entry.text }, entry.id) : renderAi(entry))
     ] }),
-    empty && !thread.length ? jsx("div", { className: "dy-wfd-chips", role: "group", "aria-label": "Examples", children: AI_EXAMPLES.map((example) => jsx("button", { type: "button", "data-wfd-ai-example": example, onClick: () => send(example), children: example }, example)) }) : null,
+    empty && !thread.length ? jsx("div", { className: "dy-wfd-chips", role: "group", "aria-label": "\u041F\u0440\u0438\u043C\u0435\u0440\u044B", children: AI_EXAMPLES.map((example) => jsx("button", { type: "button", "data-wfd-ai-example": example, onClick: () => send(example), children: example }, example)) }) : null,
     // The AI's changes can be kept or dropped from here too: floating, the
     // sidebar covers the right end of the toolbar.
-    unsaved ? jsxs("div", { className: "dy-wfd-ai-unsaved", role: "group", "aria-label": "Unsaved changes", "data-wfd-ai-unsaved": true, children: [
-      jsx("span", { children: "Unsaved changes on the canvas" }),
-      jsx(Button, { small: true, variant: "primary", action: "wfd-ai-save", onClick: onSave, children: "Save version" }),
-      jsx(Button, { small: true, action: "wfd-ai-discard", onClick: onDiscard, children: "Discard" }),
+    unsaved ? jsxs("div", { className: "dy-wfd-ai-unsaved", role: "group", "aria-label": "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "data-wfd-ai-unsaved": true, children: [
+      jsx("span", { children: "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043D\u0430 \u0445\u043E\u043B\u0441\u0442\u0435" }),
+      jsx(Button, { small: true, variant: "primary", action: "wfd-ai-save", onClick: onSave, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u044E" }),
+      jsx(Button, { small: true, action: "wfd-ai-discard", onClick: onDiscard, children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u043A\u0438" }),
       saveError ? jsx("p", { className: "dy-wfd-error", role: "alert", children: saveError }) : null
     ] }) : null,
     jsxs("div", { className: "dy-wfd-ai-compose", children: [
-      jsx("textarea", { ref: inputRef, rows: 2, value: text2, "data-wfd-ai-input": true, "aria-label": "Message to the AI", "aria-invalid": error ? "true" : "false", placeholder: empty ? "e.g. Fix a bug until the tests pass" : "e.g. what does this do? or: repeat up to 3 times", onChange: (e) => setText(e.target.value), onKeyDown: (e) => {
+      jsx("textarea", { ref: inputRef, rows: 2, value: text2, "data-wfd-ai-input": true, "aria-label": "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u0418\u0418", "aria-invalid": error ? "true" : "false", placeholder: empty ? "\u043D\u0430\u043F\u0440. \u0418\u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0431\u0430\u0433, \u043F\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u044B \u043D\u0435 \u043F\u0440\u043E\u0439\u0434\u0443\u0442" : "\u043D\u0430\u043F\u0440. \u0447\u0442\u043E \u044D\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442? \u0438\u043B\u0438: \u043F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0434\u043E 3 \u0440\u0430\u0437", onChange: (e) => setText(e.target.value), onKeyDown: (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
           send();
         }
       } }),
-      jsx(Button, { small: true, variant: "primary", action: "wfd-ai-send", onClick: () => send(), children: "Send" })
+      jsx(Button, { small: true, variant: "primary", action: "wfd-ai-send", onClick: () => send(), children: "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C" })
     ] }),
     error ? jsx("p", { className: "dy-wfd-error", role: "alert", children: error }) : null,
-    jsx("p", { className: "dockyard-meta", children: "Nothing changes until you press Apply, and nothing is saved until Save version." })
+    jsx("p", { className: "dockyard-meta", children: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u043D\u0430\u0436\u043C\u0451\u0442\u0435 \xAB\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C\xBB, \u0438 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u0434\u043E \xAB\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u044E\xBB." })
   ] });
 }
 
@@ -18656,12 +18656,12 @@ function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pinned, on
 var NO_RUNS = [];
 var NO_THREAD = [];
 var failureText = (failure) => String(failure?.message ?? failure ?? "unknown error").replace(/^\d{3}:\s*/, "");
-var RUN_WORDS = { pending: ["Running", "info"], escalated: ["Needs a person", "danger"], complete: ["Finished", "success"] };
+var RUN_WORDS = { pending: ["Running", "info"], escalated: ["\u041D\u0443\u0436\u0435\u043D \u0447\u0435\u043B\u043E\u0432\u0435\u043A", "danger"], complete: ["\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E", "success"] };
 var runWord = (status) => RUN_WORDS[status] ?? [String(status ?? "unknown"), "neutral"];
 var COUNT_WORDS = [["done", "done"], ["working", "working"], ["blocked", "blocked"], ["pending", "pending"], ["skipped", "not needed"]];
 var timerWords = (timer) => {
   if (!timer) return null;
-  if (!timer.moving) return "Runs move on when you press Move on now (the timer is off).";
+  if (!timer.moving) return "\u0417\u0430\u043F\u0443\u0441\u043A\u0438 \u0434\u0432\u0438\u0433\u0430\u044E\u0442\u0441\u044F, \u043A\u043E\u0433\u0434\u0430 \u0432\u044B \u043D\u0430\u0436\u043C\u0451\u0442\u0435 \xAB\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441\xBB (\u0442\u0430\u0439\u043C\u0435\u0440 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D).";
   const at = new Date(timer.at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const failed = timer.failed?.length ?? 0;
   return `Runs move on by themselves (checked ${at})${failed ? ` \xB7 ${failed} run${failed === 1 ? "" : "s"} could not move on` : ""}`;
@@ -18756,7 +18756,7 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
   const toDefinitionNodes = (editedNodes) => mergeEdits(editedNodes, planRef.current.nodes);
   const savePlan = async (editedNodes) => {
     const workflow = planRef.current.name;
-    if (!workflow) throw new Error("No workflow is open.");
+    if (!workflow) throw new Error("\u041D\u0438 \u043E\u0434\u0438\u043D \u043F\u0440\u043E\u0446\u0435\u0441\u0441 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442.");
     const saved = await api(`/projects/${encoded}/workflows/${encodeURIComponent(workflow)}/versions`, { method: "POST", body: { nodes: toDefinitionNodes(editedNodes) }, suppressErrorToast: true });
     if (planRef.current.name === workflow && Number.isFinite(Number(saved?.version)) && Array.isArray(saved?.definition?.nodes)) {
       planRef.current = { name: workflow, version: Number(saved.version), nodes: saved.definition.nodes };
@@ -18894,7 +18894,7 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
       },
       onReject: async (ref) => {
         const decision = await api(`/initiatives/${encodeURIComponent(ref)}/decision`);
-        await api(`/initiatives/${encodeURIComponent(ref)}/reject`, { method: "POST", body: { expected_fingerprint: decision.fingerprint, reason: "Rejected from workflow gate review" } });
+        await api(`/initiatives/${encodeURIComponent(ref)}/reject`, { method: "POST", body: { expected_fingerprint: decision.fingerprint, reason: "\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u043E \u043D\u0430 \u0433\u0435\u0439\u0442-\u0440\u0435\u0432\u044C\u044E \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430" } });
         await actionsRef.current.loadRuns(workflowName);
       },
       // Retry gives a stuck step back to its bot: Doing unblocks it. To do
@@ -18980,7 +18980,7 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
       }
     }
     if (!nodesNow.some((n) => n.human_gate)) issues.push("no human gate on this graph");
-    setValidation(issues.length ? { ok: false, text: `Validation: ${issues.join("; ")}` } : { ok: true, text: "Validation: no issues found" });
+    setValidation(issues.length ? { ok: false, text: `Validation: ${issues.join("; ")}` } : { ok: true, text: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430: \u043F\u0440\u043E\u0431\u043B\u0435\u043C \u043D\u0435\u0442" });
   };
   const statusFor = (run, node) => run?.nodes?.find((item) => item.node_id === (node.id || node.node_id))?.status ?? "pending";
   const latest = runs[0];
@@ -18994,7 +18994,7 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
     try {
       const moved = await api(`/projects/${encoded}/workflows/${encodeURIComponent(current.name)}/runs/${encodeURIComponent(latest.run_key)}/advance`, { method: "POST", body: {}, suppressErrorToast: true });
       const changes = moved?.changes ?? [];
-      setMoveNote(changes.length ? `Moved on: ${changes.join("; ")}.` : "Nothing to move on: each step is waiting for its turn, its bot or you.");
+      setMoveNote(changes.length ? `Moved on: ${changes.join("; ")}.` : "\u0414\u0432\u0438\u0433\u0430\u0442\u044C \u043D\u0435\u0447\u0435\u0433\u043E: \u043A\u0430\u0436\u0434\u044B\u0439 \u0448\u0430\u0433 \u0436\u0434\u0451\u0442 \u0441\u0432\u043E\u0435\u0439 \u043E\u0447\u0435\u0440\u0435\u0434\u0438, \u0441\u0432\u043E\u0435\u0433\u043E \u0431\u043E\u0442\u0430 \u0438\u043B\u0438 \u0432\u0430\u0441.");
     } catch (failure) {
       setMoveNote(null);
       setError(failureText(failure));
@@ -19060,7 +19060,7 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
     if (!d) return;
     setDraftError(null);
     if (!d.nodes.length) {
-      setDraftError("Add at least one step first.");
+      setDraftError("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u0438\u043D \u0448\u0430\u0433.");
       return;
     }
     try {
@@ -19091,23 +19091,23 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
     acc[key] = (acc[key] ?? 0) + 1;
     return acc;
   }, {}) : null;
-  const askAi = (key) => jsx(Button, { small: true, action: "wfd-ask-ai", variant: aiOpen ? "primary" : "", data: { "aria-expanded": aiOpen ? "true" : "false", "aria-controls": "wfd-ai-sidebar" }, disabled: !current, onClick: () => setAiOpen((v) => !v), children: "Ask AI" }, key);
+  const askAi = (key) => jsx(Button, { small: true, action: "wfd-ask-ai", variant: aiOpen ? "primary" : "", data: { "aria-expanded": aiOpen ? "true" : "false", "aria-controls": "wfd-ai-sidebar" }, disabled: !current, onClick: () => setAiOpen((v) => !v), children: "\u0421\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0418\u0418" }, key);
   return jsxs("section", { className: "dockyard-feature-card dockyard-workflows-v6 dy-wfd-on", "data-workflows-prototype": project.id, "data-executable-workflows": project.id, children: [
     // One compact row (the old two header blocks took ~150px and pushed the
     // canvas below the window).
     jsxs("header", { className: "dy-wfd-head", "data-wfd-head": true, children: [
-      jsx("h2", { children: "Workflows" }),
+      jsx("h2", { children: "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u044B" }),
       jsx(StatusTag, { tone: latest ? runWord(latest.status)[1] : "neutral", label: latest ? `Live: ${runWord(latest.status)[0]}` : `${number(grouped.length)} ${plural2(grouped.length, "workflow")}` }),
       !latest && current && !draft ? jsx("span", { className: "dy-wfd-chip", "data-workflow-no-run": true, children: `${current.name}: no runs yet` }) : null,
       jsx("span", { className: "dy-wfd-grow" }),
-      jsx(Button, { small: true, action: "open-workflow-library", onClick: () => onOpenLibrary?.(), children: "Open library" }),
-      jsx(Button, { small: true, variant: "primary", action: "wfd-new-workflow", disabled: Boolean(draft), onClick: startNew, children: "New workflow" })
+      jsx(Button, { small: true, action: "open-workflow-library", onClick: () => onOpenLibrary?.(), children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443" }),
+      jsx(Button, { small: true, variant: "primary", action: "wfd-new-workflow", disabled: Boolean(draft), onClick: startNew, children: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0446\u0435\u0441\u0441" })
     ] }),
     error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null,
     jsxs("div", { className: libCollapsed ? "dockyard-wf3 lib-collapsed" : "dockyard-wf3", "data-wf-library-collapsed": libCollapsed ? "true" : "false", children: [
       // ---- Zone 1: the workflow library ------------------------------------
       jsxs("aside", { className: "dockyard-wf3-lib", "data-workflow-library": project.id, "aria-hidden": libCollapsed ? "true" : void 0, inert: libCollapsed ? true : void 0, children: [
-        jsxs("div", { className: "dockyard-wf3-lib-head", children: [jsx("strong", { children: "Library" }), jsx("span", { children: number(grouped.length) })] }),
+        jsxs("div", { className: "dockyard-wf3-lib-head", children: [jsx("strong", { children: "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430" }), jsx("span", { children: number(grouped.length) })] }),
         grouped.length ? jsx("div", { className: "dockyard-wf3-lib-list", children: grouped.map((item) => jsxs("button", {
           type: "button",
           className: item.name === current?.name ? "active" : "",
@@ -19115,13 +19115,13 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
           "data-action": "select-workflow",
           // The AI's unsaved changes are never thrown away by a click.
           disabled: Boolean(draft),
-          title: draft ? "Save or discard the AI\u2019s changes first." : void 0,
+          title: draft ? "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0438\u043B\u0438 \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0418\u0418." : void 0,
           onClick: () => setSelected(item.name),
           children: [
             jsx("strong", { children: item.name }),
             jsx("small", { children: `v${item.versions[item.versions.length - 1].version}${item.archived_at ? " \xB7 archived" : ""}` })
           ]
-        }, item.name)) }) : jsx("p", { className: "dockyard-meta", children: "No workflows yet. Press New workflow." })
+        }, item.name)) }) : jsx("p", { className: "dockyard-meta", children: "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\xBB." })
       ] }),
       // ---- Zone 2: toolbar + run readout + canvas (the surface) ----------
       // There is no third column: run lifecycle lives in the toolbar, the
@@ -19129,31 +19129,31 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
       // details open in the canvas's own floating panel, and the AI chat is
       // a sidebar beside the page.
       jsxs("div", { className: "dockyard-wf3-stage", children: [
-        jsxs("div", { className: "dockyard-wf3-toolbar", role: "toolbar", "aria-label": "Workflow canvas tools", children: draft ? [
+        jsxs("div", { className: "dockyard-wf3-toolbar", role: "toolbar", "aria-label": "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0445\u043E\u043B\u0441\u0442\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432", children: draft ? [
           // The AI's unsaved changes have their own controls; the run
           // controls come back once they are saved or discarded.
-          jsx("button", { type: "button", className: "dockyard-wf3-libtoggle", "data-action": "wf-toggle-library", "aria-expanded": libCollapsed ? "false" : "true", "aria-label": libCollapsed ? "Show workflow library" : "Hide workflow library", title: libCollapsed ? "Show library" : "Hide library", onClick: () => setLibCollapsed((v) => !v), children: libCollapsed ? "\xBB" : "\xAB" }, "lib"),
+          jsx("button", { type: "button", className: "dockyard-wf3-libtoggle", "data-action": "wf-toggle-library", "aria-expanded": libCollapsed ? "false" : "true", "aria-label": libCollapsed ? "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432", title: libCollapsed ? "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443", onClick: () => setLibCollapsed((v) => !v), children: libCollapsed ? "\xBB" : "\xAB" }, "lib"),
           jsx("span", { className: "dy-wfd-draft-label", "data-wfd-draft-label": true, children: `Unsaved changes to ${draft.base.name}` }, "label"),
           jsx("span", { className: "dockyard-wf3-sep", "aria-hidden": true }, "sep1"),
           jsx(Button, { small: true, action: "wf-add-step", onClick: () => addNode(false), children: "\uFF0B Step" }, "step"),
           jsx(Button, { small: true, action: "wf-add-gate", onClick: () => addNode(true), children: "\uFF0B Gate" }, "gate"),
-          jsx(Button, { small: true, action: "wf-auto-layout", disabled: !draft.nodes.length, onClick: autoLayout, children: "Auto layout" }, "layout"),
-          jsx(Button, { small: true, action: "wf-validate", disabled: !draft.nodes.length, onClick: validateGraph, children: "Validate" }, "validate"),
-          jsx(Button, { small: true, action: "wfd-settings", onClick: () => setDialog("settings"), children: "Settings" }, "settings"),
+          jsx(Button, { small: true, action: "wf-auto-layout", disabled: !draft.nodes.length, onClick: autoLayout, children: "\u0410\u0432\u0442\u043E\u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430" }, "layout"),
+          jsx(Button, { small: true, action: "wf-validate", disabled: !draft.nodes.length, onClick: validateGraph, children: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C" }, "validate"),
+          jsx(Button, { small: true, action: "wfd-settings", onClick: () => setDialog("settings"), children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438" }, "settings"),
           askAi("ai"),
           jsx("span", { className: "dockyard-wf3-sep", "aria-hidden": true }, "sep2"),
-          jsx(Button, { small: true, variant: "primary", action: "wfd-draft-save", onClick: saveDraft, children: "Save version" }, "save"),
-          jsx(Button, { small: true, action: "wfd-draft-discard", onClick: () => closeDraft("discarded"), children: "Discard" }, "discard")
+          jsx(Button, { small: true, variant: "primary", action: "wfd-draft-save", onClick: saveDraft, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u044E" }, "save"),
+          jsx(Button, { small: true, action: "wfd-draft-discard", onClick: () => closeDraft("discarded"), children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u043A\u0438" }, "discard")
         ] : [
-          jsx("button", { type: "button", className: "dockyard-wf3-libtoggle", "data-action": "wf-toggle-library", "aria-expanded": libCollapsed ? "false" : "true", "aria-label": libCollapsed ? "Show workflow library" : "Hide workflow library", title: libCollapsed ? "Show library" : "Hide library", onClick: () => setLibCollapsed((v) => !v), children: libCollapsed ? "\xBB" : "\xAB" }),
+          jsx("button", { type: "button", className: "dockyard-wf3-libtoggle", "data-action": "wf-toggle-library", "aria-expanded": libCollapsed ? "false" : "true", "aria-label": libCollapsed ? "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432", title: libCollapsed ? "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443" : "\u0421\u043A\u0440\u044B\u0442\u044C \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0443", onClick: () => setLibCollapsed((v) => !v), children: libCollapsed ? "\xBB" : "\xAB" }),
           jsx("span", { className: "dockyard-wf3-sep", "aria-hidden": true }),
-          jsx(Button, { small: true, action: "wf-view-definition", variant: mode === "definition" ? "primary" : "", onClick: () => setMode("definition"), children: "Definition" }),
-          jsx(Button, { small: true, action: "wf-view-live", variant: mode === "live" ? "primary" : "", disabled: !latest, onClick: () => setMode("live"), children: "Live run" }),
+          jsx(Button, { small: true, action: "wf-view-definition", variant: mode === "definition" ? "primary" : "", onClick: () => setMode("definition"), children: "\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435" }),
+          jsx(Button, { small: true, action: "wf-view-live", variant: mode === "live" ? "primary" : "", disabled: !latest, onClick: () => setMode("live"), children: "\u0416\u0438\u0432\u043E\u0439 \u0437\u0430\u043F\u0443\u0441\u043A" }),
           jsx("span", { className: "dockyard-wf3-sep", "aria-hidden": true }),
           jsx(Button, { small: true, action: "wf-add-step", disabled: !current, onClick: () => addNode(false), children: "\uFF0B Step" }),
           jsx(Button, { small: true, action: "wf-add-gate", disabled: !current, onClick: () => addNode(true), children: "\uFF0B Gate" }),
-          jsx(Button, { small: true, action: "wf-auto-layout", disabled: !current || layoutPendingVersion !== null, onClick: autoLayout, children: layoutPendingVersion !== null ? "Saving layout\u2026" : "Auto layout" }),
-          jsx(Button, { small: true, action: "wf-validate", disabled: !current, onClick: validateGraph, children: "Validate" }),
+          jsx(Button, { small: true, action: "wf-auto-layout", disabled: !current || layoutPendingVersion !== null, onClick: autoLayout, children: layoutPendingVersion !== null ? "Saving layout\u2026" : "\u0410\u0432\u0442\u043E\u0440\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430" }),
+          jsx(Button, { small: true, action: "wf-validate", disabled: !current, onClick: validateGraph, children: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C" }),
           jsx("span", { className: "dockyard-wf3-sep", "aria-hidden": true }),
           // Run lifecycle (was the inspector column). Start runs the LATEST
           // stored version; older versions start from the Versions menu.
@@ -19168,9 +19168,9 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
               jsx("pre", { children: JSON.stringify(version.definition?.nodes ?? [], null, 2) })
             ] }, `definition-${version.version}`)) })
           ] }) : null,
-          current ? current.archived_at ? jsx(Button, { small: true, action: "restore-workflow", onClick: () => mutate(`/projects/${encoded}/workflows/${encodeURIComponent(current.name)}/restore`), children: "Restore" }) : jsx(Button, { small: true, action: "archive-workflow", variant: "danger", onClick: () => mutate(`/projects/${encoded}/workflows/${encodeURIComponent(current.name)}/archive`), children: "Archive" }) : null,
-          jsx(Button, { small: true, action: "inspect-workflow", disabled: !current, onClick: () => loadRuns(current.name), children: "Refresh" }),
-          jsx(Button, { small: true, action: "wfd-settings", disabled: !current, onClick: () => setDialog("settings"), children: "Settings" }),
+          current ? current.archived_at ? jsx(Button, { small: true, action: "restore-workflow", onClick: () => mutate(`/projects/${encoded}/workflows/${encodeURIComponent(current.name)}/restore`), children: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" }) : jsx(Button, { small: true, action: "archive-workflow", variant: "danger", onClick: () => mutate(`/projects/${encoded}/workflows/${encodeURIComponent(current.name)}/archive`), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }) : null,
+          jsx(Button, { small: true, action: "inspect-workflow", disabled: !current, onClick: () => loadRuns(current.name), children: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C" }),
+          jsx(Button, { small: true, action: "wfd-settings", disabled: !current, onClick: () => setDialog("settings"), children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438" }),
           askAi()
         ] }),
         draftError ? jsx("p", { className: "dy-wfd-error", role: "alert", "data-wfd-draft-error": true, children: draftError }) : null,
@@ -19182,19 +19182,19 @@ function ExecutableWorkflowsPanel({ project, workflows, onRefresh, onOpenLibrary
           jsx("span", { className: "dockyard-wf3-runkey", children: `${latest.run_key} \xB7 v${latest.version}` }),
           liveCounts ? jsx("span", { className: "dockyard-wf3-counts", children: COUNT_WORDS.filter(([k]) => liveCounts[k]).map(([k, word]) => `${liveCounts[k]} ${word}`).join(" \xB7 ") }) : null,
           jsxs("details", { className: "dockyard-wf3-steps", children: [
-            jsx("summary", { children: attentionCount ? `Steps \xB7 ${attentionCount} need attention` : "Steps" }),
+            jsx("summary", { children: attentionCount ? `Steps \xB7 ${attentionCount} need attention` : "\u0428\u0430\u0433\u0438" }),
             jsx("ul", { "data-wf-live-map": latest.run_key, children: latestView.nodes.map((node) => jsx("li", { "data-wf-live-node": node.node_id, "data-wf-needs-attention": needsAttention(node) ? "true" : void 0, children: `${node.title} \u2014 ${stepWord(node, latestView)}${node.assignee ? ` \xB7 ${node.assignee}` : ""}${needsAttention(node) ? " \xB7 needs attention" : ""}` }, node.node_id)) })
           ] }),
-          latest.status !== "complete" ? jsx(Button, { small: true, action: "wf-move-on", onClick: moveOn, children: "Move on now" }) : null,
+          latest.status !== "complete" ? jsx(Button, { small: true, action: "wf-move-on", onClick: moveOn, children: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441" }) : null,
           timer ? jsx("span", { className: "dockyard-wf3-timer", "data-wf-timer": timer.moving ? "on" : "off", children: timerWords(timer) }) : null,
           moveNote ? jsx("p", { className: "dockyard-wf3-movenote", role: "status", "data-wf-move-note": true, children: moveNote }) : null
         ] }) : null,
         // The canvas, with the AI's draft banner over it. Nothing shares its
         // row: the AI chat is a sidebar beside the page, not a column here.
         current || draft ? jsxs("div", { className: "dy-wfd-canvas-wrap", children: [
-          jsx("div", { ref: canvasRef, className: "dockyard-workflow-graph", "data-workflow-canvas": draft ? draft.base.name : current.name, "data-wfd-draft": draft ? "edit" : void 0, role: "img", "aria-label": "Workflow planning graph", "aria-busy": !draft && (layoutPendingVersion !== null || !canvasReady), style: !draft && layoutPendingVersion !== null ? { pointerEvents: "none" } : void 0 }),
+          jsx("div", { ref: canvasRef, className: "dockyard-workflow-graph", "data-workflow-canvas": draft ? draft.base.name : current.name, "data-wfd-draft": draft ? "edit" : void 0, role: "img", "aria-label": "\u0413\u0440\u0430\u0444 \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432", "aria-busy": !draft && (layoutPendingVersion !== null || !canvasReady), style: !draft && layoutPendingVersion !== null ? { pointerEvents: "none" } : void 0 }),
           draft ? jsx("p", { className: "dy-wfd-draft-banner", role: "status", "data-wfd-draft-banner": true, children: "The AI\u2019s changes are on the canvas but not saved. Save version keeps them; Discard drops them." }) : null
-        ] }, "canvas") : jsx("p", { className: "dockyard-meta", children: "No workflow selected." })
+        ] }, "canvas") : jsx("p", { className: "dockyard-meta", children: "\u041F\u0440\u043E\u0446\u0435\u0441\u0441 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D." })
       ] })
     ] }),
     dialog === "new" ? jsx(NewWorkflowDialog, { project: { id: project.id, name: project.name || project.id }, taken: { project: takenNames, global: globalNames }, templates, members, onCreate: createFromDialog, onClose: () => setDialog(null) }) : null,
@@ -19263,7 +19263,7 @@ function ProjectContentPanel({ project, content, onRefresh }) {
     setError(null);
     try {
       const mediaType = mediaTypeOf(file);
-      if (!mediaType) throw new Error("Choose a text, Markdown, PDF, PNG, JPEG, WebP, MP4 or WebM file.");
+      if (!mediaType) throw new Error("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043B: \u0442\u0435\u043A\u0441\u0442, Markdown, PDF, PNG, JPEG, WebP, MP4 \u0438\u043B\u0438 WebM.");
       const contentBase64 = await fileAsBase64(file);
       const created = await api(`/projects/${encoded}/content`, {
         method: "POST",
@@ -19285,7 +19285,7 @@ function ProjectContentPanel({ project, content, onRefresh }) {
       const cid = encodeURIComponent(selected.content_id);
       if (contentAction === "remove") {
         const dependencyResult = await api(`/projects/${encoded}/content/${cid}/dependencies`);
-        if ((dependencyResult.dependencies ?? []).length > 0) throw new Error("Removal blocked: this content is still referenced.");
+        if ((dependencyResult.dependencies ?? []).length > 0) throw new Error("\u0423\u0434\u0430\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E: \u043D\u0430 \u044D\u0442\u043E \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0435 \u0435\u0449\u0451 \u0441\u0441\u044B\u043B\u0430\u044E\u0442\u0441\u044F.");
         await api(`/projects/${encoded}/content/${cid}`, { method: "DELETE" });
       } else {
         await api(`/projects/${encoded}/content/${cid}/${contentAction}`, { method: "POST", body: {} });
@@ -19305,42 +19305,42 @@ function ProjectContentPanel({ project, content, onRefresh }) {
   return jsxs("div", { className: "dockyard-content-layout", "data-project-content": project.id, children: [
     jsxs("section", { className: "dockyard-feature-card", children: [
       jsxs("div", { className: "dockyard-section-head", children: [
-        jsxs("div", { children: [jsx("h2", { children: "Project documentation" }), jsx("p", { children: "Supporting files linked to this project." })] }),
+        jsxs("div", { children: [jsx("h2", { children: "\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }), jsx("p", { children: "\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B, \u0441\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435 \u0441 \u044D\u0442\u0438\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u043C." })] }),
         jsx(StatusTag, { tone: "neutral", label: `${number(items.length)} ${plural2(items.length, "file")}` })
       ] }),
       items.length > 0 ? jsx("div", { className: "dockyard-content-list", children: items.map((item) => jsxs("button", { type: "button", "data-project-content-item": item.content_id, onClick: () => openPreview(item), children: [
         jsxs("span", { children: [jsx("strong", { children: item.filename }), jsx("small", { children: `${mediaTypeLabel(item.media_type)} / ${formatBytes(item.size_bytes)} / ${formatWhen(item.uploaded_at) || "Uploaded"}` })] }),
         jsx(Icon, { name: "chevron" })
-      ] }, item.content_id)) }) : jsx("p", { className: "dockyard-meta", children: "No supporting content uploaded yet." }),
+      ] }, item.content_id)) }) : jsx("p", { className: "dockyard-meta", children: "\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u044B." }),
       jsxs("div", { className: "dockyard-upload-panel", children: [
         jsxs("label", { className: "dockyard-upload-dropzone", children: [
-          jsx("span", { children: file ? file.name : "Choose supporting content" }),
-          jsx("small", { children: file ? `${formatBytes(file.size)} selected` : "Text, Markdown, PDF or image up to 5 MB, or an MP4 or WebM video up to 25 MB." }),
+          jsx("span", { children: file ? file.name : "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B" }),
+          jsx("small", { children: file ? `${formatBytes(file.size)} selected` : "\u0422\u0435\u043A\u0441\u0442, Markdown, PDF \u0438\u043B\u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0434\u043E 5 \u041C\u0411, \u043B\u0438\u0431\u043E \u0432\u0438\u0434\u0435\u043E MP4 \u0438\u043B\u0438 WebM \u0434\u043E 25 \u041C\u0411." }),
           jsx("input", { type: "file", "data-content-file": true, accept: ".txt,.md,.pdf,.png,.jpg,.jpeg,.webp,.mp4,.webm,text/plain,text/markdown,application/pdf,image/png,image/jpeg,image/webp,video/mp4,video/webm", onChange: (event) => {
             setFile(event.target.files?.[0] ?? null);
             setError(null);
           } })
         ] }),
-        jsx(Button, { action: "upload-project-content", variant: "primary", disabled: uploading || !file || file.size <= 0 || tooBig(file), onClick: upload, children: uploading ? "Uploading..." : "Upload content" })
+        jsx(Button, { action: "upload-project-content", variant: "primary", disabled: uploading || !file || file.size <= 0 || tooBig(file), onClick: upload, children: uploading ? "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026" : "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043A\u043E\u043D\u0442\u0435\u043D\u0442" })
       ] }),
       tooBig(file) ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: `This file exceeds the ${limitOf(mediaTypeOf(file)) / (1024 * 1024)} MB limit.` }) : null,
       error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null
     ] }),
     jsxs("aside", { className: "dockyard-feature-card dockyard-content-preview-card", children: [
       jsx("span", { className: "dockyard-card-label", children: "PREVIEW" }),
-      selected ? jsx("h2", { children: selected.filename }) : jsx("h2", { children: "Select a document" }),
-      previewState === "loading" ? jsx("p", { children: "Loading preview..." }) : null,
-      previewState === "ready" && selected?.preview_kind === "text" ? jsx("pre", { "data-content-preview": true, className: "dockyard-content-preview", children: selected.text || "This text file is empty." }) : previewState === "ready" && selected?.preview_kind === "image" && selected.data_base64 ? jsx("img", { "data-content-preview": true, "data-preview-kind": "image", className: "dockyard-content-image", alt: selected.filename, src: `data:${selected.media_type};base64,${selected.data_base64}` }) : previewState === "ready" && selected?.preview_kind === "pdf" && mediaUrl ? jsx("iframe", { "data-content-preview": true, "data-preview-kind": "pdf", className: "dockyard-content-pdf", title: `PDF preview: ${selected.filename}`, src: mediaUrl, sandbox: "allow-same-origin" }) : previewState === "ready" && selected?.preview_kind === "video" && mediaUrl ? jsx("video", { "data-content-preview": true, "data-preview-kind": "video", className: "dockyard-content-video", controls: true, preload: "metadata", "aria-label": `Video: ${selected.filename}`, src: mediaUrl }) : previewState === "ready" ? jsx("div", { "data-content-preview": true, className: "dockyard-report-placeholder", children: `Preview is not available for ${mediaTypeLabel(selected?.media_type)}. File metadata remains visible.` }) : previewState === "idle" ? jsx("p", { className: "dockyard-meta", children: "Text, Markdown, images, PDFs and videos show here." }) : null,
+      selected ? jsx("h2", { children: selected.filename }) : jsx("h2", { children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442" }),
+      previewState === "loading" ? jsx("p", { children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430\u2026" }) : null,
+      previewState === "ready" && selected?.preview_kind === "text" ? jsx("pre", { "data-content-preview": true, className: "dockyard-content-preview", children: selected.text || "\u042D\u0442\u043E\u0442 \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u044B\u0439 \u0444\u0430\u0439\u043B \u043F\u0443\u0441\u0442." }) : previewState === "ready" && selected?.preview_kind === "image" && selected.data_base64 ? jsx("img", { "data-content-preview": true, "data-preview-kind": "image", className: "dockyard-content-image", alt: selected.filename, src: `data:${selected.media_type};base64,${selected.data_base64}` }) : previewState === "ready" && selected?.preview_kind === "pdf" && mediaUrl ? jsx("iframe", { "data-content-preview": true, "data-preview-kind": "pdf", className: "dockyard-content-pdf", title: `PDF preview: ${selected.filename}`, src: mediaUrl, sandbox: "allow-same-origin" }) : previewState === "ready" && selected?.preview_kind === "video" && mediaUrl ? jsx("video", { "data-content-preview": true, "data-preview-kind": "video", className: "dockyard-content-video", controls: true, preload: "metadata", "aria-label": `Video: ${selected.filename}`, src: mediaUrl }) : previewState === "ready" ? jsx("div", { "data-content-preview": true, className: "dockyard-report-placeholder", children: `Preview is not available for ${mediaTypeLabel(selected?.media_type)}. File metadata remains visible.` }) : previewState === "idle" ? jsx("p", { className: "dockyard-meta", children: "\u0417\u0434\u0435\u0441\u044C \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442\u0441\u044F \u0442\u0435\u043A\u0441\u0442, Markdown, \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F, PDF \u0438 \u0432\u0438\u0434\u0435\u043E." }) : null,
       selected ? jsxs("div", { className: "dockyard-form-actions", children: [
-        selected.archived_at ? jsx(Button, { action: "restore-project-content", disabled: actionBusy, onClick: () => setContentAction("restore"), children: "Restore" }) : jsx(Button, { action: "archive-project-content", disabled: actionBusy, onClick: () => setContentAction("archive"), children: "Archive" }),
-        jsx(Button, { action: "remove-project-content", variant: "danger", disabled: actionBusy, onClick: () => setContentAction("remove"), children: "Remove file" })
+        selected.archived_at ? jsx(Button, { action: "restore-project-content", disabled: actionBusy, onClick: () => setContentAction("restore"), children: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" }) : jsx(Button, { action: "archive-project-content", disabled: actionBusy, onClick: () => setContentAction("archive"), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }),
+        jsx(Button, { action: "remove-project-content", variant: "danger", disabled: actionBusy, onClick: () => setContentAction("remove"), children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0444\u0430\u0439\u043B" })
       ] }) : null
     ] }),
     contentAction ? jsx(ConfirmDialog, {
       confirmKey: `content-${contentAction}`,
       title: `${contentAction === "remove" ? "Remove" : readableLabel(contentAction)} this content?`,
-      description: contentAction === "remove" ? "The managed file is deleted only after authority, dependency, containment and identity checks pass." : "The content record and history are retained.",
-      confirmLabel: contentAction === "remove" ? "Remove managed file" : readableLabel(contentAction),
+      description: contentAction === "remove" ? "The managed file is deleted only after authority, dependency, containment and identity checks pass." : "\u0417\u0430\u043F\u0438\u0441\u044C \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0433\u043E \u0438 \u0438\u0441\u0442\u043E\u0440\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F.",
+      confirmLabel: contentAction === "remove" ? "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C\u044B\u0439 \u0444\u0430\u0439\u043B" : readableLabel(contentAction),
       busy: actionBusy,
       onConfirm: applyContentAction,
       onCancel: () => setContentAction(null)
@@ -19350,9 +19350,9 @@ function ProjectContentPanel({ project, content, onRefresh }) {
 
 // hermes_dockyard_plugin/desktop/src/project/memory.js
 var MEMORY_KINDS = Object.freeze([
-  ["rule", "Rule", "Rules"],
-  ["decision", "Decision", "Decisions"],
-  ["fact", "Fact", "Facts"]
+  ["rule", "\u041F\u0440\u0430\u0432\u0438\u043B\u043E", "\u041F\u0440\u0430\u0432\u0438\u043B\u0430"],
+  ["decision", "\u0420\u0435\u0448\u0435\u043D\u0438\u0435", "\u0420\u0435\u0448\u0435\u043D\u0438\u044F"],
+  ["fact", "\u0424\u0430\u043A\u0442", "\u0424\u0430\u043A\u0442\u044B"]
 ]);
 var MEMORY_MAX_TEXT = 500;
 var kindLabel = (kind) => (MEMORY_KINDS.find(([key]) => key === kind) ?? [kind, kind])[1];
@@ -19401,25 +19401,25 @@ function MemoryEntry({ entry, canWrite, busy, onEdit, onArchive, onRestore }) {
   };
   return jsxs("article", { className: "dy-mem-entry", "data-memory-entry": entry.id, "data-memory-entry-kind": entry.kind, "data-archived": entry.archived_at ? "true" : "false", children: [
     editing ? jsxs("div", { className: "dockyard-inline-editor", "data-memory-editor": entry.id, children: [
-      jsx(KindSelect, { value: kind, onChange: setKind, label: "Kind" }),
+      jsx(KindSelect, { value: kind, onChange: setKind, label: "\u0422\u0438\u043F" }),
       jsx(TextBox, { value: text2, onChange: setText, label: "Text", field: "data-memory-edit-text" }),
       jsxs("div", { className: "dy-mem-actions", children: [
-        jsx(Button, { action: "save-memory-entry", variant: "primary", small: true, disabled: busy || !text2.trim(), onClick: save2, children: "Save" }),
+        jsx(Button, { action: "save-memory-entry", variant: "primary", small: true, disabled: busy || !text2.trim(), onClick: save2, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C" }),
         jsx(Button, { action: "cancel-memory-edit", small: true, onClick: () => {
           setEditing(false);
           setText(entry.text);
           setKind(entry.kind);
-        }, children: "Cancel" })
+        }, children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
       ] })
     ] }) : jsxs("div", { className: "dy-mem-body", children: [
       jsx("p", { className: "dy-mem-text", children: entry.text }),
       jsx("small", { className: "dy-mem-meta", children: memoryMeta(entry) })
     ] }),
     !editing ? jsxs("div", { className: "dy-mem-actions", children: [
-      entry.supersedes_id != null ? jsx(Button, { action: "memory-history", small: true, ariaLabel: `History of: ${entry.text}`, onClick: showHistory, children: history ? "Hide history" : "History" }) : null,
-      canWrite && !entry.archived_at ? jsx(Button, { action: "edit-memory-entry", small: true, ariaLabel: `Edit: ${entry.text}`, disabled: busy, onClick: () => setEditing(true), children: "Edit" }) : null,
-      canWrite && !entry.archived_at ? jsx(Button, { action: "archive-memory-entry", small: true, ariaLabel: `Archive: ${entry.text}`, disabled: busy, onClick: () => onArchive(entry), children: "Archive" }) : null,
-      canWrite && entry.archived_at ? jsx(Button, { action: "restore-memory-entry", small: true, ariaLabel: `Restore: ${entry.text}`, disabled: busy, onClick: () => onRestore(entry), children: "Restore" }) : null
+      entry.supersedes_id != null ? jsx(Button, { action: "memory-history", small: true, ariaLabel: `History of: ${entry.text}`, onClick: showHistory, children: history ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0438\u0441\u0442\u043E\u0440\u0438\u044E" : "\u0418\u0441\u0442\u043E\u0440\u0438\u044F" }) : null,
+      canWrite && !entry.archived_at ? jsx(Button, { action: "edit-memory-entry", small: true, ariaLabel: `Edit: ${entry.text}`, disabled: busy, onClick: () => setEditing(true), children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C" }) : null,
+      canWrite && !entry.archived_at ? jsx(Button, { action: "archive-memory-entry", small: true, ariaLabel: `Archive: ${entry.text}`, disabled: busy, onClick: () => onArchive(entry), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }) : null,
+      canWrite && entry.archived_at ? jsx(Button, { action: "restore-memory-entry", small: true, ariaLabel: `Restore: ${entry.text}`, disabled: busy, onClick: () => onRestore(entry), children: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" }) : null
     ] }) : null,
     history ? jsx("ol", { className: "dy-mem-history", "data-memory-history": entry.id, children: history.map((version) => jsxs("li", { children: [
       jsx("span", { children: `${kindLabel(version.kind)}: ${version.text}` }),
@@ -19471,7 +19471,7 @@ function ProjectMemoryPanel({ project }) {
     }
   };
   const add = async () => {
-    const added = await write(`/projects/${encoded}/memory`, { method: "POST", body: { kind, text: text2, source } }, "Added to the project memory.");
+    const added = await write(`/projects/${encoded}/memory`, { method: "POST", body: { kind, text: text2, source } }, "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0432 \u043F\u0430\u043C\u044F\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442\u0430.");
     if (added) {
       setText("");
       setSource("human");
@@ -19480,13 +19480,13 @@ function ProjectMemoryPanel({ project }) {
   const edit = (entry, changes) => {
     const body = Object.fromEntries(Object.entries(changes).filter(([, value]) => value !== void 0));
     if (Object.keys(body).length === 0) {
-      setError("Nothing to change: the entry already says this.");
+      setError("\u041C\u0435\u043D\u044F\u0442\u044C \u043D\u0435\u0447\u0435\u0433\u043E: \u0437\u0430\u043F\u0438\u0441\u044C \u0443\u0436\u0435 \u044D\u0442\u043E \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442.");
       return Promise.resolve(false);
     }
-    return write(`/projects/${encoded}/memory/${entry.id}`, { method: "PATCH", body }, "Memory entry updated.");
+    return write(`/projects/${encoded}/memory/${entry.id}`, { method: "PATCH", body }, "\u0417\u0430\u043F\u0438\u0441\u044C \u043F\u0430\u043C\u044F\u0442\u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0430.");
   };
-  const archive = (entry) => write(`/projects/${encoded}/memory/${entry.id}/archive`, { method: "POST", body: {} }, "Archived. Bots no longer see it.");
-  const restore = (entry) => write(`/projects/${encoded}/memory/${entry.id}/restore`, { method: "POST", body: {} }, "Restored. Bots see it again.");
+  const archive = (entry) => write(`/projects/${encoded}/memory/${entry.id}/archive`, { method: "POST", body: {} }, "\u0412 \u0430\u0440\u0445\u0438\u0432\u0435. \u0411\u043E\u0442\u044B \u0431\u043E\u043B\u044C\u0448\u0435 \u0435\u0433\u043E \u043D\u0435 \u0432\u0438\u0434\u044F\u0442.");
+  const restore = (entry) => write(`/projects/${encoded}/memory/${entry.id}/restore`, { method: "POST", body: {} }, "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E. \u0411\u043E\u0442\u044B \u0441\u043D\u043E\u0432\u0430 \u0435\u0433\u043E \u0432\u0438\u0434\u044F\u0442.");
   const useSuggestion = (item) => {
     setKind("fact");
     setText(item.text);
@@ -19499,27 +19499,27 @@ function ProjectMemoryPanel({ project }) {
     jsxs("section", { className: "dockyard-feature-card", children: [
       jsxs("div", { className: "dockyard-section-head", children: [
         jsxs("div", { children: [
-          jsx("h2", { children: "Project memory" }),
+          jsx("h2", { children: "\u041F\u0430\u043C\u044F\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }),
           jsx("p", { children: "What this project's bots are told when they work on it: rules first, then decisions, then facts." })
         ] }),
         jsx(StatusTag, { tone: "neutral", label: `${number(active.length)} ${plural2(active.length, "entry", "entries")}` })
       ] }),
-      state.status === "loading" ? jsx("p", { className: "dockyard-meta", children: "Loading memory..." }) : null,
+      state.status === "loading" ? jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043F\u0430\u043C\u044F\u0442\u0438\u2026" }) : null,
       state.status === "ready" && state.canWrite ? jsxs("div", { className: "dockyard-inline-editor", "data-memory-add": true, children: [
-        jsx(KindSelect, { value: kind, onChange: setKind, label: "Kind" }),
+        jsx(KindSelect, { value: kind, onChange: setKind, label: "\u0422\u0438\u043F" }),
         jsx(TextBox, { value: text2, onChange: setText, label: "Text", field: "data-memory-text" }),
         source !== "human" ? jsxs("p", { className: "dockyard-meta", "data-memory-source": source, children: [
           `Starting from finished work ${source.slice(5)}. `,
           jsx(Button, { action: "clear-memory-source", small: true, onClick: () => {
             setSource("human");
             setText("");
-          }, children: "Clear" })
+          }, children: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C" })
         ] }) : null,
-        jsx("div", { className: "dy-mem-actions", children: jsx(Button, { action: "add-memory-entry", variant: "primary", disabled: busy || !text2.trim(), onClick: add, children: busy ? "Saving..." : "Add to memory" }) })
+        jsx("div", { className: "dy-mem-actions", children: jsx(Button, { action: "add-memory-entry", variant: "primary", disabled: busy || !text2.trim(), onClick: add, children: busy ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043F\u0430\u043C\u044F\u0442\u044C" }) })
       ] }) : null,
-      state.status === "ready" && !state.canWrite ? jsx("p", { className: "dockyard-meta", "data-memory-read-only": true, children: "Only the project owner can change the memory." }) : null,
+      state.status === "ready" && !state.canWrite ? jsx("p", { className: "dockyard-meta", "data-memory-read-only": true, children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0432\u043B\u0430\u0434\u0435\u043B\u0435\u0446 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043C\u043E\u0436\u0435\u0442 \u043C\u0435\u043D\u044F\u0442\u044C \u043F\u0430\u043C\u044F\u0442\u044C." }) : null,
       error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null,
-      state.status === "ready" && active.length === 0 ? jsx("p", { className: "dockyard-meta", "data-memory-empty": true, children: "No memory yet. Add the facts, decisions and rules the bots should know." }) : null,
+      state.status === "ready" && active.length === 0 ? jsx("p", { className: "dockyard-meta", "data-memory-empty": true, children: "\u041F\u0430\u043C\u044F\u0442\u0438 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0444\u0430\u043A\u0442\u044B, \u0440\u0435\u0448\u0435\u043D\u0438\u044F \u0438 \u043F\u0440\u0430\u0432\u0438\u043B\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0434\u043E\u043B\u0436\u043D\u044B \u0437\u043D\u0430\u0442\u044C \u0431\u043E\u0442\u044B." }) : null,
       ...MEMORY_KINDS.map(([key, , heading]) => {
         const group = active.filter((entry) => entry.kind === key);
         if (group.length === 0) return null;
@@ -19528,28 +19528,28 @@ function ProjectMemoryPanel({ project }) {
           ...group.map((entry) => jsx(MemoryEntry, { entry, ...entryProps }, `${entry.id}:${entry.archived_at ?? ""}`))
         ] }, key);
       }),
-      archived.length > 0 ? jsx("div", { className: "dy-mem-actions", children: jsx(Button, { action: "toggle-archived-memory", small: true, onClick: () => setShowArchived(!showArchived), children: showArchived ? "Hide archived" : `Show archived (${number(archived.length)})` }) }) : null,
+      archived.length > 0 ? jsx("div", { className: "dy-mem-actions", children: jsx(Button, { action: "toggle-archived-memory", small: true, onClick: () => setShowArchived(!showArchived), children: showArchived ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435" : `Show archived (${number(archived.length)})` }) }) : null,
       showArchived && archived.length > 0 ? jsxs("div", { className: "dy-mem-group", "data-memory-group": "archived", children: [
-        jsx("h3", { children: "Archived" }),
+        jsx("h3", { children: "\u0412 \u0430\u0440\u0445\u0438\u0432\u0435" }),
         ...archived.map((entry) => jsx(MemoryEntry, { entry, ...entryProps }, `${entry.id}:${entry.archived_at}`))
       ] }) : null
     ] }),
     jsxs("aside", { className: "dockyard-feature-card", "data-memory-preview-card": true, children: [
       jsx("span", { className: "dockyard-card-label", children: "WHAT BOTS SEE" }),
-      state.context ? jsx("pre", { className: "dockyard-content-preview", "data-memory-preview": true, children: state.context }) : jsx("p", { className: "dockyard-meta", "data-memory-preview": true, children: "Nothing yet. Bots get no project memory until you add some." }),
+      state.context ? jsx("pre", { className: "dockyard-content-preview", "data-memory-preview": true, children: state.context }) : jsx("p", { className: "dockyard-meta", "data-memory-preview": true, children: "\u041F\u043E\u043A\u0430 \u043F\u0443\u0441\u0442\u043E. \u0411\u043E\u0442\u044B \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0430\u0442 \u043F\u0430\u043C\u044F\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442\u0430, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u0435 \u0435\u0451." }),
       jsx("small", { className: "dy-mem-count", children: `${number(state.context.length)} of ${number(state.cap)} characters. Bots get this when they work on this project's tasks, or in a chat opened from Project Stewardship.` }),
       jsxs("div", { className: "dy-mem-suggestions", "data-memory-suggestions": suggestions.status, children: [
-        jsx("h3", { children: "From finished work" }),
-        suggestions.status === "loading" ? jsx("p", { className: "dockyard-meta", children: "Loading finished work..." }) : null,
-        suggestions.status === "unavailable" ? jsx("p", { className: "dockyard-meta", children: "Finished work is unavailable right now." }) : null,
+        jsx("h3", { children: "\u0418\u0437 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B" }),
+        suggestions.status === "loading" ? jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B\u2026" }) : null,
+        suggestions.status === "unavailable" ? jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0441\u0435\u0439\u0447\u0430\u0441 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430." }) : null,
         suggestions.status === "unlinked" ? jsx("p", { className: "dockyard-meta", children: `${UNLINKED_TITLE}: finished work cannot be shown.` }) : null,
-        suggestions.status === "ready" && suggestions.items.length === 0 ? jsx("p", { className: "dockyard-meta", children: "No finished work with a result to start from." }) : null,
+        suggestions.status === "ready" && suggestions.items.length === 0 ? jsx("p", { className: "dockyard-meta", children: "\u041D\u0435\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C, \u043E\u0442 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u043C\u043E\u0436\u043D\u043E \u043D\u0430\u0447\u0430\u0442\u044C." }) : null,
         ...suggestions.items.map((item) => jsxs("article", { className: "dy-mem-entry", "data-memory-suggestion": item.work_id, children: [
           jsxs("div", { className: "dy-mem-body", children: [
             jsx("p", { className: "dy-mem-text", children: item.text }),
             jsx("small", { className: "dy-mem-meta", children: [item.title, item.work_id].filter(Boolean).join(" \xB7 ") })
           ] }),
-          state.canWrite ? jsx("div", { className: "dy-mem-actions", children: jsx(Button, { action: "use-memory-suggestion", small: true, ariaLabel: `Start an entry from: ${item.title || item.work_id}`, onClick: () => useSuggestion(item), children: "Use this" }) }) : null
+          state.canWrite ? jsx("div", { className: "dy-mem-actions", children: jsx(Button, { action: "use-memory-suggestion", small: true, ariaLabel: `Start an entry from: ${item.title || item.work_id}`, onClick: () => useSuggestion(item), children: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u044D\u0442\u043E" }) }) : null
         ] }, item.work_id))
       ] })
     ] })
@@ -19608,7 +19608,7 @@ function ArchivedProjectsList({ onRestored, onCount }) {
     setBusy(null);
   };
   if (error) return jsx("p", { className: "dockyard-inline-error", role: "alert", "data-archived-error": true, children: error });
-  if (!rows) return jsx("p", { className: "dockyard-meta", "data-archived-loading": true, children: "Loading archived projects..." });
+  if (!rows) return jsx("p", { className: "dockyard-meta", "data-archived-loading": true, children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0445 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432\u2026" });
   if (!rows.length) {
     return jsx("p", {
       className: "dy-arch-empty",
@@ -19628,15 +19628,15 @@ function ArchivedProjectsList({ onRestored, onCount }) {
       asking ? jsxs("div", { className: "dy-arch-confirm", role: "group", "aria-label": `Restore ${row.project_id}`, children: [
         jsx("span", { children: `Restore ${row.project_id}? It comes back exactly as it was archived (${stateWords(row.restores_to)}) and shows on your dashboard, inbox and roadmap again.` }),
         jsxs("span", { className: "dy-arch-confirm-actions", children: [
-          jsx(Button, { small: true, action: "cancel-restore", disabled: working, onClick: () => setConfirming(null), children: "Cancel" }),
-          jsx(Button, { small: true, variant: "primary", action: "confirm-restore", disabled: working, onClick: () => restore(row), children: working ? "Restoring..." : "Restore" })
+          jsx(Button, { small: true, action: "cancel-restore", disabled: working, onClick: () => setConfirming(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+          jsx(Button, { small: true, variant: "primary", action: "confirm-restore", disabled: working, onClick: () => restore(row), children: working ? "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435..." : "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" })
         ] })
       ] }) : jsx(Button, {
         small: true,
         action: "restore-project",
         data: { "data-restore-project": row.project_id },
         onClick: () => setConfirming(row.project_id),
-        children: jsxs(Fragment, { children: [jsx(Icon, { name: "archive-restore" }), "Restore"] })
+        children: jsxs(Fragment, { children: [jsx(Icon, { name: "archive-restore" }), "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C"] })
       })
     ] }, row.project_id);
   }) });
@@ -19657,11 +19657,11 @@ function ArchivedProjectsDialog({ onClose, onRestored, onCount }) {
     },
     children: jsxs("div", { className: "dockyard-modal dy-arch-modal", role: "dialog", "aria-modal": true, "aria-labelledby": "dy-arch-title", children: [
       jsxs("header", { className: "dy-arch-head", children: [
-        jsx("h2", { id: "dy-arch-title", children: "Archived projects" }),
+        jsx("h2", { id: "dy-arch-title", children: "\u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" }),
         jsx("p", { children: "Hidden everywhere else, and nothing was deleted. Restore brings a project back exactly as it was archived." })
       ] }),
       jsx(ArchivedProjectsList, { onRestored, onCount }),
-      jsx("div", { className: "dockyard-modal-actions", children: jsx(Button, { action: "close-archived", onClick: onClose, children: "Close" }) })
+      jsx("div", { className: "dockyard-modal-actions", children: jsx(Button, { action: "close-archived", onClick: onClose, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" }) })
     ] })
   });
 }
@@ -19703,13 +19703,13 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
   const enabled = lifecycleState?.enabled !== false;
   const phase = lifecycleState?.phase || project.phase || "unknown";
   const lifecycleCopy = {
-    enable: { endpoint: "re-enable", label: "Enable", past: "enabled" },
-    disable: { endpoint: "disable", label: "Disable", past: "disabled" },
-    pause: { endpoint: "pause", label: "Pause", past: "paused" },
-    resume: { endpoint: "resume", label: "Resume", past: "resumed" },
-    freeze: { endpoint: "freeze", label: "Freeze", past: "frozen" },
-    archive: { endpoint: "archive", label: "Archive", past: "archived" },
-    restore: { endpoint: "restore", label: "Restore", past: "restored" }
+    enable: { endpoint: "re-enable", label: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C", past: "enabled" },
+    disable: { endpoint: "disable", label: "\u0412\u044B\u043A\u043B\u044E\u0447\u0438\u0442\u044C", past: "disabled" },
+    pause: { endpoint: "pause", label: "\u041F\u0430\u0443\u0437\u0430", past: "paused" },
+    resume: { endpoint: "resume", label: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C", past: "resumed" },
+    freeze: { endpoint: "freeze", label: "\u0417\u0430\u043C\u043E\u0440\u043E\u0437\u0438\u0442\u044C", past: "frozen" },
+    archive: { endpoint: "archive", label: "\u0412 \u0430\u0440\u0445\u0438\u0432", past: "archived" },
+    restore: { endpoint: "restore", label: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C", past: "restored" }
   };
   const archived = Boolean(lifecycleState?.archived_at);
   const lifecycleActions = archived ? ["restore"] : !enabled ? ["enable", "archive"] : phase === "active" ? ["pause", "freeze", "archive", "disable"] : phase === "paused" ? ["resume", "freeze", "archive", "disable"] : phase === "frozen" ? ["resume", "archive", "disable"] : ["disable"];
@@ -19744,7 +19744,7 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
           }
         }
       });
-      setMessage({ tone: "success", text: "Project configuration saved." });
+      setMessage({ tone: "success", text: "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430." });
       setEditing(false);
       onDirty?.(false);
       onRefresh?.();
@@ -19780,15 +19780,15 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
   };
   return jsxs("section", { className: "dockyard-feature-card dockyard-settings-card", "data-project-settings-form": true, children: [
     jsxs("header", { className: "dockyard-section-head", children: [
-      jsxs("div", { children: [jsx("h2", { children: "Project configuration" }), jsx("p", { children: "Ownership, autonomy, verification, release and notification boundaries." })] }),
+      jsxs("div", { children: [jsx("h2", { children: "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }), jsx("p", { children: "\u0413\u0440\u0430\u043D\u0438\u0446\u044B \u0432\u043B\u0430\u0434\u0435\u043D\u0438\u044F, \u0430\u0432\u0442\u043E\u043D\u043E\u043C\u0438\u0438, \u0432\u0435\u0440\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u0438, \u0440\u0435\u043B\u0438\u0437\u0430 \u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439." })] }),
       jsxs("div", { className: "dockyard-project-state-summary", children: [
-        jsx("span", { "data-project-enabled-state": true, children: jsx(StatusTag, { tone: enabled ? "success" : "neutral", label: enabled ? "Enabled" : "Disabled" }) }),
+        jsx("span", { "data-project-enabled-state": true, children: jsx(StatusTag, { tone: enabled ? "success" : "neutral", label: enabled ? "\u0412\u043A\u043B\u044E\u0447\u0435\u043D\u043E" : "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E" }) }),
         jsx("span", { "data-project-phase-state": true, children: jsx(StatusTag, { tone: phase === "active" ? "success" : "warning", label: phase.charAt(0).toUpperCase() + phase.slice(1) }) })
       ] })
     ] }),
     jsxs("section", { className: "dockyard-lifecycle-panel", "data-project-lifecycle": true, children: [
       jsxs("header", { children: [
-        jsxs("div", { children: [jsx("h3", { children: "Project lifecycle" }), jsx("p", { children: enabled ? "Only actions valid for the current phase are available." : "Configuration remains readable while the project is disabled." })] }),
+        jsxs("div", { children: [jsx("h3", { children: "\u0416\u0438\u0437\u043D\u0435\u043D\u043D\u044B\u0439 \u0446\u0438\u043A\u043B \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }), jsx("p", { children: enabled ? "\u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F, \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0435 \u0434\u043B\u044F \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u0444\u0430\u0437\u044B." : "\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0447\u0438\u0442\u0430\u0435\u043C\u043E\u0439, \u043F\u043E\u043A\u0430 \u043F\u0440\u043E\u0435\u043A\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0451\u043D." })] }),
         jsx("div", { className: "dockyard-lifecycle-actions", children: lifecycleActions.map((action) => jsx("button", {
           type: "button",
           className: `dockyard-button small${["disable", "freeze", "archive"].includes(action) ? " danger" : ["enable", "restore"].includes(action) ? " primary" : ""}`,
@@ -19801,24 +19801,24 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
     ] }),
     jsxs("fieldset", { className: "dockyard-settings-grid dockyard-settings-fieldset", disabled: !enabled || !editing, children: [
       jsxs("div", { className: "dockyard-settings-category", children: [
-        jsx("div", { className: "dockyard-settings-category-label", children: "General" }),
+        jsx("div", { className: "dockyard-settings-category-label", children: "\u041E\u0431\u0449\u0435\u0435" }),
         jsxs("label", { className: "dockyard-field dockyard-field-wide", children: [
-          jsx("span", { children: "Mission" }),
+          jsx("span", { children: "\u041C\u0438\u0441\u0441\u0438\u044F" }),
           jsx("textarea", { "data-setting-field": "mission", rows: 3, value: form.mission, onInput: (event) => update("mission", event.target.value), onChange: (event) => update("mission", event.target.value) })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Lead profile" }),
+          jsx("span", { children: "\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0432\u0435\u0434\u0443\u0449\u0435\u0433\u043E" }),
           jsx("input", { "data-setting-field": "lead-profile", value: form.leadProfile, onChange: (event) => update("leadProfile", event.target.value) })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Member profiles" }),
+          jsx("span", { children: "\u041F\u0440\u043E\u0444\u0438\u043B\u0438 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432" }),
           jsx("input", { "data-setting-field": "members", value: form.members, placeholder: "bot-a, bot-b", onChange: (event) => update("members", event.target.value) })
         ] })
       ] }),
       jsxs("div", { className: "dockyard-settings-category", children: [
-        jsx("div", { className: "dockyard-settings-category-label", children: "Autonomy & verification" }),
+        jsx("div", { className: "dockyard-settings-category-label", children: "\u0410\u0432\u0442\u043E\u043D\u043E\u043C\u0438\u044F \u0438 \u0432\u0435\u0440\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u044F" }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Autonomy level" }),
+          jsx("span", { children: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0430\u0432\u0442\u043E\u043D\u043E\u043C\u0438\u0438" }),
           jsx("select", {
             "data-setting-field": "autonomy",
             value: form.autonomyLevel,
@@ -19827,7 +19827,7 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
           })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Human gate from risk" }),
+          jsx("span", { children: "\u0427\u0435\u043B\u043E\u0432\u0435\u0447\u0435\u0441\u043A\u0438\u0439 \u0433\u0435\u0439\u0442 \u0438\u0437-\u0437\u0430 \u0440\u0438\u0441\u043A\u0430" }),
           jsx("select", {
             value: form.humanGateRisk,
             onChange: (event) => update("humanGateRisk", event.target.value),
@@ -19836,29 +19836,29 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
         ] }),
         jsxs("label", { className: "dockyard-check-field", children: [
           jsx("input", { type: "checkbox", checked: form.autoStartLowRisk, onChange: (event) => update("autoStartLowRisk", event.target.checked) }),
-          jsxs("span", { children: [jsx("strong", { children: "Auto-start low-risk work" }), jsx("small", { children: "Only inside the declared autonomy boundary." })] })
+          jsxs("span", { children: [jsx("strong", { children: "\u0410\u0432\u0442\u043E\u0437\u0430\u043F\u0443\u0441\u043A \u043D\u0438\u0437\u043A\u043E\u0440\u0438\u0441\u043A\u043E\u0432\u044B\u0445 \u0440\u0430\u0431\u043E\u0442" }), jsx("small", { children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0432\u043D\u0443\u0442\u0440\u0438 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u043D\u0438\u0446\u044B \u0430\u0432\u0442\u043E\u043D\u043E\u043C\u0438\u0438." })] })
         ] }),
         jsxs("label", { className: "dockyard-check-field", children: [
           jsx("input", { type: "checkbox", "data-setting-field": "require-tests", checked: form.requireTests, onChange: (event) => update("requireTests", event.target.checked) }),
-          jsxs("span", { children: [jsx("strong", { children: "Require test evidence" }), jsx("small", { children: "Block verification without a test result." })] })
+          jsxs("span", { children: [jsx("strong", { children: "\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u0442\u044C \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432 \u0442\u0435\u0441\u0442\u043E\u0432" }), jsx("small", { children: "\u041D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0431\u0435\u0437 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u043E\u0432." })] })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Maximum open initiatives" }),
+          jsx("span", { children: "\u041C\u0430\u043A\u0441\u0438\u043C\u0443\u043C \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432" }),
           jsx("input", { type: "number", min: 1, max: 25, value: form.maxOpenInitiatives, onChange: (event) => update("maxOpenInitiatives", event.target.value) })
         ] })
       ] }),
       jsxs("div", { className: "dockyard-settings-category", children: [
-        jsx("div", { className: "dockyard-settings-category-label", children: "Release & notifications" }),
+        jsx("div", { className: "dockyard-settings-category-label", children: "\u0420\u0435\u043B\u0438\u0437 \u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F" }),
         jsxs("label", { className: "dockyard-check-field", children: [
           jsx("input", { type: "checkbox", checked: form.requireRollback, onChange: (event) => update("requireRollback", event.target.checked) }),
-          jsxs("span", { children: [jsx("strong", { children: "Require rollback plan" }), jsx("small", { children: "Every release must declare its recovery path." })] })
+          jsxs("span", { children: [jsx("strong", { children: "\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u0442\u044C \u043F\u043B\u0430\u043D \u043E\u0442\u043A\u0430\u0442\u0430" }), jsx("small", { children: "\u041A\u0430\u0436\u0434\u044B\u0439 \u0440\u0435\u043B\u0438\u0437 \u0434\u043E\u043B\u0436\u0435\u043D \u043E\u0431\u044A\u044F\u0432\u0438\u0442\u044C \u043F\u0443\u0442\u044C \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F." })] })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Soak period in hours" }),
+          jsx("span", { children: "\u041F\u0435\u0440\u0438\u043E\u0434 \u0432\u044B\u0434\u0435\u0440\u0436\u043A\u0438, \u0447\u0430\u0441\u043E\u0432" }),
           jsx("input", { type: "number", min: 0, max: 720, "data-setting-field": "soak-hours", value: form.soakHours, onChange: (event) => update("soakHours", event.target.value) })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Alert threshold" }),
+          jsx("span", { children: "\u041F\u043E\u0440\u043E\u0433 \u043E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u044F" }),
           jsx("select", {
             value: form.severityThreshold,
             onChange: (event) => update("severityThreshold", event.target.value),
@@ -19866,7 +19866,7 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
           })
         ] }),
         jsxs("label", { className: "dockyard-field", children: [
-          jsx("span", { children: "Notification cadence" }),
+          jsx("span", { children: "\u0427\u0430\u0441\u0442\u043E\u0442\u0430 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439" }),
           jsx("select", {
             "data-setting-field": "digest",
             value: form.digest,
@@ -19885,22 +19885,22 @@ function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, onArchive
           setEditing(false);
           onDirty?.(false);
           setMessage(null);
-        }, children: "Cancel" }),
-        jsx(Button, { action: "save-project-settings", variant: "primary", disabled: saving || !form.mission.trim(), onClick: save2, children: saving ? "Saving..." : "Save configuration" })
+        }, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+        jsx(Button, { action: "save-project-settings", variant: "primary", disabled: saving || !form.mission.trim(), onClick: save2, children: saving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044E" })
       ] }) : jsx(Button, { action: "edit-project-settings", variant: "primary", onClick: () => {
         setForm(buildForm());
         setEditing(true);
         onDirty?.(false);
         setMessage(null);
-      }, children: "Edit configuration" })
-    }) : jsx("p", { className: "dockyard-meta", children: "Enable this project before editing its configuration." }),
+      }, children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044E" })
+    }) : jsx("p", { className: "dockyard-meta", children: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0435\u0433\u043E \u043A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044E." }),
     jsxs("section", { className: "dockyard-modal-layer", "data-lifecycle-confirm": true, hidden: !pendingLifecycle, children: [
       jsxs("div", { className: "dockyard-modal", role: "dialog", "aria-modal": true, "aria-labelledby": "dockyard-lifecycle-title", children: [
         jsx("h2", { id: "dockyard-lifecycle-title", children: `${lifecycleCopy[pendingLifecycle]?.label || "Change"} project?` }),
         jsx("p", { "data-lifecycle-confirm-text": pendingLifecycle || "", children: pendingLifecycle === "archive" ? `${project.id} will be hidden everywhere: dashboard, projects, roadmap, inbox, search and alerts. Stewardship stops for it while it is archived. Nothing is deleted: its Hermes project, board, tasks and repository stay exactly as they are. Restore it any time from ${RESTORE_FROM}, and it comes back exactly as it is now (${enabled ? "switched on" : "switched off"}, ${phase}).` : `This changes ${project.id} from its current ${enabled ? "enabled" : "disabled"} and ${phase} state.` }),
         jsxs("div", { className: "dockyard-modal-actions", children: [
-          jsx(Button, { disabled: lifecycleBusy, onClick: () => setPendingLifecycle(null), children: "Cancel" }),
-          jsx(Button, { action: "confirm-lifecycle-action", variant: ["disable", "freeze", "archive"].includes(pendingLifecycle) ? "danger" : "primary", disabled: lifecycleBusy, onClick: confirmLifecycle, children: lifecycleBusy ? "Applying..." : `Confirm ${lifecycleCopy[pendingLifecycle]?.label || "change"}` })
+          jsx(Button, { disabled: lifecycleBusy, onClick: () => setPendingLifecycle(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+          jsx(Button, { action: "confirm-lifecycle-action", variant: ["disable", "freeze", "archive"].includes(pendingLifecycle) ? "danger" : "primary", disabled: lifecycleBusy, onClick: confirmLifecycle, children: lifecycleBusy ? "\u041F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u0435\u2026" : `Confirm ${lifecycleCopy[pendingLifecycle]?.label || "change"}` })
         ] })
       ] })
     ] })
@@ -19941,18 +19941,18 @@ function downloadTextFile(content, filename, mediaType = "text/markdown;charset=
 
 // hermes_dockyard_plugin/desktop/src/lib/report-vocab.js
 var REPORT_TYPES = Object.freeze([
-  { value: "executive", label: "Executive summary", sections: ["Configuration", "Delivery", "Risks and decisions"], work: false, activity: true },
-  { value: "delivery", label: "Delivery report", sections: ["Configuration", "Delivery"], work: true, activity: true },
-  { value: "risk", label: "Risk and decisions", sections: ["Configuration", "Risks and decisions"], work: false, activity: false },
-  { value: "full", label: "Full project report", sections: ["Configuration", "Delivery", "Risks and decisions"], work: true, activity: true }
+  { value: "executive", label: "\u041A\u0440\u0430\u0442\u043A\u0430\u044F \u0441\u0432\u043E\u0434\u043A\u0430", sections: ["\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F", "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430", "\u0420\u0438\u0441\u043A\u0438 \u0438 \u0440\u0435\u0448\u0435\u043D\u0438\u044F"], work: false, activity: true },
+  { value: "delivery", label: "\u041E\u0442\u0447\u0451\u0442 \u043F\u043E \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0435", sections: ["\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F", "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430"], work: true, activity: true },
+  { value: "risk", label: "\u0420\u0438\u0441\u043A\u0438 \u0438 \u0440\u0435\u0448\u0435\u043D\u0438\u044F", sections: ["\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F", "\u0420\u0438\u0441\u043A\u0438 \u0438 \u0440\u0435\u0448\u0435\u043D\u0438\u044F"], work: false, activity: false },
+  { value: "full", label: "\u041F\u043E\u043B\u043D\u044B\u0439 \u043E\u0442\u0447\u0451\u0442 \u043F\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0443", sections: ["\u041A\u043E\u043D\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u044F", "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430", "\u0420\u0438\u0441\u043A\u0438 \u0438 \u0440\u0435\u0448\u0435\u043D\u0438\u044F"], work: true, activity: true }
 ]);
-var ACTIVITY = "Recent activity";
+var ACTIVITY = "\u041D\u0435\u0434\u0430\u0432\u043D\u044F\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C";
 var sentence = (value) => {
   const words2 = String(value ?? "").replace(/[._]+/g, " ").replace(/\s+/g, " ").trim();
   return words2 ? words2[0].toUpperCase() + words2.slice(1) : "";
 };
 var reportType = (value) => REPORT_TYPES.find((type) => type.value === value) ?? null;
-var reportTypeLabel = (value) => reportType(value)?.label ?? (sentence(value) || "Report");
+var reportTypeLabel = (value) => reportType(value)?.label ?? (sentence(value) || "\u041E\u0442\u0447\u0451\u0442");
 var takesActivity = (value) => reportType(value)?.activity ?? false;
 function reportSections(value, includeActivity) {
   const type = reportType(value);
@@ -19962,7 +19962,7 @@ function reportSections(value, includeActivity) {
 function reportHint(value, includeActivity) {
   const type = reportType(value);
   if (!type) return "";
-  const parts = reportSections(value, includeActivity).map((section3) => section3 === "Delivery" && type.work ? "Delivery, with the work list" : section3);
+  const parts = reportSections(value, includeActivity).map((section3) => section3 === "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430" && type.work ? "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430, \u0441\u043E \u0441\u043F\u0438\u0441\u043A\u043E\u043C \u0440\u0430\u0431\u043E\u0442" : section3);
   return `Sections: ${parts.join(" \xB7 ")}${type.activity ? "" : ". Risk reports never include recent activity."}`;
 }
 function reportWhen(value, timeZone) {
@@ -20043,7 +20043,7 @@ function ReportControls({ type, onType, includeActivity, onActivity, generating,
   return jsxs("div", { className: "dy-rep-controls", "data-report-controls": true, children: [
     jsxs("div", { className: "dy-rep-row", children: [
       jsxs("label", { className: "dy-rep-field", children: [
-        jsx("span", { children: "Report type" }),
+        jsx("span", { children: "\u0422\u0438\u043F \u043E\u0442\u0447\u0451\u0442\u0430" }),
         jsx("select", {
           "data-report-type": true,
           value: type,
@@ -20055,9 +20055,9 @@ function ReportControls({ type, onType, includeActivity, onActivity, generating,
         // Risk reports never carry activity, so the box shows off there; the
         // person's choice comes back for the other types.
         jsx("input", { type: "checkbox", checked: allowed && includeActivity, disabled: !allowed, onChange: (event) => onActivity(event.target.checked) }),
-        jsx("span", { children: "Include recent activity" })
+        jsx("span", { children: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043D\u0435\u0434\u0430\u0432\u043D\u044E\u044E \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C" })
       ] }),
-      jsx(Button, { action: "generate-report", variant: "primary", disabled: generating, onClick: onGenerate, children: generating ? "Generating\u2026" : "Generate report" })
+      jsx(Button, { action: "generate-report", variant: "primary", disabled: generating, onClick: onGenerate, children: generating ? "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435\u2026" : "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0442\u0447\u0451\u0442" })
     ] }),
     jsx("p", { className: "dy-rep-hint", "data-report-hint": true, children: reportHint(type, includeActivity) }),
     error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: error }) : null
@@ -20091,8 +20091,8 @@ function ReportPage({ report, onCopy, onDownload }) {
         jsx("p", { className: "dy-rep-meta", "data-report-meta": true, children: `${reportTypeLabel(report.report_type)} \xB7 Generated ${when}${by ? ` by ${by}` : ""}` })
       ] }),
       jsxs("div", { className: "dy-rep-actions", children: [
-        jsx(Button, { action: "copy-report", small: true, onClick: onCopy, children: "Copy Markdown" }),
-        jsx(Button, { action: "download-report", small: true, onClick: onDownload, children: "Download Markdown" })
+        jsx(Button, { action: "copy-report", small: true, onClick: onCopy, children: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C Markdown" }),
+        jsx(Button, { action: "download-report", small: true, onClick: onDownload, children: "\u0421\u043A\u0430\u0447\u0430\u0442\u044C Markdown" })
       ] })
     ] }),
     jsx("div", { className: "dy-rep-body", children: doc.blocks.map((block, index) => jsx(ReportBlock, { block }, index)) })
@@ -20102,26 +20102,26 @@ function ReportBody({ state, history, onRetry, onCopy, onDownload }) {
   if (state.openError) {
     return jsxs("div", { className: "dy-rep-state", role: "alert", children: [
       jsx("p", { children: `This report could not be opened: ${state.openError}` }),
-      jsx(Button, { action: "retry-report", small: true, onClick: onRetry, children: "Try again" })
+      jsx(Button, { action: "retry-report", small: true, onClick: onRetry, children: "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043D\u043E\u0432\u0430" })
     ] });
   }
   if (state.report) return jsx(ReportPage, { report: state.report, onCopy, onDownload });
-  if (state.opening) return jsx("p", { className: "dy-rep-state", "aria-busy": true, children: "Opening the report\u2026" });
+  if (state.opening) return jsx("p", { className: "dy-rep-state", "aria-busy": true, children: "\u041E\u0442\u043A\u0440\u044B\u0442\u0438\u0435 \u043E\u0442\u0447\u0451\u0442\u0430\u2026" });
   return jsxs("div", { className: "dy-rep-state", "data-report-empty": true, children: [
     jsx(Icon, { name: "project" }),
-    jsx("p", { children: history.length > 0 ? "Pick a report from the list to read it here." : "No reports yet. Pick a type above and press Generate report. Reports are saved here, so you can read, copy or download them later." })
+    jsx("p", { children: history.length > 0 ? "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0442\u0447\u0451\u0442 \u0438\u0437 \u0441\u043F\u0438\u0441\u043A\u0430, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0435\u0433\u043E \u0437\u0434\u0435\u0441\u044C." : "No reports yet. Pick a type above and press Generate report. Reports are saved here, so you can read, copy or download them later." })
   ] });
 }
 function ReportList({ history, openId, onOpen }) {
-  return jsxs("aside", { className: "dy-rep-list", "data-report-list": true, "aria-label": "Past reports", children: [
-    jsxs("h3", { children: ["Past reports", jsx("span", { children: history.length })] }),
+  return jsxs("aside", { className: "dy-rep-list", "data-report-list": true, "aria-label": "\u041F\u0440\u043E\u0448\u043B\u044B\u0435 \u043E\u0442\u0447\u0451\u0442\u044B", children: [
+    jsxs("h3", { children: ["\u041F\u0440\u043E\u0448\u043B\u044B\u0435 \u043E\u0442\u0447\u0451\u0442\u044B", jsx("span", { children: history.length })] }),
     history.length > 0 ? jsx("ul", { children: history.map((report) => jsx("li", { children: jsxs("button", {
       type: "button",
       "data-report-history": report.report_id,
       "aria-current": report.report_id === openId ? "true" : void 0,
       onClick: () => onOpen(report.report_id, { scroll: true }),
       children: [jsx("strong", { children: reportTypeLabel(report.report_type) }), jsx("span", { children: byline(report) })]
-    }) }, report.report_id)) }) : jsx("p", { className: "dy-rep-none", children: "No reports yet." })
+    }) }, report.report_id)) }) : jsx("p", { className: "dy-rep-none", children: "\u041E\u0442\u0447\u0451\u0442\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442." })
   ] });
 }
 function ProjectReportsPanel({ project, reports, onRefresh }) {
@@ -20181,13 +20181,13 @@ function ProjectReportsPanel({ project, reports, onRefresh }) {
   const shown = report && report.report_id === openId ? report : null;
   const copy = async () => {
     const copied = shown?.content && _os?.writeClipboard ? await _os.writeClipboard(shown.content) : false;
-    emitToast(copied ? "success" : "danger", copied ? "Report copied to clipboard" : "Clipboard is unavailable");
+    emitToast(copied ? "success" : "danger", copied ? "\u041E\u0442\u0447\u0451\u0442 \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D \u0432 \u0431\u0443\u0444\u0435\u0440 \u043E\u0431\u043C\u0435\u043D\u0430" : "\u0411\u0443\u0444\u0435\u0440 \u043E\u0431\u043C\u0435\u043D\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D");
   };
   const download = () => {
     if (!shown?.content) return;
     const filename = reportDownloadFilename(project.id, shown);
     const started = downloadTextFile(shown.content, filename);
-    emitToast(started ? "success" : "danger", started ? `Downloading ${filename}` : "Download could not start in this environment");
+    emitToast(started ? "success" : "danger", started ? `Downloading ${filename}` : "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043D\u0435 \u0443\u0434\u0430\u043B\u0430\u0441\u044C \u0432 \u044D\u0442\u043E\u0439 \u0441\u0440\u0435\u0434\u0435");
   };
   const body = jsx(ReportBody, {
     state: { report: shown, opening, openError },
@@ -20218,7 +20218,7 @@ function WorkTable({ columns, items, groups, className, emptyText }) {
   const live = (list) => (list ?? []).filter((item) => item.status !== "archived");
   const rowsOf = (list) => live(list).map((item) => jsxs("tr", { "data-work-row": item.ref, children: columns.map((column) => jsx("td", { children: column.cell(item) }, column.key)) }, item.ref));
   const total = groups ? groups.reduce((sum, group) => sum + live(group.items).length, 0) : (items ?? []).length;
-  if (total === 0) return jsx("p", { className: "dockyard-meta", "data-work-table-empty": true, children: emptyText ?? "No work items match this saved view." });
+  if (total === 0) return jsx("p", { className: "dockyard-meta", "data-work-table-empty": true, children: emptyText ?? "\u041D\u0438 \u043E\u0434\u0438\u043D \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u044D\u0442\u043E\u043C\u0443 \u0432\u0438\u0434\u0443." });
   return jsxs("table", { className: ["dockyard-backlog-table", className].filter(Boolean).join(" "), "data-work-table": true, children: [
     jsx("thead", { children: jsx("tr", { children: columns.map((column) => jsx("th", { scope: "col", children: column.heading }, column.key)) }) }),
     jsx("tbody", { children: groups ? groups.map((group) => jsxs(Fragment, { children: [
@@ -20232,11 +20232,11 @@ function WorkTable({ columns, items, groups, className, emptyText }) {
 var DONE_STATUSES = Object.freeze(["done", "complete", "completed"]);
 var isDone = (status) => DONE_STATUSES.includes(status);
 var STAGES = Object.freeze([
-  { key: "backlog", label: "Backlog", statuses: ["backlog"], hint: "Not started" },
-  { key: "active", label: "In progress", statuses: ["in_progress", "executing", "active"], hint: "Being worked on" },
-  { key: "review", label: "Review", statuses: ["in_review", "review"], hint: "Waiting for a check" },
-  { key: "blocked", label: "Blocked", statuses: ["blocked"], hint: "Stopped until something changes" },
-  { key: "done", label: "Done", statuses: DONE_STATUSES, hint: "Finished" }
+  { key: "backlog", label: "\u0411\u044D\u043A\u043B\u043E\u0433", statuses: ["backlog"], hint: "\u041D\u0435 \u043D\u0430\u0447\u0430\u0442\u043E" },
+  { key: "active", label: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", statuses: ["in_progress", "executing", "active"], hint: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435" },
+  { key: "review", label: "\u041E\u0431\u0437\u043E\u0440", statuses: ["in_review", "review"], hint: "\u041E\u0436\u0438\u0434\u0430\u0435\u0442 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438" },
+  { key: "blocked", label: "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E", statuses: ["blocked"], hint: "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E, \u043F\u043E\u043A\u0430 \u0447\u0442\u043E-\u043D\u0438\u0431\u0443\u0434\u044C \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F" },
+  { key: "done", label: "\u0413\u043E\u0442\u043E\u0432\u043E", statuses: DONE_STATUSES, hint: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E" }
 ]);
 var STAGE_BY_KEY = Object.fromEntries(STAGES.map((stage) => [stage.key, stage]));
 var stageLabel = (key) => STAGE_BY_KEY[key]?.label ?? key;
@@ -20258,7 +20258,7 @@ var TASK_MOVES = Object.freeze({ backlog: ["active", "done"], active: ["review",
 var EPIC_MOVES = Object.freeze({ backlog: ["active"], active: [], review: [], blocked: [], done: [] });
 function movesFor(item, openBlockers = 0) {
   const from = stageKeyOf(item);
-  if (!from) return { targets: [], reason: "This item is not in a board column." };
+  if (!from) return { targets: [], reason: "\u042D\u043B\u0435\u043C\u0435\u043D\u0442 \u043D\u0435 \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u0432 \u043A\u043E\u043B\u043E\u043D\u043A\u0435 \u0434\u043E\u0441\u043A\u0438." };
   const epic = (item.type || "task") === "epic";
   let keys = (epic ? EPIC_MOVES : TASK_MOVES)[from] ?? [];
   let reason = null;
@@ -20266,7 +20266,7 @@ function movesFor(item, openBlockers = 0) {
     keys = [];
     reason = `Can't start yet: waiting on ${openBlockers} open ${openBlockers === 1 ? "blocker" : "blockers"}.`;
   } else if (keys.length === 0) {
-    reason = from === "done" ? "Finished work stays in Done." : epic ? "Hermes does not move an epic from this column." : null;
+    reason = from === "done" ? "\u0417\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0432 \xAB\u0413\u043E\u0442\u043E\u0432\u043E\xBB." : epic ? "Hermes \u043D\u0435 \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0438\u0442 \u044D\u043F\u0438\u043A \u0438\u0437 \u044D\u0442\u043E\u0439 \u043A\u043E\u043B\u043E\u043D\u043A\u0438." : null;
   }
   return { targets: keys.map((key) => ({ key, label: STAGE_BY_KEY[key].label, status: dropStatusOf(key) })), reason };
 }
@@ -20330,11 +20330,11 @@ function cardFacts(item, data = {}, today = null) {
 }
 var CARD_FIELDS = Object.freeze(["assignee", "links", "due", "labels", "planning"]);
 var CARD_FIELD_LABELS = Object.freeze({
-  assignee: "Assignee",
-  links: "Blocked by and Blocks",
-  due: "Due date",
-  labels: "Labels",
-  planning: "Initiative and milestone"
+  assignee: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C",
+  links: "\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0438 \u0431\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442",
+  due: "\u0421\u0440\u043E\u043A",
+  labels: "\u041C\u0435\u0442\u043A\u0438",
+  planning: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0438 \u0432\u0435\u0445\u0430"
 });
 var defaultFields = () => ({ assignee: true, links: true, due: true, labels: true, planning: false });
 var DENSITIES = Object.freeze(["compact", "detailed"]);
@@ -20372,7 +20372,7 @@ function applyFilters(items, filters, factsByRef = {}) {
     return [...facts?.blockedBy ?? [], ...facts?.blocks ?? []].some((card) => String(card.ref).toLowerCase().includes(query));
   });
 }
-var ALL_WORK = "All work";
+var ALL_WORK = "\u0412\u0441\u044F \u0440\u0430\u0431\u043E\u0442\u0430";
 var defaultDefinition = () => ({ layout: "board", filters: emptyFilters(), density: "compact", fields: defaultFields() });
 var sortedFields = (fields) => CARD_FIELDS.filter((key) => fields[key]);
 var sameDefinition = (a, b) => JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
@@ -20423,10 +20423,10 @@ function describeFilters(filters) {
   return parts.join(" \xB7 ");
 }
 function describeDefinition(definition) {
-  const parts = [definition.layout === "list" ? "List" : "Board"];
+  const parts = [definition.layout === "list" ? "List" : "\u0414\u043E\u0441\u043A\u0430"];
   const filters = describeFilters(definition.filters);
   if (filters) parts.push(filters);
-  if (definition.layout !== "list" && definition.density === "detailed") parts.push("All cards open");
+  if (definition.layout !== "list" && definition.density === "detailed") parts.push("\u0412\u0441\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u044B");
   return parts.join(" \xB7 ");
 }
 function freeName(base, taken) {
@@ -20443,11 +20443,11 @@ var domId = (prefix, ref) => `${prefix}-${String(ref).replace(/[^A-Za-z0-9_-]/g,
 var draftKey = (name) => name ?? "";
 var statusText = (status) => {
   const key = stageKeyOf({ status });
-  return key ? stageLabel(key) : readableLabel(status || "unknown", "Unknown");
+  return key ? stageLabel(key) : readableLabel(status || "unknown", "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E");
 };
 function Avatar({ name }) {
   const initials3 = initialsOf(name);
-  return jsx("span", { className: initials3 ? "dy-kb-avatar" : "dy-kb-avatar empty", title: name ? displayName(name) : "Unassigned", "aria-hidden": true, children: initials3 });
+  return jsx("span", { className: initials3 ? "dy-kb-avatar" : "dy-kb-avatar empty", title: name ? displayName(name) : "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D", "aria-hidden": true, children: initials3 });
 }
 function CardBody({ id, item, facts, moves, moving, today, onMove, onOpenItem, onOpenRef, onNavigate }) {
   const linkRow = (card) => jsx("li", { children: jsxs("button", {
@@ -20467,29 +20467,29 @@ function CardBody({ id, item, facts, moves, moving, today, onMove, onOpenItem, o
   const row = (label, value, extra = {}, key = label) => jsxs("div", { className: "dy-kb-row", ...extra, children: [jsx("dt", { children: label }), jsx("dd", { children: value })] }, key);
   const goto = (label, onClick, text2) => jsx("button", { type: "button", className: "dy-kb-goto", "aria-label": `${label}: ${text2}`, onClick, children: text2 });
   const planning = [];
-  if (facts.initiative) planning.push(row("Initiative", goto("Initiative", () => onNavigate(`plan:initiative:${facts.initiative.ref}`), facts.initiative.title || facts.initiative.ref)));
-  facts.milestones.forEach((milestone, index) => planning.push(row("Milestone", goto("Milestone", () => onNavigate(`plan:milestone:${milestone.id}`), milestone.due ? `${milestone.name} \xB7 due ${shortDate(milestone.due, today)}` : milestone.name), {}, `milestone:${index}`)));
+  if (facts.initiative) planning.push(row("\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", goto("\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", () => onNavigate(`plan:initiative:${facts.initiative.ref}`), facts.initiative.title || facts.initiative.ref)));
+  facts.milestones.forEach((milestone, index) => planning.push(row("\u0412\u0435\u0445\u0430", goto("\u0412\u0435\u0445\u0430", () => onNavigate(`plan:milestone:${milestone.id}`), milestone.due ? `${milestone.name} \xB7 due ${shortDate(milestone.due, today)}` : milestone.name), {}, `milestone:${index}`)));
   if (facts.goal) {
-    planning.push(row("Goal", jsxs("span", { children: [
-      goto("Goal", () => onNavigate(`plan:goal:${facts.goal.id}`), facts.goal.title)
+    planning.push(row("\u0426\u0435\u043B\u044C", jsxs("span", { children: [
+      goto("\u0426\u0435\u043B\u044C", () => onNavigate(`plan:goal:${facts.goal.id}`), facts.goal.title)
     ] })));
   } else {
-    planning.push(row("Goal", jsx("span", { className: "dy-kb-via", children: "Not placed yet" })));
+    planning.push(row("\u0426\u0435\u043B\u044C", jsx("span", { className: "dy-kb-via", children: "\u0415\u0449\u0451 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E" })));
   }
-  const details = [row("Assignee", item.assignee ? displayName(item.assignee) : "Unassigned")];
-  if (facts.due) details.push(row("Due", facts.overdue ? `${shortDate(facts.due, today)} \xB7 Overdue` : shortDate(facts.due, today), facts.overdue ? { "data-overdue": "true" } : {}));
-  if (facts.labels.length) details.push(row("Labels", facts.labels.join(", ")));
+  const details = [row("\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", item.assignee ? displayName(item.assignee) : "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D")];
+  if (facts.due) details.push(row("\u0421\u0440\u043E\u043A", facts.overdue ? `${shortDate(facts.due, today)} \xB7 Overdue` : shortDate(facts.due, today), facts.overdue ? { "data-overdue": "true" } : {}));
+  if (facts.labels.length) details.push(row("\u041C\u0435\u0442\u043A\u0438", facts.labels.join(", ")));
   return jsxs("div", { className: "dy-kb-card-body", id, "data-card-body": item.ref, children: [
-    facts.blockedBy.length ? section3("blocked_by", "Blocked by", jsx("ul", { className: "dy-kb-links", children: facts.blockedBy.map(linkRow) })) : null,
-    facts.blocks.length ? section3("blocks", "Blocks", jsx("ul", { className: "dy-kb-links", children: facts.blocks.map(linkRow) })) : null,
-    planning.length ? section3("planning", "Planning", jsx("dl", { children: planning })) : null,
+    facts.blockedBy.length ? section3("blocked_by", "\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442\u0441\u044F", jsx("ul", { className: "dy-kb-links", children: facts.blockedBy.map(linkRow) })) : null,
+    facts.blocks.length ? section3("blocks", "\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442", jsx("ul", { className: "dy-kb-links", children: facts.blocks.map(linkRow) })) : null,
+    planning.length ? section3("planning", "\u041F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435", jsx("dl", { children: planning })) : null,
     section3("details", "Details", jsx("dl", { children: details })),
     jsxs("div", { className: "dy-kb-card-actions", children: [
       moves.targets.length ? jsxs("select", { "aria-label": `Move ${item.ref}`, "data-card-move": item.ref, disabled: moving, value: "", onChange: (event) => onMove(item.ref, event.target.value), children: [
-        jsx("option", { value: "", children: "Move to\u2026" }),
+        jsx("option", { value: "", children: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u2026" }),
         ...moves.targets.map((target) => jsx("option", { value: target.status, children: target.label }, target.key))
       ] }) : moves.reason ? jsx("p", { className: "dy-kb-move-none", "data-card-move-none": item.ref, children: moves.reason }) : null,
-      jsxs("button", { type: "button", className: "dockyard-button small", "data-card-open": item.ref, onClick: () => onOpenItem(item), children: [jsx(Icon, { name: "arrow-up-right" }), "Open full details"] })
+      jsxs("button", { type: "button", className: "dockyard-button small", "data-card-open": item.ref, onClick: () => onOpenItem(item), children: [jsx(Icon, { name: "arrow-up-right" }), "\u041F\u043E\u043B\u043D\u044B\u0435 \u0434\u0435\u0442\u0430\u043B\u0438"] })
     ] })
   ] });
 }
@@ -20563,7 +20563,7 @@ function ViewsPanel({
 }) {
   const panelRef = useRef(null);
   const [newOpen, setNewOpen] = useState(Boolean(startNew));
-  const [newName, setNewName] = useState(() => freeName("New view", [ALL_WORK, ...views.map((saved) => saved.name)]));
+  const [newName, setNewName] = useState(() => freeName("\u041D\u043E\u0432\u044B\u0439 \u0432\u0438\u0434", [ALL_WORK, ...views.map((saved) => saved.name)]));
   const [newShared, setNewShared] = useState(false);
   const [renaming, setRenaming] = useState(null);
   const [renameText, setRenameText] = useState("");
@@ -20588,10 +20588,10 @@ function ViewsPanel({
     }
   };
   const trimmed = newName.trim();
-  const newProblem = !trimmed ? "Give the view a name." : names.includes(trimmed) ? `A view called "${trimmed}" already exists.` : null;
+  const newProblem = !trimmed ? "\u0414\u0430\u0439\u0442\u0435 \u0432\u0438\u0434\u0443 \u0438\u043C\u044F." : names.includes(trimmed) ? `A view called "${trimmed}" already exists.` : null;
   const renameProblem = (from) => {
     const text2 = renameText.trim();
-    if (!text2) return "Give the view a name.";
+    if (!text2) return "\u0414\u0430\u0439\u0442\u0435 \u0432\u0438\u0434\u0443 \u0438\u043C\u044F.";
     if (text2 !== from && names.includes(text2)) return `A view called "${text2}" already exists.`;
     return null;
   };
@@ -20605,32 +20605,32 @@ function ViewsPanel({
       });
     },
     children: [
-      jsx("h3", { children: "New view" }),
+      jsx("h3", { children: "\u041D\u043E\u0432\u044B\u0439 \u0432\u0438\u0434" }),
       jsxs("label", { className: "dy-kb-field", children: [
-        jsx("span", { children: "Name" }),
+        jsx("span", { children: "\u0418\u043C\u044F" }),
         jsx("input", { type: "text", "data-view-new-name": true, value: newName, maxLength: 80, onChange: (event) => setNewName(event.target.value) })
       ] }),
       jsxs("fieldset", { className: "dy-kb-choice", children: [
-        jsx("legend", { children: "Who can see it" }),
-        ...[[false, "Only me"], [true, "Everyone on this project"]].map(([value, label]) => jsxs("label", { children: [
+        jsx("legend", { children: "\u041A\u043E\u043C\u0443 \u0432\u0438\u0434\u043D\u043E" }),
+        ...[[false, "\u0422\u043E\u043B\u044C\u043A\u043E \u044F"], [true, "\u0412\u0441\u0435 \u0432 \u044D\u0442\u043E\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0435"]].map(([value, label]) => jsxs("label", { children: [
           jsx("input", { type: "radio", name: "dy-kb-new-shared", "data-view-new-shared": String(value), checked: newShared === value, onChange: () => setNewShared(value) }),
           jsx("span", { children: label })
         ] }, String(value)))
       ] }),
-      jsxs("p", { className: "dy-kb-panel-meta", children: ["Saves what you see now: ", describeDefinition(working), "."] }),
+      jsxs("p", { className: "dy-kb-panel-meta", children: ["\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0442\u043E, \u0447\u0442\u043E \u0432\u0438\u0434\u0438\u0442\u0435 \u0441\u0435\u0439\u0447\u0430\u0441: ", describeDefinition(working), "."] }),
       newProblem && trimmed ? jsx("p", { className: "dy-kb-panel-problem", role: "alert", children: newProblem }) : null,
       jsxs("div", { className: "dy-kb-panel-buttons", children: [
-        jsx("button", { type: "submit", className: "dockyard-button small primary", "data-view-create": true, disabled: Boolean(newProblem) || busy, children: "Create view" }),
-        jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setNewOpen(false), children: "Cancel" })
+        jsx("button", { type: "submit", className: "dockyard-button small primary", "data-view-create": true, disabled: Boolean(newProblem) || busy, children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0432\u0438\u0434" }),
+        jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setNewOpen(false), children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
       ] })
     ]
-  }) : jsx("div", { className: "dy-kb-panel-section", children: jsxs("button", { type: "button", className: "dockyard-button small", "data-view-new-open": true, onClick: () => setNewOpen(true), children: [jsx(Icon, { name: "plus" }), "New view from what you see"] }) });
+  }) : jsx("div", { className: "dy-kb-panel-section", children: jsxs("button", { type: "button", className: "dockyard-button small", "data-view-new-open": true, onClick: () => setNewOpen(true), children: [jsx(Icon, { name: "plus" }), "\u041D\u043E\u0432\u043E\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0438\u0437 \u0442\u043E\u0433\u043E, \u0447\u0442\u043E \u0432\u0438\u0434\u0438\u0442\u0435"] }) });
   const viewRow = (saved) => {
     const name = saved ? saved.name : ALL_WORK;
     const isCurrent = (saved ? saved.name : null) === currentName;
     const definition = saved ? definitionOf(saved) : defaultDefinition();
     const mine = saved ? saved.mine !== false : false;
-    const badge = !saved ? "Built in" : saved.shared ? "Shared" : "Only me";
+    const badge = !saved ? "\u0412\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u044B\u0439" : saved.shared ? "\u041E\u0431\u0449\u0438\u0439" : "\u0422\u043E\u043B\u044C\u043A\u043E \u044F";
     let actions;
     if (saved && renaming === name) {
       const problem = renameProblem(name);
@@ -20641,32 +20641,32 @@ function ViewsPanel({
         });
       }, children: [
         jsx("input", { type: "text", "aria-label": `New name for ${name}`, "data-view-rename-input": name, value: renameText, maxLength: 80, autoFocus: true, onChange: (event) => setRenameText(event.target.value) }),
-        jsx("button", { type: "submit", className: "dockyard-button small primary", disabled: Boolean(problem) || busy, children: "Save name" }),
-        jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setRenaming(null), children: "Cancel" }),
+        jsx("button", { type: "submit", className: "dockyard-button small primary", disabled: Boolean(problem) || busy, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u043C\u044F" }),
+        jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setRenaming(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
         problem && renameText.trim() ? jsx("p", { className: "dy-kb-panel-problem", role: "alert", children: problem }) : null
       ] });
     } else if (saved && confirming === name) {
       actions = jsxs("div", { className: "dy-kb-confirm", role: "alert", children: [
         jsx("span", { children: `Delete "${name}"? This can't be undone.` }),
-        jsx("button", { type: "button", className: "dockyard-button small danger", "data-view-delete-confirm": name, disabled: busy, onClick: () => onDelete(saved).then(() => setConfirming(null)), children: "Delete" }),
-        jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setConfirming(null), children: "Cancel" })
+        jsx("button", { type: "button", className: "dockyard-button small danger", "data-view-delete-confirm": name, disabled: busy, onClick: () => onDelete(saved).then(() => setConfirming(null)), children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C" }),
+        jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setConfirming(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
       ] });
     } else {
       const small = (label, icon, onClick, extra = {}) => jsxs("button", { type: "button", className: "dy-kb-icon-button", title: label, "aria-label": `${label} ${name}`, disabled: busy, onClick, ...extra, children: [jsx(Icon, { name: icon }), jsx("span", { children: label })] }, label);
       actions = jsxs("div", { className: "dy-kb-row-actions", children: [
-        isCurrent ? null : small("Open", "eye", () => onSelect(saved ? saved.name : null), { "data-view-open": name }),
-        saved && mine ? small("Rename", "pencil", () => {
+        isCurrent ? null : small("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "eye", () => onSelect(saved ? saved.name : null), { "data-view-open": name }),
+        saved && mine ? small("\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C", "pencil", () => {
           setRenaming(name);
           setRenameText(name);
           setConfirming(null);
         }, { "data-view-rename": name }) : null,
-        saved ? small("Duplicate", "copy", () => onDuplicate(saved), { "data-view-duplicate": name }) : null,
-        saved && mine ? small(saved.shared ? "Make it only mine" : "Share with project", saved.shared ? "user" : "send", () => onShare(saved, !saved.shared), { "data-view-share": name }) : null,
-        saved && mine ? small("Delete", "trash-2", () => {
+        saved ? small("\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C", "copy", () => onDuplicate(saved), { "data-view-duplicate": name }) : null,
+        saved && mine ? small(saved.shared ? "\u0421\u0434\u0435\u043B\u0430\u0442\u044C \u0442\u043E\u043B\u044C\u043A\u043E \u043C\u043E\u0438\u043C" : "\u041F\u043E\u0434\u0435\u043B\u0438\u0442\u044C\u0441\u044F \u0441 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u043C", saved.shared ? "user" : "send", () => onShare(saved, !saved.shared), { "data-view-share": name }) : null,
+        saved && mine ? small("\u0423\u0434\u0430\u043B\u0438\u0442\u044C", "trash-2", () => {
           setConfirming(name);
           setRenaming(null);
         }, { "data-view-delete": name }) : null,
-        saved && !mine ? jsx("span", { className: "dy-kb-panel-meta", children: saved.owner ? `Shared by ${displayName(saved.owner)}. Duplicate it to make your own.` : "Shared view. Duplicate it to make your own." }) : null
+        saved && !mine ? jsx("span", { className: "dy-kb-panel-meta", children: saved.owner ? `Shared by ${displayName(saved.owner)}. Duplicate it to make your own.` : "\u041E\u0431\u0449\u0438\u0439 \u0432\u0438\u0434. \u041F\u0440\u043E\u0434\u0443\u0431\u043B\u0438\u0440\u0443\u0439\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0441\u0432\u043E\u0439." }) : null
       ] });
     }
     return jsxs("li", { className: "dy-kb-view-row", "data-view-row": name, "data-current": isCurrent ? "true" : void 0, children: [
@@ -20683,33 +20683,33 @@ function ViewsPanel({
   const adjust = jsxs("section", { className: "dy-kb-panel-section", "data-view-adjust": currentName ?? ALL_WORK, children: [
     jsx("h3", { children: `Adjust "${currentName ?? ALL_WORK}"` }),
     jsxs("fieldset", { className: "dy-kb-choice", children: [
-      jsx("legend", { children: "Show on cards" }),
+      jsx("legend", { children: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043D\u0430 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430\u0445" }),
       ...CARD_FIELDS.map((key) => jsxs("label", { children: [
         jsx("input", { type: "checkbox", "data-card-field": key, checked: Boolean(fields[key]), onChange: () => onFields({ ...fields, [key]: !fields[key] }) }),
         jsx("span", { children: CARD_FIELD_LABELS[key] })
       ] }, key))
     ] }),
     jsxs("div", { className: "dy-kb-filter-summary", children: [
-      jsx("span", { children: describeFilters(working.filters) || "No filters: shows all work." }),
-      filtersActive(working.filters) ? jsx("button", { type: "button", className: "dockyard-button small", "data-view-clear-filters": true, onClick: onClearFilters, children: "Clear filters" }) : null
+      jsx("span", { children: describeFilters(working.filters) || "\u0411\u0435\u0437 \u0444\u0438\u043B\u044C\u0442\u0440\u043E\u0432: \u0432\u0441\u044F \u0440\u0430\u0431\u043E\u0442\u0430." }),
+      filtersActive(working.filters) ? jsx("button", { type: "button", className: "dockyard-button small", "data-view-clear-filters": true, onClick: onClearFilters, children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440\u044B" }) : null
     ] }),
-    jsx("p", { className: "dy-kb-panel-meta", children: "Layout and card size are on the toolbar. Every change shows straight away on the board." }),
+    jsx("p", { className: "dy-kb-panel-meta", children: "\u0420\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430 \u0438 \u0440\u0430\u0437\u043C\u0435\u0440 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A \u2014 \u043D\u0430 \u043F\u0430\u043D\u0435\u043B\u0438 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432. \u041A\u0430\u0436\u0434\u043E\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0441\u0440\u0430\u0437\u0443 \u0432\u0438\u0434\u043D\u043E \u043D\u0430 \u0434\u043E\u0441\u043A\u0435." }),
     edited ? jsxs("div", { className: "dy-kb-panel-buttons", children: [
-      current && current.mine !== false ? jsx("button", { type: "button", className: "dockyard-button small primary", "data-view-save": true, disabled: busy, onClick: onSaveCurrent, children: "Save changes" }) : null,
-      jsx("button", { type: "button", className: "dockyard-button small", disabled: busy, onClick: () => setNewOpen(true), children: "Save as new view" }),
-      jsx("button", { type: "button", className: "dockyard-button small", disabled: busy, onClick: onReset, children: "Reset" })
+      current && current.mine !== false ? jsx("button", { type: "button", className: "dockyard-button small primary", "data-view-save": true, disabled: busy, onClick: onSaveCurrent, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" }) : null,
+      jsx("button", { type: "button", className: "dockyard-button small", disabled: busy, onClick: () => setNewOpen(true), children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u043D\u043E\u0432\u044B\u0439 \u0432\u0438\u0434" }),
+      jsx("button", { type: "button", className: "dockyard-button small", disabled: busy, onClick: onReset, children: "\u0421\u0431\u0440\u043E\u0441" })
     ] }) : null
   ] });
   return jsxs("aside", { className: "dy-kb-panel", ref: panelRef, "data-views-panel": true, "aria-labelledby": "dy-kb-panel-title", onKeyDown, children: [
     jsxs("header", { children: [
-      jsx("h2", { id: "dy-kb-panel-title", tabIndex: -1, children: "Manage views" }),
-      jsx("button", { type: "button", className: "dy-kb-collapse", "aria-label": "Close Manage views", "data-views-close": true, onClick: close, children: jsx(Icon, { name: "x" }) })
+      jsx("h2", { id: "dy-kb-panel-title", tabIndex: -1, children: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0432\u0438\u0434\u0430\u043C\u0438" }),
+      jsx("button", { type: "button", className: "dy-kb-collapse", "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C\u0438", "data-views-close": true, onClick: close, children: jsx(Icon, { name: "x" }) })
     ] }),
     jsx("p", { className: "dy-kb-panel-meta", "data-views-note": true, children: "A view only changes what this board shows. It never runs automations, assigns work or changes permissions." }),
     error ? jsx("p", { className: "dy-kb-note", role: "alert", "data-views-error": true, children: error }) : null,
     newForm,
     jsxs("section", { className: "dy-kb-panel-section", children: [
-      jsx("h3", { children: "Views" }),
+      jsx("h3", { children: "\u0412\u0438\u0434\u044B" }),
       jsx("ul", { className: "dy-kb-view-rows", children: [viewRow(null), ...views.map(viewRow)] })
     ] }),
     adjust
@@ -20825,7 +20825,7 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
     try {
       await api(`/projects/${encoded}/work-items/${encodeURIComponent(ref)}/transition`, { method: "POST", body: { status } });
       const readback = await api(`/projects/${encoded}/work-items`);
-      if (!(readback.work_items ?? []).some((item) => item.ref === ref && item.status === status)) throw new Error("Hermes did not confirm the new column");
+      if (!(readback.work_items ?? []).some((item) => item.ref === ref && item.status === status)) throw new Error("Hermes \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u043B \u043D\u043E\u0432\u0443\u044E \u043A\u043E\u043B\u043E\u043D\u043A\u0443");
       focusCard.current = { ref, stage: stageKeyOf({ status }) };
       onRefresh?.();
       emitToast("success", `Work item moved to ${status.replaceAll("_", " ")}.`);
@@ -20923,19 +20923,19 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
     const name = saved ? saved.name : null;
     const label = saved ? saved.name : ALL_WORK;
     const active = name === currentName;
-    return jsxs("button", { type: "button", className: "dy-kb-viewtab", "data-view-tab": label, "aria-pressed": active, title: saved ? describeDefinition(definitionOf(saved)) : "Everything, on the board", onClick: () => selectView(name), children: [
+    return jsxs("button", { type: "button", className: "dy-kb-viewtab", "data-view-tab": label, "aria-pressed": active, title: saved ? describeDefinition(definitionOf(saved)) : "\u0412\u0441\u0451 \u2014 \u043D\u0430 \u0434\u043E\u0441\u043A\u0435", onClick: () => selectView(name), children: [
       jsx("span", { className: "dy-kb-viewtab-name", children: label }),
       editedNames.has(name) ? jsx("span", { className: "dy-kb-dot", "aria-label": "unsaved changes", role: "img" }) : null
     ] }, label);
   };
   const viewsBar = jsxs("div", { className: "dy-kb-viewsbar", children: [
-    jsxs("nav", { className: "dy-kb-viewtabs", "aria-label": "Views", children: [
+    jsxs("nav", { className: "dy-kb-viewtabs", "aria-label": "\u0412\u0438\u0434\u044B", children: [
       viewTab(null),
       ...viewList.map(viewTab),
-      jsxs("button", { type: "button", className: "dy-kb-viewtab dy-kb-viewtab-new", "data-view-new": true, onClick: () => openPanel("new"), children: [jsx(Icon, { name: "plus" }), jsx("span", { children: "New view" })] }, "new")
+      jsxs("button", { type: "button", className: "dy-kb-viewtab dy-kb-viewtab-new", "data-view-new": true, onClick: () => openPanel("new"), children: [jsx(Icon, { name: "plus" }), jsx("span", { children: "\u041D\u043E\u0432\u044B\u0439 \u0432\u0438\u0434" })] }, "new")
     ] }),
     jsxs("div", { className: "dy-kb-views-right", children: [
-      jsxs("button", { type: "button", className: "dy-kb-control dy-kb-button", ref: manageRef, "data-views-manage": true, "aria-expanded": Boolean(panel), onClick: () => panel ? setPanel(null) : openPanel("manage"), children: [jsx(Icon, { name: "list-filter" }), "Manage views"] })
+      jsxs("button", { type: "button", className: "dy-kb-control dy-kb-button", ref: manageRef, "data-views-manage": true, "aria-expanded": Boolean(panel), onClick: () => panel ? setPanel(null) : openPanel("manage"), children: [jsx(Icon, { name: "list-filter" }), "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0432\u0438\u0434\u0430\u043C\u0438"] })
     ] })
   ] });
   const { filters } = working;
@@ -20943,9 +20943,9 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
   const toolbar = jsxs("div", { className: "dy-kb-toolbar", "data-kanban-toolbar": true, children: [
     jsxs("label", { className: "dy-kb-control dy-kb-search", children: [
       jsx(Icon, { name: "search" }),
-      jsx("input", { type: "search", "aria-label": "Search work items", placeholder: "Search ref or title", value: filters.query, onChange: (event) => setFilters({ ...filters, query: event.target.value }) })
+      jsx("input", { type: "search", "aria-label": "\u041F\u043E\u0438\u0441\u043A \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432", placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u043D\u043E\u043C\u0435\u0440\u0443 \u0438\u043B\u0438 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0443", value: filters.query, onChange: (event) => setFilters({ ...filters, query: event.target.value }) })
     ] }),
-    ...[["assignee", "Filter by assignee", "All assignees", options.assignees], ["type", "Filter by type", "All types", options.types], ["label", "Filter by label", "All labels", options.labels]].map(([key, label, all, values]) => jsx("label", { className: "dy-kb-control", children: jsxs("select", { "aria-label": label, "data-kanban-filter": key, value: filters[key], onChange: (event) => setFilters({ ...filters, [key]: event.target.value }), children: [
+    ...[["assignee", "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044E", "\u0412\u0441\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u0438", options.assignees], ["type", "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0442\u0438\u043F\u0443", "\u0412\u0441\u0435 \u0442\u0438\u043F\u044B", options.types], ["label", "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u043C\u0435\u0442\u043A\u0435", "\u0412\u0441\u0435 \u043C\u0435\u0442\u043A\u0438", options.labels]].map(([key, label, all, values]) => jsx("label", { className: "dy-kb-control", children: jsxs("select", { "aria-label": label, "data-kanban-filter": key, value: filters[key], onChange: (event) => setFilters({ ...filters, [key]: event.target.value }), children: [
       jsx("option", { value: "", children: all }),
       ...values.map((value) => jsx("option", { value, children: key === "type" ? typeLabel(value) : key === "assignee" ? displayName(value) : value }, value))
     ] }) }, key)),
@@ -20954,38 +20954,38 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
       className: "dy-kb-control dy-kb-button",
       "data-kanban-status-filter": true,
       onClick: () => setFilters({ ...filters, statuses: [] }),
-      "aria-label": "Remove the status filter",
+      "aria-label": "\u0423\u0431\u0440\u0430\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0441\u0442\u0430\u0442\u0443\u0441\u0443",
       children: [`Status: ${filters.statuses.map(statusText).join(", ")}`, jsx(Icon, { name: "x" })]
     }) : null,
-    jsx("button", { type: "button", className: "dy-kb-control dy-kb-button", "data-kanban-clear": true, disabled: !filtersActive(filters), onClick: () => setFilters(emptyFilters()), children: "Clear filters" }),
+    jsx("button", { type: "button", className: "dy-kb-control dy-kb-button", "data-kanban-clear": true, disabled: !filtersActive(filters), onClick: () => setFilters(emptyFilters()), children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440\u044B" }),
     jsx("span", { className: "dy-kb-toolbar-gap", "aria-hidden": true }),
-    segmented("Layout", "layout", working.layout, [["board", "Board"], ["list", "List"]], (layout) => setWorking({ ...working, layout })),
+    segmented("\u0420\u0430\u0441\u043A\u043B\u0430\u0434\u043A\u0430", "layout", working.layout, [["board", "\u0414\u043E\u0441\u043A\u0430"], ["list", "List"]], (layout) => setWorking({ ...working, layout })),
     // Sahil 05/10: "Expanded" did not say what it did. One button opens (or closes) every card.
     working.layout === "board" ? jsx("button", {
       type: "button",
       className: "dy-kb-control dy-kb-button",
       "data-kanban-open-all": true,
       "aria-pressed": working.density === "detailed",
-      title: "Show every card's details without opening each one",
+      title: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438 \u0432\u0441\u0435\u0445 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A, \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u044F \u043A\u0430\u0436\u0434\u0443\u044E",
       onClick: () => {
         setOverrides({});
         setWorking({ ...working, density: working.density === "detailed" ? "compact" : "detailed" });
       },
-      children: "Open all cards"
+      children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u0441\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438"
     }) : null,
     jsx("span", { className: "dy-kb-count", "data-kanban-count": true, role: "status", children: `${number(liveCount)} ${plural2(liveCount, "item")}` })
   ] });
   const help = working.layout === "board" ? jsx("p", { className: "dy-kb-help", "data-kanban-help": true, children: "Drag a card to another column, or open the card and use Move to. Only moves Hermes accepts are offered." }) : null;
   const editedStrip = edited ? jsxs("div", { className: "dy-kb-edited", "data-view-edited": currentName ?? ALL_WORK, role: "status", children: [
     jsx("span", { className: "dy-kb-dot", "aria-hidden": true }),
-    jsx("span", { className: "dy-kb-edited-text", children: currentSaved ? `Unsaved changes to "${currentSaved.name}".` : "You changed All work. Save it as a view to keep this." }),
-    currentSaved && currentSaved.mine !== false ? jsx("button", { type: "button", className: "dockyard-button small primary", "data-view-save": true, disabled: busy, onClick: saveCurrent, children: "Save" }) : null,
-    jsx("button", { type: "button", className: "dockyard-button small", "data-view-save-as": true, disabled: busy, onClick: () => openPanel("new"), children: "Save as new view" }),
-    jsx("button", { type: "button", className: "dockyard-button small", "data-view-reset": true, onClick: resetView, children: "Reset" })
+    jsx("span", { className: "dy-kb-edited-text", children: currentSaved ? `Unsaved changes to "${currentSaved.name}".` : "\u0412\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438 \xAB\u0412\u0441\u044E \u0440\u0430\u0431\u043E\u0442\u0443\xBB. \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043A\u0430\u043A \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u044D\u0442\u043E." }),
+    currentSaved && currentSaved.mine !== false ? jsx("button", { type: "button", className: "dockyard-button small primary", "data-view-save": true, disabled: busy, onClick: saveCurrent, children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C" }) : null,
+    jsx("button", { type: "button", className: "dockyard-button small", "data-view-save-as": true, disabled: busy, onClick: () => openPanel("new"), children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u043D\u043E\u0432\u044B\u0439 \u0432\u0438\u0434" }),
+    jsx("button", { type: "button", className: "dockyard-button small", "data-view-reset": true, onClick: resetView, children: "\u0421\u0431\u0440\u043E\u0441" })
   ] }) : null;
   const notes = [
-    deps.status === "error" ? jsx("p", { className: "dy-kb-note", "data-kanban-note": "dependencies", role: "status", children: "Dependencies unavailable. Blocked by and Blocks are not shown." }, "deps") : null,
-    roadmap.status === "error" ? jsx("p", { className: "dy-kb-note", "data-kanban-note": "objectives", role: "status", children: "Objectives unavailable. Objectives are not shown." }, "roadmap") : null,
+    deps.status === "error" ? jsx("p", { className: "dy-kb-note", "data-kanban-note": "dependencies", role: "status", children: "\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u0438 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B. \xAB\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E\xBB \u0438 \xAB\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442\xBB \u043D\u0435 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B." }, "deps") : null,
+    roadmap.status === "error" ? jsx("p", { className: "dy-kb-note", "data-kanban-note": "objectives", role: "status", children: "\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B. \u041E\u043D\u0438 \u043D\u0435 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B." }, "roadmap") : null,
     // Never hide work: an item whose status no column lists is named here.
     unplaced.length ? jsxs("div", { className: "dy-kb-note", "data-kanban-note": "unplaced", role: "status", children: [
       jsx("span", { children: `${number(unplaced.length)} ${plural2(unplaced.length, "item")} not on the board: Hermes gave ${unplaced.length === 1 ? "it a status" : "them statuses"} no column lists. ` }),
@@ -20993,7 +20993,7 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
     ] }, "unplaced") : null
   ];
   const noMatch = allItems.length > 0 && liveCount === 0 && filtersActive(filters);
-  const empty = noMatch ? jsxs("p", { className: "dy-kb-empty", "data-kanban-empty": "filters", children: ["No work matches these filters. ", jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setFilters(emptyFilters()), children: "Clear filters" })] }, "empty") : allItems.length === 0 ? jsx("p", { className: "dy-kb-empty", "data-kanban-empty": "none", children: "This project has no work items yet. Add work from the Backlog tab." }, "empty") : null;
+  const empty = noMatch ? jsxs("p", { className: "dy-kb-empty", "data-kanban-empty": "filters", children: ["\u041D\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E \u044D\u0442\u0438\u043C \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u043C. ", jsx("button", { type: "button", className: "dockyard-button small", onClick: () => setFilters(emptyFilters()), children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440\u044B" })] }, "empty") : allItems.length === 0 ? jsx("p", { className: "dy-kb-empty", "data-kanban-empty": "none", children: "\u0412 \u044D\u0442\u043E\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0435 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0443 \u043D\u0430 \u0432\u043A\u043B\u0430\u0434\u043A\u0435 \xAB\u0411\u044D\u043A\u043B\u043E\u0433\xBB." }, "empty") : null;
   const openRef = (ref) => {
     const target = allItems.find((item) => item.ref === ref);
     if (target) onOpenItem(target);
@@ -21066,39 +21066,39 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
           jsx("h3", { title: stage.hint, children: stage.label }),
           jsx("span", { children: number(stageItems.length) })
         ] }, "header"),
-        jsx("div", { className: "dockyard-board-cards", children: stageItems.length > 0 ? stageItems.map((item) => card(item, stage.key)) : jsx("p", { className: "dockyard-meta", children: refused ? "Can't move here." : "Nothing here." }) }, "cards")
+        jsx("div", { className: "dockyard-board-cards", children: stageItems.length > 0 ? stageItems.map((item) => card(item, stage.key)) : jsx("p", { className: "dockyard-meta", children: refused ? "\u041D\u0435\u043B\u044C\u0437\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0441\u044E\u0434\u0430." : "\u0417\u0434\u0435\u0441\u044C \u043F\u0443\u0441\u0442\u043E." }) }, "cards")
       ]
     }, stage.key);
   };
-  const board = jsx("div", { className: "dockyard-board", ref: boardRef, role: "region", "aria-label": "Kanban board", "data-kanban-board": true, children: STAGES.map(column) }, "board");
+  const board = jsx("div", { className: "dockyard-board", ref: boardRef, role: "region", "aria-label": "\u041A\u0430\u043D\u0431\u0430\u043D-\u0434\u043E\u0441\u043A\u0430", "data-kanban-board": true, children: STAGES.map(column) }, "board");
   const refsCell = (cards) => jsx("div", { className: "dy-kb-cell-refs", children: cards.map((linked) => jsx("button", { type: "button", className: "dy-kb-goto", "data-done": linked.done ? "true" : void 0, title: statusText(linked.status), onClick: () => openRef(linked.ref), children: `${linked.ref} ${linked.title}` }, linked.ref)) });
   const moveCell = (item) => {
     const moves = movesOf(item);
     return moves.targets.length ? jsxs("select", { "aria-label": `Move ${item.ref}`, "data-card-move": item.ref, disabled: moving, value: "", onChange: (event) => transitionStatus(item.ref, event.target.value), children: [
-      jsx("option", { value: "", children: "Move to\u2026" }),
+      jsx("option", { value: "", children: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u2026" }),
       ...moves.targets.map((target) => jsx("option", { value: target.status, children: target.label }, target.key))
     ] }) : jsx("span", { className: "dy-kb-panel-meta", title: moves.reason ?? "", children: "\u2014" });
   };
   const facts = (item) => factsByRef[item.ref];
   const listColumns = [
     { key: "ref", heading: "Ref", cell: (item) => jsx("button", { type: "button", className: "dy-kb-goto", onClick: () => onOpenItem(item), children: item.ref }) },
-    { key: "title", heading: "Title", cell: (item) => item.title },
-    { key: "type", heading: "Type", cell: (item) => typeLabel(item.type) },
-    { key: "status", heading: "State", cell: (item) => statusText(item.status) },
-    { key: "assignee", heading: "Assignee", cell: (item) => item.assignee ? displayName(item.assignee) : "Unassigned" },
-    { key: "blocked_by", heading: "Blocked by", cell: (item) => refsCell(facts(item).blockedBy) },
-    { key: "blocks", heading: "Blocks", cell: (item) => refsCell(facts(item).blocks) },
-    { key: "initiative", heading: "Initiative", cell: (item) => facts(item).initiative ? facts(item).initiative.title || facts(item).initiative.ref : "" },
-    { key: "milestone", heading: "Milestone", cell: (item) => facts(item).milestones.map((milestone) => milestone.name).join(", ") },
-    { key: "goal", heading: "Goal", cell: (item) => facts(item).goal ? facts(item).goal.title : "" },
-    { key: "due", heading: "Due", cell: (item) => facts(item).due ? `${shortDate(facts(item).due, today)}${facts(item).overdue ? " \xB7 Overdue" : ""}` : "" },
-    { key: "move", heading: "Move", cell: moveCell }
+    { key: "title", heading: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A", cell: (item) => item.title },
+    { key: "type", heading: "\u0422\u0438\u043F", cell: (item) => typeLabel(item.type) },
+    { key: "status", heading: "\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435", cell: (item) => statusText(item.status) },
+    { key: "assignee", heading: "\u0418\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C", cell: (item) => item.assignee ? displayName(item.assignee) : "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D" },
+    { key: "blocked_by", heading: "\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442\u0441\u044F", cell: (item) => refsCell(facts(item).blockedBy) },
+    { key: "blocks", heading: "\u0411\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442", cell: (item) => refsCell(facts(item).blocks) },
+    { key: "initiative", heading: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", cell: (item) => facts(item).initiative ? facts(item).initiative.title || facts(item).initiative.ref : "" },
+    { key: "milestone", heading: "\u0412\u0435\u0445\u0430", cell: (item) => facts(item).milestones.map((milestone) => milestone.name).join(", ") },
+    { key: "goal", heading: "\u0426\u0435\u043B\u044C", cell: (item) => facts(item).goal ? facts(item).goal.title : "" },
+    { key: "due", heading: "\u0421\u0440\u043E\u043A", cell: (item) => facts(item).due ? `${shortDate(facts(item).due, today)}${facts(item).overdue ? " \xB7 Overdue" : ""}` : "" },
+    { key: "move", heading: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C", cell: moveCell }
   ];
   const list = jsx("div", { className: "dy-kb-list", children: jsx(WorkTable, {
     columns: listColumns,
     className: "dy-kb-table",
     groups: STAGES.map((stage) => ({ key: stage.key, label: stage.label, items: grouped[stage.key] })).filter((group) => group.items.length > 0),
-    emptyText: "No work items to list."
+    emptyText: "\u0420\u0430\u0431\u043E\u0447\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u043F\u0438\u0441\u043A\u0430 \u043D\u0435\u0442."
   }) }, "list");
   const body = [jsxs("div", { className: "dy-kb-controls", children: [toolbar, editedStrip, help] }, "controls"), ...notes, empty, working.layout === "list" ? list : board];
   return jsxs("div", { className: "dockyard-board-wrap", "data-kanban-screen": true, "data-view": currentName ?? ALL_WORK, "data-panel-open": panel ? "true" : void 0, children: [
@@ -21130,18 +21130,18 @@ function KanbanScreen({ project, view, onRefresh, setWorkNotice, onOpenItem, onN
 
 // hermes_dockyard_plugin/desktop/src/lib/plan-vocab.js
 var ICON = Object.freeze({ project: "P", initiative: "I", milestone: "M", work: "W", objective: "O", goal: "G" });
-var KIND_LABEL = Object.freeze({ initiative: "Initiative", milestone: "Milestone", objective: "Objective", goal: "Goal" });
-var BUCKETS = Object.freeze([["planned", "Planned"], ["building", "Building"], ["ready_for_review", "Ready for review"], ["complete", "Complete"]]);
+var KIND_LABEL = Object.freeze({ initiative: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", milestone: "\u0412\u0435\u0445\u0430", objective: "\u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C", goal: "\u0426\u0435\u043B\u044C" });
+var BUCKETS = Object.freeze([["planned", "\u0417\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u043E"], ["building", "\u0421\u0431\u043E\u0440\u043A\u0430"], ["ready_for_review", "\u0413\u043E\u0442\u043E\u0432\u043E \u043A \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435"], ["complete", "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044C"]]);
 var STATUS_LABEL = Object.freeze({
-  proposed: "Proposed",
-  pending_approval: "Waiting for approval",
-  changes_requested: "Changes requested",
-  approved: "Approved",
-  executing: "In progress",
-  completed: "Complete",
-  regressed: "Regressed",
-  rejected: "Rejected",
-  cancelled: "Withdrawn"
+  proposed: "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u043E",
+  pending_approval: "\u0416\u0434\u0451\u0442 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F",
+  changes_requested: "\u0417\u0430\u043F\u0440\u043E\u0448\u0435\u043D\u044B \u043F\u0440\u0430\u0432\u043A\u0438",
+  approved: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u043E",
+  executing: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435",
+  completed: "\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044C",
+  regressed: "\u041E\u0442\u043A\u0430\u0442",
+  rejected: "\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u043E",
+  cancelled: "\u041E\u0442\u043E\u0437\u0432\u0430\u043D\u043E"
 });
 var STATUS_TONE = Object.freeze({
   proposed: "info",
@@ -21158,21 +21158,21 @@ var OPEN_STATUSES = Object.freeze(["proposed", "pending_approval", "changes_requ
 var WITHDRAWABLE_STATUSES = Object.freeze(["proposed", "pending_approval", "changes_requested"]);
 var COMPLETABLE_STATUSES = Object.freeze(["approved", "executing"]);
 var CLOSED_STATUSES = Object.freeze(["completed", "regressed", "rejected", "cancelled"]);
-var GOAL_LABEL = Object.freeze({ met: "Met", at_risk: "At risk", unknown: "Unknown evidence", unproven: "Unproven" });
+var GOAL_LABEL = Object.freeze({ met: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u043E", at_risk: "\u041F\u043E\u0434 \u0443\u0433\u0440\u043E\u0437\u043E\u0439", unknown: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", unproven: "\u041D\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u043D\u043E" });
 var GOAL_TONE = Object.freeze({ met: "success", at_risk: "danger", unknown: "neutral", unproven: "neutral" });
-var OUTCOME_LABEL = Object.freeze({ passed: "Passed", failed: "Failed", stale: "Stale", unknown: "Unknown", not_applicable: "Not applicable" });
+var OUTCOME_LABEL = Object.freeze({ passed: "\u041F\u0440\u043E\u0439\u0434\u0435\u043D\u043E", failed: "\u041F\u0440\u043E\u0432\u0430\u043B\u0435\u043D\u043E", stale: "\u0423\u0441\u0442\u0430\u0440\u0435\u043B\u043E", unknown: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E", not_applicable: "\u041D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u0438\u043C\u043E" });
 var OUTCOME_TONE = Object.freeze({ passed: "success", failed: "danger", stale: "warning", unknown: "neutral", not_applicable: "neutral" });
 var REL_LABEL = Object.freeze({ delivers: "delivers", depends_on: "depends on", supports: "supports", measures: "measures", unblocks: "unblocks" });
 var RELATIONSHIPS = Object.freeze({ milestone: Object.freeze(["delivers", "depends_on"]), objective: Object.freeze(["supports", "measures", "unblocks"]) });
 function forecastLine(fc) {
-  if (!fc) return "Forecast unavailable.";
-  if (fc.state === "complete") return "Forecast: complete.";
+  if (!fc) return "\u041F\u0440\u043E\u0433\u043D\u043E\u0437 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D.";
+  if (fc.state === "complete") return "\u041F\u0440\u043E\u0433\u043D\u043E\u0437: \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E.";
   if (fc.state === "insufficient_history") {
     return `Forecast: insufficient history (${fc.sample_size ?? 0} completions in the last ${fc.assumptions?.window_weeks ?? 4} complete weeks; needs ${fc.assumptions?.min_sample ?? 8}).`;
   }
-  if (fc.state === "not_comparable") return "Forecast: work history is not comparable.";
+  if (fc.state === "not_comparable") return "\u041F\u0440\u043E\u0433\u043D\u043E\u0437: \u0438\u0441\u0442\u043E\u0440\u0438\u044F \u0440\u0430\u0431\u043E\u0442 \u043D\u0435\u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u0438\u043C\u0430.";
   const range = fc.range_weeks ?? {};
-  const upper = range.upper_open_ended ? "open-ended (a zero-throughput week was observed)" : `${range.upper} weeks`;
+  const upper = range.upper_open_ended ? "\u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 (\u043D\u0430\u0431\u043B\u044E\u0434\u0430\u043B\u0430\u0441\u044C \u043D\u0435\u0434\u0435\u043B\u044F \u043D\u0443\u043B\u0435\u0432\u043E\u0433\u043E \u043E\u0431\u043E\u0440\u043E\u0442\u0430)" : `${range.upper} weeks`;
   return `Forecast: ~${fc.central_weeks} weeks central (range ${range.lower}\u2013${upper}); ${fc.sample_size} completions. A count-based scenario, not a delivery promise.`;
 }
 function riskLine(risk) {
@@ -21197,9 +21197,9 @@ var sameItem = (a, b) => Boolean(a && b && a.kind === b.kind && String(a.id) ===
 var listOf = (plan, kind) => ({ initiative: plan.initiatives, milestone: plan.milestones, objective: plan.objectives, goal: plan.goals })[kind] ?? [];
 var findItem = (plan, ref) => plan && ref ? listOf(plan, ref.kind).find((row) => sameItem(row, ref)) ?? null : null;
 function statusOf(item) {
-  if (item.archived) return { tone: "neutral", label: "Archived" };
+  if (item.archived) return { tone: "neutral", label: "\u0412 \u0430\u0440\u0445\u0438\u0432\u0435" };
   if (item.kind === "initiative") return { tone: STATUS_TONE[item.status] ?? "neutral", label: STATUS_LABEL[item.status] ?? item.status };
-  if (item.kind === "milestone") return item.closed ? { tone: "success", label: "Closed" } : isOverdue2(item) ? { tone: "danger", label: "Overdue" } : { tone: "info", label: "Open" };
+  if (item.kind === "milestone") return item.closed ? { tone: "success", label: "Closed" } : isOverdue2(item) ? { tone: "danger", label: "\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E" } : { tone: "info", label: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C" };
   if (item.kind === "objective") return { tone: OUTCOME_TONE[item.outcome] ?? "neutral", label: OUTCOME_LABEL[item.outcome] ?? item.outcome };
   return { tone: GOAL_TONE[item.state] ?? "neutral", label: GOAL_LABEL[item.state] ?? item.state };
 }
@@ -21398,7 +21398,7 @@ function planActions(projectId) {
 var RISKS = ["low", "medium", "high"];
 var SEVERITIES = ["low", "medium", "high", "critical"];
 var capital = (word) => word[0].toUpperCase() + word.slice(1);
-var errorText = (failure) => String(failure?.message ?? failure ?? "Something went wrong");
+var errorText = (failure) => String(failure?.message ?? failure ?? "\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A");
 function KindGlyph({ kind }) {
   return jsx("span", { className: `dy-plan-glyph ${kind}`, "aria-hidden": true, children: ICON[kind] ?? "\xB7" });
 }
@@ -21500,7 +21500,7 @@ var blank = (kind, item) => ({
 function validate(kind, form, mode) {
   const errors = {};
   if (!(mode === "edit" && kind === "initiative") && !form.title.trim()) errors.title = `Give the ${KIND_LABEL[kind].toLowerCase()} a name.`;
-  if (kind === "initiative" && !form.rationale.trim()) errors.rationale = "Say why this initiative matters; reviewers decide on it.";
+  if (kind === "initiative" && !form.rationale.trim()) errors.rationale = "\u0421\u043A\u0430\u0436\u0438\u0442\u0435, \u043F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u0430 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0432\u0430\u0436\u043D\u0430; \u0440\u0435\u0432\u044C\u044E\u0435\u0440\u044B \u0440\u0435\u0448\u0430\u044E\u0442 \u043F\u043E \u043D\u0435\u0439.";
   if (kind === "objective" && !form.target.trim()) errors.target = "Set a target, for example >=1.";
   return errors;
 }
@@ -21574,40 +21574,40 @@ function ItemForm({ kind, mode = "create", item, plan, actions, linkTo, onClose,
   };
   const fields = {
     initiative: () => [
-      mode === "create" ? field("title", "Title", jsx("input", input("title", { autoComplete: "off" })), { required: true }) : null,
-      field("rationale", "Why it matters", jsx("textarea", input("rationale", { rows: 3 })), { required: true }),
-      field("expectedOutcome", "Expected outcome", jsx("textarea", input("expectedOutcome", { rows: 2 })), { hint: "What should be true when it is done." }),
-      field("risk", "Risk", jsx("select", { ...input("risk"), children: options(RISKS) }), { required: true }),
+      mode === "create" ? field("title", "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A", jsx("input", input("title", { autoComplete: "off" })), { required: true }) : null,
+      field("rationale", "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E \u0432\u0430\u0436\u043D\u043E", jsx("textarea", input("rationale", { rows: 3 })), { required: true }),
+      field("expectedOutcome", "\u041E\u0436\u0438\u0434\u0430\u0435\u043C\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", jsx("textarea", input("expectedOutcome", { rows: 2 })), { hint: "\u0427\u0442\u043E \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0432\u0435\u0440\u043D\u043E, \u043A\u043E\u0433\u0434\u0430 \u044D\u0442\u043E \u0441\u0434\u0435\u043B\u0430\u043D\u043E." }),
+      field("risk", "\u0420\u0438\u0441\u043A", jsx("select", { ...input("risk"), children: options(RISKS) }), { required: true }),
       // The backend cannot add checks later (resubmit keeps them as they are),
       // so the box is offered when proposing only.
       mode === "create" ? field(
         "checks",
-        "How we\u2019ll know it worked",
-        jsx("textarea", input("checks", { rows: 2, placeholder: "For example: the test suite passes and sign-ups recover to 40 a day." })),
+        "\u041A\u0430\u043A \u043C\u044B \u043F\u043E\u0439\u043C\u0451\u043C, \u0447\u0442\u043E \u044D\u0442\u043E \u0441\u0440\u0430\u0431\u043E\u0442\u0430\u043B\u043E",
+        jsx("textarea", input("checks", { rows: 2, placeholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u043D\u0430\u0431\u043E\u0440 \u0442\u0435\u0441\u0442\u043E\u0432 \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442, \u0430 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u0438 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0434\u043E 40 \u0432 \u0434\u0435\u043D\u044C." })),
         { hint: "Optional. Reviewers see these checks. Hermes can only finish an initiative by itself when it has them; without them, mark it complete when the work is done." }
       ) : null
     ],
     milestone: () => [
-      field("title", "Name", jsx("input", input("title", { autoComplete: "off" })), { required: true }),
-      field("due", "Due date", jsx("input", input("due", { type: "date" })), { hint: "Shown as overdue once it passes and the milestone is still open." }),
-      mode === "edit" ? jsxs("label", { className: "dy-plan-check", children: [jsx("input", { type: "checkbox", checked: form.closed, onChange: set("closed"), "data-plan-field": "closed" }), "Closed (finished)"] }, "closed") : null
+      field("title", "\u0418\u043C\u044F", jsx("input", input("title", { autoComplete: "off" })), { required: true }),
+      field("due", "\u0421\u0440\u043E\u043A", jsx("input", input("due", { type: "date" })), { hint: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043D\u043E\u0435, \u043A\u043E\u0433\u0434\u0430 \u0441\u0440\u043E\u043A \u043F\u0440\u043E\u0448\u0451\u043B, \u0430 \u0432\u0435\u0445\u0430 \u0435\u0449\u0451 \u043E\u0442\u043A\u0440\u044B\u0442\u0430." }),
+      mode === "edit" ? jsxs("label", { className: "dy-plan-check", children: [jsx("input", { type: "checkbox", checked: form.closed, onChange: set("closed"), "data-plan-field": "closed" }), "\u0417\u0430\u043A\u0440\u044B\u0442\u043E (\u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E)"] }, "closed") : null
     ],
     objective: () => [
-      field("title", "Name", jsx("input", input("title", { autoComplete: "off" })), { required: true }),
-      field("description", "Description", jsx("textarea", input("description", { rows: 2 }))),
-      field("target", "Target", jsx("input", input("target", { autoComplete: "off" })), { required: true, hint: "How evidence is judged, for example >=1." }),
-      field("severity", "Severity", jsx("select", { ...input("severity"), children: options(SEVERITIES) }), { required: true })
+      field("title", "\u0418\u043C\u044F", jsx("input", input("title", { autoComplete: "off" })), { required: true }),
+      field("description", "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", jsx("textarea", input("description", { rows: 2 }))),
+      field("target", "\u0426\u0435\u043B\u044C", jsx("input", input("target", { autoComplete: "off" })), { required: true, hint: "How evidence is judged, for example >=1." }),
+      field("severity", "\u0412\u0430\u0436\u043D\u043E\u0441\u0442\u044C", jsx("select", { ...input("severity"), children: options(SEVERITIES) }), { required: true })
     ],
     goal: () => {
       const choices = plan.objectives.filter((row) => !row.archived);
       const ownerOf2 = (objectiveId) => plan.goals.find((goal) => goal.id !== item?.id && goal.objectiveIds.includes(objectiveId));
       const toggle = (id, on) => setForm((current) => ({ ...current, objectiveIds: on ? [...current.objectiveIds, id] : current.objectiveIds.filter((x) => x !== id) }));
       return [
-        field("title", "Title", jsx("input", input("title", { autoComplete: "off" })), { required: true }),
-        field("description", "Description", jsx("textarea", input("description", { rows: 2 }))),
+        field("title", "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A", jsx("input", input("title", { autoComplete: "off" })), { required: true }),
+        field("description", "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", jsx("textarea", input("description", { rows: 2 }))),
         jsxs("fieldset", { className: "dy-plan-checklist", children: [
-          jsx("legend", { children: "Objectives that measure this goal (optional)" }),
-          choices.length ? null : jsx("p", { className: "dockyard-meta", children: "No objectives yet. Add one first, then link it here." }),
+          jsx("legend", { children: "\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438, \u0438\u0437\u043C\u0435\u0440\u044F\u044E\u0449\u0438\u0435 \u044D\u0442\u0443 \u0446\u0435\u043B\u044C (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)" }),
+          choices.length ? null : jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0434\u0430\u0447-\u0446\u0435\u043B\u0435\u0439 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043E\u0434\u043D\u0443, \u0437\u0430\u0442\u0435\u043C \u0441\u0432\u044F\u0436\u0438\u0442\u0435 \u0435\u0451 \u0437\u0434\u0435\u0441\u044C." }),
           ...choices.map((row) => {
             const owner = ownerOf2(row.id);
             return jsxs("label", { className: `dy-plan-check${owner ? " taken" : ""}`, children: [
@@ -21620,7 +21620,7 @@ function ItemForm({ kind, mode = "create", item, plan, actions, linkTo, onClose,
       ];
     }
   }[kind]();
-  const verb = mode === "create" ? kind === "initiative" ? "Propose" : "Create" : kind === "initiative" ? "Resubmit" : "Save";
+  const verb = mode === "create" ? kind === "initiative" ? "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u044C" : "Create" : kind === "initiative" ? "\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C";
   const title = mode === "create" ? `New ${KIND_LABEL[kind].toLowerCase()}` : kind === "initiative" ? `Revise \u201C${item.title}\u201D` : `Edit ${KIND_LABEL[kind].toLowerCase()}`;
   const note = kind !== "initiative" ? null : mode === "create" ? "A new initiative waits for approval before work starts. Reviewers see why it matters and its risk." : "Changes were requested. Update the proposal and resubmit it for approval. The title stays as proposed.";
   return jsx(PlanDialog, {
@@ -21630,7 +21630,7 @@ function ItemForm({ kind, mode = "create", item, plan, actions, linkTo, onClose,
     busy,
     onClose,
     actions: [
-      jsx(Button, { onClick: onClose, disabled: busy, children: "Cancel" }, "cancel"),
+      jsx(Button, { onClick: onClose, disabled: busy, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }, "cancel"),
       jsx(Button, { variant: "primary", action: `plan-${mode}-${kind}`, disabled: busy, onClick: submit, children: busy ? `${verb}\u2026` : verb }, "submit")
     ],
     children: jsxs("form", { className: "dy-plan-form", noValidate: true, onSubmit: (event) => {
@@ -21675,8 +21675,8 @@ function LinkDialog({ from, target, plan, actions, onClose, onDone, onCreateNew 
     onClose,
     actions: [
       onCreateNew ? jsx(Button, { action: `plan-link-new-${target}`, disabled: busy, onClick: onCreateNew, children: `New ${noun}\u2026` }, "new") : null,
-      jsx(Button, { onClick: onClose, disabled: busy, children: "Cancel" }, "cancel"),
-      jsx(Button, { variant: "primary", action: "plan-link-confirm", disabled: busy || !chosen, onClick: submit, children: busy ? "Placing\u2026" : "Place" }, "link")
+      jsx(Button, { onClick: onClose, disabled: busy, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }, "cancel"),
+      jsx(Button, { variant: "primary", action: "plan-link-confirm", disabled: busy || !chosen, onClick: submit, children: busy ? "\u0420\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u0435\u2026" : "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C" }, "link")
     ],
     children: jsxs("div", { className: "dy-plan-form", children: [
       options.length === 0 ? jsx("p", { className: "dy-plan-note", children: `Nothing to place it under: this project has no ${parentNoun} yet${onCreateNew ? `. Create a new ${noun} instead` : ""}.` }) : jsx(Field, { id: "dy-plan-link-choice", label: KIND_LABEL[target], required: true, children: jsxs("select", { id: "dy-plan-link-choice", "data-plan-link-choice": true, value: choice, onChange: (event) => setChoice(event.target.value), children: [
@@ -21736,7 +21736,7 @@ function ActionDialog({ spec, onCancel, onDone }) {
     busy,
     onClose: onCancel,
     actions: [
-      jsx(Button, { onClick: onCancel, disabled: busy, children: "Cancel" }, "cancel"),
+      jsx(Button, { onClick: onCancel, disabled: busy, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }, "cancel"),
       jsx(Button, { variant: spec.variant ?? "primary", action: `plan-${spec.key}-confirm`, disabled: busy, onClick: submit, children: busy ? "Working\u2026" : spec.label }, "confirm")
     ],
     children: jsxs("div", { className: "dy-plan-form", children: [
@@ -21766,14 +21766,14 @@ function MissionStrip({ plan, actions, onChanged, onConfirm }) {
   };
   const saveMission = async () => {
     if (!draft.trim()) {
-      setFailure("Write the mission, or use Remove mission to clear it.");
+      setFailure("\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u043C\u0438\u0441\u0441\u0438\u044E \u0438\u043B\u0438 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \xAB\u0423\u0431\u0440\u0430\u0442\u044C \u043C\u0438\u0441\u0441\u0438\u044E\xBB, \u0447\u0442\u043E\u0431\u044B \u043E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0435\u0451.");
       return;
     }
     setBusy(true);
     setFailure(null);
     try {
       await actions.saveMission(draft);
-      emitToast("success", "Mission saved.");
+      emitToast("success", "\u041C\u0438\u0441\u0441\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430.");
       setEditing(false);
       onChanged();
     } catch (error) {
@@ -21782,11 +21782,11 @@ function MissionStrip({ plan, actions, onChanged, onConfirm }) {
       setBusy(false);
     }
   };
-  return jsxs("section", { className: "dy-plan-mission", "data-plan-mission": true, "aria-label": "Project mission", children: [
-    jsx("span", { className: "dy-plan-mission-label", children: "Mission" }),
+  return jsxs("section", { className: "dy-plan-mission", "data-plan-mission": true, "aria-label": "\u041C\u0438\u0441\u0441\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430", children: [
+    jsx("span", { className: "dy-plan-mission-label", children: "\u041C\u0438\u0441\u0441\u0438\u044F" }),
     editing ? jsxs("div", { className: "dy-plan-mission-edit", children: [
       jsx("textarea", {
-        "aria-label": "Mission statement",
+        "aria-label": "\u0424\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u043A\u0430 \u043C\u0438\u0441\u0441\u0438\u0438",
         "data-plan-mission-input": true,
         rows: 2,
         value: draft,
@@ -21798,39 +21798,39 @@ function MissionStrip({ plan, actions, onChanged, onConfirm }) {
           }
         }
       }),
-      jsx(Button, { small: true, variant: "primary", action: "plan-mission-save", disabled: busy, onClick: saveMission, children: busy ? "Saving\u2026" : "Save" }),
-      jsx(Button, { small: true, disabled: busy, onClick: cancel, children: "Cancel" })
-    ] }) : jsx("p", { className: plan.mission ? "" : "empty", children: plan.mission || "No mission set. Say what this project exists to achieve." }),
+      jsx(Button, { small: true, variant: "primary", action: "plan-mission-save", disabled: busy, onClick: saveMission, children: busy ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435\u2026" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C" }),
+      jsx(Button, { small: true, disabled: busy, onClick: cancel, children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
+    ] }) : jsx("p", { className: plan.mission ? "" : "empty", children: plan.mission || "\u041C\u0438\u0441\u0441\u0438\u044F \u043D\u0435 \u0437\u0430\u0434\u0430\u043D\u0430. \u0421\u043A\u0430\u0436\u0438\u0442\u0435, \u0440\u0430\u0434\u0438 \u0447\u0435\u0433\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442." }),
     editing ? null : jsx(Button, { small: true, action: "plan-mission-edit", onClick: () => {
       setDraft(plan.mission);
       setEditing(true);
-    }, children: plan.mission ? "Edit" : "Add mission" }),
-    editing ? null : jsx(Menu, { label: "Mission actions", trigger: "\u22EF", action: "mission", items: [
-      { id: "history", label: history ? "Hide mission history" : `Mission history (${plan.missionHistory.length})`, onSelect: () => setHistory(!history) },
-      plan.mission ? { id: "archive", label: "Archive mission\u2026", onSelect: () => onConfirm({ key: "archive-mission", title: "Archive this mission?", description: "The mission moves to history and is removed from the active project.", label: "Archive mission", done: "Mission archived.", run: actions.archiveMission }) } : null,
-      plan.mission ? { id: "remove", label: "Remove mission\u2026", danger: true, onSelect: () => onConfirm({ key: "remove-mission", title: "Remove this mission?", description: "The active mission is cleared without adding it to mission history.", label: "Remove mission", done: "Mission removed.", run: actions.removeMission }) } : null
+    }, children: plan.mission ? "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043C\u0438\u0441\u0441\u0438\u044E" }),
+    editing ? null : jsx(Menu, { label: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u043C\u0438\u0441\u0441\u0438\u0438", trigger: "\u22EF", action: "mission", items: [
+      { id: "history", label: history ? "\u0421\u043A\u0440\u044B\u0442\u044C \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043C\u0438\u0441\u0441\u0438\u0439" : `Mission history (${plan.missionHistory.length})`, onSelect: () => setHistory(!history) },
+      plan.mission ? { id: "archive", label: "\u0410\u0440\u0445\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043C\u0438\u0441\u0441\u0438\u044E\u2026", onSelect: () => onConfirm({ key: "archive-mission", title: "\u0410\u0440\u0445\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u044D\u0442\u0443 \u043C\u0438\u0441\u0441\u0438\u044E?", description: "\u041C\u0438\u0441\u0441\u0438\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u0442\u0441\u044F \u0432 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u0438 \u0443\u0431\u0438\u0440\u0430\u0435\u0442\u0441\u044F \u0438\u0437 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430.", label: "\u0410\u0440\u0445\u0438\u0432\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043C\u0438\u0441\u0441\u0438\u044E", done: "\u041C\u0438\u0441\u0441\u0438\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0432 \u0430\u0440\u0445\u0438\u0432.", run: actions.archiveMission }) } : null,
+      plan.mission ? { id: "remove", label: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043C\u0438\u0441\u0441\u0438\u044E\u2026", danger: true, onSelect: () => onConfirm({ key: "remove-mission", title: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u044D\u0442\u0443 \u043C\u0438\u0441\u0441\u0438\u044E?", description: "\u0410\u043A\u0442\u0438\u0432\u043D\u0430\u044F \u043C\u0438\u0441\u0441\u0438\u044F \u043E\u0447\u0438\u0449\u0430\u0435\u0442\u0441\u044F, \u043D\u0435 \u043F\u043E\u043F\u0430\u0434\u0430\u044F \u0432 \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043C\u0438\u0441\u0441\u0438\u0439.", label: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043C\u0438\u0441\u0441\u0438\u044E", done: "\u041C\u0438\u0441\u0441\u0438\u044F \u0443\u0434\u0430\u043B\u0435\u043D\u0430.", run: actions.removeMission }) } : null
     ] }),
     failure ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: failure }) : null,
     history ? jsx("ol", { className: "dy-plan-mission-history", "data-plan-mission-history": true, children: plan.missionHistory.length ? plan.missionHistory.map((entry) => jsxs("li", { children: [
       jsx("span", { children: entry.mission }),
       jsx("small", { children: `Archived ${formatWhen(entry.archived_at) || "previously"} by ${entry.archived_by || "unknown"}` })
-    ] }, entry.archive_id)) : jsx("li", { className: "empty", children: "No earlier missions." }) }) : null
+    ] }, entry.archive_id)) : jsx("li", { className: "empty", children: "\u0411\u043E\u043B\u0435\u0435 \u0440\u0430\u043D\u043D\u0438\u0445 \u043C\u0438\u0441\u0441\u0438\u0439 \u043D\u0435\u0442." }) }) : null
   ] });
 }
 
 // hermes_dockyard_plugin/desktop/src/project/plan/plan-drawer.js
 var LOOP = [
-  ["verify", "Verify state", () => "Confirm the project state and evidence source."],
-  ["detect", "Detect gap", (i) => i.rationale || "Research the highest-value project gap."],
-  ["propose", "Create initiative", (i) => i.expectedOutcome || "Declare the expected outcome."],
+  ["verify", "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435", () => "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0438 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432."],
+  ["detect", "\u0412\u044B\u044F\u0432\u0438\u0442\u044C \u043F\u0440\u043E\u0431\u0435\u043B", (i) => i.rationale || "\u0418\u0441\u0441\u043B\u0435\u0434\u0443\u0439\u0442\u0435 \u0441\u0430\u043C\u044B\u0439 \u0446\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0431\u0435\u043B \u043F\u0440\u043E\u0435\u043A\u0442\u0430."],
+  ["propose", "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443", (i) => i.expectedOutcome || "\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u043E\u0436\u0438\u0434\u0430\u0435\u043C\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442."],
   // No priority number: nothing can set one (the API has no field for it).
-  ["prioritise", "Prioritise", () => "Counted against the project\u2019s open-initiative limit."],
-  ["approval", "Human approval", () => "Owner reviews the risk, evidence and checks."],
-  ["execute", "Build and verify", (i) => checksOf(i.record.validation_contract) ?? "No checks recorded: mark it complete when the work is done."],
-  ["release", "Release", () => "Release remains bounded by project policy."],
-  ["observe", "Observe outcome", () => "Measure whether the project improved."]
+  ["prioritise", "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C", () => "\u0423\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u0432 \u043B\u0438\u043C\u0438\u0442\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0430."],
+  ["approval", "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435 \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u043E\u043C", () => "\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u0442 \u0440\u0438\u0441\u043A, \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438."],
+  ["execute", "\u0421\u043E\u0431\u0440\u0430\u0442\u044C \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C", (i) => checksOf(i.record.validation_contract) ?? "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B: \u043E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435, \u043A\u043E\u0433\u0434\u0430 \u0440\u0430\u0431\u043E\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0441\u0434\u0435\u043B\u0430\u043D\u0430."],
+  ["release", "\u0420\u0435\u043B\u0438\u0437", () => "\u0420\u0435\u043B\u0438\u0437 \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0432 \u0440\u0430\u043C\u043A\u0430\u0445 \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0430."],
+  ["observe", "\u041D\u0430\u0431\u043B\u044E\u0434\u0430\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", () => "\u0418\u0437\u043C\u0435\u0440\u0438\u0442\u044C, \u0443\u043B\u0443\u0447\u0448\u0438\u043B\u0441\u044F \u043B\u0438 \u043F\u0440\u043E\u0435\u043A\u0442."]
 ];
-var STOPPED = { rejected: "Rejected at approval.", cancelled: "Withdrawn before approval." };
+var STOPPED = { rejected: "\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u043E \u043D\u0430 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0438.", cancelled: "\u041E\u0442\u043E\u0437\u0432\u0430\u043D\u043E \u0434\u043E \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F." };
 var loopIndex = (status) => ["pending_approval", "changes_requested", "rejected", "cancelled"].includes(status) ? 4 : ["approved", "executing"].includes(status) ? 5 : ["completed", "regressed"].includes(status) ? 7 : 2;
 function checksOf(contract) {
   const steps = Array.isArray(contract?.steps) ? contract.steps.filter(Boolean) : [];
@@ -21870,7 +21870,7 @@ function ChangesFeedback({ refId }) {
     };
   }, [refId]);
   if (!rows) return jsx("p", { className: "dockyard-meta", children: "Loading the reviewer\u2019s feedback\u2026" });
-  return jsx("blockquote", { className: "dy-plan-feedback", "data-plan-feedback": true, children: rows.at(-1)?.reason || "The reviewer asked for changes without a note." });
+  return jsx("blockquote", { className: "dy-plan-feedback", "data-plan-feedback": true, children: rows.at(-1)?.reason || "\u0420\u0435\u0432\u044C\u044E\u0435\u0440 \u0437\u0430\u043F\u0440\u043E\u0441\u0438\u043B \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0431\u0435\u0437 \u0437\u0430\u043C\u0435\u0442\u043A\u0438." });
 }
 function MilestoneWork({ milestone, plan, actions, onChanged, readOnly }) {
   const [detail, setDetail] = useState(null);
@@ -21907,13 +21907,13 @@ function MilestoneWork({ milestone, plan, actions, onChanged, readOnly }) {
   const editable = !readOnly && !milestone.archived;
   const attachable = plan.workItems.filter((item) => !milestone.itemRefs.includes(item.ref));
   const wip = Object.entries(detail?.assignee_wip ?? {});
-  return jsxs(Section2, { title: "Work in this milestone", children: [
+  return jsxs(Section2, { title: "\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u044D\u0442\u043E\u0439 \u0432\u0435\u0445\u0435", children: [
     failure ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: failure }) : null,
-    detail ? jsx("p", { className: "dockyard-meta", children: `Scope: ${detail.committed ?? detail.total} committed, ${detail.done} done, ${detail.blocked ?? 0} blocked (${detail.units || "items"}, not hours).` }) : failure ? null : jsx("p", { className: "dockyard-meta", children: "Loading\u2026" }),
+    detail ? jsx("p", { className: "dockyard-meta", children: `Scope: ${detail.committed ?? detail.total} committed, ${detail.done} done, ${detail.blocked ?? 0} blocked (${detail.units || "items"}, not hours).` }) : failure ? null : jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026" }),
     wip.length ? jsx("p", { className: "dockyard-meta", children: `In progress: ${wip.map(([who, n]) => `${who} ${n}`).join(", ")} (item counts).` }) : null,
     detail?.risks?.length ? jsx("ul", { className: "dy-plan-risks", children: detail.risks.map((risk, index) => jsx("li", { "data-risk-kind": risk.kind, children: riskLine(risk) }, `${risk.kind}:${index}`)) }) : null,
     detail ? jsx("p", { className: "dockyard-meta", children: forecastLine(detail.forecast) }) : null,
-    jsx(Links, { empty: "No work items yet.", rows: milestone.itemRefs.map((ref) => jsxs("li", { className: "dy-plan-link-row", children: [
+    jsx(Links, { empty: "\u0420\u0430\u0431\u043E\u0447\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442.", rows: milestone.itemRefs.map((ref) => jsxs("li", { className: "dy-plan-link-row", children: [
       jsx(KindGlyph, { kind: "work" }),
       jsxs("span", { className: "dy-plan-link-open static", children: [jsx("strong", { children: plan.workItems.find((item) => item.ref === ref)?.title ?? ref }), jsx("small", { children: ref })] }),
       editable ? jsx("button", {
@@ -21921,7 +21921,7 @@ function MilestoneWork({ milestone, plan, actions, onChanged, readOnly }) {
         className: "dy-plan-unlink",
         "data-plan-detach": ref,
         "aria-label": `Remove ${ref} from ${milestone.name}`,
-        title: "Remove from milestone",
+        title: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0432\u0435\u0445\u0438",
         disabled: busy,
         onClick: () => run(() => actions.detachWork(milestone.name, ref), `Removed ${ref} from ${milestone.name}.`),
         children: "\xD7"
@@ -21929,7 +21929,7 @@ function MilestoneWork({ milestone, plan, actions, onChanged, readOnly }) {
     ] }, ref)) }),
     editable ? jsxs("div", { className: "dy-plan-inline", children: [
       jsxs("select", { "aria-label": `Add a work item to ${milestone.name}`, "data-plan-attach-choice": true, value: scopeRef, onChange: (event) => setScopeRef(event.target.value), children: [
-        jsx("option", { value: "", children: attachable.length ? "Add a work item\u2026" : "Every work item is already here" }),
+        jsx("option", { value: "", children: attachable.length ? "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u2026" : "\u0412\u0441\u0435 \u0440\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u0443\u0436\u0435 \u0437\u0434\u0435\u0441\u044C" }),
         ...attachable.map((item) => jsx("option", { value: item.ref, children: `${item.title} (${item.ref})` }, item.ref))
       ] }),
       jsx(Button, { small: true, action: "plan-attach-work", disabled: busy || !scopeRef, onClick: () => run(() => actions.attachWork(milestone.name, scopeRef), `Added ${scopeRef} to ${milestone.name}.`), children: "Add" })
@@ -21952,7 +21952,7 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
   const live = !readOnly && !item.archived && (item.kind !== "initiative" || isLinkable(item));
   const open = (kind, id) => () => ui.open({ kind, id });
   const linkButton = (target, label = "+ Link") => live ? jsx(Button, { small: true, action: `plan-link-${target}`, onClick: () => ui.link(item, target), children: label }) : null;
-  const unlink = (title, description, run, label = "Unlink") => readOnly ? null : () => ui.confirm({ key: "plan-unlink", title, description, label, done: "Link removed.", run });
+  const unlink = (title, description, run, label = "\u0420\u0430\u0437\u043E\u0440\u0432\u0430\u0442\u044C \u0441\u0432\u044F\u0437\u044C") => readOnly ? null : () => ui.confirm({ key: "plan-unlink", title, description, label, done: "\u0421\u0432\u044F\u0437\u044C \u0443\u0434\u0430\u043B\u0435\u043D\u0430.", run });
   const act = async (work, message) => {
     setBusy(true);
     try {
@@ -21976,20 +21976,20 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
     tags.push(jsx(Tag, { children: `${item.risk} risk` }, "risk"));
     body = [
       jsx(Facts, { rows: [
-        ["Why", item.rationale || "\u2014"],
-        ["Expected outcome", item.expectedOutcome || "\u2014"],
-        ["Checks", checks ?? "None recorded"],
-        ["Reference", item.ref]
+        ["\u041F\u043E\u0447\u0435\u043C\u0443", item.rationale || "\u2014"],
+        ["\u041E\u0436\u0438\u0434\u0430\u0435\u043C\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", item.expectedOutcome || "\u2014"],
+        ["\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0438", checks ?? "\u041D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E"],
+        ["\u0421\u0441\u044B\u043B\u043A\u0430", item.ref]
       ] }, "facts"),
-      item.status === "changes_requested" ? jsxs(Section2, { title: "Changes requested", children: [
+      item.status === "changes_requested" ? jsxs(Section2, { title: "\u0417\u0430\u043F\u0440\u043E\u0448\u0435\u043D\u044B \u043F\u0440\u0430\u0432\u043A\u0438", children: [
         jsx(ChangesFeedback, { refId: item.ref }),
-        readOnly ? null : jsx(Button, { small: true, variant: "primary", action: "plan-revise", onClick: () => ui.edit(item), children: "Revise and resubmit" })
+        readOnly ? null : jsx(Button, { small: true, variant: "primary", action: "plan-revise", onClick: () => ui.edit(item), children: "\u0414\u043E\u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E" })
       ] }, "changes") : null,
-      item.status === "pending_approval" && !readOnly ? jsxs(Section2, { title: "Waiting for your decision", children: [
-        jsx("p", { className: "dockyard-meta", children: "Approve, request changes or reject, with the same checks as the Inbox." }),
+      item.status === "pending_approval" && !readOnly ? jsxs(Section2, { title: "\u0416\u0434\u0451\u0442 \u0442\u0432\u043E\u0435\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F", children: [
+        jsx("p", { className: "dockyard-meta", children: "\u041E\u0434\u043E\u0431\u0440\u0438\u0442\u044C, \u0437\u0430\u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0438\u043B\u0438 \u043E\u0442\u043A\u043B\u043E\u043D\u0438\u0442\u044C \u2014 \u0441 \u0442\u0435\u043C\u0438 \u0436\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u043C\u0438, \u0447\u0442\u043E \u0432\u043E \xAB\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0445\xBB." }),
         jsx(Button, { small: true, variant: "primary", action: "plan-review", onClick: () => ui.review(item), children: "Review\u2026" })
       ] }, "review") : null,
-      jsx(Section2, { title: "Milestones", readOnly, action: linkButton("milestone"), children: jsx(Links, { empty: "No milestones linked yet.", rows: item.milestones.map((m) => {
+      jsx(Section2, { title: "\u0412\u0435\u0445\u0438", readOnly, action: linkButton("milestone"), children: jsx(Links, { empty: "\u0412\u0435\u0445\u0438 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D\u044B.", rows: item.milestones.map((m) => {
         const row = plan.milestones.find((x) => x.id === m.id);
         return jsx(LinkRow, {
           kind: "milestone",
@@ -21997,14 +21997,14 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
           onOpen: open("milestone", m.id),
           unlinkLabel: `Unlink ${m.title}`,
           meta: [row?.due && `due ${row.due}`, row && `${row.done}/${row.total} done`, row?.closed && "closed"].filter(Boolean).join(" \xB7 "),
-          onUnlink: unlink("Unlink this milestone?", `\u201C${m.title}\u201D stays in the project; it is no longer linked to \u201C${item.title}\u201D.`, () => actions.unlinkMilestone(item.ref, m.id))
+          onUnlink: unlink("\u041E\u0442\u0432\u044F\u0437\u0430\u0442\u044C \u044D\u0442\u0443 \u0432\u0435\u0445\u0443?", `\u201C${m.title}\u201D stays in the project; it is no longer linked to \u201C${item.title}\u201D.`, () => actions.unlinkMilestone(item.ref, m.id))
         }, m.id);
       }) }) }, "milestones"),
       // v42: an objective sits under a milestone (not under an initiative), so
       // this list is read-only here — place/unplace an objective from its own
       // drawer, or from the Roadmap.
-      jsx(Section2, { title: "Objectives (via its milestones)", children: jsx(Links, {
-        empty: "No objectives yet. An objective measures a goal and sits under a milestone.",
+      jsx(Section2, { title: "\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438 (\u0447\u0435\u0440\u0435\u0437 \u0435\u0433\u043E \u0432\u0435\u0445\u0438)", children: jsx(Links, {
+        empty: "\u0417\u0430\u0434\u0430\u0447-\u0446\u0435\u043B\u0435\u0439 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C \u0438\u0437\u043C\u0435\u0440\u044F\u0435\u0442 \u0446\u0435\u043B\u044C \u0438 \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u043F\u043E\u0434 \u0432\u0435\u0445\u043E\u0439.",
         rows: item.objectives.map((o) => {
           const row = plan.objectives.find((x) => x.id === o.id);
           return jsx(LinkRow, {
@@ -22015,27 +22015,27 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
           }, o.id);
         })
       }) }, "objectives"),
-      jsx(Section2, { title: "Delivery", children: !item.delivery || item.delivery.state === "no_linked_work" ? jsx("p", { className: "dockyard-meta", children: "No linked work yet." }) : item.delivery.state === "unavailable" ? jsx("p", { className: "dockyard-meta", children: unavailableWords(item.delivery.reason) }) : jsx("div", { className: "dy-plan-buckets", children: [
+      jsx(Section2, { title: "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430", children: !item.delivery || item.delivery.state === "no_linked_work" ? jsx("p", { className: "dockyard-meta", children: "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435\u0442." }) : item.delivery.state === "unavailable" ? jsx("p", { className: "dockyard-meta", children: unavailableWords(item.delivery.reason) }) : jsx("div", { className: "dy-plan-buckets", children: [
         ...BUCKETS.map(([key, label]) => jsxs("span", { children: [jsx("strong", { children: number(item.delivery[key] ?? 0) }), label] }, key)),
-        item.delivery.blocked > 0 ? jsxs("span", { className: "blocked", children: [jsx("strong", { children: number(item.delivery.blocked) }), "Blocked"] }, "blocked") : null
+        item.delivery.blocked > 0 ? jsxs("span", { className: "blocked", children: [jsx("strong", { children: number(item.delivery.blocked) }), "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E"] }, "blocked") : null
       ] }) }, "delivery"),
-      jsx("p", { className: "dy-plan-note", "data-plan-no-delete": true, children: WITHDRAWABLE_STATUSES.includes(item.status) ? "Initiatives are not deleted: each keeps its approval record. Not needed any more? Withdraw it before approval." : "Initiatives are not deleted: each keeps its approval record." }, "nodelete"),
-      jsx(Section2, { title: "Stages", children: jsx("ol", { className: "dy-plan-loop", "data-plan-loop": item.ref, children: LOOP.map(([key, label, text2], index) => jsxs("li", {
+      jsx("p", { className: "dy-plan-note", "data-plan-no-delete": true, children: WITHDRAWABLE_STATUSES.includes(item.status) ? "Initiatives are not deleted: each keeps its approval record. Not needed any more? Withdraw it before approval." : "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B \u043D\u0435 \u0443\u0434\u0430\u043B\u044F\u044E\u0442\u0441\u044F: \u0443 \u043A\u0430\u0436\u0434\u043E\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442\u0441\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043E\u0431 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0438." }, "nodelete"),
+      jsx(Section2, { title: "\u042D\u0442\u0430\u043F\u044B", children: jsx("ol", { className: "dy-plan-loop", "data-plan-loop": item.ref, children: LOOP.map(([key, label, text2], index) => jsxs("li", {
         className: index < stage ? "done" : index === stage ? stopped ? "stopped" : "current" : "",
         "aria-current": index === stage ? "step" : void 0,
         children: [jsx("strong", { children: label }), index === stage ? jsx("small", { children: stopped ?? text2(item) }) : null]
       }, key)) }) }, "loop")
     ];
     footer = [
-      COMPLETABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: "primary", action: "plan-complete", onClick: () => ui.complete(item), children: "Mark complete\u2026" }, "complete") : null,
-      WITHDRAWABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: "danger", action: "plan-withdraw", onClick: () => ui.withdraw(item), children: "Withdraw\u2026" }, "withdraw") : null
+      COMPLETABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: "primary", action: "plan-complete", onClick: () => ui.complete(item), children: "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u043C\u2026" }, "complete") : null,
+      WITHDRAWABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: "danger", action: "plan-withdraw", onClick: () => ui.withdraw(item), children: "\u041E\u0442\u043E\u0437\u0432\u0430\u0442\u044C\u2026" }, "withdraw") : null
     ].filter(Boolean);
   } else if (item.kind === "milestone") {
     body = [
-      jsx(Facts, { rows: [["Due", item.due ?? "No due date"], ["Progress", `${number(item.done)} of ${number(item.total)} work items done`]] }, "facts"),
+      jsx(Facts, { rows: [["\u0421\u0440\u043E\u043A", item.due ?? "\u0411\u0435\u0437 \u0441\u0440\u043E\u043A\u0430"], ["\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441", `${number(item.done)} of ${number(item.total)} work items done`]] }, "facts"),
       // v42 (R2 fix 5): a milestone's parent is an INITIATIVE (one only).
-      jsx(Section2, { title: "Initiative it is placed under", readOnly, action: linkButton("initiative"), children: jsx(Links, {
-        empty: "Not placed under an initiative yet.",
+      jsx(Section2, { title: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430, \u043F\u043E\u0434 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043E\u043D \u0440\u0430\u0437\u043C\u0435\u0449\u0451\u043D", readOnly, action: linkButton("initiative"), children: jsx(Links, {
+        empty: "\u041F\u043E\u043A\u0430 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E \u043F\u043E\u0434 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u043E\u0439.",
         rows: (() => {
           const parent = plan.initiatives.find((x) => x.ref === item.initiativeRef);
           return parent ? [jsx(LinkRow, {
@@ -22044,10 +22044,10 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
             onOpen: open("initiative", parent.ref),
             unlinkLabel: `Unplace from ${parent.title}`,
             onUnlink: unlink(
-              "Unplace this milestone?",
+              "\u0421\u043D\u044F\u0442\u044C \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u044D\u0442\u043E\u0439 \u0432\u0435\u0445\u0438?",
               `\u201C${item.title}\u201D stays in the project; it is no longer under \u201C${parent.title}\u201D.`,
               () => actions.unplaceMilestone(item.id),
-              "Unplace"
+              "\u0423\u0431\u0440\u0430\u0442\u044C \u0441 \u043C\u0435\u0441\u0442\u0430"
             )
           }, parent.ref)] : [];
         })()
@@ -22055,17 +22055,17 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
       jsx(MilestoneWork, { milestone: item, plan, actions, onChanged, readOnly }, "work")
     ];
     footer = item.archived ? [
-      jsx(Button, { action: "plan-restore-milestone", onClick: () => ui.restore(item), children: "Restore" }, "restore"),
+      jsx(Button, { action: "plan-restore-milestone", onClick: () => ui.restore(item), children: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" }, "restore"),
       jsx(Button, { variant: "danger", action: "plan-delete-milestone", onClick: () => ui.remove(item), children: "Delete for good\u2026" }, "delete")
     ] : [
-      jsx(Button, { variant: "primary", action: "plan-edit", onClick: () => ui.edit(item), children: "Edit" }, "edit"),
+      jsx(Button, { variant: "primary", action: "plan-edit", onClick: () => ui.edit(item), children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C" }, "edit"),
       jsx(Button, {
         action: item.closed ? "plan-reopen-milestone" : "plan-close-milestone",
         disabled: busy,
-        onClick: () => act(() => actions.updateMilestone(item.name, { closed: !item.closed }), item.closed ? "Milestone reopened." : "Milestone closed."),
-        children: item.closed ? "Reopen" : "Close"
+        onClick: () => act(() => actions.updateMilestone(item.name, { closed: !item.closed }), item.closed ? "\u0412\u0435\u0445\u0430 \u043F\u0435\u0440\u0435\u043E\u0442\u043A\u0440\u044B\u0442\u0430." : "\u0412\u0435\u0445\u0430 \u0437\u0430\u043A\u0440\u044B\u0442\u0430."),
+        children: item.closed ? "Reopen" : "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
       }, "close"),
-      jsx(Button, { variant: "danger", action: "plan-archive-milestone", onClick: () => ui.archive(item), children: "Archive" }, "archive")
+      jsx(Button, { variant: "danger", action: "plan-archive-milestone", onClick: () => ui.archive(item), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }, "archive")
     ];
   } else if (item.kind === "objective") {
     tags.push(jsx(Tag, { children: `${item.severity} severity` }, "severity"));
@@ -22093,9 +22093,9 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
     const goalRow = goal && plan.goals.find((x) => x.id === goal.id);
     body = [
       jsx(Facts, { rows: [
-        ["Description", item.description || "\u2014"],
-        ["Target", item.target],
-        ["Evidence", item.samples ? `${number(item.samples)} result(s) in ${item.window}${item.passRate !== null ? `, ${Math.round(item.passRate * 100)}% passed` : ""}` : `None yet (${item.window} window)`]
+        ["\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", item.description || "\u2014"],
+        ["\u0426\u0435\u043B\u044C", item.target],
+        ["\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430", item.samples ? `${number(item.samples)} result(s) in ${item.window}${item.passRate !== null ? `, ${Math.round(item.passRate * 100)}% passed` : ""}` : `None yet (${item.window} window)`]
       ] }, "facts"),
       evaluation ? jsx("p", { className: "dy-plan-note", role: "status", "data-plan-evaluation": true, children: evaluation }, "evaluation") : null,
       // Evidence history and, for a manual objective, the human assessment
@@ -22103,24 +22103,24 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
       // without an authenticated human).
       item.record ? jsx(ObjectiveEvidence, { objective: item.record, projectId: plan.projectId, onSaved: onChanged }, "evidence") : null,
       // The backend allows each objective in one goal.
-      jsx(Section2, { title: "Goal it measures", readOnly, action: goal ? null : linkButton("goal", "+ Add"), children: jsx(Links, {
-        empty: "Not part of a goal yet. An objective can measure one goal.",
+      jsx(Section2, { title: "\u041A\u0430\u043A\u0443\u044E \u0446\u0435\u043B\u044C \u0438\u0437\u043C\u0435\u0440\u044F\u0435\u0442", readOnly, action: goal ? null : linkButton("goal", "+ Add"), children: jsx(Links, {
+        empty: "\u041F\u043E\u043A\u0430 \u043D\u0435 \u0447\u0430\u0441\u0442\u044C \u0446\u0435\u043B\u0438. \u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C \u043C\u043E\u0436\u0435\u0442 \u0438\u0437\u043C\u0435\u0440\u044F\u0442\u044C \u043E\u0434\u043D\u0443 \u0446\u0435\u043B\u044C.",
         rows: goal ? [jsx(LinkRow, {
           kind: "goal",
           title: goal.title,
           onOpen: open("goal", goal.id),
           unlinkLabel: `Remove from ${goal.title}`,
           onUnlink: unlink(
-            "Remove from this goal?",
+            "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u044D\u0442\u043E\u0439 \u0446\u0435\u043B\u0438?",
             `\u201C${item.title}\u201D no longer measures the goal \u201C${goal.title}\u201D.`,
             () => actions.updateGoal(goal.id, { objective_ids: goalRow.objectiveIds.filter((id) => id !== item.id) }),
-            "Remove"
+            "\u0423\u0431\u0440\u0430\u0442\u044C"
           )
         }, goal.id)] : []
       }) }, "goal"),
       // v42 (R2 fix 5): an objective's parent is a MILESTONE (one only).
-      jsx(Section2, { title: "Milestone it is placed under", readOnly, action: linkButton("milestone"), children: jsx(Links, {
-        empty: "Not placed under a milestone yet.",
+      jsx(Section2, { title: "\u0412\u0435\u0445\u0430, \u043F\u043E\u0434 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043E\u043D \u0440\u0430\u0437\u043C\u0435\u0449\u0451\u043D", readOnly, action: linkButton("milestone"), children: jsx(Links, {
+        empty: "\u041F\u043E\u043A\u0430 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E \u043F\u043E\u0434 \u0432\u0435\u0445\u043E\u0439.",
         rows: (() => {
           const parent = plan.milestones.find((x) => x.id === item.milestoneId);
           return parent ? [jsx(LinkRow, {
@@ -22130,19 +22130,19 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
             unlinkLabel: `Unplace from ${parent.title}`,
             meta: parent.due ? `due ${parent.due}` : void 0,
             onUnlink: unlink(
-              "Unplace this objective?",
+              "\u0421\u043D\u044F\u0442\u044C \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u044D\u0442\u043E\u0439 \u0437\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438?",
               `\u201C${item.title}\u201D stays in the project; it is no longer under \u201C${parent.title}\u201D.`,
               () => actions.unplaceObjective(item.id),
-              "Unplace"
+              "\u0423\u0431\u0440\u0430\u0442\u044C \u0441 \u043C\u0435\u0441\u0442\u0430"
             )
           }, parent.id)] : [];
         })()
       }) }, "milestone")
     ];
     footer = item.archived ? [jsx(Button, { variant: "danger", action: "plan-delete-objective", onClick: () => ui.remove(item), children: "Delete for good\u2026" }, "delete")] : [
-      jsx(Button, { variant: "primary", action: "plan-edit", onClick: () => ui.edit(item), children: "Edit" }, "edit"),
-      jsx(Button, { action: "plan-evaluate", disabled: busy, onClick: evaluate, children: busy ? "Evaluating\u2026" : "Evaluate now" }, "evaluate"),
-      jsx(Button, { variant: "danger", action: "plan-archive-objective", onClick: () => ui.archive(item), children: "Archive" }, "archive")
+      jsx(Button, { variant: "primary", action: "plan-edit", onClick: () => ui.edit(item), children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C" }, "edit"),
+      jsx(Button, { action: "plan-evaluate", disabled: busy, onClick: evaluate, children: busy ? "\u041E\u0446\u0435\u043D\u0438\u0432\u0430\u043D\u0438\u0435\u2026" : "\u041E\u0446\u0435\u043D\u0438\u0442\u044C \u0441\u0435\u0439\u0447\u0430\u0441" }, "evaluate"),
+      jsx(Button, { variant: "danger", action: "plan-archive-objective", onClick: () => ui.archive(item), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }, "archive")
     ];
   } else {
     const active = plan.goals.filter((row) => !row.archived);
@@ -22150,13 +22150,13 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
     const move = (step) => {
       const ids = active.map((row) => row.id);
       [ids[index], ids[index + step]] = [ids[index + step], ids[index]];
-      act(() => actions.orderGoals(ids), "Goal order saved.");
+      act(() => actions.orderGoals(ids), "\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0446\u0435\u043B\u0435\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D.");
     };
     body = [
-      jsx(Facts, { rows: [["Description", item.description || "\u2014"], ["Order", item.archived ? "\u2014" : `${index + 1} of ${active.length}`]] }, "facts"),
+      jsx(Facts, { rows: [["\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435", item.description || "\u2014"], ["\u041F\u043E\u0440\u044F\u0434\u043E\u043A", item.archived ? "\u2014" : `${index + 1} of ${active.length}`]] }, "facts"),
       // v42: a goal's parent is an OBJECTIVE (one only).
-      jsx(Section2, { title: "Objective it is placed under", readOnly, action: item.objectiveId ? null : linkButton("objective", "+ Add"), children: jsx(Links, {
-        empty: "Not placed under an objective yet.",
+      jsx(Section2, { title: "\u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C, \u043F\u043E\u0434 \u043A\u043E\u0442\u043E\u0440\u043E\u0439 \u043E\u043D \u0440\u0430\u0437\u043C\u0435\u0449\u0451\u043D", readOnly, action: item.objectiveId ? null : linkButton("objective", "+ Add"), children: jsx(Links, {
+        empty: "\u041F\u043E\u043A\u0430 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E \u043F\u043E\u0434 \u0437\u0430\u0434\u0430\u0447\u0435\u0439-\u0446\u0435\u043B\u044C\u044E.",
         rows: (() => {
           const row = plan.objectives.find((x) => x.id === item.objectiveId);
           return row ? [jsx(LinkRow, {
@@ -22166,23 +22166,23 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
             onOpen: open("objective", row.id),
             unlinkLabel: `Unplace from ${row.title}`,
             onUnlink: unlink(
-              "Unplace this goal?",
+              "\u0421\u043D\u044F\u0442\u044C \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u044D\u0442\u043E\u0439 \u0446\u0435\u043B\u0438?",
               `\u201C${item.title}\u201D stays in the project; it is no longer under \u201C${row.title}\u201D.`,
               () => actions.unplaceGoal(item.id),
-              "Unplace"
+              "\u0423\u0431\u0440\u0430\u0442\u044C \u0441 \u043C\u0435\u0441\u0442\u0430"
             )
           }, row.id)] : [];
         })()
       }) }, "objective")
     ];
     footer = item.archived ? [
-      jsx(Button, { action: "plan-restore-goal", onClick: () => ui.restore(item), children: "Restore" }, "restore"),
+      jsx(Button, { action: "plan-restore-goal", onClick: () => ui.restore(item), children: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" }, "restore"),
       jsx(Button, { variant: "danger", action: "plan-delete-goal", onClick: () => ui.remove(item), children: "Delete for good\u2026" }, "delete")
     ] : [
-      jsx(Button, { variant: "primary", action: "plan-edit", onClick: () => ui.edit(item), children: "Edit" }, "edit"),
-      jsx(Button, { action: "plan-goal-up", disabled: busy || index <= 0, onClick: () => move(-1), children: "Move up" }, "up"),
-      jsx(Button, { action: "plan-goal-down", disabled: busy || index >= active.length - 1, onClick: () => move(1), children: "Move down" }, "down"),
-      jsx(Button, { variant: "danger", action: "plan-archive-goal", onClick: () => ui.archive(item), children: "Archive" }, "archive")
+      jsx(Button, { variant: "primary", action: "plan-edit", onClick: () => ui.edit(item), children: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C" }, "edit"),
+      jsx(Button, { action: "plan-goal-up", disabled: busy || index <= 0, onClick: () => move(-1), children: "\u0412\u0432\u0435\u0440\u0445" }, "up"),
+      jsx(Button, { action: "plan-goal-down", disabled: busy || index >= active.length - 1, onClick: () => move(1), children: "\u0412\u043D\u0438\u0437" }, "down"),
+      jsx(Button, { variant: "danger", action: "plan-archive-goal", onClick: () => ui.archive(item), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }, "archive")
     ];
   }
   return jsxs("aside", { ref: root, className: "dy-plan-drawer", "aria-label": `${KIND_LABEL[item.kind]} details`, "data-plan-drawer": item.kind, "data-plan-drawer-id": String(item.id), children: [
@@ -22190,7 +22190,7 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
       jsxs("p", { className: "dockyard-meta", children: [jsx(KindGlyph, { kind: item.kind }), KIND_LABEL[item.kind]] }),
       jsx("h3", { children: item.title }),
       jsx("div", { className: "dy-plan-tags", children: tags }),
-      jsx("button", { type: "button", className: "dy-plan-drawer-close", "aria-label": "Close details", "data-plan-drawer-close": true, onClick: onClose, children: "\xD7" })
+      jsx("button", { type: "button", className: "dy-plan-drawer-close", "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438", "data-plan-drawer-close": true, onClick: onClose, children: "\xD7" })
     ] }),
     jsx("div", { className: "dy-plan-drawer-body", children: body }),
     readOnly || !footer.length ? null : jsx("footer", { className: "dy-plan-drawer-foot", children: footer })
@@ -22199,14 +22199,14 @@ function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
 
 // hermes_dockyard_plugin/desktop/src/project/plan/plan-screen.js
 var KINDS = ["initiative", "milestone", "objective", "goal"];
-var PLURAL = { initiative: "Initiatives", milestone: "Milestones", objective: "Objectives", goal: "Goals" };
+var PLURAL = { initiative: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B", milestone: "\u0412\u0435\u0445\u0438", objective: "\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438", goal: "\u0426\u0435\u043B\u0438" };
 var EMPTY = {
-  initiative: "No open initiatives. Propose one: it waits for approval before work starts.",
-  milestone: "No milestones yet. A milestone groups the work for one delivery date.",
-  objective: "No objectives yet. An objective is evidence that the work made a difference.",
-  goal: "No goals yet. A goal is met when its objectives pass."
+  initiative: "\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432 \u043D\u0435\u0442. \u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u0435 \u043E\u0434\u043D\u0443: \u043E\u043D\u0430 \u0436\u0434\u0451\u0442 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F \u0434\u043E \u043D\u0430\u0447\u0430\u043B\u0430 \u0440\u0430\u0431\u043E\u0442\u044B.",
+  milestone: "\u0412\u0435\u0445 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0412\u0435\u0445\u0430 \u0433\u0440\u0443\u043F\u043F\u0438\u0440\u0443\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0443 \u043A \u043E\u0434\u043D\u043E\u0439 \u0434\u0430\u0442\u0435 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0438.",
+  objective: "\u0417\u0430\u0434\u0430\u0447-\u0446\u0435\u043B\u0435\u0439 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C \u2014 \u044D\u0442\u043E \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u0442\u043E\u0433\u043E, \u0447\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u0430 \u0434\u0430\u043B\u0430 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.",
+  goal: "\u0426\u0435\u043B\u0435\u0439 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0426\u0435\u043B\u044C \u0434\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u0430, \u043A\u043E\u0433\u0434\u0430 \u0435\u0451 \u0437\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438 \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442."
 };
-var TUCKED = "Show finished and archived";
+var TUCKED = "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u0435 \u0438 \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435";
 function parsePlanFocus(entry) {
   const match = /^plan:(initiative|milestone|objective|goal):(.+)$/.exec(String(entry ?? ""));
   return match ? { kind: match[1], id: match[2] } : null;
@@ -22222,18 +22222,18 @@ function summaryOf(item) {
 function rowMenu(item, ui) {
   if (ui.readOnly) return null;
   const entry = (id, label, onSelect, danger) => ({ id, label, onSelect, danger });
-  const items = [entry("open", "Open details", () => ui.open(item))];
+  const items = [entry("open", "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u0435\u0442\u0430\u043B\u0438", () => ui.open(item))];
   if (item.kind === "initiative") {
     if (item.status === "pending_approval") items.push(entry("review", "Review\u2026", () => ui.review(item)));
-    if (item.status === "changes_requested") items.push(entry("revise", "Revise and resubmit\u2026", () => ui.edit(item)));
+    if (item.status === "changes_requested") items.push(entry("revise", "\u0414\u043E\u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E\u2026", () => ui.edit(item)));
     if (isLinkable(item)) items.push(entry("link-milestone", "Link a milestone\u2026", () => ui.link(item, "milestone")), entry("link-objective", "Link an objective\u2026", () => ui.link(item, "objective")));
-    if (COMPLETABLE_STATUSES.includes(item.status)) items.push(entry("complete", "Mark complete\u2026", () => ui.complete(item)));
-    if (WITHDRAWABLE_STATUSES.includes(item.status)) items.push(entry("withdraw", "Withdraw\u2026", () => ui.withdraw(item), true));
+    if (COMPLETABLE_STATUSES.includes(item.status)) items.push(entry("complete", "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u043C\u2026", () => ui.complete(item)));
+    if (WITHDRAWABLE_STATUSES.includes(item.status)) items.push(entry("withdraw", "\u041E\u0442\u043E\u0437\u0432\u0430\u0442\u044C\u2026", () => ui.withdraw(item), true));
   } else if (item.archived) {
     if (item.kind !== "objective") items.push(entry("restore", "Restore\u2026", () => ui.restore(item)));
     items.push(entry("delete", "Delete for good\u2026", () => ui.remove(item), true));
   } else {
-    items.push(entry("edit", "Edit\u2026", () => ui.edit(item)));
+    items.push(entry("edit", "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C\u2026", () => ui.edit(item)));
     items.push(item.kind === "goal" ? entry("link-objective", "Add an objective\u2026", () => ui.link(item, "objective")) : entry("link-initiative", "Link to an initiative\u2026", () => ui.link(item, "initiative")));
     items.push(entry("archive", "Archive\u2026", () => ui.archive(item), true));
   }
@@ -22241,7 +22241,7 @@ function rowMenu(item, ui) {
 }
 function Row({ item, ui, selected }) {
   const status = statusOf(item);
-  const quick = ui.readOnly || item.kind !== "initiative" ? null : item.status === "pending_approval" ? jsx(Button, { small: true, variant: "primary", action: "plan-row-review", onClick: () => ui.review(item), children: "Review" }) : item.status === "changes_requested" ? jsx(Button, { small: true, action: "plan-row-revise", onClick: () => ui.edit(item), children: "Revise" }) : null;
+  const quick = ui.readOnly || item.kind !== "initiative" ? null : item.status === "pending_approval" ? jsx(Button, { small: true, variant: "primary", action: "plan-row-review", onClick: () => ui.review(item), children: "\u041E\u0431\u0437\u043E\u0440" }) : item.status === "changes_requested" ? jsx(Button, { small: true, action: "plan-row-revise", onClick: () => ui.edit(item), children: "\u0414\u043E\u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C" }) : null;
   return jsxs("div", {
     className: ["dy-plan-row", selected && "selected", item.archived && "archived", isClosed(item) && "closed"].filter(Boolean).join(" "),
     "data-plan-row": item.kind,
@@ -22279,7 +22279,7 @@ function ReviewDialog({ initiative, projectId, onClose, onResolved }) {
     title: initiative.title,
     wide: true,
     onClose,
-    actions: [jsx(Button, { onClick: onClose, children: "Close" }, "close")],
+    actions: [jsx(Button, { onClick: onClose, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" }, "close")],
     children: jsx(ApprovalDetail, { item, onResolved: () => {
       onResolved();
       onClose();
@@ -22328,9 +22328,9 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
   }, [selected]);
   if (!plan) {
     return jsxs("section", { className: "dockyard-feature-card", "data-plan-screen": failure ? "error" : "loading", "aria-busy": !failure, children: failure ? [
-      jsx("h2", { children: "Vision" }),
+      jsx("h2", { children: "\u0412\u0438\u0434\u0435\u043D\u0438\u0435" }),
       jsx("p", { className: "dockyard-inline-error", role: "alert", children: `Vision could not be loaded: ${failure}` }),
-      jsx(Button, { action: "plan-retry", onClick: reload, children: "Try again" })
+      jsx(Button, { action: "plan-retry", onClick: reload, children: "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043D\u043E\u0432\u0430" })
     ] : [jsx("p", { className: "dockyard-meta", children: "Loading Vision\u2026" })] });
   }
   const noun = (item) => KIND_LABEL[item.kind].toLowerCase();
@@ -22348,12 +22348,12 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
       key: "withdraw",
       eyebrow: eyebrow(item),
       title: `Withdraw \u201C${item.title}\u201D?`,
-      label: "Withdraw",
+      label: "\u041E\u0442\u043E\u0437\u0432\u0430\u0442\u044C",
       variant: "danger",
       lines: [
-        "It stops waiting for approval and frees its open slot.",
+        "\u041F\u0435\u0440\u0435\u0441\u0442\u0430\u0451\u0442 \u0436\u0434\u0430\u0442\u044C \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F \u0438 \u043E\u0441\u0432\u043E\u0431\u043E\u0436\u0434\u0430\u0435\u0442 \u0441\u0432\u043E\u0439 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u0441\u043B\u043E\u0442.",
         `It is not deleted: it keeps its record and stays under ${TUCKED}.`,
-        "This cannot be undone. To try again later, propose it again."
+        "\u042D\u0442\u043E \u043D\u0435\u043B\u044C\u0437\u044F \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C. \u0427\u0442\u043E\u0431\u044B \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u043F\u043E\u0437\u0436\u0435, \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u0435 \u0437\u0430\u043D\u043E\u0432\u043E."
       ],
       reasonLabel: "Reason",
       done: `Withdrew \u201C${item.title}\u201D.`,
@@ -22366,12 +22366,12 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
         key: "complete",
         eyebrow: eyebrow(item),
         title: `Mark \u201C${item.title}\u201D complete?`,
-        label: "Mark complete",
+        label: "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u044B\u043C",
         variant: "primary",
         lines: [
-          "Use this when the work is done.",
+          "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u044D\u0442\u043E, \u043A\u043E\u0433\u0434\u0430 \u0440\u0430\u0431\u043E\u0442\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0430.",
           open ? `${plural3(open, "linked work item")} ${open === 1 ? "is" : "are"} not finished yet.` : null,
-          "Its own board tasks that are still open are marked done.",
+          "\u0415\u0433\u043E \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u043D\u0435\u0437\u0430\u043A\u0440\u044B\u0442\u044B\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u043E\u0441\u043A\u0438 \u043F\u043E\u043C\u0435\u0447\u0430\u044E\u0442\u0441\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043D\u044B\u043C\u0438.",
           `It frees its open slot and moves under ${TUCKED}. Its objectives keep measuring whether it worked.`
         ],
         done: `Marked \u201C${item.title}\u201D complete.`,
@@ -22381,7 +22381,7 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
     archive: (item) => setConfirm({
       key: "plan-archive",
       title: `Archive this ${noun(item)}?`,
-      label: "Archive",
+      label: "\u0412 \u0430\u0440\u0445\u0438\u0432",
       done: `${KIND_LABEL[item.kind]} archived.`,
       description: item.kind === "objective" ? `\u201C${item.title}\u201D stops being evaluated and leaves Vision. It can then be deleted for good.` : `\u201C${item.title}\u201D is hidden from Vision${item.kind === "milestone" ? " and the Roadmap" : ""}. Restore it, or delete it for good, from ${TUCKED}.`,
       run: () => ({ milestone: () => actions.archiveMilestone(item.name), objective: () => actions.archiveObjective(item.id), goal: () => actions.archiveGoal(item.id) })[item.kind]()
@@ -22389,7 +22389,7 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
     restore: (item) => setConfirm({
       key: "plan-restore",
       title: `Restore this ${noun(item)}?`,
-      label: "Restore",
+      label: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C",
       done: `${KIND_LABEL[item.kind]} restored.`,
       description: `\u201C${item.title}\u201D returns to Vision.`,
       run: () => item.kind === "milestone" ? actions.restoreMilestone(item.name) : actions.restoreGoal(item.id)
@@ -22398,7 +22398,7 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
     remove: (item) => setConfirm({
       key: "plan-delete",
       title: `Delete this ${noun(item)} for good?`,
-      label: "Delete",
+      label: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C",
       done: `${KIND_LABEL[item.kind]} deleted.`,
       description: {
         objective: `\u201C${item.title}\u201D and its links to goals and initiatives are removed. This cannot be undone.`,
@@ -22423,35 +22423,35 @@ function PlanScreen({ project, focus, onFocusConsumed, onOpenRoadmap }) {
   return jsxs("section", { className: `dy-plan${selectedItem ? " with-drawer" : ""}`, "data-plan-screen": project.id, children: [
     jsxs("header", { className: "dy-plan-head", children: [
       jsxs("div", { children: [
-        jsx("h2", { children: "Vision" }),
+        jsx("h2", { children: "\u0412\u0438\u0434\u0435\u043D\u0438\u0435" }),
         jsx("p", { className: "dockyard-meta", children: `Initiatives, milestones, objectives and goals for ${plan.label}. The Roadmap shows them across all projects.` })
       ] }),
       jsxs("div", { className: "dy-plan-toolbar", children: [
         reviewCount ? jsx(Tag, { tone: "warning", data: { "data-plan-review-count": reviewCount }, children: `${number(reviewCount)} to review` }) : null,
-        jsx("input", { type: "search", className: "dy-plan-search", placeholder: "Find in Vision", "aria-label": "Find in Vision", "data-plan-search": true, value: query, onChange: (event) => setQuery(event.target.value) }),
+        jsx("input", { type: "search", className: "dy-plan-search", placeholder: "\u041D\u0430\u0439\u0442\u0438 \u0432 \xAB\u0412\u0438\u0434\u0435\u043D\u0438\u0438\xBB", "aria-label": "\u041D\u0430\u0439\u0442\u0438 \u0432 \xAB\u0412\u0438\u0434\u0435\u043D\u0438\u0438\xBB", "data-plan-search": true, value: query, onChange: (event) => setQuery(event.target.value) }),
         jsxs("label", { className: "dy-plan-check", children: [
           jsx("input", { type: "checkbox", "data-plan-show-archived": true, checked: showTucked, onChange: (event) => setShowTucked(event.target.checked) }),
           `${TUCKED}${tuckedCount ? ` (${number(tuckedCount)})` : ""}`
         ] }),
         ui.readOnly ? null : jsx(Menu, { label: "Create", trigger: "+ New", action: "new", variant: "primary", items: KINDS.map((kind) => ({
           id: kind,
-          label: kind === "initiative" ? "Propose an initiative\u2026" : `New ${KIND_LABEL[kind].toLowerCase()}\u2026`,
+          label: kind === "initiative" ? "\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u044C \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443\u2026" : `New ${KIND_LABEL[kind].toLowerCase()}\u2026`,
           onSelect: () => ui.create(kind)
         })) }),
-        jsx(Menu, { label: "More Vision actions", trigger: "\u22EF", action: "plan-more", items: [
-          onOpenRoadmap ? { id: "roadmap", label: "Open the Roadmap (all projects)", onSelect: onOpenRoadmap } : null,
+        jsx(Menu, { label: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \xAB\u0412\u0438\u0434\u0435\u043D\u0438\u044F\xBB", trigger: "\u22EF", action: "plan-more", items: [
+          onOpenRoadmap ? { id: "roadmap", label: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0440\u043E\u0436\u043D\u0443\u044E \u043A\u0430\u0440\u0442\u0443 (\u0432\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B)", onSelect: onOpenRoadmap } : null,
           ui.readOnly ? null : { id: "freeze", label: "Freeze project\u2026", danger: true, onSelect: () => setConfirm({
             key: "freeze-project",
-            title: "Freeze this project?",
-            description: "Freezing stops new execution until the project is explicitly resumed.",
-            label: "Freeze project",
-            done: "Project frozen. New execution stops until it is resumed.",
+            title: "\u0417\u0430\u043C\u043E\u0440\u043E\u0437\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442?",
+            description: "\u0417\u0430\u043C\u043E\u0440\u043E\u0437\u043A\u0430 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442 \u043D\u043E\u0432\u043E\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435, \u043F\u043E\u043A\u0430 \u043F\u0440\u043E\u0435\u043A\u0442 \u044F\u0432\u043D\u043E \u043D\u0435 \u0440\u0430\u0437\u043C\u043E\u0440\u043E\u0437\u044F\u0442.",
+            label: "\u0417\u0430\u043C\u043E\u0440\u043E\u0437\u0438\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
+            done: "\u041F\u0440\u043E\u0435\u043A\u0442 \u0437\u0430\u043C\u043E\u0440\u043E\u0436\u0435\u043D. \u041D\u043E\u0432\u043E\u0435 \u0438\u0441\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E \u0434\u043E \u0440\u0430\u0437\u043C\u043E\u0440\u043E\u0437\u043A\u0438.",
             run: actions.freeze
           }) }
         ] })
       ] })
     ] }),
-    ui.readOnly ? jsx("p", { className: "dy-plan-note", role: "status", children: "Read-only: this session can view Vision but not change it." }) : null,
+    ui.readOnly ? jsx("p", { className: "dy-plan-note", role: "status", children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0447\u0442\u0435\u043D\u0438\u0435: \u044D\u0442\u0430 \u0441\u0435\u0441\u0441\u0438\u044F \u043C\u043E\u0436\u0435\u0442 \u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \xAB\u0412\u0438\u0434\u0435\u043D\u0438\u0435\xBB, \u043D\u043E \u043D\u0435 \u043C\u0435\u043D\u044F\u0442\u044C \u0435\u0433\u043E." }) : null,
     failure ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: `Last refresh failed: ${failure}` }) : null,
     jsx(MissionStrip, { plan, actions, onChanged: reload, onConfirm: setConfirm }, `${project.id}:${plan.mission}`),
     jsxs("div", { className: "dy-plan-main", children: [
@@ -22538,7 +22538,7 @@ function chatOutcomeMessage(profile, outcome) {
 
 // hermes_dockyard_plugin/desktop/src/project/attention.js
 var STALLED_AFTER_DAYS = 14;
-var PHASE_LABEL = { paused: "Paused", frozen: "Frozen", disabled: "Disabled", archived: "Archived" };
+var PHASE_LABEL = { paused: "\u041D\u0430 \u043F\u0430\u0443\u0437\u0435", frozen: "\u0417\u0430\u043C\u043E\u0440\u043E\u0436\u0435\u043D", disabled: "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E", archived: "\u0412 \u0430\u0440\u0445\u0438\u0432\u0435" };
 var plural4 = (count, word) => `${count} ${word}${count === 1 ? "" : "s"}`;
 function joinAnd(parts) {
   if (parts.length <= 1) return parts[0] ?? "";
@@ -22587,8 +22587,8 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
       available: false,
       state: "unknown",
       tone: "neutral",
-      label: "Status unavailable",
-      summary: "the attention check did not load. Refresh to try again.",
+      label: "\u0421\u0442\u0430\u0442\u0443\u0441 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D",
+      summary: "\u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C. \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430.",
       items: []
     };
   }
@@ -22600,15 +22600,15 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
       key: `approval:${decision.ref}`,
       kind: "approval",
       tone: "warning",
-      label: "Approval waiting",
+      label: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435 \u043E\u0436\u0438\u0434\u0430\u0435\u0442\u0441\u044F",
       title: decision.title || decision.ref,
       ref: decision.ref,
       note: `Initiative waiting for your decision${decision.risk ? ` (${decision.risk} risk)` : ""}.`,
       ageDays: decision.age_days,
       owner: null,
-      next: "Decide in the Approval inbox, where the fingerprint is shown.",
+      next: "\u0420\u0435\u0448\u0435\u043D\u0438\u0435 \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u0432\u043E \xAB\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F\u0445\xBB, \u0433\u0434\u0435 \u043F\u043E\u043A\u0430\u0437\u0430\u043D \u043E\u0442\u043F\u0435\u0447\u0430\u0442\u043E\u043A.",
       target: { kind: "deep_link", link: decision.deep_link || `s6:initiative/${decision.ref}` },
-      openLabel: "Open in Approval inbox"
+      openLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u043E \xAB\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F\u0445\xBB"
     });
   }
   for (const entry of groups.interventions ?? []) {
@@ -22620,11 +22620,11 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
         key: `blocked:${entry.ref}`,
         kind: "blocked",
         tone: "danger",
-        label: "Blocked",
+        label: "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E",
         title: `${entry.ref} \xB7 ${entry.title}`,
-        note: entry.detail || "Blocked without a recorded reason.",
+        note: entry.detail || "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0431\u0435\u0437 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u043E\u0439 \u043F\u0440\u0438\u0447\u0438\u043D\u044B.",
         target: { kind: "work", ref: entry.ref },
-        openLabel: "Open work item"
+        openLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442"
       });
     } else if (entry.cause === "overdue_item") {
       items.push({
@@ -22632,11 +22632,11 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
         key: `overdue:${entry.ref}`,
         kind: "overdue",
         tone: "warning",
-        label: "Overdue",
+        label: "\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E",
         title: `${entry.ref} \xB7 ${entry.title}`,
-        note: entry.detail || "Past its due date and not done.",
+        note: entry.detail || "\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E \u0438 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E.",
         target: { kind: "work", ref: entry.ref },
-        openLabel: "Open work item"
+        openLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442"
       });
     } else if (entry.cause === "evidence_stale") {
       items.push({
@@ -22644,11 +22644,11 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
         key: "evidence",
         kind: "evidence",
         tone: "warning",
-        label: "Evidence out of date",
-        title: entry.title || "The last health check is old",
+        label: "\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u0443\u0441\u0442\u0430\u0440\u0435\u043B\u0438",
+        title: entry.title || "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0437\u0434\u043E\u0440\u043E\u0432\u044C\u044F \u0443\u0441\u0442\u0430\u0440\u0435\u043B\u0430",
         note: entry.detail || "",
         target: { kind: "view", view: "overview" },
-        openLabel: "Open the assessment"
+        openLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0446\u0435\u043D\u043A\u0443"
       });
     } else if (entry.cause === "unlinked_project") {
       items.push({
@@ -22656,11 +22656,11 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
         key: "unlinked",
         kind: "unlinked",
         tone: "warning",
-        label: "Not linked",
-        title: entry.title || "Not linked to a Hermes project",
+        label: "\u041D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D",
+        title: entry.title || "\u041D\u0435 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D \u043A \u043F\u0440\u043E\u0435\u043A\u0442\u0443 Hermes",
         note: entry.detail || "",
         target: { kind: "view", view: "settings" },
-        openLabel: "Open project settings"
+        openLabel: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"
       });
     } else if (entry.cause === "project_attention") {
       const switchedOff = project.enabled === false || row.enabled === false;
@@ -22669,11 +22669,11 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
         key: "project",
         kind: "project",
         tone: "neutral",
-        label: switchedOff ? "Switched off" : PHASE_LABEL[project.phase ?? row.phase] ?? "Project state",
-        title: switchedOff ? "This project is switched off" : `This project is ${project.phase ?? row.phase}`,
-        note: switchedOff ? "Nothing runs for it until someone enables it again." : "Its lifecycle state needs a decision.",
+        label: switchedOff ? "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E" : PHASE_LABEL[project.phase ?? row.phase] ?? "\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
+        title: switchedOff ? "\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D" : `This project is ${project.phase ?? row.phase}`,
+        note: switchedOff ? "\u0414\u043B\u044F \u043D\u0435\u0433\u043E \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0437\u0430\u043F\u0443\u0441\u043A\u0430\u0435\u0442\u0441\u044F, \u043F\u043E\u043A\u0430 \u043A\u0442\u043E-\u043D\u0438\u0431\u0443\u0434\u044C \u043D\u0435 \u0432\u043A\u043B\u044E\u0447\u0438\u0442 \u0435\u0433\u043E \u0441\u043D\u043E\u0432\u0430." : "\u0415\u0433\u043E \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u0436\u0438\u0437\u043D\u0435\u043D\u043D\u043E\u0433\u043E \u0446\u0438\u043A\u043B\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0440\u0435\u0448\u0435\u043D\u0438\u044F.",
         target: { kind: "view", view: "settings" },
-        openLabel: "Open project settings"
+        openLabel: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"
       });
     }
   }
@@ -22682,15 +22682,15 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
       key: `milestone:${milestone.id}`,
       kind: "milestone",
       tone: "warning",
-      label: "Milestone overdue",
+      label: "\u0412\u0435\u0445\u0430 \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u0430",
       title: milestone.name,
       ref: milestone.id,
       note: `Due ${milestone.due} and still open${Number.isFinite(Number(milestone.total)) ? ` (${Number(milestone.done ?? 0)} of ${Number(milestone.total)} done)` : ""}.`,
       ageDays: Math.max(0, Math.floor((now.getTime() - Date.parse(milestone.due)) / 864e5)),
       owner: null,
-      next: "Review the date or close the milestone.",
+      next: "\u041F\u0435\u0440\u0435\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u0438\u043B\u0438 \u0437\u0430\u043A\u0440\u043E\u0439\u0442\u0435 \u0432\u0435\u0445\u0443.",
       target: { kind: "plan", entry: `plan:milestone:${milestone.id}` },
-      openLabel: "Open in Vision"
+      openLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 \xAB\u0412\u0438\u0434\u0435\u043D\u0438\u0438\xBB"
     });
   }
   if (row.status === "stalled") {
@@ -22698,14 +22698,14 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
       key: "stalled",
       kind: "stalled",
       tone: "warning",
-      label: "Stalled",
+      label: "\u0417\u0430\u0441\u0442\u0440\u044F\u043B\u043E",
       title: `No work has moved for ${STALLED_AFTER_DAYS} days or more`,
-      note: "There is open work, but nothing on it has changed.",
+      note: "\u0415\u0441\u0442\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430, \u043D\u043E \u043D\u0438\u0447\u0435\u0433\u043E \u0432 \u043D\u0435\u0439 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u043E\u0441\u044C.",
       ageDays: null,
       owner: null,
-      next: "Check the board and re-plan.",
+      next: "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0434\u043E\u0441\u043A\u0443 \u0438 \u043F\u0435\u0440\u0435\u043F\u043B\u0430\u043D\u0438\u0440\u0443\u0439\u0442\u0435.",
       target: { kind: "view", view: "board" },
-      openLabel: "Open Kanban"
+      openLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043A\u0430\u043D\u0431\u0430\u043D"
     });
   }
   const rank = { danger: 0, warning: 1, info: 2, neutral: 3, success: 4 };
@@ -22713,15 +22713,15 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
   const enabled = project.enabled ?? row.enabled;
   const phase = project.phase ?? row.phase;
   let state;
-  if (enabled === false) state = ["disabled", "neutral", "Disabled"];
+  if (enabled === false) state = ["disabled", "neutral", "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043E"];
   else if (phase && phase !== "active") state = [phase, "neutral", PHASE_LABEL[phase] ?? phase];
-  else if (row.status === "unlinked") state = ["unlinked", "warning", "Not linked"];
-  else if (Number(row.items?.blocked ?? 0) > 0) state = ["blocked", "danger", "Blocked"];
-  else if (row.status === "at_risk") state = ["at_risk", "warning", "At risk"];
-  else if (row.status === "stalled") state = ["stalled", "warning", "Stalled"];
-  else if (items.some((item) => item.kind === "approval")) state = ["review", "info", "Needs review"];
-  else if (row.status === "idle") state = ["idle", "neutral", "Idle"];
-  else state = ["on_track", "success", "On track"];
+  else if (row.status === "unlinked") state = ["unlinked", "warning", "\u041D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D"];
+  else if (Number(row.items?.blocked ?? 0) > 0) state = ["blocked", "danger", "\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E"];
+  else if (row.status === "at_risk") state = ["at_risk", "warning", "\u041F\u043E\u0434 \u0443\u0433\u0440\u043E\u0437\u043E\u0439"];
+  else if (row.status === "stalled") state = ["stalled", "warning", "\u0417\u0430\u0441\u0442\u0440\u044F\u043B\u043E"];
+  else if (items.some((item) => item.kind === "approval")) state = ["review", "info", "\u041D\u0443\u0436\u043D\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430"];
+  else if (row.status === "idle") state = ["idle", "neutral", "\u041F\u0440\u043E\u0441\u0442\u043E\u0439"];
+  else state = ["on_track", "success", "\u0412 \u0433\u0440\u0430\u0444\u0438\u043A\u0435"];
   const count = (kind) => items.filter((item) => item.kind === kind).length;
   const countable = [
     ["blocked", "blocked item"],
@@ -22730,7 +22730,7 @@ function projectAttention({ project, portfolio, milestones = [], now = /* @__PUR
     ["approval", "approval"]
   ].filter(([kind]) => count(kind) > 0);
   const sentences = [];
-  if (state[0] === "unlinked") sentences.push("Hermes has no project for it, so its work cannot be shown");
+  if (state[0] === "unlinked") sentences.push("\u0423 Hermes \u043D\u0435\u0442 \u0434\u043B\u044F \u043D\u0435\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0435\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u0430 \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u0430");
   if (countable.length > 0) {
     const total = countable.reduce((sum, [kind]) => sum + count(kind), 0);
     sentences.push(`${joinAnd(countable.map(([kind, word]) => plural4(count(kind), word)))} ${total === 1 ? "needs" : "need"} you`);
@@ -22755,7 +22755,7 @@ var SEGMENTS = [
 ];
 function ageText(days) {
   if (typeof days !== "number" || !Number.isFinite(days)) return null;
-  if (days < 1) return "Under a day";
+  if (days < 1) return "\u041C\u0435\u043D\u044C\u0448\u0435 \u0434\u043D\u044F";
   return `${number(days)} ${days === 1 ? "day" : "days"}`;
 }
 function ProjectChatMenu({ projectId, lead }) {
@@ -22781,7 +22781,7 @@ function ProjectChatMenu({ projectId, lead }) {
   return jsx("span", { className: "dy-ov-chat", "data-strip-chat": projectId, children: jsx(Menu, {
     label: `Chat with a bot on ${projectId}`,
     action: "project-chat",
-    trigger: jsxs(Fragment, { children: [jsx(Icon, { name: "message-square" }), jsx("span", { children: "Chat" })] }),
+    trigger: jsxs(Fragment, { children: [jsx(Icon, { name: "message-square" }), jsx("span", { children: "\u0427\u0430\u0442" })] }),
     items: targets.map((target) => ({
       id: target.profile,
       label: target.role === "lead" ? `${target.profile} (lead)` : target.profile,
@@ -22803,7 +22803,7 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
     return () => window.removeEventListener("keydown", onKey, true);
   }, [onClose]);
   const items = attention.items;
-  const sub = !attention.available ? "The attention check did not load, so nothing is listed. Refresh to try again." : items.length === 0 ? `Nothing needs action in ${projectId} right now.` : `${number(items.length)} ${items.length === 1 ? "thing needs" : "things need"} action in ${projectId}. Most urgent first.`;
+  const sub = !attention.available ? "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u0441\u043F\u0438\u0441\u043E\u043A \u043F\u0443\u0441\u0442. \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430." : items.length === 0 ? `Nothing needs action in ${projectId} right now.` : `${number(items.length)} ${items.length === 1 ? "thing needs" : "things need"} action in ${projectId}. Most urgent first.`;
   return jsx("section", {
     className: "dockyard-modal-layer dy-ov-attn-layer",
     "data-attention-drawer": projectId,
@@ -22817,16 +22817,16 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
       "aria-labelledby": "dy-ov-attn-title",
       children: [
         jsxs("header", { children: [
-          jsx("h2", { id: "dy-ov-attn-title", children: "Needs attention" }),
-          jsx("button", { type: "button", className: "dy-ov-attn-close", "aria-label": "Close attention panel", "data-attention-close": true, onClick: onClose, children: jsx(Icon, { name: "x" }) })
+          jsx("h2", { id: "dy-ov-attn-title", children: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F" }),
+          jsx("button", { type: "button", className: "dy-ov-attn-close", "aria-label": "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043D\u0435\u043B\u044C \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F", "data-attention-close": true, onClick: onClose, children: jsx(Icon, { name: "x" }) })
         ] }),
         jsx("p", { className: "dy-ov-attn-sub", children: sub }),
         items.length > 0 ? jsx("ul", { className: "dy-ov-attn-list", children: items.map((item, index) => {
           const open = expanded === item.key;
           const facts = [
-            ["Owner", item.owner],
-            ["Waiting", ageText(item.ageDays)],
-            ["Next step", item.next]
+            ["\u0412\u043B\u0430\u0434\u0435\u043B\u0435\u0446", item.owner],
+            ["\u041E\u0436\u0438\u0434\u0430\u043D\u0438\u0435", ageText(item.ageDays)],
+            ["\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", item.next]
           ].filter(([, value]) => value);
           return jsxs("li", { className: "dy-ov-attn-item", "data-tone": item.tone, "data-attention-item": item.key, children: [
             jsxs("button", {
@@ -22849,7 +22849,7 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
               jsx(Button, { variant: "primary", small: true, action: "attention-open", onClick: () => onOpenItem(item), children: item.openLabel })
             ] }) : null
           ] }, item.key);
-        }) }) : jsx("p", { className: "dy-ov-attn-empty", "data-attention-empty": true, children: attention.available ? "The banner turns amber or red when work is overdue, blocked or stalled, and blue when a decision waits for you." : "No status is shown rather than a guess." })
+        }) }) : jsx("p", { className: "dy-ov-attn-empty", "data-attention-empty": true, children: attention.available ? "The banner turns amber or red when work is overdue, blocked or stalled, and blue when a decision waits for you." : "\u0421\u0442\u0430\u0442\u0443\u0441 \u043D\u0435 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0441\u044F, \u0447\u0442\u043E\u0431\u044B \u043D\u0435 \u0433\u0430\u0434\u0430\u0442\u044C." })
       ]
     })
   });
@@ -22878,7 +22878,7 @@ function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, onOpenIte
         "aria-haspopup": "dialog",
         "aria-expanded": open,
         "aria-label": `Project status: ${attention.label}. ${attention.summary.replace(/\.$/, "")}. Open attention details.`,
-        title: "Open attention details",
+        title: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F",
         onClick: openDrawer,
         onKeyDown: (event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -22892,7 +22892,7 @@ function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, onOpenIte
             jsx("strong", { children: attention.label }),
             jsx("span", { className: "dy-ov-banner-summary", children: `\u2014 ${attention.summary}` })
           ] }),
-          jsx("span", { className: "dy-ov-banner-view", "aria-hidden": true, children: "View" })
+          jsx("span", { className: "dy-ov-banner-view", "aria-hidden": true, children: "\u0412\u0438\u0434" })
         ]
       }),
       jsxs("div", { className: "dy-ov-eyebrow-row", children: [
@@ -22904,25 +22904,25 @@ function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, onOpenIte
           project.health !== "healthy" ? jsxs("span", { className: "dy-ov-evidence", "data-tone": healthTone, "data-strip-evidence": project.health ?? "unknown", children: [jsx("i", { "aria-hidden": true }), `Evidence: ${healthLabel}`] }, "evidence") : null
         ] }),
         jsxs("div", { className: "dy-ov-meta", children: [
-          jsx("span", { "data-strip-updated": true, children: recent ? `Updated ${recent}` : "No activity yet" }),
+          jsx("span", { "data-strip-updated": true, children: recent ? `Updated ${recent}` : "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442" }),
           jsx("span", { "data-roadmap-link": true, children: jsx("a", { href: "#", onClick: (event) => {
             event.preventDefault();
             onOpenRoadmap?.();
-          }, children: "View in Roadmap" }) }),
+          }, children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 \u0434\u043E\u0440\u043E\u0436\u043D\u043E\u0439 \u043A\u0430\u0440\u0442\u0435" }) }),
           jsx(ProjectChatMenu, { projectId: project.id, lead }, `chat:${project.id}`),
-          jsx("button", { type: "button", className: "dy-ov-refresh", "data-action": "refresh", "aria-label": "Refresh", title: "Refresh", onClick: onRefresh, children: jsx(Icon, { name: "refresh" }) })
+          jsx("button", { type: "button", className: "dy-ov-refresh", "data-action": "refresh", "aria-label": "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C", title: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C", onClick: onRefresh, children: jsx(Icon, { name: "refresh" }) })
         ] })
       ] }),
       jsx("h1", { className: "dy-ov-headline", "data-strip-headline": mission ? "mission" : "missing", children: mission || project.id }),
       jsxs("div", { className: "dy-ov-progress", "data-strip-progress": true, children: [
         jsxs("span", { className: "dy-ov-pct", children: [
-          delivery.percent === null ? "No work yet" : `${delivery.percent}%`,
+          delivery.percent === null ? "\u0420\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435\u0442" : `${delivery.percent}%`,
           delivery.total > 0 ? jsx("small", { children: `complete \xB7 ${number(delivery.done)} of ${number(delivery.total)} work items` }) : null
         ] }),
         jsx("div", {
           className: "dy-ov-track",
           role: "img",
-          "aria-label": delivery.total > 0 ? `Delivery: ${legendText}` : "Delivery: no work items yet",
+          "aria-label": delivery.total > 0 ? `Delivery: ${legendText}` : "\u041F\u043E\u0441\u0442\u0430\u0432\u043A\u0430: \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442",
           children: legend.map(([key]) => jsx("span", { className: key, style: { width: `${delivery[key] / delivery.total * 100}%` } }, key))
         }),
         legend.length > 0 ? jsx("div", { className: "dy-ov-legend", children: legend.map(([key, word]) => jsxs("span", { className: key, children: [jsx("i", { "aria-hidden": true }), `${number(delivery[key])} ${word}`] }, key)) }) : null
@@ -22943,27 +22943,27 @@ function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, onOpenIte
 // hermes_dockyard_plugin/desktop/src/lib/event-vocab.js
 var CHECK = "stewardship.cycle.started";
 var HEALTH_ORDER = ["critical", "degraded", "watch", "healthy"];
-var HEALTH_WORD = Object.freeze({ healthy: "Healthy", watch: "Watch", degraded: "Degraded", critical: "Critical", unknown: "Not verified" });
+var HEALTH_WORD = Object.freeze({ healthy: "\u0417\u0434\u043E\u0440\u043E\u0432", watch: "\u041D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435", degraded: "\u0414\u0435\u0433\u0440\u0430\u0434\u0430\u0446\u0438\u044F", critical: "\u041A\u0440\u0438\u0442\u0438\u0447\u043D\u043E", unknown: "\u041D\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043E" });
 var TRIGGER_WORD = Object.freeze({
-  manual: "Run on request",
-  gateway: "Run from a chat command",
-  webhook: "Run by a webhook",
-  internal: "Run by Project Stewardship",
-  schedule: "Run on schedule",
-  scheduled: "Run on schedule"
+  manual: "\u0417\u0430\u043F\u0443\u0441\u043A \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443",
+  gateway: "\u0417\u0430\u043F\u0443\u0441\u043A \u0438\u0437 \u0447\u0430\u0442\u0430",
+  webhook: "\u0417\u0430\u043F\u0443\u0441\u043A \u0432\u0435\u0431\u0445\u0443\u043A\u043E\u043C",
+  internal: "\u0417\u0430\u043F\u0443\u0441\u043A \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C\u0438",
+  schedule: "\u0417\u0430\u043F\u0443\u0441\u043A \u043F\u043E \u0440\u0430\u0441\u043F\u0438\u0441\u0430\u043D\u0438\u044E",
+  scheduled: "\u0417\u0430\u043F\u0443\u0441\u043A \u043F\u043E \u0440\u0430\u0441\u043F\u0438\u0441\u0430\u043D\u0438\u044E"
 });
-var EVENT_FILTERS = Object.freeze([["all", "All events"], ["initiatives", "Initiatives"], ["work", "Work"], ["health", "Health and checks"]]);
+var EVENT_FILTERS = Object.freeze([["all", "\u0412\u0441\u0435 \u0441\u043E\u0431\u044B\u0442\u0438\u044F"], ["initiatives", "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B"], ["work", "\u0420\u0430\u0431\u043E\u0442\u0430"], ["health", "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438"]]);
 var INITIATIVE = Object.freeze({
-  "initiative.proposed": { label: "Initiative proposed", icon: "sparkles", effect: ["New proposal", "info"], note: "risk" },
-  "initiative.approval_required": { label: "Approval requested", icon: "hand", effect: ["Waiting for a decision", "warning"], note: "risk" },
-  "initiative.approved": { label: "Initiative approved", icon: "circle-check", effect: ["Work can start", "success"] },
-  "initiative.rejected": { label: "Initiative rejected", icon: "x", effect: ["Will not go ahead", "neutral"], note: "reason" },
-  "initiative.changes_requested": { label: "Changes requested", icon: "undo-2", effect: ["Back with the proposer", "warning"], note: "feedback" },
-  "initiative.withdrawn": { label: "Initiative withdrawn", icon: "archive", effect: ["Closed by the proposer", "neutral"], note: "reason" },
-  "initiative.started": { label: "Initiative started", icon: "flag", effect: ["In progress", "info"] },
-  "initiative.completed": { label: "Initiative completed", icon: "circle-check", effect: ["Complete", "success"] },
-  "initiative.regressed": { label: "Initiative regressed", icon: "triangle-alert", effect: ["Outcome went backwards", "danger"] },
-  "initiative.ready_to_confirm": { label: "Initiative ready to confirm", icon: "circle-check", effect: ["A person can confirm it as delivered", "info"] }
+  "initiative.proposed": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0430", icon: "sparkles", effect: ["\u041D\u043E\u0432\u043E\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435", "info"], note: "risk" },
+  "initiative.approval_required": { label: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435 \u0437\u0430\u043F\u0440\u043E\u0448\u0435\u043D\u043E", icon: "hand", effect: ["\u041E\u0436\u0438\u0434\u0430\u0435\u0442 \u0440\u0435\u0448\u0435\u043D\u0438\u044F", "warning"], note: "risk" },
+  "initiative.approved": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0430", icon: "circle-check", effect: ["\u0420\u0430\u0431\u043E\u0442\u0430 \u043C\u043E\u0436\u0435\u0442 \u043D\u0430\u0447\u0430\u0442\u044C\u0441\u044F", "success"] },
+  "initiative.rejected": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0430", icon: "x", effect: ["\u041D\u0435 \u0431\u0443\u0434\u0435\u0442 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0435\u043D\u043E", "neutral"], note: "reason" },
+  "initiative.changes_requested": { label: "\u0417\u0430\u043F\u0440\u043E\u0448\u0435\u043D\u044B \u043F\u0440\u0430\u0432\u043A\u0438", icon: "undo-2", effect: ["\u0423 \u0430\u0432\u0442\u043E\u0440\u0430", "warning"], note: "feedback" },
+  "initiative.withdrawn": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043E\u0442\u043E\u0437\u0432\u0430\u043D\u0430", icon: "archive", effect: ["\u0417\u0430\u043A\u0440\u044B\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u043E\u043C", "neutral"], note: "reason" },
+  "initiative.started": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0437\u0430\u043F\u0443\u0449\u0435\u043D\u0430", icon: "flag", effect: ["\u0412 \u0440\u0430\u0431\u043E\u0442\u0435", "info"] },
+  "initiative.completed": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430", icon: "circle-check", effect: ["\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044C", "success"] },
+  "initiative.regressed": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u043E\u0442\u043A\u0430\u0442\u0438\u043B\u0430\u0441\u044C", icon: "triangle-alert", effect: ["\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043E\u0442\u043A\u0430\u0442\u0438\u043B\u0441\u044F", "danger"] },
+  "initiative.ready_to_confirm": { label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0433\u043E\u0442\u043E\u0432\u0430 \u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E", icon: "circle-check", effect: ["\u0427\u0435\u043B\u043E\u0432\u0435\u043A \u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443", "info"] }
 });
 var KNOWN_EVENT_TYPES = Object.freeze([
   ...Object.keys(INITIATIVE),
@@ -22997,32 +22997,32 @@ function describeInitiative(type, spec, ref, payload, ctx) {
     kind: "initiatives",
     icon: spec.icon,
     ref: ref || null,
-    label: type === "initiative.approval_required" && payload.resubmitted === true ? "Resubmitted for approval" : spec.label,
+    label: type === "initiative.approval_required" && payload.resubmitted === true ? "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E \u043D\u0430 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435 \u0437\u0430\u043D\u043E\u0432\u043E" : spec.label,
     title: ref ? name ? `${ref} \xB7 ${name}` : ref : name,
     note,
     effect: effect(...spec.effect),
     // Still waiting: decide it where the fingerprint is shown. Otherwise open
     // it in Vision. No button for an initiative the project no longer lists.
     target: initiative ? pending ? { kind: "deep_link", link: `s6:initiative/${ref}` } : { kind: "plan", entry: `plan:initiative:${ref}` } : null,
-    openLabel: initiative ? pending ? "Open in Approval inbox" : "Open in Vision" : null
+    openLabel: initiative ? pending ? "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u043E \xAB\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F\u0445\xBB" : "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 \xAB\u0412\u0438\u0434\u0435\u043D\u0438\u0438\xBB" : null
   };
 }
 function describeHealth(payload) {
   const from = text(payload.from);
   const to = text(payload.to);
   const score = payload.score === null || payload.score === void 0 || payload.score === "" ? NaN : Number(payload.score);
-  let change = effect("Health changed", "neutral");
-  if (to && !from) change = effect("First reading", "neutral");
+  let change = effect("\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u043E\u0441\u044C", "neutral");
+  if (to && !from) change = effect("\u041F\u0435\u0440\u0432\u0438\u0447\u043D\u043E\u0435 \u0447\u0442\u0435\u043D\u0438\u0435", "neutral");
   else if (to) {
     const before = HEALTH_ORDER.indexOf(from);
     const after = HEALTH_ORDER.indexOf(to);
-    if (before >= 0 && after >= 0 && after < before) change = effect("Health worse", to === "critical" ? "danger" : "warning");
-    else if (before >= 0 && after >= 0 && after > before) change = effect("Health better", "success");
+    if (before >= 0 && after >= 0 && after < before) change = effect("\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u0445\u0443\u0436\u0435", to === "critical" ? "danger" : "warning");
+    else if (before >= 0 && after >= 0 && after > before) change = effect("\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u043B\u0443\u0447\u0448\u0435", "success");
   }
   return {
     kind: "health",
     icon: "activity",
-    label: "Health changed",
+    label: "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u043E\u0441\u044C",
     title: !to ? "" : from ? `${healthWord(from)} \u2192 ${healthWord(to)}` : healthWord(to),
     // An unverified project carries score 0 in the payload; that is not a
     // measurement, so no score is shown for it (unavailable is not zero).
@@ -23038,14 +23038,14 @@ function describeWork(type, ref, payload, ctx) {
     kind: "work",
     icon: "user",
     ref: ref || null,
-    label: assigned ? "Work assigned" : "Work unassigned",
+    label: assigned ? "\u0420\u0430\u0431\u043E\u0442\u0430 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0430" : "\u0420\u0430\u0431\u043E\u0442\u0430 \u043D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0430",
     title: ref ? name ? `${ref} \xB7 ${name}` : ref : name,
     note: assigned && text(payload.to) ? `Assigned to ${text(payload.to)}` : "",
     // Unassigned: the app's own words ("no bot will pick it up", Sahil 04/10).
     // Assigned: the owner may be a person, so only say it has one.
-    effect: assigned ? effect("Has an owner", "success") : effect("No bot will pick it up", "warning"),
+    effect: assigned ? effect("\u0415\u0441\u0442\u044C \u0432\u043B\u0430\u0434\u0435\u043B\u0435\u0446", "success") : effect("\u041D\u0438 \u043E\u0434\u0438\u043D \u0431\u043E\u0442 \u0435\u0433\u043E \u043D\u0435 \u043F\u043E\u0434\u0445\u0432\u0430\u0442\u0438\u0442", "warning"),
     target: item ? { kind: "work", ref } : null,
-    openLabel: item ? "Open work item" : null
+    openLabel: item ? "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442" : null
   };
 }
 function describeType(type, subject, payload, ctx) {
@@ -23057,10 +23057,10 @@ function describeType(type, subject, payload, ctx) {
     return {
       kind: "health",
       icon: "triangle-alert",
-      label: "Project critical",
-      title: "Health is critical",
-      note: [list.length > 0 ? plural5(list.length, "contradiction") : "", payload.auto_freeze === true ? "Changes are frozen automatically" : ""].filter(Boolean).join(" \xB7 "),
-      effect: effect("Critical", "danger")
+      label: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043A\u0440\u0438\u0442\u0438\u0447\u0435\u043D",
+      title: "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u043A\u0440\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435",
+      note: [list.length > 0 ? plural5(list.length, "contradiction") : "", payload.auto_freeze === true ? "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043C\u043E\u0440\u043E\u0436\u0435\u043D\u044B \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438" : ""].filter(Boolean).join(" \xB7 "),
+      effect: effect("\u041A\u0440\u0438\u0442\u0438\u0447\u043D\u043E", "danger")
     };
   }
   if (type === "stewardship.verification.failed") {
@@ -23068,20 +23068,20 @@ function describeType(type, subject, payload, ctx) {
     return {
       kind: "health",
       icon: "shield-alert",
-      label: "Verification failed",
-      title: list.length > 0 ? `${plural5(list.length, "contradiction")} found` : "The evidence did not check out",
+      label: "\u0412\u0435\u0440\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u044F \u043D\u0435 \u043F\u0440\u043E\u0439\u0434\u0435\u043D\u0430",
+      title: list.length > 0 ? `${plural5(list.length, "contradiction")} found` : "\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u043B\u0438\u0441\u044C",
       note: firstDetail(list),
-      effect: effect("Evidence disagrees", "warning")
+      effect: effect("\u0414\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u043F\u0440\u043E\u0442\u0438\u0432\u043E\u0440\u0435\u0447\u0430\u0442", "warning")
     };
   }
   if (type === "stewardship.reasoning.failed") {
     return {
       kind: "health",
       icon: "triangle-alert",
-      label: "Proposal step failed",
-      title: "The proposal step stopped with an error",
+      label: "\u0428\u0430\u0433 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u043B\u0441\u044F \u043E\u0448\u0438\u0431\u043A\u043E\u0439",
+      title: "\u0428\u0430\u0433 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u043B\u0441\u044F \u0441 \u043E\u0448\u0438\u0431\u043A\u043E\u0439",
       note: text(payload.error).slice(0, 160),
-      effect: effect("No proposals made", "warning")
+      effect: effect("\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0439 \u043D\u0435\u0442", "warning")
     };
   }
   if (type === CHECK) {
@@ -23089,16 +23089,16 @@ function describeType(type, subject, payload, ctx) {
     return {
       kind: "health",
       icon: "rotate-cw",
-      label: "Stewardship check",
-      title: TRIGGER_WORD[trigger] ?? (trigger ? `Run: ${sentence2(trigger).toLowerCase()}` : "Run"),
+      label: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0441\u0442\u044E\u0430\u0440\u0434\u0448\u0438\u043F\u0430",
+      title: TRIGGER_WORD[trigger] ?? (trigger ? `Run: ${sentence2(trigger).toLowerCase()}` : "\u041F\u0440\u043E\u0433\u043E\u043D"),
       note: "",
       effect: null
     };
   }
   if (type === "cycle.mutations_blocked") {
-    return { kind: "health", icon: "shield-alert", label: "Changes blocked", title: text(payload.reason), note: "", effect: effect("Nothing was changed", "neutral") };
+    return { kind: "health", icon: "shield-alert", label: "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B", title: text(payload.reason), note: "", effect: effect("\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E", "neutral") };
   }
-  return { kind: "other", icon: "history", label: sentence2(type) || "Project event", title: subject, note: "", effect: null };
+  return { kind: "other", icon: "history", label: sentence2(type) || "\u0421\u043E\u0431\u044B\u0442\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430", title: subject, note: "", effect: null };
 }
 function describeEvent(event, ctx = {}) {
   const type = String(event?.event_type ?? event?.type ?? "");
@@ -23155,9 +23155,9 @@ function groupByDay(rows, { now = /* @__PURE__ */ new Date(), timeZone } = {}) {
   for (const row of rows ?? []) {
     const key = row.day ?? (row.at === null ? "unknown" : dayKey(row.at, timeZone));
     if (!groups.has(key)) {
-      let label = "Unknown time";
-      if (key === today) label = "Today";
-      else if (key === yesterday) label = "Yesterday";
+      let label = "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F";
+      if (key === today) label = "\u0421\u0435\u0433\u043E\u0434\u043D\u044F";
+      else if (key === yesterday) label = "\u0412\u0447\u0435\u0440\u0430";
       else if (key !== "unknown") {
         const sameYear = key.slice(0, 4) === today.slice(0, 4);
         label = formatter({ weekday: "short", day: "numeric", month: "short", ...sameYear ? {} : { year: "numeric" } }, timeZone).format(row.at).replace(/,/g, "");
@@ -23180,7 +23180,7 @@ function matchesFilter(row, { kind = "all", query = "" } = {}) {
 var STEPS = [50, 200, 500];
 var fullTime = (ts) => {
   const at = Date.parse(ts ?? "");
-  return Number.isNaN(at) ? "Time not recorded" : new Intl.DateTimeFormat("en-GB", { dateStyle: "full", timeStyle: "short" }).format(at);
+  return Number.isNaN(at) ? "\u0412\u0440\u0435\u043C\u044F \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E" : new Intl.DateTimeFormat("en-GB", { dateStyle: "full", timeStyle: "short" }).format(at);
 };
 var plural6 = (count, word) => `${number(count)} ${word}${count === 1 ? "" : "s"}`;
 function Impact({ row }) {
@@ -23243,7 +23243,7 @@ function ProjectActivityPanel({ project, view, onOpenItem }) {
       const data = await api(`/projects/${encoded}/events?limit=${next}`, { quiet: true });
       setOlder({ limit: next, events: data?.events ?? [] });
     } catch {
-      setError("Could not load older events. Try again.");
+      setError("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0431\u043E\u043B\u0435\u0435 \u0441\u0442\u0430\u0440\u044B\u0435 \u0441\u043E\u0431\u044B\u0442\u0438\u044F. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.");
     } finally {
       setLoading(false);
     }
@@ -23254,14 +23254,14 @@ function ProjectActivityPanel({ project, view, onOpenItem }) {
   else if (full) footnote = `The latest ${plural6(total, "event")}, the most the app can read.`;
   return jsxs("section", { className: "dockyard-feature-card dy-act", "data-activity": project.id, children: [
     jsxs("header", { className: "dy-act-head", children: [
-      jsx("h2", { children: "Project activity" }),
+      jsx("h2", { children: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }),
       jsx("span", { className: "dy-act-count", "data-activity-count": true, children: filtered ? `${number(eventCount(shown))} of ${plural6(total, "event")}` : plural6(total, "event") })
     ] }),
     rows.length === 0 ? jsxs("div", { className: "dy-act-empty", "data-activity-empty": "none", children: [
-      jsx("p", { children: jsx("strong", { children: "No events recorded yet." }) }),
+      jsx("p", { children: jsx("strong", { children: "\u0421\u043E\u0431\u044B\u0442\u0438\u044F \u043F\u043E\u043A\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B." }) }),
       jsx("p", { children: "Events appear here when someone proposes, approves or rejects an initiative, assigns work, or when a stewardship check runs." })
     ] }) : jsxs("div", { className: "dy-act-tools", children: [
-      jsx("div", { className: "dy-act-chips", role: "group", "aria-label": "Show", children: EVENT_FILTERS.map(([key, label]) => {
+      jsx("div", { className: "dy-act-chips", role: "group", "aria-label": "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C", children: EVENT_FILTERS.map(([key, label]) => {
         const count = key === "all" ? total : eventCount(rows.filter((row) => row.kind === key));
         return jsxs("button", {
           type: "button",
@@ -23276,18 +23276,18 @@ function ProjectActivityPanel({ project, view, onOpenItem }) {
         type: "search",
         className: "dy-act-search",
         "data-activity-search": true,
-        "aria-label": "Search activity",
-        placeholder: "Search events, people or refs",
+        "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438",
+        placeholder: "\u041F\u043E\u0438\u0441\u043A \u0441\u043E\u0431\u044B\u0442\u0438\u0439, \u043B\u044E\u0434\u0435\u0439 \u0438\u043B\u0438 \u0441\u0441\u044B\u043B\u043E\u043A",
         value: query,
         onChange: (event) => setQuery(event.target.value)
       })
     ] }),
     rows.length > 0 && shown.length === 0 ? jsxs("div", { className: "dy-act-empty", "data-activity-empty": "filtered", children: [
-      jsx("p", { children: "No events match these filters." }),
+      jsx("p", { children: "\u041D\u0435\u0442 \u0441\u043E\u0431\u044B\u0442\u0438\u0439 \u043F\u043E \u044D\u0442\u0438\u043C \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u043C." }),
       jsx("button", { type: "button", className: "dy-act-open", "data-activity-clear": true, onClick: () => {
         setKind("all");
         setQuery("");
-      }, children: "Clear filters" })
+      }, children: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440\u044B" })
     ] }) : null,
     shown.length > 0 ? jsx(Timeline, { groups, onOpenItem }) : null,
     rows.length > 0 ? jsxs("footer", { className: "dy-act-foot", children: [
@@ -23298,7 +23298,7 @@ function ProjectActivityPanel({ project, view, onOpenItem }) {
         "data-activity-older": next,
         disabled: loading,
         onClick: showOlder,
-        children: loading ? "Loading\u2026" : "Show older events"
+        children: loading ? "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026" : "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0431\u043E\u043B\u0435\u0435 \u0441\u0442\u0430\u0440\u044B\u0435 \u0441\u043E\u0431\u044B\u0442\u0438\u044F"
       }) : null,
       error ? jsx("span", { className: "dy-act-error", role: "alert", children: error }) : null
     ] }) : null
@@ -23308,10 +23308,10 @@ function RecentActivityCard({ view, onViewAll }) {
   const rows = activityRows(view.events ?? [], { initiatives: view.initiatives, workItems: view.workItems }).slice(0, 4);
   return jsxs("section", { className: "dockyard-feature-card dockyard-overview-card", "data-overview-activity": "words", children: [
     jsxs("header", { children: [
-      jsx("h2", { children: "Recent activity" }),
-      jsx("button", { type: "button", className: "dy-act-viewall", "data-activity-view-all": true, onClick: onViewAll, children: "View all" })
+      jsx("h2", { children: "\u041D\u0435\u0434\u0430\u0432\u043D\u044F\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C" }),
+      jsx("button", { type: "button", className: "dy-act-viewall", "data-activity-view-all": true, onClick: onViewAll, children: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0432\u0441\u0435" })
     ] }),
-    jsx("p", { children: "What happened on this project lately." }),
+    jsx("p", { children: "\u0427\u0442\u043E \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u043B\u043E \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435 \u0432 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u0432\u0440\u0435\u043C\u044F." }),
     rows.length > 0 ? jsx("div", { className: "dockyard-overview-list activity", children: rows.map((row) => {
       const words2 = row.title ? `${row.label} \xB7 ${row.title}` : row.label;
       return jsxs("article", { "data-activity-row": row.key, children: [
@@ -23322,7 +23322,7 @@ function RecentActivityCard({ view, onViewAll }) {
         // A small card: no placeholder dash when the event has no impact.
         row.effect ? jsx(Impact, { row }) : null
       ] }, row.key);
-    }) }) : jsx("p", { className: "dockyard-meta", children: "No events recorded yet." })
+    }) }) : jsx("p", { className: "dockyard-meta", children: "\u0421\u043E\u0431\u044B\u0442\u0438\u044F \u043F\u043E\u043A\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B." })
   ] });
 }
 
@@ -23391,22 +23391,22 @@ function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDirty, pe
   if (!project && view.missingProject) {
     return jsxs("section", { className: "dockyard-deep-link-miss", "data-deep-link-miss": view.missingProject, children: [
       jsx("p", { className: "dockyard-inline-error", role: "alert", children: `Project ${view.missingProject} no longer exists or is not connected. Nothing was substituted.` }),
-      jsx(Button, { onClick: () => onSelectProject?.((view.projects ?? [])[0]?.id ?? null), children: "Back to fleet" })
+      jsx(Button, { onClick: () => onSelectProject?.((view.projects ?? [])[0]?.id ?? null), children: "\u041D\u0430\u0437\u0430\u0434 \u043A \u0444\u043B\u043E\u0442\u0443" })
     ] });
   }
-  if (!project) return jsx(EmptyState, { title: "No project selected", description: "Connect a project before opening the project dashboard.", icon: "project" });
+  if (!project) return jsx(EmptyState, { title: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D", description: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0442\u044C \u0435\u0433\u043E \u043F\u0430\u043D\u0435\u043B\u044C.", icon: "project" });
   const [healthTone, healthLabel] = healthDetails(project.health);
   const views = [
-    ["overview", "Overview"],
-    ["plan", "Vision"],
-    ["board", "Kanban"],
-    ["planning", "Planning"],
-    ["workflows", "Workflows"],
-    ["content", "Content"],
-    ["memory", "Memory"],
-    ["activity", "Activity"],
-    ["reports", "Reports"],
-    ["settings", "Settings"]
+    ["overview", "\u041E\u0431\u0437\u043E\u0440"],
+    ["plan", "\u0412\u0438\u0434\u0435\u043D\u0438\u0435"],
+    ["board", "\u041A\u0430\u043D\u0431\u0430\u043D"],
+    ["planning", "\u041F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435"],
+    ["workflows", "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u044B"],
+    ["content", "\u041A\u043E\u043D\u0442\u0435\u043D\u0442"],
+    ["memory", "\u041F\u0430\u043C\u044F\u0442\u044C"],
+    ["activity", "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C"],
+    ["reports", "\u041E\u0442\u0447\u0451\u0442\u044B"],
+    ["settings", "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"]
   ];
   const openAttentionItem = (item) => {
     const target = item?.target ?? {};
@@ -23478,23 +23478,23 @@ function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDirty, pe
       ] }),
       jsxs("div", { className: "dockyard-project-overview-grid", children: [
         jsxs("section", { className: "dockyard-feature-card dockyard-overview-card", "data-overview-work": true, children: [
-          jsxs("header", { children: [jsx("h2", { children: "Current work" }), jsx("span", { children: number(view.workItems?.length ?? 0) })] }),
-          jsx("p", { children: "Live work, ownership and stage." }),
+          jsxs("header", { children: [jsx("h2", { children: "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430" }), jsx("span", { children: number(view.workItems?.length ?? 0) })] }),
+          jsx("p", { children: "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430, \u0432\u043B\u0430\u0434\u0435\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0434\u0438\u044F." }),
           visibleWork.length > 0 ? jsx("div", {
             className: "dockyard-overview-list",
             children: visibleWork.map((item) => jsxs("article", { children: [
               jsxs("span", { children: [jsx("strong", { children: item.title || item.ref }), jsx("small", { children: `${item.ref} / ${item.assignee || "Unassigned"}` })] }),
               jsx(StatusTag, { tone: ["done", "completed"].includes(item.status) ? "success" : item.status === "in_progress" ? "info" : "neutral", label: String(item.status || "unknown").replaceAll("_", " ") })
             ] }, item.ref))
-          }) : jsx("p", { className: "dockyard-meta", children: "No work items are attached." })
+          }) : jsx("p", { className: "dockyard-meta", children: "\u0420\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u043D\u0435 \u043F\u0440\u0438\u043A\u0440\u0435\u043F\u043B\u0435\u043D\u044B." })
         ] }),
         jsxs("section", { className: "dockyard-feature-card dockyard-overview-card", "data-overview-initiatives": true, children: [
-          jsxs("header", { children: [jsx("h2", { children: "Initiatives" }), jsx("span", { children: number(view.initiatives?.length ?? 0) })] }),
-          jsx("p", { children: "Current improvement bets and their decision state." }),
+          jsxs("header", { children: [jsx("h2", { children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B" }), jsx("span", { children: number(view.initiatives?.length ?? 0) })] }),
+          jsx("p", { children: "\u0422\u0435\u043A\u0443\u0449\u0438\u0435 \u0441\u0442\u0430\u0432\u043A\u0438 \u043D\u0430 \u0443\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435 \u0438 \u0438\u0445 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u0439." }),
           visibleInitiatives.length > 0 ? jsx("div", {
             className: "dockyard-overview-list",
             children: visibleInitiatives.map((initiative) => jsx(InitiativeRevisionRow, { initiative, onResubmitted: onRefresh }, initiative.ref))
-          }) : jsx("p", { className: "dockyard-meta", children: "No initiatives are attached." })
+          }) : jsx("p", { className: "dockyard-meta", children: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B \u043D\u0435 \u043F\u0440\u0438\u043A\u0440\u0435\u043F\u043B\u0435\u043D\u044B." })
         ] }),
         // C5 (Sahil 06/10): the Activity tab's words, the latest four, and View all.
         jsx(RecentActivityCard, { view, onViewAll: () => changeView("activity") })
@@ -23524,7 +23524,7 @@ function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDirty, pe
       className: "dockyard-project-toolbar",
       children: jsx("nav", {
         className: "dockyard-project-tabs",
-        "aria-label": "Project views",
+        "aria-label": "\u0412\u0438\u0434\u044B \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
         children: views.map(([key, label]) => jsx("button", {
           type: "button",
           className: projectView === key ? "active" : "",
@@ -23541,7 +23541,7 @@ function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDirty, pe
         className: "dockyard-modal",
         role: "alertdialog",
         "aria-modal": true,
-        "aria-label": "Unsaved planning board changes",
+        "aria-label": "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0434\u043E\u0441\u043A\u0438 \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
         onKeyDown: (event) => {
           if (event.key === "Escape" && !viewSaving) {
             event.stopPropagation();
@@ -23549,12 +23549,12 @@ function ProjectDashboard({ view, onSelectProject, onRefresh, onProjectDirty, pe
           }
         },
         children: [
-          jsx("h2", { children: "Unsaved changes on this board" }),
+          jsx("h2", { children: "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043D\u0430 \u044D\u0442\u043E\u0439 \u0434\u043E\u0441\u043A\u0435" }),
           jsx("p", { children: "The planning board has edits that are not saved. Save them before you leave, discard them, or cancel to keep editing." }),
           jsxs("div", { className: "dockyard-modal-actions", children: [
-            jsx(Button, { action: "view-switch-cancel", disabled: viewSaving, onClick: () => setPendingView(null), children: "Cancel" }),
-            jsx(Button, { variant: "danger", action: "view-switch-discard", disabled: viewSaving, onClick: () => leaveView(pendingView), children: "Discard" }),
-            jsx(Button, { variant: "primary", action: "view-switch-save", disabled: viewSaving || !canvasSaver.current, onClick: saveThenLeave, children: viewSaving ? "Saving..." : "Save and continue" })
+            jsx(Button, { action: "view-switch-cancel", disabled: viewSaving, onClick: () => setPendingView(null), children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+            jsx(Button, { variant: "danger", action: "view-switch-discard", disabled: viewSaving, onClick: () => leaveView(pendingView), children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u043A\u0438" }),
+            jsx(Button, { variant: "primary", action: "view-switch-save", disabled: viewSaving || !canvasSaver.current, onClick: saveThenLeave, children: viewSaving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C" })
           ] })
         ]
       })
@@ -23703,36 +23703,36 @@ function TeamsView({ view, onRefresh }) {
   };
   return jsxs("div", { "data-bot-teams": true, children: [
     jsx(PageHead, {
-      title: "Bot teams",
-      description: "Capabilities, availability, group ownership and structured handoffs.",
+      title: "\u041A\u043E\u043C\u0430\u043D\u0434\u044B \u0431\u043E\u0442\u043E\u0432",
+      description: "\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438, \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u044C, \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u0435 \u0432\u043B\u0430\u0434\u0435\u043D\u0438\u0435 \u0438 \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0438.",
       status: workload.stuck?.length > 0 ? `${number(workload.stuck.length)} stuck` : null,
       onRefresh
     }),
     jsxs("section", { className: "dockyard-feature-card", "data-team-management": true, children: [
-      jsxs("header", { children: [jsx("h2", { children: "Project team" }), jsx("span", { children: team ? `Revision ${team.membership_revision}` : unlinked ? "Not linked" : "Loading canonical roster\u2026" })] }),
+      jsxs("header", { children: [jsx("h2", { children: "\u041A\u043E\u043C\u0430\u043D\u0434\u0430 \u043F\u0440\u043E\u0435\u043A\u0442\u0430" }), jsx("span", { children: team ? `Revision ${team.membership_revision}` : unlinked ? "\u041D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D" : "Loading canonical roster\u2026" })] }),
       // The roster lives in Hermes: an unlinked project has none (10/10/2026).
       unlinked ? jsx(UnlinkedNotice, { projectId }) : null,
       teamError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: teamError }) : null,
       jsx("div", { className: "dockyard-bot-grid", children: (team?.members ?? []).map((member) => jsxs("article", { className: "dockyard-bot-card", "data-project-member": member.profile_slug, children: [
         jsxs("strong", { children: [member.profile_slug, member.role === "lead" ? " \xB7 Lead" : " \xB7 Member"] }),
-        jsx(StatusTag, { tone: member.hermes_available ? "success" : "warning", label: member.hermes_available ? "Hermes available" : "Unavailable" }),
+        jsx(StatusTag, { tone: member.hermes_available ? "success" : "warning", label: member.hermes_available ? "Hermes \u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D" : "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E" }),
         jsx("span", { children: `${number(member.workload?.total ?? 0)} canonical work items` }),
         jsx("small", { children: member.state })
       ] }, member.profile_slug)) }),
-      jsx(DiscoveredProfilePicker, { profiles, name: "team-member-lead", label: "Discovered Hermes profile", value: chosenProfile, onChange: setChosenProfile }),
+      jsx(DiscoveredProfilePicker, { profiles, name: "team-member-lead", label: "\u041E\u0431\u043D\u0430\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C Hermes", value: chosenProfile, onChange: setChosenProfile }),
       jsxs("div", { className: "dockyard-modal-actions", children: [
-        jsx(Button, { action: "add-project-member", disabled: !chosenProfile || !projectId, onClick: addMember, children: "Add member" }),
-        jsx(Button, { action: "transfer-project-lead", disabled: !chosenProfile || !projectId, onClick: transferLead, children: "Transfer lead" })
+        jsx(Button, { action: "add-project-member", disabled: !chosenProfile || !projectId, onClick: addMember, children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0430" }),
+        jsx(Button, { action: "transfer-project-lead", disabled: !chosenProfile || !projectId, onClick: transferLead, children: "\u041F\u0435\u0440\u0435\u0434\u0430\u0442\u044C \u0432\u0435\u0434\u0443\u0449\u0435\u0433\u043E" })
       ] }),
       jsxs("div", { className: "dockyard-settings-grid", children: [
-        jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Member leaving" }), jsx("select", { ["data-transfer-from"]: true, value: transferFrom, onChange: (event) => setTransferFrom(event.target.value), children: (team?.members ?? []).map((member) => jsx("option", { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] }),
-        jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "Replacement" }), jsx("select", { "data-transfer-to": true, value: transferTo, onChange: (event) => setTransferTo(event.target.value), children: (team?.members ?? []).map((member) => jsx("option", { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] })
+        jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A \u043F\u043E\u043A\u0438\u0434\u0430\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442" }), jsx("select", { ["data-transfer-from"]: true, value: transferFrom, onChange: (event) => setTransferFrom(event.target.value), children: (team?.members ?? []).map((member) => jsx("option", { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] }),
+        jsxs("label", { className: "dockyard-field", children: [jsx("span", { children: "\u0417\u0430\u043C\u0435\u043D\u0430" }), jsx("select", { "data-transfer-to": true, value: transferTo, onChange: (event) => setTransferTo(event.target.value), children: (team?.members ?? []).map((member) => jsx("option", { value: member.profile_slug, children: member.profile_slug }, member.profile_slug)) })] })
       ] }),
-      jsx(Button, { action: "preview-work-transfer", disabled: !transferFrom || !transferTo || transferFrom === transferTo, onClick: previewTransfer, children: "Preview exact consequences" }),
+      jsx(Button, { action: "preview-work-transfer", disabled: !transferFrom || !transferTo || transferFrom === transferTo, onClick: previewTransfer, children: "\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0442\u043E\u0447\u043D\u044B\u0435 \u043F\u043E\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u044F" }),
       preview ? jsxs("div", { "data-transfer-preview": preview.fingerprint, children: [
         jsx("strong", { children: `${number(preview.enumerated_count)} items enumerated \xB7 fingerprint ${preview.fingerprint}` }),
         jsx("ul", { children: [...preview.eligible_items ?? [], ...preview.excluded_items ?? []].map((item) => jsx("li", { children: `${item.id} \xB7 ${item.title || ""} \xB7 ${item.status} \xB7 ${item.reason || "eligible"}` }, item.id)) }),
-        jsx(Button, { action: "execute-work-transfer", variant: "primary", disabled: preview.complete !== true || (preview.excluded_items ?? []).length > 0, onClick: executeTransfer, children: "Confirm exact transfer" })
+        jsx(Button, { action: "execute-work-transfer", variant: "primary", disabled: preview.complete !== true || (preview.excluded_items ?? []).length > 0, onClick: executeTransfer, children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0442\u043E\u0447\u043D\u044B\u0439 \u043F\u0435\u0440\u0435\u043D\u043E\u0441" })
       ] }) : null,
       pendingOperations.length ? jsxs("section", { "data-pending-transfers": true, children: [
         jsx("h3", { children: "Unfinished transfers \xB7 member departure" }),
@@ -23745,11 +23745,11 @@ function TeamsView({ view, onRefresh }) {
         jsx("strong", { children: `${operation.op_id} \xB7 ${operation.state}` }),
         jsx("span", { children: `${(operation.items ?? []).filter((item) => item.outcome === "completed").length} of ${(operation.items ?? []).length} transferred` }),
         jsx("ul", { children: (operation.items ?? []).map((item) => jsx("li", { children: `${item.item_id} \xB7 ${item.outcome}${item.detail ? ` \xB7 ${item.detail}` : ""}` }, item.item_id)) }),
-        operation.state !== "completed" ? jsx(Button, { action: "retry-work-transfer", onClick: retryTransfer, children: "Retry remaining items" }) : null
+        operation.state !== "completed" ? jsx(Button, { action: "retry-work-transfer", onClick: retryTransfer, children: "\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u043F\u0443\u043D\u043A\u0442\u044B" }) : null
       ] }) : null
     ] }),
     jsxs("section", { className: "dockyard-workload-card", "data-workload-visual": true, children: [
-      jsxs("div", { children: [jsx("h2", { children: "Workload heat" }), jsx("p", { children: "Current fleet availability from owned work." })] }),
+      jsxs("div", { children: [jsx("h2", { children: "\u041D\u0430\u0433\u0440\u0443\u0437\u043A\u0430" }), jsx("p", { children: "\u0422\u0435\u043A\u0443\u0449\u0430\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u044C \u0444\u043B\u043E\u0442\u0430 \u043F\u043E \u0435\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u0435." })] }),
       jsxs("div", { className: "dockyard-workload-chart", children: [
         jsxs("div", { className: "dockyard-work-visual", role: "img", "aria-label": `${workload.busy?.length ?? 0} busy, ${workload.idle?.length ?? 0} idle, ${workload.stuck?.length ?? 0} stuck, ${workload.offline?.length ?? 0} offline`, children: [
           workload.busy?.length > 0 ? jsx("span", { className: "active", style: { width: `${workload.busy.length / total * 100}%` } }) : null,
@@ -23761,19 +23761,19 @@ function TeamsView({ view, onRefresh }) {
     ] }),
     jsxs("div", { className: "dockyard-teams-layout", children: [
       jsxs("section", { className: "dockyard-feature-card", children: [
-        jsx("h2", { children: "Registry" }),
-        jsx("p", { children: "Declared capabilities and current state. Capability never expands permission." }),
+        jsx("h2", { children: "\u0420\u0435\u0435\u0441\u0442\u0440" }),
+        jsx("p", { children: "\u0417\u0430\u044F\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u0442\u0435\u043A\u0443\u0449\u0435\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435. \u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0440\u0430\u0441\u0448\u0438\u0440\u044F\u044E\u0442 \u043F\u0440\u0430\u0432\u0430." }),
         jsx("div", {
           className: "dockyard-bot-grid",
           children: bots.map((bot) => jsxs("article", { className: "dockyard-bot-card", "data-bot-card": bot.id, children: [
             jsxs("header", { children: [
               jsx("span", { className: "dockyard-avatar", children: initials2(bot.name || bot.id) }),
-              jsxs("span", { children: [jsx("strong", { children: bot.name || bot.id }), jsx("small", { children: bot.current_item || "No active item" })] }),
+              jsxs("span", { children: [jsx("strong", { children: bot.name || bot.id }), jsx("small", { children: bot.current_item || "\u041D\u0435\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0433\u043E \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430" })] }),
               jsx(StatusTag, { tone: bot.status === "busy" ? "warning" : bot.status === "idle" ? "success" : "neutral", label: bot.status || "unknown" })
             ] }),
             jsx("div", {
               className: "dockyard-capabilities",
-              children: (bot.capabilities ?? []).length > 0 ? bot.capabilities.map((capability) => jsx("span", { children: capability }, capability)) : jsx("span", { children: "No capabilities declared" })
+              children: (bot.capabilities ?? []).length > 0 ? bot.capabilities.map((capability) => jsx("span", { children: capability }, capability)) : jsx("span", { children: "\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0437\u0430\u044F\u0432\u043B\u0435\u043D\u044B" })
             }),
             jsxs("button", {
               type: "button",
@@ -23782,28 +23782,28 @@ function TeamsView({ view, onRefresh }) {
               "data-bot-id": bot.id,
               "aria-expanded": selectedBot === bot.id,
               onClick: () => openSessions(bot.id),
-              children: [jsx(Icon, { name: "activity" }), jsx("span", { children: "Session logs" }), jsx(Icon, { name: "chevron" })]
+              children: [jsx(Icon, { name: "activity" }), jsx("span", { children: "\u0416\u0443\u0440\u043D\u0430\u043B\u044B \u0441\u0435\u0441\u0441\u0438\u0439" }), jsx(Icon, { name: "chevron" })]
             })
           ] }, bot.id))
         })
       ] }),
       jsxs("section", { className: "dockyard-feature-card", children: [
-        jsx("h2", { children: "Groups and handoffs" }),
-        jsx("p", { children: "Group membership and audited A2A messages from the canonical feed." }),
+        jsx("h2", { children: "\u0413\u0440\u0443\u043F\u043F\u044B \u0438 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0438" }),
+        jsx("p", { children: "\u0421\u043E\u0441\u0442\u0430\u0432 \u0433\u0440\u0443\u043F\u043F \u0438 \u0430\u0443\u0434\u0438\u0440\u0443\u0435\u043C\u044B\u0435 A2A-\u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0438\u0437 \u043A\u0430\u043D\u043E\u043D\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u043F\u043E\u0442\u043E\u043A\u0430." }),
         jsx("div", {
           className: "dockyard-group-list",
           children: (view.groups ?? []).length > 0 ? view.groups.map((group) => jsxs("article", { className: "dockyard-group-card", "data-bot-group": group.name, children: [
             jsxs("header", { children: [jsx("strong", { children: group.name }), jsx("span", { children: `${number(group.members?.length ?? 0)} members` })] }),
-            jsx("p", { children: group.purpose || "No purpose supplied" }),
+            jsx("p", { children: group.purpose || "\u041D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E" }),
             jsx("div", { className: "dockyard-group-members", children: (group.members ?? []).map((member) => jsx("span", { className: "dockyard-avatar", title: member, children: initials2(member) }, member)) }),
             jsx("div", {
               className: "dockyard-handoff-list",
               children: (view.messages?.[group.name] ?? []).length > 0 ? view.messages[group.name].map((message, index) => jsxs("div", { children: [
-                jsx("strong", { children: message.payload?.summary || message.msg_type || "A2A event" }),
+                jsx("strong", { children: message.payload?.summary || message.msg_type || "\u0421\u043E\u0431\u044B\u0442\u0438\u0435 A2A" }),
                 jsx("span", { children: `${message.from_actor || "Unknown actor"} / ${formatWhen(message.created_at)}` })
-              ] }, String(message.id ?? index))) : jsx("span", { className: "dockyard-meta", children: "No handoff messages recorded." })
+              ] }, String(message.id ?? index))) : jsx("span", { className: "dockyard-meta", children: "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u043E \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B." })
             })
-          ] }, group.name)) : jsx("p", { className: "dockyard-meta", children: "No bot groups configured." })
+          ] }, group.name)) : jsx("p", { className: "dockyard-meta", children: "\u0413\u0440\u0443\u043F\u043F\u044B \u0431\u043E\u0442\u043E\u0432 \u043D\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u044B." })
         })
       ] })
     ] }),
@@ -23812,19 +23812,19 @@ function TeamsView({ view, onRefresh }) {
         jsxs("div", { children: [
           jsx("span", { className: "dockyard-card-label", children: "SESSION EVIDENCE" }),
           jsx("h2", { children: `${bots.find((bot) => bot.id === selectedBot)?.name || selectedBot} activity` }),
-          jsx("p", { children: sessionData?.scope_note || "System prompts and private reasoning are excluded." })
+          jsx("p", { children: sessionData?.scope_note || "\u0421\u0438\u0441\u0442\u0435\u043C\u043D\u044B\u0435 \u043F\u0440\u043E\u043C\u043F\u0442\u044B \u0438 \u043F\u0440\u0438\u0432\u0430\u0442\u043D\u044B\u0435 \u0440\u0430\u0441\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u044F \u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u044B." })
         ] }),
         jsx(Button, { small: true, onClick: () => {
           setSelectedBot(null);
           setSessionData(null);
           setTranscript(null);
-        }, children: "Close" })
+        }, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" })
       ] }),
       sessionError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: sessionError }) : null,
-      sessionState === "loading" ? jsx("p", { className: "dockyard-meta", children: "Loading sessions..." }) : jsxs("div", { className: "dockyard-session-layout", children: [
+      sessionState === "loading" ? jsx("p", { className: "dockyard-meta", children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0441\u0435\u0441\u0441\u0438\u0439\u2026" }) : jsxs("div", { className: "dockyard-session-layout", children: [
         jsxs("aside", { className: "dockyard-session-list", children: [
-          jsx("h3", { children: "Recent sessions" }),
-          sessionData?.available === false ? jsx("p", { className: "dockyard-meta", children: "No Hermes session store is available for this bot profile." }) : (sessionData?.sessions ?? []).length > 0 ? sessionData.sessions.map((session) => jsxs("button", {
+          jsx("h3", { children: "\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u0441\u0435\u0441\u0441\u0438\u0438" }),
+          sessionData?.available === false ? jsx("p", { className: "dockyard-meta", children: "\u0414\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0431\u043E\u0442\u0430 \u043D\u0435\u0442 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0430 \u0441\u0435\u0441\u0441\u0438\u0439 Hermes." }) : (sessionData?.sessions ?? []).length > 0 ? sessionData.sessions.map((session) => jsxs("button", {
             type: "button",
             "data-bot-session": session.session_id,
             className: transcript?.session?.session_id === session.session_id ? "active" : "",
@@ -23833,11 +23833,11 @@ function TeamsView({ view, onRefresh }) {
               jsxs("span", { children: [jsx("strong", { children: session.title }), jsx("small", { children: `${session.source} / ${formatWhen(session.last_activity_at)}` })] }),
               jsx(StatusTag, { tone: session.status === "active" ? "success" : "neutral", label: session.status })
             ]
-          }, session.session_id)) : jsx("p", { className: "dockyard-meta", children: "No sessions were recorded for this bot." })
+          }, session.session_id)) : jsx("p", { className: "dockyard-meta", children: "\u0421\u0435\u0441\u0441\u0438\u0438 \u044D\u0442\u043E\u0433\u043E \u0431\u043E\u0442\u0430 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B." })
         ] }),
         transcript ? jsxs("article", { className: "dockyard-transcript", "data-session-transcript": transcript.session?.session_id, children: [
           jsxs("header", { children: [
-            jsxs("div", { children: [jsx("h3", { children: transcript.session?.title || "Session transcript" }), jsx("span", { children: `${transcript.session?.source || "unknown"} / ${transcript.session?.model || "model not recorded"}` })] }),
+            jsxs("div", { children: [jsx("h3", { children: transcript.session?.title || "\u0422\u0440\u0430\u043D\u0441\u043A\u0440\u0438\u043F\u0442 \u0441\u0435\u0441\u0441\u0438\u0438" }), jsx("span", { children: `${transcript.session?.source || "unknown"} / ${transcript.session?.model || "model not recorded"}` })] }),
             jsx(StatusTag, { tone: "info", label: `${number(transcript.messages?.length ?? 0)} messages` })
           ] }),
           jsx("div", {
@@ -23845,11 +23845,11 @@ function TeamsView({ view, onRefresh }) {
             children: (transcript.messages ?? []).map((message, index) => jsxs("div", { className: `dockyard-transcript-message ${message.role}`, "data-transcript-message": message.role, children: [
               jsxs("div", { children: [jsx("strong", { children: message.tool_name || message.role }), jsx("span", { children: formatWhen(message.timestamp) })] }),
               jsx("pre", { children: message.content || "(empty message)" }),
-              message.truncated ? jsx("small", { children: "Message truncated at the safe display limit." }) : null
+              message.truncated ? jsx("small", { children: "\u0421\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043E\u0431\u0440\u0435\u0437\u0430\u043D\u043E \u043F\u043E \u043B\u0438\u043C\u0438\u0442\u0443 \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0433\u043E \u043F\u043E\u043A\u0430\u0437\u0430." }) : null
             ] }, String(message.message_id ?? index)))
           }),
           jsx("p", { className: "dockyard-transcript-scope", children: transcript.scope_note })
-        ] }) : jsx("div", { className: "dockyard-transcript-placeholder", children: sessionState === "loading-transcript" ? "Loading transcript..." : "Select a session to inspect its transcript." })
+        ] }) : jsx("div", { className: "dockyard-transcript-placeholder", children: sessionState === "loading-transcript" ? "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0442\u0440\u0430\u043D\u0441\u043A\u0440\u0438\u043F\u0442\u0430..." : "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0435\u0441\u0441\u0438\u044E, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0435\u0451 \u0442\u0440\u0430\u043D\u0441\u043A\u0440\u0438\u043F\u0442." })
       ] })
     ] }) : null
   ] });
@@ -23885,7 +23885,7 @@ function InboxRow({ item, selected, onSelect, onOpenProject }) {
             event.stopPropagation();
             onOpenProject?.(item.deep_link);
           },
-          children: "Open project"
+          children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442"
         })
       ]
     });
@@ -23910,7 +23910,7 @@ function InboxRow({ item, selected, onSelect, onOpenProject }) {
 function AttentionDetail({ item, onBack, onOpenProject }) {
   const copy = attentionPanel(item);
   return jsxs("article", { className: "dockyard-inbox-panel dockyard-attention-panel", "data-inbox-panel": "true", children: [
-    onBack ? jsx(Button, { variant: "quiet", small: true, onClick: onBack, children: "Back" }) : null,
+    onBack ? jsx(Button, { variant: "quiet", small: true, onClick: onBack, children: "\u041D\u0430\u0437\u0430\u0434" }) : null,
     jsx("h2", { children: copy.title }),
     jsx("p", { children: copy.description }),
     jsx(Button, { variant: "primary", onClick: () => onOpenProject?.(copy.deeplink), children: `Open ${copy.project || "project"}` })
@@ -23935,7 +23935,7 @@ function ReadyToConfirm({ rows, onDone }) {
     jsx("h3", { children: `Ready to confirm \xB7 ${number(rows.length)}` }),
     jsx("ul", { children: rows.map((row) => jsxs("li", { children: [
       jsxs("span", { children: [row.title, jsx("small", { children: ` \xB7 ${row.project}` })] }),
-      jsx(Button, { small: true, variant: "primary", action: "inbox-confirm-delivered", disabled: busy === row.ref, onClick: () => confirm(row), children: busy === row.ref ? "Confirming\u2026" : "Confirm as delivered" })
+      jsx(Button, { small: true, variant: "primary", action: "inbox-confirm-delivered", disabled: busy === row.ref, onClick: () => confirm(row), children: busy === row.ref ? "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u2026" : "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443" })
     ] }, `${row.project}/${row.ref}`)) })
   ] });
 }
@@ -23991,21 +23991,21 @@ function InboxView({ view, onRefresh, focusRef = null, onOpenProject }) {
   };
   if (items.length === 0) {
     return jsxs("div", { "data-inbox-screen": "true", children: [
-      jsx(PageHead, { title: "Approval Inbox", description: "Every pending human decision across every project, with enough context to decide here.", onRefresh }),
-      jsx(EmptyState, { title: "No approvals waiting", description: "New owner decisions will appear here with their project, evidence context and risk.", icon: "check" })
+      jsx(PageHead, { title: "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F", description: "\u0412\u0441\u0435 \u043E\u0436\u0438\u0434\u0430\u044E\u0449\u0438\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430 \u043F\u043E \u0432\u0441\u0435\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C \u2014 \u0441 \u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u044B\u043C \u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u043E\u043C, \u0447\u0442\u043E\u0431\u044B \u0440\u0435\u0448\u0438\u0442\u044C \u0437\u0434\u0435\u0441\u044C.", onRefresh }),
+      jsx(EmptyState, { title: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0439 \u043D\u0435 \u043E\u0436\u0438\u0434\u0430\u0435\u0442\u0441\u044F", description: "\u041D\u043E\u0432\u044B\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F \u0432\u043B\u0430\u0434\u0435\u043B\u044C\u0446\u0430 \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C \u0432\u043C\u0435\u0441\u0442\u0435 \u0441 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u043C, \u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u043E\u043C \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432 \u0438 \u0440\u0438\u0441\u043A\u043E\u043C.", icon: "check" })
     ] });
   }
   return jsxs("div", { className: "dockyard-inbox", "data-inbox-screen": "true", children: [
     jsx(PageHead, {
-      title: "Approval Inbox",
-      description: "Review one decision at a time. Attention rows are project warnings, not decisions.",
+      title: "\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F",
+      description: "\u0420\u0430\u0441\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u0439\u0442\u0435 \u043F\u043E \u043E\u0434\u043D\u043E\u043C\u0443 \u0440\u0435\u0448\u0435\u043D\u0438\u044E. \u0421\u0442\u0440\u043E\u043A\u0438 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F \u2014 \u043F\u0440\u0435\u0434\u0443\u043F\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430, \u0430 \u043D\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F.",
       status: `${number(items.length)} ${plural2(items.length, "item")} waiting`,
       onRefresh
     }),
     jsx("div", {
       className: "dockyard-inbox-tabs",
       role: "tablist",
-      "aria-label": "Approval age filters",
+      "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440\u044B \u043F\u043E \u0432\u043E\u0437\u0440\u0430\u0441\u0442\u0443 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0439",
       children: TAB_KEYS.map((key) => jsxs("button", {
         type: "button",
         role: "tab",
@@ -24021,8 +24021,8 @@ function InboxView({ view, onRefresh, focusRef = null, onOpenProject }) {
     }),
     jsxs("section", { className: "dockyard-inbox-layout", children: [
       jsx(ReadyToConfirm, { rows: view.readyToConfirm ?? [], onDone: onRefresh }),
-      narrow && selected ? null : jsx("div", { className: "dockyard-inbox-list", "aria-label": "Pending approvals and project attention", children: visible.length ? visible.map((item) => jsx(InboxRow, { item, selected: item.ref === selectedRef, onSelect: selectRow, onOpenProject }, item.ref)) : jsx("p", { className: "dockyard-inbox-empty", children: `No ${TAB_LABELS[tab].toLowerCase()} items.` }) }),
-      selected ? isAttention(selected) ? jsx(AttentionDetail, { item: selected, onBack: narrow ? closePanel : null, onOpenProject }) : jsx(ApprovalDetail, { item: selected, onResolved: resolved, onBack: narrow ? closePanel : null }) : narrow ? null : jsx("p", { className: "dockyard-inbox-empty", children: "Select a row to review its full decision context." })
+      narrow && selected ? null : jsx("div", { className: "dockyard-inbox-list", "aria-label": "\u041E\u0436\u0438\u0434\u0430\u044E\u0449\u0438\u0435 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F \u0438 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u043F\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C", children: visible.length ? visible.map((item) => jsx(InboxRow, { item, selected: item.ref === selectedRef, onSelect: selectRow, onOpenProject }, item.ref)) : jsx("p", { className: "dockyard-inbox-empty", children: `No ${TAB_LABELS[tab].toLowerCase()} items.` }) }),
+      selected ? isAttention(selected) ? jsx(AttentionDetail, { item: selected, onBack: narrow ? closePanel : null, onOpenProject }) : jsx(ApprovalDetail, { item: selected, onResolved: resolved, onBack: narrow ? closePanel : null }) : narrow ? null : jsx("p", { className: "dockyard-inbox-empty", children: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0442\u0440\u043E\u043A\u0443, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043E\u043B\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442 \u0440\u0435\u0448\u0435\u043D\u0438\u044F." })
     ] })
   ] });
 }
@@ -24102,7 +24102,7 @@ function WorkflowLibraryView({ projectId, projectLabel = null, highlight = null,
     try {
       await api(path, { method: "POST" });
       await load();
-      emitToast("success", "Workflow library updated.");
+      emitToast("success", "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0430.");
     } catch (failure) {
       setError(String(failure?.message ?? failure));
     } finally {
@@ -24116,7 +24116,7 @@ function WorkflowLibraryView({ projectId, projectLabel = null, highlight = null,
       const params = owner ? `?owner_project_id=${encodeURIComponent(owner)}` : "";
       await api(`/workflow-library/${rowScope}/${encodeURIComponent(rowName)}${params}`, { method: "DELETE" });
       await load();
-      emitToast("success", "Workflow library updated.");
+      emitToast("success", "\u0411\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0430.");
     } catch (failure) {
       setError(String(failure?.message ?? failure));
     } finally {
@@ -24155,41 +24155,41 @@ function WorkflowLibraryView({ projectId, projectLabel = null, highlight = null,
     }
   };
   return jsxs("section", { "data-workflow-library-screen": true, children: [
-    jsx(PageHead, { title: "Workflows", description: "Every workflow available to project teams. Global workflows are shared by all projects; dedicated ones belong to a single project." }),
+    jsx(PageHead, { title: "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u044B", description: "Every workflow available to project teams. Global workflows are shared by all projects; dedicated ones belong to a single project." }),
     error ? jsx("p", { className: "dockyard-inline-error", role: "alert", "data-library-error": true, children: error }) : null,
     jsxs("div", { className: "dockyard-wf-library-toolbar", children: [
-      jsxs("div", { className: "dockyard-wf-library-scope", role: "group", "aria-label": "Scope filter", children: [
-        jsx(Button, { small: true, action: "library-scope-all", variant: scope === "all" ? "primary" : "", onClick: () => setScope("all"), children: "All" }),
+      jsxs("div", { className: "dockyard-wf-library-scope", role: "group", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0445\u0432\u0430\u0442\u0430", children: [
+        jsx(Button, { small: true, action: "library-scope-all", variant: scope === "all" ? "primary" : "", onClick: () => setScope("all"), children: "\u0412\u0441\u0435" }),
         jsx(Button, { small: true, action: "library-scope-global", variant: scope === "global" ? "primary" : "", onClick: () => setScope("global"), children: "Global" }),
-        jsx(Button, { small: true, action: "library-scope-project", variant: scope === "project" ? "primary" : "", onClick: () => setScope("project"), children: "Project" })
+        jsx(Button, { small: true, action: "library-scope-project", variant: scope === "project" ? "primary" : "", onClick: () => setScope("project"), children: "\u041F\u0440\u043E\u0435\u043A\u0442" })
       ] }),
-      jsx("input", { "data-library-search": true, "aria-label": "Search workflows", placeholder: "Search workflows", value: search, onChange: (event) => setSearch(event.target.value) }),
-      jsx(Button, { action: "library-create", variant: "primary", disabled: busy || Boolean(dialog), onClick: openNew, children: "New workflow" })
+      jsx("input", { "data-library-search": true, "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432", placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432", value: search, onChange: (event) => setSearch(event.target.value) }),
+      jsx(Button, { action: "library-create", variant: "primary", disabled: busy || Boolean(dialog), onClick: openNew, children: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0446\u0435\u0441\u0441" })
     ] }),
     dialog ? jsx(NewWorkflowDialog, { project: projectId ? { id: projectId, name: projectLabel ?? projectId } : null, taken: dialog.taken, templates: dialog.templates, members: dialog.members, onCreate: createNew, onClose: () => setDialog(null) }) : null,
-    rows === null && !error ? jsx(LoadingState, {}) : rows === null && error ? jsx(ErrorState, { error, onRetry: load }) : filtered.length === 0 ? jsx(EmptyState, { title: "No workflows yet", description: "Create a workflow and project teams can adopt it for autonomous work.", icon: "project" }) : jsxs("div", { className: "dockyard-wf-library-grid", "data-library-rows": true, children: filtered.map((row) => {
+    rows === null && !error ? jsx(LoadingState, {}) : rows === null && error ? jsx(ErrorState, { error, onRetry: load }) : filtered.length === 0 ? jsx(EmptyState, { title: "\u041F\u0440\u043E\u0446\u0435\u0441\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", description: "\u0421\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u043F\u0440\u043E\u0446\u0435\u0441\u0441 \u2014 \u0438 \u043A\u043E\u043C\u0430\u043D\u0434\u044B \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432 \u0441\u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u0438\u043D\u044F\u0442\u044C \u0435\u0433\u043E \u0434\u043B\u044F \u0430\u0432\u0442\u043E\u043D\u043E\u043C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B.", icon: "project" }) : jsxs("div", { className: "dockyard-wf-library-grid", "data-library-rows": true, children: filtered.map((row) => {
       const made = row.scope === "global" && row.name === justMade;
       return jsxs("article", { className: `dockyard-feature-card${made ? " dy-wf-just-made" : ""}`, "data-library-row": row.name, "data-library-scope": row.scope, "data-library-just-created": made ? "true" : void 0, children: [
         jsxs("header", { children: [
           jsx("h3", { children: row.name }),
-          made ? jsx(StatusTag, { tone: "success", label: "Just made" }) : null,
-          jsx(StatusTag, { tone: row.scope === "global" ? "info" : "neutral", label: row.scope === "global" ? "Global" : "Project" })
+          made ? jsx(StatusTag, { tone: "success", label: "\u0422\u043E\u043B\u044C\u043A\u043E \u0447\u0442\u043E" }) : null,
+          jsx(StatusTag, { tone: row.scope === "global" ? "info" : "neutral", label: row.scope === "global" ? "Global" : "\u041F\u0440\u043E\u0435\u043A\u0442" })
         ] }),
         jsx("p", { className: "dockyard-meta", children: row.owner_project_id ? `Dedicated to ${row.owner_project_id} \xB7 v${row.version}` : `Available to every project \xB7 v${row.version}` }),
         jsx("p", { className: "dockyard-meta", children: `${number(row.definition?.nodes?.length ?? 0)} nodes` }),
-        row.archived_at ? jsx(Button, { small: true, action: "library-restore", disabled: busy, onClick: () => act(`/workflow-library/${row.scope}/${encodeURIComponent(row.name)}/restore${row.owner_project_id ? `?owner_project_id=${encodeURIComponent(row.owner_project_id)}` : ""}`), children: "Restore" }) : jsxs("div", { className: "dockyard-form-actions", children: [
-          jsx(Button, { small: true, action: "library-open", disabled: busy, onClick: () => onOpenBuilder?.(row), children: "Open builder" }),
-          jsx(Button, { small: true, action: "library-archive", disabled: busy, onClick: () => act(`/workflow-library/${row.scope}/${encodeURIComponent(row.name)}/archive${row.owner_project_id ? `?owner_project_id=${encodeURIComponent(row.owner_project_id)}` : ""}`), children: "Archive" }),
-          jsx(Button, { small: true, action: "library-delete", variant: "danger", disabled: busy, onClick: () => remove(row.scope, row.name, row.owner_project_id), children: "Delete" })
+        row.archived_at ? jsx(Button, { small: true, action: "library-restore", disabled: busy, onClick: () => act(`/workflow-library/${row.scope}/${encodeURIComponent(row.name)}/restore${row.owner_project_id ? `?owner_project_id=${encodeURIComponent(row.owner_project_id)}` : ""}`), children: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" }) : jsxs("div", { className: "dockyard-form-actions", children: [
+          jsx(Button, { small: true, action: "library-open", disabled: busy, onClick: () => onOpenBuilder?.(row), children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440" }),
+          jsx(Button, { small: true, action: "library-archive", disabled: busy, onClick: () => act(`/workflow-library/${row.scope}/${encodeURIComponent(row.name)}/archive${row.owner_project_id ? `?owner_project_id=${encodeURIComponent(row.owner_project_id)}` : ""}`), children: "\u0412 \u0430\u0440\u0445\u0438\u0432" }),
+          jsx(Button, { small: true, action: "library-delete", variant: "danger", disabled: busy, onClick: () => remove(row.scope, row.name, row.owner_project_id), children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C" })
         ] }),
-        !projectId || row.scope === "project" && row.owner_project_id !== projectId ? jsx("p", { className: "dockyard-meta", "data-wf-enablement-na": `${row.scope}:${row.name}`, children: projectId ? `Only ${row.owner_project_id} can run this workflow.` : "Select a project to turn workflows on or off." }) : jsxs("div", { className: "dockyard-wf-enablement", children: [
+        !projectId || row.scope === "project" && row.owner_project_id !== projectId ? jsx("p", { className: "dockyard-meta", "data-wf-enablement-na": `${row.scope}:${row.name}`, children: projectId ? `Only ${row.owner_project_id} can run this workflow.` : "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442, \u0447\u0442\u043E\u0431\u044B \u0432\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0438\u043B\u0438 \u043E\u0442\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u044B." }) : jsxs("div", { className: "dockyard-wf-enablement", children: [
           jsxs("label", { className: "dockyard-switch", children: [
             jsx("input", { type: "checkbox", role: "switch", "data-wf-enablement": `${row.scope}:${row.name}`, "aria-label": `Turn ${row.name} on for ${projectId}`, checked: Boolean(enablement[`${row.scope}:${row.name}`] ?? row.scope === "project"), "aria-checked": String(Boolean(enablement[`${row.scope}:${row.name}`] ?? row.scope === "project")), disabled: busy, onChange: () => toggle(row.scope, row.name) }),
             jsx("span", { className: "dockyard-switch-track", "aria-hidden": true }),
             jsx("span", { className: "dockyard-switch-thumb", "aria-hidden": true })
           ] }),
           jsx("span", { className: "dockyard-wf-enablement-label", children: row.scope === "global" ? `On for ${projectId} (off by default)` : `On for ${projectId}` }),
-          jsx(Button, { small: true, action: "library-run", data: { "data-wf-run-start": `${row.scope}:${row.name}` }, disabled: busy, onClick: () => start(row.scope, row.name), children: "Start run" })
+          jsx(Button, { small: true, action: "library-run", data: { "data-wf-run-start": `${row.scope}:${row.name}` }, disabled: busy, onClick: () => start(row.scope, row.name), children: "\u0417\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u043F\u0440\u043E\u0433\u043E\u043D" })
         ] }),
         refusals[`${row.scope}:${row.name}`] ? jsx("p", { className: "dockyard-inline-error", role: "alert", "data-wf-run-refused": `${row.scope}:${row.name}`, children: refusals[`${row.scope}:${row.name}`] }) : null
       ] }, `${row.scope}:${row.name}:${row.owner_project_id ?? ""}`);
@@ -24239,26 +24239,26 @@ var NOTIFICATIONS_CSS = `
 // hermes_dockyard_plugin/desktop/src/views/notifications.js
 var SEVERITIES2 = ["info", "low", "medium", "high", "critical"];
 var KIND_LABELS = {
-  approval_required: "Approvals",
-  health_change: "Health",
-  alert: "Alerts",
-  unassigned_work: "Unassigned"
+  approval_required: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F",
+  health_change: "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435",
+  alert: "\u041E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u044F",
+  unassigned_work: "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D"
 };
-var STATE_LABELS = { new: "New", seen: "Seen", resolved: "Resolved" };
+var STATE_LABELS = { new: "\u041D\u043E\u0432\u043E\u0435", seen: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u043D\u043E", resolved: "\u0420\u0435\u0448\u0435\u043D\u043E" };
 var PAGE_SIZE = 50;
 var kindLabel2 = (kind) => KIND_LABELS[kind] ?? "Other";
 function dayBucket(createdAt) {
   const value = String(createdAt || "");
   const stamp2 = Date.parse(value);
-  if (!Number.isFinite(stamp2)) return "Earlier";
+  if (!Number.isFinite(stamp2)) return "\u0420\u0430\u043D\u0435\u0435";
   const day2 = new Date(stamp2);
   day2.setHours(0, 0, 0, 0);
   const today = /* @__PURE__ */ new Date();
   today.setHours(0, 0, 0, 0);
   const diff = Math.round((today.getTime() - day2.getTime()) / 864e5);
-  if (diff <= 0) return "Today";
-  if (diff === 1) return "Yesterday";
-  return "Earlier";
+  if (diff <= 0) return "\u0421\u0435\u0433\u043E\u0434\u043D\u044F";
+  if (diff === 1) return "\u0412\u0447\u0435\u0440\u0430";
+  return "\u0420\u0430\u043D\u0435\u0435";
 }
 function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowledged: onChanged, onOpen, onOpenSettings }) {
   const [stateFilter, setStateFilter] = useState("all");
@@ -24285,7 +24285,7 @@ function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowled
       if (typeFilter !== "other" && note.kind !== typeFilter) return false;
     }
     if (severityFilter !== "all" && String(note.severity || "info").toLowerCase() !== severityFilter) return false;
-    if (projectFilter !== "all" && (note.project || "Fleet") !== projectFilter) return false;
+    if (projectFilter !== "all" && (note.project || "\u0424\u043B\u043E\u0442") !== projectFilter) return false;
     return true;
   });
   filtered.sort((left, right) => String(right.created_at || "").localeCompare(String(left.created_at || "")));
@@ -24356,25 +24356,25 @@ function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowled
   return jsxs(Fragment, { children: [
     jsx("style", { "data-dy-notifications": "true", children: NOTIFICATIONS_CSS }),
     jsx(PageHead, {
-      title: "Notifications",
-      description: "Fleet events: approvals, health and alerts, with their history.",
+      title: "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F",
+      description: "\u0421\u043E\u0431\u044B\u0442\u0438\u044F \u0444\u043B\u043E\u0442\u0430: \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F, \u0437\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u0438 \u043E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u044F \u2014 \u0441 \u0438\u0445 \u0438\u0441\u0442\u043E\u0440\u0438\u0435\u0439.",
       status: newCount > 0 ? `${number(newCount)} new` : null,
       onRefresh
     }),
     jsxs("div", { className: "dy-notif-toolbar", children: [
-      jsxs("div", { className: "dy-notif-filters", role: "group", "aria-label": "Notification filters", children: [
-        jsx("label", { className: "dy-notif-filter", children: jsx("select", { "aria-label": "Filter by state", value: stateFilter, onChange: (e) => {
+      jsxs("div", { className: "dy-notif-filters", role: "group", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440\u044B \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439", children: [
+        jsx("label", { className: "dy-notif-filter", children: jsx("select", { "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u044E", value: stateFilter, onChange: (e) => {
           setStateFilter(e.target.value);
           setVisible(PAGE_SIZE);
-        }, children: ["all", "new", "seen", "resolved"].map((value) => jsx("option", { value, children: value === "all" ? "All states" : STATE_LABELS[value] }, value)) }) }),
-        jsx("label", { className: "dy-notif-filter", children: jsx("select", { "aria-label": "Filter by type", value: typeFilter, onChange: (e) => {
+        }, children: ["all", "new", "seen", "resolved"].map((value) => jsx("option", { value, children: value === "all" ? "\u0412\u0441\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u044F" : STATE_LABELS[value] }, value)) }) }),
+        jsx("label", { className: "dy-notif-filter", children: jsx("select", { "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0442\u0438\u043F\u0443", value: typeFilter, onChange: (e) => {
           setTypeFilter(e.target.value);
           setVisible(PAGE_SIZE);
-        }, children: [["all", "All types"], ["approval_required", "Approvals"], ["health_change", "Health"], ["alert", "Alerts"], ["unassigned_work", "Unassigned"], ["other", "Other"]].map(([value, label]) => jsx("option", { value, children: label }, value)) }) }),
-        jsx("label", { className: "dy-notif-filter", children: jsx("select", { "aria-label": "Filter by severity", value: severityFilter, onChange: (e) => {
+        }, children: [["all", "\u0412\u0441\u0435 \u0442\u0438\u043F\u044B"], ["approval_required", "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F"], ["health_change", "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435"], ["alert", "\u041E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u044F"], ["unassigned_work", "\u041D\u0435 \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D"], ["other", "Other"]].map(([value, label]) => jsx("option", { value, children: label }, value)) }) }),
+        jsx("label", { className: "dy-notif-filter", children: jsx("select", { "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440 \u043F\u043E \u0432\u0430\u0436\u043D\u043E\u0441\u0442\u0438", value: severityFilter, onChange: (e) => {
           setSeverityFilter(e.target.value);
           setVisible(PAGE_SIZE);
-        }, children: [["all", "All severities"], ...SEVERITIES2.map((s) => [s, s])].map(([value, label]) => jsx("option", { value, children: label }, value)) }) })
+        }, children: [["all", "\u0412\u0441\u0435 \u0432\u0430\u0436\u043D\u043E\u0441\u0442\u0438"], ...SEVERITIES2.map((s) => [s, s])].map(([value, label]) => jsx("option", { value, children: label }, value)) }) })
       ] }),
       jsx("span", { className: "dy-notif-spacer" }),
       jsx(Button, {
@@ -24382,10 +24382,10 @@ function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowled
         small: true,
         disabled: busyId === "all" || filtered.length === 0,
         onClick: markAllSeen,
-        children: busyId === "all" ? "Marking\u2026" : "Mark all as seen"
+        children: busyId === "all" ? "Marking\u2026" : "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u043A\u0430\u043A \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u0435"
       })
     ] }),
-    filterEmpty ? jsx(EmptyState, { title: "Nothing matches these filters", description: "Loosen or reset the filters to see more of the history.", icon: "bell" }) : all.length === 0 ? jsx(EmptyState, { title: "No notifications yet", description: "Fleet events will appear here when work changes state or needs attention.", icon: "bell" }) : jsxs("div", { className: "dy-notif-layout", "data-panel": selected ? "open" : "none", children: [
+    filterEmpty ? jsx(EmptyState, { title: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u043C", description: "\u041E\u0441\u043B\u0430\u0431\u044C\u0442\u0435 \u0438\u043B\u0438 \u0441\u0431\u0440\u043E\u0441\u044C\u0442\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0431\u043E\u043B\u044C\u0448\u0435 \u0438\u0441\u0442\u043E\u0440\u0438\u0438.", icon: "bell" }) : all.length === 0 ? jsx(EmptyState, { title: "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", description: "\u0421\u043E\u0431\u044B\u0442\u0438\u044F \u0444\u043B\u043E\u0442\u0430 \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C, \u043A\u043E\u0433\u0434\u0430 \u0440\u0430\u0431\u043E\u0442\u0430 \u043C\u0435\u043D\u044F\u0435\u0442 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u0438\u043B\u0438 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F.", icon: "bell" }) : jsxs("div", { className: "dy-notif-layout", "data-panel": selected ? "open" : "none", children: [
       jsxs("div", { children: [
         groups.map((group) => jsxs("section", { className: "dockyard-feed-group", children: [
           jsxs("div", { className: "dockyard-feed-head", children: [
@@ -24404,7 +24404,7 @@ function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowled
             onOpen
           }, String(note.id)))
         ] }, group.title)),
-        filtered.length > visible ? jsx(Button, { action: "load-more", className: "dy-notif-more", onClick: () => setVisible((v) => v + PAGE_SIZE), children: "Load more" }) : null
+        filtered.length > visible ? jsx(Button, { action: "load-more", className: "dy-notif-more", onClick: () => setVisible((v) => v + PAGE_SIZE), children: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451" }) : null
       ] }),
       selected ? jsx(NotificationDetail, {
         note: selected,
@@ -24419,8 +24419,8 @@ function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowled
       }) : null
     ] }),
     jsxs("p", { className: "dy-notif-settings-link", "data-notification-settings-link": true, children: [
-      jsx("span", { children: "Notification settings are in App settings." }),
-      jsx(Button, { small: true, action: "open-app-settings", onClick: onOpenSettings, children: "Open App settings" })
+      jsx("span", { children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439 \u2014 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F." }),
+      jsx(Button, { small: true, action: "open-app-settings", onClick: onOpenSettings, children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F" })
     ] }),
     actionError ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: `Action failed: ${actionError}` }) : null
   ] });
@@ -24444,7 +24444,7 @@ function NotificationRow({ note, busy, selected, onSelect, onSeen, onOpen }) {
           jsx("span", { className: `dockyard-notification-marker ${tone}`, "aria-hidden": "true", children: jsx(Icon, { name: tone === "danger" || tone === "warning" ? "alert" : "bell" }) }),
           jsxs("span", { children: [
             jsxs("span", { className: "dy-notif-row-titleline", children: [
-              jsx("strong", { children: note.title ?? "Fleet notification" }),
+              jsx("strong", { children: note.title ?? "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 \u0444\u043B\u043E\u0442\u0430" }),
               jsx(StatusTag, { tone: state === "new" ? "info" : "neutral", label: STATE_LABELS[state] ?? state })
             ] }),
             jsx("p", { children: note.body ?? "" }),
@@ -24453,8 +24453,8 @@ function NotificationRow({ note, busy, selected, onSelect, onSeen, onOpen }) {
         ] })
       }),
       jsxs("div", { className: "dockyard-notification-action", children: [
-        typeof onOpen === "function" && note.deep_link ? jsx(Button, { action: "open", small: true, onClick: () => onOpen(note.deep_link), children: "Open" }) : null,
-        state === "new" ? jsx(Button, { action: "mark-seen", small: true, disabled: busy, onClick: onSeen, children: busy ? "Working\u2026" : "Mark seen" }) : null
+        typeof onOpen === "function" && note.deep_link ? jsx(Button, { action: "open", small: true, onClick: () => onOpen(note.deep_link), children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C" }) : null,
+        state === "new" ? jsx(Button, { action: "mark-seen", small: true, disabled: busy, onClick: onSeen, children: busy ? "Working\u2026" : "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u043C" }) : null
       ] })
     ]
   });
@@ -24463,8 +24463,8 @@ function NotificationDetail({ note, busy, resolveOpen, onResolveToggle, resolveN
   const state = note.state ?? (note.acked ? "seen" : "new");
   const resolvedBy = note.resolved_by;
   const seenBy = note.acked_by;
-  return jsxs("aside", { className: "dy-notif-detail", "data-notification-detail": String(note.id), "aria-label": "Notification detail", children: [
-    jsxs("h3", { children: [note.title ?? "Fleet notification", " ", jsx(StatusTag, { tone: state === "new" ? "info" : "neutral", label: STATE_LABELS[state] ?? state })] }),
+  return jsxs("aside", { className: "dy-notif-detail", "data-notification-detail": String(note.id), "aria-label": "\u0414\u0435\u0442\u0430\u043B\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F", children: [
+    jsxs("h3", { children: [note.title ?? "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 \u0444\u043B\u043E\u0442\u0430", " ", jsx(StatusTag, { tone: state === "new" ? "info" : "neutral", label: STATE_LABELS[state] ?? state })] }),
     jsx("p", { children: note.body ?? "" }),
     jsx("span", { className: "dockyard-meta", children: `Project: ${note.project || "Fleet"}` }),
     jsx("span", { className: "dockyard-meta", children: `Type: ${kindLabel2(note.kind)} \xB7 Severity: ${note.severity}` }),
@@ -24476,21 +24476,21 @@ function NotificationDetail({ note, busy, resolveOpen, onResolveToggle, resolveN
       note.resolution_note ? ` \u2014 \u201C${note.resolution_note}\u201D` : ""
     ] }) : null,
     jsxs("div", { className: "dy-notif-detail-actions", children: [
-      typeof onOpen === "function" && note.deep_link ? jsx(Button, { action: "detail-open", small: true, onClick: () => onOpen(note.deep_link), children: "Open item" }) : null,
-      state === "new" ? jsx(Button, { action: "detail-seen", small: true, disabled: busy, onClick: onSeen, children: busy ? "Working\u2026" : "Mark seen" }) : null,
+      typeof onOpen === "function" && note.deep_link ? jsx(Button, { action: "detail-open", small: true, onClick: () => onOpen(note.deep_link), children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442" }) : null,
+      state === "new" ? jsx(Button, { action: "detail-seen", small: true, disabled: busy, onClick: onSeen, children: busy ? "Working\u2026" : "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u043C" }) : null,
       state !== "resolved" ? jsx(Button, { action: "detail-resolve", small: true, disabled: busy, onClick: onResolveToggle, "aria-expanded": resolveOpen ? "true" : "false", children: "Resolve" }) : null,
-      note.kind === "approval_required" && note.ref ? jsx(Button, { action: "detail-approval", small: true, onClick: () => onOpen?.(note.project ? `s4:project/${note.project}` : "s4:approval-inbox"), children: "Review in Approval Inbox" }) : null
+      note.kind === "approval_required" && note.ref ? jsx(Button, { action: "detail-approval", small: true, onClick: () => onOpen?.(note.project ? `s4:project/${note.project}` : "s4:approval-inbox"), children: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u043E \xAB\u0412\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F\u0445\xBB" }) : null
     ] }),
     resolveOpen && state !== "resolved" ? jsxs(Fragment, { children: [
       jsx("textarea", {
         className: "dy-notif-resolve-note",
-        "aria-label": "Resolution note",
-        placeholder: "Resolution note (optional)",
+        "aria-label": "\u0417\u0430\u043C\u0435\u0442\u043A\u0430 \u043E \u0440\u0435\u0448\u0435\u043D\u0438\u0438",
+        placeholder: "\u0417\u0430\u043C\u0435\u0442\u043A\u0430 \u043E \u0440\u0435\u0448\u0435\u043D\u0438\u0438 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
         value: resolveNote,
         maxLength: 2e3,
         onChange: (e) => onResolveNote(e.target.value)
       }),
-      jsx(Button, { action: "detail-resolve-confirm", variant: "primary", small: true, disabled: busy, onClick: onResolve, children: busy ? "Resolving\u2026" : "Confirm resolve" })
+      jsx(Button, { action: "detail-resolve-confirm", variant: "primary", small: true, disabled: busy, onClick: onResolve, children: busy ? "Resolving\u2026" : "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0440\u0435\u0448\u0435\u043D\u0438\u0435" })
     ] }) : null
   ] });
 }
@@ -24503,41 +24503,41 @@ function NotificationSettings({ settings, busy, error, onSave }) {
   const quiet = value.quiet_hours ?? {};
   const bypass = value.bypass_quiet_hours ?? ["approval_required"];
   const approvalsBypass = bypass.includes("approval_required");
-  return jsxs("aside", { className: "dy-notif-settings", "data-notification-settings": "true", "aria-label": "Notification settings", children: [
-    jsx("h3", { children: "Notification settings" }),
+  return jsxs("aside", { className: "dy-notif-settings", "data-notification-settings": "true", "aria-label": "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439", children: [
+    jsx("h3", { children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0439" }),
     jsxs("div", { className: "dy-notif-setting", children: [
-      jsx("label", { htmlFor: "dy-notif-min-severity", children: "Minimum severity" }),
+      jsx("label", { htmlFor: "dy-notif-min-severity", children: "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0432\u0430\u0436\u043D\u043E\u0441\u0442\u044C" }),
       jsx("select", { id: "dy-notif-min-severity", value: channels.in_app?.min_severity ?? "low", disabled: busy, onChange: (e) => onSave({ channels: { ...channels, in_app: { ...channels.in_app ?? {}, min_severity: e.target.value } } }), children: SEVERITIES2.map((s) => jsx("option", { value: s, children: s }, s)) })
     ] }),
     jsxs("div", { className: "dy-notif-setting", children: [
-      jsx("label", { htmlFor: "dy-notif-popups-enabled", children: "Pop-ups" }),
-      jsx("select", { id: "dy-notif-popups-enabled", value: desktop.enabled === false ? "off" : "on", disabled: busy, onChange: (e) => onSave({ channels: { ...channels, desktop: { ...desktop, enabled: e.target.value === "on" } } }), children: [["on", "On"], ["off", "Off"]].map(([v, label]) => jsx("option", { value: v, children: label }, v)) })
+      jsx("label", { htmlFor: "dy-notif-popups-enabled", children: "\u0412\u0441\u043F\u043B\u044B\u0432\u0430\u044E\u0449\u0438\u0435 \u043E\u043A\u043D\u0430" }),
+      jsx("select", { id: "dy-notif-popups-enabled", value: desktop.enabled === false ? "off" : "on", disabled: busy, onChange: (e) => onSave({ channels: { ...channels, desktop: { ...desktop, enabled: e.target.value === "on" } } }), children: [["on", "\u0412\u043A\u043B"], ["off", "\u0412\u044B\u043A\u043B"]].map(([v, label]) => jsx("option", { value: v, children: label }, v)) })
     ] }),
     jsxs("div", { className: "dy-notif-setting", children: [
-      jsx("label", { htmlFor: "dy-notif-popups-severity", children: "Pop-up minimum severity" }),
+      jsx("label", { htmlFor: "dy-notif-popups-severity", children: "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0432\u0430\u0436\u043D\u043E\u0441\u0442\u044C \u0434\u043B\u044F \u0432\u0441\u043F\u043B\u044B\u0432\u0430\u044E\u0449\u0438\u0445" }),
       jsx("select", { id: "dy-notif-popups-severity", value: desktop.min_severity ?? "high", disabled: busy, onChange: (e) => onSave({ channels: { ...channels, desktop: { ...desktop, min_severity: e.target.value } } }), children: SEVERITIES2.map((s) => jsx("option", { value: s, children: s }, s)) })
     ] }),
     jsxs("div", { className: "dy-notif-setting", children: [
-      jsx("label", { htmlFor: "dy-notif-discord-enabled", children: "Discord alerts" }),
-      jsx("select", { id: "dy-notif-discord-enabled", value: discordOn ? "on" : "off", disabled: busy, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, enabled: e.target.value === "on" } } }), children: [["off", "Off"], ["on", "On"]].map(([v, label]) => jsx("option", { value: v, children: label }, v)) })
+      jsx("label", { htmlFor: "dy-notif-discord-enabled", children: "\u041E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u044F \u0432 Telegram" }),
+      jsx("select", { id: "dy-notif-discord-enabled", value: discordOn ? "on" : "off", disabled: busy, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, enabled: e.target.value === "on" } } }), children: [["off", "\u0412\u044B\u043A\u043B"], ["on", "\u0412\u043A\u043B"]].map(([v, label]) => jsx("option", { value: v, children: label }, v)) })
     ] }),
     jsxs("div", { className: "dy-notif-setting", children: [
-      jsx("label", { htmlFor: "dy-notif-discord-severity", children: "Discord minimum severity" }),
+      jsx("label", { htmlFor: "dy-notif-discord-severity", children: "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0432\u0430\u0436\u043D\u043E\u0441\u0442\u044C \u0434\u043B\u044F Telegram" }),
       jsx("select", { id: "dy-notif-discord-severity", value: discord.min_severity ?? "high", disabled: busy || !discordOn, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, min_severity: e.target.value } } }), children: SEVERITIES2.map((s) => jsx("option", { value: s, children: s }, s)) })
     ] }),
-    jsx("p", { className: "dy-notif-override-link", "data-discord-note": true, children: "Discord alerts are posted by a scheduled job on this computer once it is set up. Until then nothing is sent." }),
+    jsx("p", { className: "dy-notif-override-link", "data-discord-note": true, children: "\u041E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u044F \u0432 Telegram \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043F\u043B\u0430\u043D\u043E\u0432\u044B\u043C \u0437\u0430\u0434\u0430\u043D\u0438\u0435\u043C \u043D\u0430 \u044D\u0442\u043E\u043C \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u043F\u043E\u0441\u043B\u0435 \u0435\u0433\u043E \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438. \u0414\u043E \u044D\u0442\u043E\u0433\u043E \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F." }),
     jsxs("div", { className: "dy-notif-setting", children: [
-      jsx("label", { htmlFor: "dy-notif-quiet-start", children: "Quiet hours" }),
+      jsx("label", { htmlFor: "dy-notif-quiet-start", children: "\u0422\u0438\u0445\u0438\u0435 \u0447\u0430\u0441\u044B" }),
       jsx("input", { id: "dy-notif-quiet-start", type: "time", value: quiet.start ?? "", disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...quiet || {}, start: e.target.value, end: quiet.end ?? "" } }) }),
       jsx("span", { children: "\u2192" }),
-      jsx("input", { "aria-label": "Quiet hours end", type: "time", value: quiet.end ?? "", disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...quiet || {}, start: quiet.start ?? "", end: e.target.value } }) })
+      jsx("input", { "aria-label": "\u041A\u043E\u043D\u0435\u0446 \u0442\u0438\u0445\u0438\u0445 \u0447\u0430\u0441\u043E\u0432", type: "time", value: quiet.end ?? "", disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...quiet || {}, start: quiet.start ?? "", end: e.target.value } }) })
     ] }),
     jsxs("div", { className: "dy-notif-setting", children: [
       jsx("input", { id: "dy-notif-bypass", type: "checkbox", checked: approvalsBypass, disabled: busy, onChange: (e) => {
         const next = e.target.checked ? Array.from(/* @__PURE__ */ new Set([...bypass, "approval_required"])) : bypass.filter((k) => k !== "approval_required");
         onSave({ bypass_quiet_hours: next });
       } }),
-      jsx("label", { htmlFor: "dy-notif-bypass", children: "Approvals ignore quiet hours" })
+      jsx("label", { htmlFor: "dy-notif-bypass", children: "\u041E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u044F \u0438\u0433\u043D\u043E\u0440\u0438\u0440\u0443\u044E\u0442 \u0442\u0438\u0445\u0438\u0435 \u0447\u0430\u0441\u044B" })
     ] }),
     jsx("p", { className: "dy-notif-override-link", children: "Per-project overrides: pick a project, then Projects \u2192 Settings." }),
     error ? jsx("p", { className: "dockyard-inline-error", role: "alert", children: `Could not save: ${error}` }) : null
@@ -24591,7 +24591,7 @@ function AppearanceSettings({ appearance, onAppearance }) {
     if (id !== font) onAppearance?.({ font: id });
   };
   return jsxs(Fragment, { children: [
-    jsx("h3", { className: "dockyard-app-settings-sub", id: "dy-appearance-theme", children: "Theme" }),
+    jsx("h3", { className: "dockyard-app-settings-sub", id: "dy-appearance-theme", children: "\u0422\u0435\u043C\u0430" }),
     jsx("div", { className: "dy-theme-grid", role: "radiogroup", "aria-labelledby": "dy-appearance-theme", children: THEMES.map((option) => jsxs("button", {
       type: "button",
       role: "radio",
@@ -24605,12 +24605,12 @@ function AppearanceSettings({ appearance, onAppearance }) {
         jsx(ThemePreview, { theme: option }),
         jsxs("span", { className: "dy-theme-name", children: [
           jsx("strong", { children: option.name }),
-          jsx("span", { children: option.mode === "auto" ? "Light or dark" : option.art ? `${option.mode} \xB7 art` : option.mode })
+          jsx("span", { children: option.mode === "auto" ? "\u0421\u0432\u0435\u0442\u043B\u0430\u044F \u0438\u043B\u0438 \u0442\u0451\u043C\u043D\u0430\u044F" : option.art ? `${option.mode} \xB7 art` : option.mode })
         ] })
       ]
     }, option.id)) }),
-    jsx("p", { className: "dy-appearance-note", children: theme === "auto" ? "Match Hermes: light or dark, the same as Hermes Desktop, and it changes when Hermes does." : "The theme applies to the whole app straight away, for everyone using this Hermes." }),
-    jsx("h3", { className: "dockyard-app-settings-sub", id: "dy-appearance-font", children: "Typeface" }),
+    jsx("p", { className: "dy-appearance-note", children: theme === "auto" ? "\u041A\u0430\u043A \u0432 Hermes: \u0441\u0432\u0435\u0442\u043B\u0430\u044F \u0438\u043B\u0438 \u0442\u0451\u043C\u043D\u0430\u044F, \u043A\u0430\u043A \u0432 Hermes Desktop, \u0438 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0432\u043C\u0435\u0441\u0442\u0435 \u0441 \u043D\u0438\u043C." : "\u0422\u0435\u043C\u0430 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043A\u043E \u0432\u0441\u0435\u043C\u0443 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044E \u0441\u0440\u0430\u0437\u0443 \u2014 \u0434\u043B\u044F \u0432\u0441\u0435\u0445, \u043A\u0442\u043E \u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u044D\u0442\u0438\u043C Hermes." }),
+    jsx("h3", { className: "dockyard-app-settings-sub", id: "dy-appearance-font", children: "\u0428\u0440\u0438\u0444\u0442" }),
     jsx("div", { className: "dy-font-grid", role: "radiogroup", "aria-labelledby": "dy-appearance-font", children: FONTS.map((option) => jsxs("button", {
       type: "button",
       role: "radio",
@@ -24631,7 +24631,7 @@ var section2 = (key, title, description, body) => jsxs("section", { className: "
 ] }, key);
 function AppSettingsView({ view, selectedProject, appearance, onAppearance, onOpenProjectSettings, onForgetProject, onRefresh }) {
   const projects = view.projects ?? [];
-  const nameOf = (id) => id === ALL_PROJECTS ? "All projects" : projects.find((project) => project.id === id)?.name || id;
+  const nameOf = (id) => id === ALL_PROJECTS ? "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" : projects.find((project) => project.id === id)?.name || id;
   const [lastProject, setLastProject] = useState(view.lastProject ?? null);
   const [collapsed, setCollapsed] = useState(view.ui?.collapsed ?? []);
   const [policy, setPolicy] = useState(view.notificationPolicy ?? null);
@@ -24643,9 +24643,9 @@ function AppSettingsView({ view, selectedProject, appearance, onAppearance, onOp
       await api("/settings/last-project", { method: "PUT", body: { project_id: null }, quiet: true });
       setLastProject(null);
       onForgetProject?.();
-      emitToast("success", "The app will open on All projects.");
+      emitToast("success", "\u041F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0442\u044C\u0441\u044F \u043D\u0430 \xAB\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B\xBB.");
     } catch {
-      emitToast("danger", "That change was not saved. Try again.");
+      emitToast("danger", "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.");
     }
     setBusy(null);
   };
@@ -24657,7 +24657,7 @@ function AppSettingsView({ view, selectedProject, appearance, onAppearance, onOp
       await api("/settings/ui", { method: "PUT", body: { collapsed: next }, quiet: true });
     } catch {
       setCollapsed(before);
-      emitToast("danger", "That change was not saved. Try again.");
+      emitToast("danger", "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.");
     }
   };
   const saveNotifications = async (patch) => {
@@ -24676,53 +24676,53 @@ function AppSettingsView({ view, selectedProject, appearance, onAppearance, onOp
   };
   return jsxs("div", { className: "dockyard-app-settings", "data-app-settings": true, children: [
     jsx("style", { "data-dy-notifications": "true", children: NOTIFICATIONS_CSS }),
-    jsx(PageHead, { title: "App settings", description: "Settings for the whole app. Each project keeps its own settings in Projects > Settings.", onRefresh }),
+    jsx(PageHead, { title: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F", description: "Settings for the whole app. Each project keeps its own settings in Projects > Settings.", onRefresh }),
     selectedProject ? jsxs("p", { className: "dockyard-app-settings-project", "data-app-settings-project": selectedProject, children: [
       jsx("span", { children: `${nameOf(selectedProject)} has its own settings: mission, lead, members, autonomy and checks.` }),
-      jsx(Button, { small: true, action: "open-project-settings", onClick: onOpenProjectSettings, children: "Open project settings" })
+      jsx(Button, { small: true, action: "open-project-settings", onClick: onOpenProjectSettings, children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0430" })
     ] }) : null,
-    section2("opening", "When the app opens", null, lastProject ? jsxs(Fragment, { children: [
-      jsx("p", { "data-opening-project": lastProject, children: lastProject === ALL_PROJECTS ? "It opens on All projects, your last choice in the switcher." : `It opens on the last project you chose: ${nameOf(lastProject)}.` }),
-      jsx(Button, { small: true, action: "forget-last-project", disabled: busy === "opening", onClick: forgetProject, children: "Forget it" })
-    ] }) : jsx("p", { "data-opening-project": "", children: "It opens on All projects, until you choose in the switcher." })),
-    section2("dashboard", "Dashboard", null, jsxs("label", { className: "dockyard-app-settings-check", children: [
+    section2("opening", "\u041F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F", null, lastProject ? jsxs(Fragment, { children: [
+      jsx("p", { "data-opening-project": lastProject, children: lastProject === ALL_PROJECTS ? "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \xAB\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B\xBB \u043B\u0438\u0431\u043E \u043D\u0430 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u043C \u0432\u044B\u0431\u043E\u0440\u0435 \u0432 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435." : `It opens on the last project you chose: ${nameOf(lastProject)}.` }),
+      jsx(Button, { small: true, action: "forget-last-project", disabled: busy === "opening", onClick: forgetProject, children: "\u0417\u0430\u0431\u0443\u0434\u044C" })
+    ] }) : jsx("p", { "data-opening-project": "", children: "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \xAB\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B\xBB, \u043F\u043E\u043A\u0430 \u0432\u044B \u043D\u0435 \u0432\u044B\u0431\u0435\u0440\u0435\u0442\u0435 \u0432 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435." })),
+    section2("dashboard", "\u041F\u0430\u043D\u0435\u043B\u044C", null, jsxs("label", { className: "dockyard-app-settings-check", children: [
       jsx("input", { type: "checkbox", "data-app-setting-fold": "needs-you-now", checked: collapsed.includes("needs-you-now"), onChange: (event) => setFolded(event.target.checked) }),
       jsx("span", { children: 'Keep "Needs you now" folded' })
     ] })),
     section2(
       "notifications",
-      "Notifications for every project",
-      "A project can change these in its own settings.",
+      "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F \u043F\u043E \u0432\u0441\u0435\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C",
+      "\u041F\u0440\u043E\u0435\u043A\u0442 \u043C\u043E\u0436\u0435\u0442 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u044D\u0442\u043E \u0432 \u0441\u0432\u043E\u0438\u0445 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445.",
       jsx(NotificationSettings, { settings: policy, busy: busy === "notifications", error: policyError, onSave: saveNotifications })
     ),
     // Sahil 05/10 (demo feedback h): the September themes, backgrounds and fonts.
-    section2("appearance", "Appearance", "Colour theme and typeface for the whole app.", jsx(AppearanceSettings, { appearance, onAppearance }))
+    section2("appearance", "\u0412\u043D\u0435\u0448\u043D\u0438\u0439 \u0432\u0438\u0434", "\u0426\u0432\u0435\u0442\u043E\u0432\u0430\u044F \u0442\u0435\u043C\u0430 \u0438 \u0448\u0440\u0438\u0444\u0442 \u0434\u043B\u044F \u0432\u0441\u0435\u0433\u043E \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F.", jsx(AppearanceSettings, { appearance, onAppearance }))
   ] });
 }
 
 // hermes_dockyard_plugin/desktop/src/views/roadmap-dialogs.js
 var PLACE_KIND = {
   milestone: {
-    title: "Place a milestone under an initiative",
-    itemLabel: "Milestone",
+    title: "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u0435\u0445\u0443 \u043F\u043E\u0434 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u043E\u0439",
+    itemLabel: "\u0412\u0435\u0445\u0430",
     path: (projectId, itemId) => `/projects/${encodeURIComponent(projectId)}/milestones/${itemId}/initiative`,
     candidates: (project) => (project.initiatives ?? []).filter((row) => row.governance !== "rejected" && row.governance !== "cancelled").map((row) => ({ id: row.ref, label: row.title }))
   },
   objective: {
-    title: "Place an objective under a milestone",
-    itemLabel: "Objective",
+    title: "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443-\u0446\u0435\u043B\u044C \u043F\u043E\u0434 \u0432\u0435\u0445\u043E\u0439",
+    itemLabel: "\u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C",
     path: (projectId, itemId) => `/projects/${encodeURIComponent(projectId)}/objectives/${itemId}/milestone`,
     candidates: (project) => (project.milestones ?? []).map((row) => ({ id: String(row.id), label: row.name }))
   },
   goal: {
-    title: "Place a goal under an objective",
-    itemLabel: "Goal",
+    title: "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0446\u0435\u043B\u044C \u043F\u043E\u0434 \u0437\u0430\u0434\u0430\u0447\u0435\u0439-\u0446\u0435\u043B\u044C\u044E",
+    itemLabel: "\u0426\u0435\u043B\u044C",
     path: (projectId, itemId) => `/projects/${encodeURIComponent(projectId)}/goals/${encodeURIComponent(itemId)}/objective`,
     candidates: (project) => (project.objectives ?? []).map((row) => ({ id: String(row.id), label: row.name }))
   },
   task: {
-    title: "Place a task under a goal",
-    itemLabel: "Task",
+    title: "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443 \u043F\u043E\u0434 \u0446\u0435\u043B\u044C\u044E",
+    itemLabel: "\u0417\u0430\u0434\u0430\u0447\u0430",
     path: (projectId, itemId) => `/projects/${encodeURIComponent(projectId)}/tasks/${encodeURIComponent(itemId)}/goal`,
     candidates: (project) => (project.goals ?? []).map((row) => ({ id: row.id, label: row.title }))
   }
@@ -24771,7 +24771,7 @@ function PlaceDialog({ kind, itemId, projectId, projectLabel, onClose, onDone })
     candidates && candidates.length === 0 ? jsx("p", { children: `Nothing to place it under: this project has no candidates yet. Create one on the project screen first.` }) : null,
     candidates && candidates.length > 0 ? field(
       "dy-rm-place-choice",
-      spec.itemLabel === "Milestone" ? "Initiative" : spec.itemLabel === "Objective" ? "Milestone" : spec.itemLabel === "Goal" ? "Objective" : "Goal",
+      spec.itemLabel === "Milestone" ? "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430" : spec.itemLabel === "Objective" ? "\u0412\u0435\u0445\u0430" : spec.itemLabel === "Goal" ? "\u0417\u0430\u0434\u0430\u0447\u0430-\u0446\u0435\u043B\u044C" : "\u0426\u0435\u043B\u044C",
       parent,
       setParent,
       [
@@ -24783,7 +24783,7 @@ function PlaceDialog({ kind, itemId, projectId, projectLabel, onClose, onDone })
   ] });
   const confirm = jsxs("div", { className: "dy-rm-modal-body", "data-rm-place-confirm": true, children: [
     jsx("p", { className: "dy-rm-confirm", children: `Place the ${spec.itemLabel.toLowerCase()} \u201C${itemId}\u201D under \u201C${parentLabel}\u201D?` }),
-    jsx("p", { className: "dy-rm-confirm", children: "This records one placement and an audit entry under your name." }),
+    jsx("p", { className: "dy-rm-confirm", children: "\u042D\u0442\u043E \u0437\u0430\u043F\u0438\u0448\u0435\u0442 \u043E\u0434\u043D\u043E \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u0438 \u0437\u0430\u043F\u0438\u0441\u044C \u0430\u0443\u0434\u0438\u0442\u0430 \u043F\u043E\u0434 \u0432\u0430\u0448\u0438\u043C \u0438\u043C\u0435\u043D\u0435\u043C." }),
     jsx("p", { className: "dy-rm-modal-error", role: "alert", children: error })
   ] });
   return jsx("div", {
@@ -24799,25 +24799,25 @@ function PlaceDialog({ kind, itemId, projectId, projectLabel, onClose, onDone })
     children: jsxs("section", { className: "dy-rm-modal", role: "dialog", "aria-modal": true, "aria-label": spec.title, children: [
       jsxs("header", { className: "dy-rm-modal-head", children: [
         jsxs("div", { children: [
-          jsx("p", { className: "dockyard-meta", children: "Place" }),
+          jsx("p", { className: "dockyard-meta", children: "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C" }),
           jsx("h3", { children: spec.title }),
           jsx("p", { children: `Project ${projectLabel}` })
         ] }),
-        jsx(Button, { onClick: onClose, ariaLabel: "Close place dialog", children: "\xD7" })
+        jsx(Button, { onClick: onClose, ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0434\u0438\u0430\u043B\u043E\u0433 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u044F", children: "\xD7" })
       ] }),
       step === "choose" ? choose : confirm,
       step === "choose" ? jsxs("div", { className: "dy-rm-modal-actions", children: [
-        jsx(Button, { onClick: onClose, children: "Cancel" }),
+        jsx(Button, { onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
         jsx(Button, { variant: "primary", disabled: !ready, onClick: () => {
           setError(null);
           setStep("confirm");
-        }, children: "Continue" })
+        }, children: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C" })
       ] }) : jsxs("div", { className: "dy-rm-modal-actions", children: [
         jsx(Button, { disabled: busy, onClick: () => {
           setError(null);
           setStep("choose");
-        }, children: "Back" }),
-        jsx(Button, { variant: "primary", disabled: busy, onClick: () => submit(parent), children: busy ? "Placing\u2026" : "Place" })
+        }, children: "\u041D\u0430\u0437\u0430\u0434" }),
+        jsx(Button, { variant: "primary", disabled: busy, onClick: () => submit(parent), children: busy ? "\u0420\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u0435\u2026" : "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C" })
       ] })
     ] })
   });
@@ -24850,23 +24850,23 @@ function ConfirmDeliveredDialog({ projectId, ref, title, onClose, onDone }) {
         onClose();
       }
     },
-    children: jsxs("section", { className: "dy-rm-modal", role: "dialog", "aria-modal": true, "aria-label": "Confirm as delivered", children: [
+    children: jsxs("section", { className: "dy-rm-modal", role: "dialog", "aria-modal": true, "aria-label": "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443", children: [
       jsxs("header", { className: "dy-rm-modal-head", children: [
         jsxs("div", { children: [
-          jsx("p", { className: "dockyard-meta", children: "Confirm" }),
-          jsx("h3", { children: "Confirm as delivered" }),
+          jsx("p", { className: "dockyard-meta", children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C" }),
+          jsx("h3", { children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443" }),
           jsx("p", { children: `Project ${projectId}` })
         ] }),
-        jsx(Button, { onClick: onClose, ariaLabel: "Close confirm dialog", children: "\xD7" })
+        jsx(Button, { onClick: onClose, ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0434\u0438\u0430\u043B\u043E\u0433 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F", children: "\xD7" })
       ] }),
       jsxs("div", { className: "dy-rm-modal-body", "data-rm-confirm-body": true, children: [
         jsx("p", { className: "dy-rm-confirm", children: `Confirm \u201C${title}\u201D as delivered? Every milestone is reached.` }),
-        jsx("p", { className: "dy-rm-confirm", children: "This records the delivery under your name and an audit entry." }),
+        jsx("p", { className: "dy-rm-confirm", children: "\u042D\u0442\u043E \u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0435\u0442 \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443 \u043F\u043E\u0434 \u0432\u0430\u0448\u0438\u043C \u0438\u043C\u0435\u043D\u0435\u043C \u0438 \u0437\u0430\u043F\u0438\u0441\u044C \u0430\u0443\u0434\u0438\u0442\u0430." }),
         jsx("p", { className: "dy-rm-modal-error", role: "alert", children: error })
       ] }),
       jsxs("div", { className: "dy-rm-modal-actions", children: [
-        jsx(Button, { disabled: busy, onClick: onClose, children: "Cancel" }),
-        jsx(Button, { variant: "primary", disabled: busy, onClick: submit, children: busy ? "Confirming\u2026" : "Confirm as delivered" })
+        jsx(Button, { disabled: busy, onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+        jsx(Button, { variant: "primary", disabled: busy, onClick: submit, children: busy ? "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u2026" : "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443" })
       ] })
     ] })
   });
@@ -24901,33 +24901,33 @@ function WaiveDialog({ kind, itemId, itemLabel, projectId, onClose, onDone }) {
         onClose();
       }
     },
-    children: jsxs("section", { className: "dy-rm-modal", role: "dialog", "aria-modal": true, "aria-label": "Mark as no longer required", children: [
+    children: jsxs("section", { className: "dy-rm-modal", role: "dialog", "aria-modal": true, "aria-label": "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u043A\u0430\u043A \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u043C\u043E\u0435", children: [
       jsxs("header", { className: "dy-rm-modal-head", children: [
         jsxs("div", { children: [
-          jsx("p", { className: "dockyard-meta", children: "No longer required" }),
-          jsx("h3", { children: "Mark as no longer required" }),
+          jsx("p", { className: "dockyard-meta", children: "\u0411\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F" }),
+          jsx("h3", { children: "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u043A\u0430\u043A \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u043C\u043E\u0435" }),
           jsx("p", { children: `Project ${projectId}` })
         ] }),
-        jsx(Button, { onClick: onClose, ariaLabel: "Close waiver dialog", children: "\xD7" })
+        jsx(Button, { onClick: onClose, ariaLabel: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0434\u0438\u0430\u043B\u043E\u0433 \u043E\u0442\u043A\u0430\u0437\u0430", children: "\xD7" })
       ] }),
       jsxs("div", { className: "dy-rm-modal-body", "data-rm-waive-body": true, children: [
         jsx("p", { className: "dy-rm-confirm", children: `\u201C${itemLabel}\u201D stops blocking the work above it, and counts as settled. Its history stays.` }),
         jsxs("label", { className: "dockyard-field dockyard-field-wide field-required", children: [
-          jsx("span", { children: "Why is it no longer required?" }),
+          jsx("span", { children: "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F?" }),
           jsx("textarea", {
             rows: 3,
             "data-rm-waive-reason": true,
             value: reason,
             onInput: (event) => setReason(event.target.value),
             onChange: (event) => setReason(event.target.value),
-            placeholder: "e.g. delivered under the old plan; not required for this initiative"
+            placeholder: "\u043D\u0430\u043F\u0440. \u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E \u043F\u043E \u0441\u0442\u0430\u0440\u043E\u043C\u0443 \u043F\u043B\u0430\u043D\u0443; \u0434\u043B\u044F \u044D\u0442\u043E\u0439 \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F"
           })
         ] }),
         jsx("p", { className: "dy-rm-modal-error", role: "alert", children: error })
       ] }),
       jsxs("div", { className: "dy-rm-modal-actions", children: [
-        jsx(Button, { disabled: busy, onClick: onClose, children: "Cancel" }),
-        jsx(Button, { variant: "primary", disabled: busy || !ready, onClick: submit, children: busy ? "Marking\u2026" : "Mark as no longer required" })
+        jsx(Button, { disabled: busy, onClick: onClose, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+        jsx(Button, { variant: "primary", disabled: busy || !ready, onClick: submit, children: busy ? "Marking\u2026" : "\u041E\u0442\u043C\u0435\u0442\u0438\u0442\u044C \u043A\u0430\u043A \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u043C\u043E\u0435" })
       ] })
     ] })
   });
@@ -24935,14 +24935,14 @@ function WaiveDialog({ kind, itemId, itemLabel, projectId, onClose, onDone }) {
 
 // hermes_dockyard_plugin/desktop/src/views/roadmap-words.js
 var STATE_LABEL = {
-  not_started: "Not started",
-  in_progress: "In progress",
-  met: "Met",
-  at_risk: "At risk",
-  unknown: "Unknown",
-  reached: "Reached",
-  not_reached: "Not reached",
-  waived: "No longer required"
+  not_started: "\u041D\u0435 \u043D\u0430\u0447\u0430\u0442\u043E",
+  in_progress: "\u0412 \u0440\u0430\u0431\u043E\u0442\u0435",
+  met: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u043E",
+  at_risk: "\u041F\u043E\u0434 \u0443\u0433\u0440\u043E\u0437\u043E\u0439",
+  unknown: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E",
+  reached: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442",
+  not_reached: "\u041D\u0435 \u0434\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u043E",
+  waived: "\u0411\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F"
 };
 var words = (value) => String(value ?? "").replace(/_/g, " ");
 var chip = (text2, tone = "") => jsx("span", { className: `dy-rm-chip${tone ? ` ${tone}` : ""}`, children: text2 });
@@ -24961,7 +24961,7 @@ var goalStateWords = (row) => {
 };
 
 // hermes_dockyard_plugin/desktop/src/views/roadmap.js
-var CONTRACT_STATUS = { active: "Active", paused: "Paused", done: "Done", cleared: "Cleared" };
+var CONTRACT_STATUS = { active: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E", paused: "\u041D\u0430 \u043F\u0430\u0443\u0437\u0435", done: "\u0413\u043E\u0442\u043E\u0432\u043E", cleared: "Cleared" };
 function treeKeydown(event) {
   const rows = [...event.currentTarget.querySelectorAll("[data-rm-row]")];
   const row = document.activeElement?.closest?.("[data-rm-row]");
@@ -24991,8 +24991,8 @@ function treeKeydown(event) {
 }
 function deliveryChips(delivery) {
   if (!delivery) return null;
-  if (delivery.state === "no_linked_work") return chip("No linked work");
-  if (delivery.state === "unavailable") return chip(delivery.reason === "unlinked" ? UNLINKED_LABEL : "Unavailable");
+  if (delivery.state === "no_linked_work") return chip("\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0442");
+  if (delivery.state === "unavailable") return chip(delivery.reason === "unlinked" ? UNLINKED_LABEL : "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E");
   const chips = BUCKETS.map(([key, label]) => Number(delivery[key] ?? 0) > 0 ? jsx("span", { className: "dy-rm-chip", children: `${label} ${number(delivery[key])}` }, key) : null).filter(Boolean);
   if (Number(delivery.blocked ?? 0) > 0) {
     chips.push(jsx("span", { className: "dy-rm-chip blocked", children: `Blocked ${number(delivery.blocked)}` }, "blocked"));
@@ -25002,12 +25002,12 @@ function deliveryChips(delivery) {
 }
 function deliveryDetail(delivery) {
   if (!delivery) return [];
-  if (delivery.state === "no_linked_work") return [["Linked work", "No linked work"]];
-  if (delivery.state === "unavailable") return [["Linked work", unavailableWords(delivery.reason)]];
+  if (delivery.state === "no_linked_work") return [["\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0442"]];
+  if (delivery.state === "unavailable") return [["\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", unavailableWords(delivery.reason)]];
   return [
     ...BUCKETS.map(([key, label]) => [label, number(delivery[key] ?? 0)]),
-    ["Blocked", number(delivery.blocked ?? 0)],
-    ["Total linked", number(delivery.total)]
+    ["\u0417\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E", number(delivery.blocked ?? 0)],
+    ["\u0412\u0441\u0435\u0433\u043E \u0441\u0432\u044F\u0437\u0430\u043D\u043E", number(delivery.total)]
   ];
 }
 function focusProps(node, tabStop, onFocusRow) {
@@ -25075,7 +25075,7 @@ function MilestoneItems({ projectId, milestoneId, onOpen }) {
     api(`/roadmap/projects/${encodeURIComponent(projectId)}/milestones/${milestoneId}/items`).then((result) => {
       if (current) {
         setItems(result.items ?? []);
-        setError(result.state !== "unavailable" ? null : result.reason === "unlinked" ? `${UNLINKED_TITLE}: its work items cannot be shown.` : "Work items are unavailable (the work host did not respond).");
+        setError(result.state !== "unavailable" ? null : result.reason === "unlinked" ? `${UNLINKED_TITLE}: its work items cannot be shown.` : "\u0420\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B (\u0445\u043E\u0441\u0442 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u043B).");
       }
     }).catch((failure) => {
       if (current) setError(String(failure?.message ?? failure));
@@ -25086,7 +25086,7 @@ function MilestoneItems({ projectId, milestoneId, onOpen }) {
   }, [projectId, milestoneId]);
   if (error) return jsx("p", { role: "status", children: error });
   if (!items) return jsx("p", { role: "status", children: "Loading work items\u2026" });
-  if (!items.length) return jsx("p", { role: "status", children: "No work items are attached to this milestone." });
+  if (!items.length) return jsx("p", { role: "status", children: "\u041A \u044D\u0442\u043E\u0439 \u0432\u0435\u0445\u0435 \u0440\u0430\u0431\u043E\u0447\u0438\u0435 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u044B \u043D\u0435 \u043F\u0440\u0438\u043A\u0440\u0435\u043F\u043B\u0435\u043D\u044B." });
   return jsx("ul", { className: "dy-rm-items", children: items.map((item) => jsxs("li", { children: [
     jsx("strong", { children: item.title }),
     jsx("small", { children: words(item.bucket) }),
@@ -25099,7 +25099,7 @@ function MilestoneItems({ projectId, milestoneId, onOpen }) {
         event.stopPropagation();
         onOpen({ project: projectId, entryView: "board", workRef: item.ref });
       },
-      children: "Open"
+      children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C"
     })
   ] }, item.ref)) });
 }
@@ -25155,33 +25155,33 @@ function GoalCheckEditor({ projectId, goal, onChanged }) {
     }
   };
   return jsxs("div", { className: "dy-rm-check-editor", "data-rm-goal-check": goal.id, children: [
-    jsxs("p", { children: ["Check: ", jsx("strong", { "data-rm-check-state": true, children: detail ? `${detail.evaluator_type} \xB7 ${detail.target} \xB7 ${state}` : hasCheck ? state : "none" })] }),
+    jsxs("p", { children: ["\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430: ", jsx("strong", { "data-rm-check-state": true, children: detail ? `${detail.evaluator_type} \xB7 ${detail.target} \xB7 ${state}` : hasCheck ? state : "none" })] }),
     open ? jsxs("div", { className: "dy-rm-check-form", children: [
-      jsxs("label", { children: ["Type ", jsx("select", { "data-rm-check-evaluator": true, value: evaluator, onChange: (event) => setEvaluator(event.target.value), children: ["manual", "command", "integration"].map((value) => jsx("option", { value, children: value }, value)) })] }),
-      jsxs("label", { children: ["Target ", jsx("input", { "data-rm-check-target": true, value: target, placeholder: "e.g. >=1", onChange: (event) => setTarget(event.target.value) })] }),
-      jsx(Button, { small: true, variant: "primary", action: "roadmap-check-save", disabled: busy || !target.trim(), onClick: () => run({ evaluator_type: evaluator, target: target.trim() }, `Check set on \u201C${goal.title}\u201D.`), children: busy ? "Saving\u2026" : "Save check" }),
-      hasCheck ? jsx(Button, { small: true, action: "roadmap-check-clear", disabled: busy, onClick: () => run({ clear: true }, `Check cleared on \u201C${goal.title}\u201D.`), children: "Clear check" }) : null,
-      jsx(Button, { small: true, action: "roadmap-check-cancel", disabled: busy, onClick: () => setOpen(false), children: "Cancel" })
-    ] }) : jsx(Button, { small: true, action: "roadmap-check-edit", onClick: () => setOpen(true), children: hasCheck ? "Edit check" : "Set check" }),
+      jsxs("label", { children: ["\u0422\u0438\u043F ", jsx("select", { "data-rm-check-evaluator": true, value: evaluator, onChange: (event) => setEvaluator(event.target.value), children: ["manual", "command", "integration"].map((value) => jsx("option", { value, children: value }, value)) })] }),
+      jsxs("label", { children: ["\u0426\u0435\u043B\u044C ", jsx("input", { "data-rm-check-target": true, value: target, placeholder: "e.g. >=1", onChange: (event) => setTarget(event.target.value) })] }),
+      jsx(Button, { small: true, variant: "primary", action: "roadmap-check-save", disabled: busy || !target.trim(), onClick: () => run({ evaluator_type: evaluator, target: target.trim() }, `Check set on \u201C${goal.title}\u201D.`), children: busy ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435\u2026" : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0443" }),
+      hasCheck ? jsx(Button, { small: true, action: "roadmap-check-clear", disabled: busy, onClick: () => run({ clear: true }, `Check cleared on \u201C${goal.title}\u201D.`), children: "\u0423\u0431\u0440\u0430\u0442\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0443" }) : null,
+      jsx(Button, { small: true, action: "roadmap-check-cancel", disabled: busy, onClick: () => setOpen(false), children: "\u041E\u0442\u043C\u0435\u043D\u0430" })
+    ] }) : jsx(Button, { small: true, action: "roadmap-check-edit", onClick: () => setOpen(true), children: hasCheck ? "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0443" : "\u0417\u0430\u0434\u0430\u0442\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0443" }),
     error ? jsx("p", { className: "dy-rm-modal-error", role: "alert", children: error }) : null
   ] });
 }
 function contractFacts(entry, goalTitle) {
-  if (!entry || entry.loading) return [["Goal contract", "Loading\u2026"]];
-  if (entry.error) return [["Goal contract", `Unavailable: ${entry.error}`]];
+  if (!entry || entry.loading) return [["\u041A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u0446\u0435\u043B\u0438", "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026"]];
+  if (entry.error) return [["\u041A\u043E\u043D\u0442\u0440\u0430\u043A\u0442 \u0446\u0435\u043B\u0438", `Unavailable: ${entry.error}`]];
   const contract = entry.contract;
   const text2 = (value) => value === null || value === void 0 || String(value).trim() === "" ? "\u2014" : String(value);
   const outcome = String(contract.outcome ?? "").trim();
   const copied = outcome !== "" && outcome === String(goalTitle ?? "").trim();
   return [
-    ["Outcome", copied ? jsxs(Fragment, { children: [contract.outcome, jsx("small", { className: "dy-rm-copied", children: "Copied from the goal title" })] }) : text2(contract.outcome)],
-    ["Contract status", CONTRACT_STATUS[contract.status] ?? words(contract.status)],
-    ...contract.status === "paused" ? [["Paused because", text2(contract.paused_reason)]] : [],
-    ["Verification", text2(contract.verification)],
-    ["Constraints", text2(contract.constraints)],
-    ["Boundaries", text2(contract.boundaries)],
-    ["Stop when", text2(contract.stop_when)],
-    ...contract.max_turns !== null && contract.max_turns !== void 0 ? [["Turn limit", number(contract.max_turns)]] : []
+    ["\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", copied ? jsxs(Fragment, { children: [contract.outcome, jsx("small", { className: "dy-rm-copied", children: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0438\u0437 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430 \u0446\u0435\u043B\u0438" })] }) : text2(contract.outcome)],
+    ["\u0421\u0442\u0430\u0442\u0443\u0441 \u043A\u043E\u043D\u0442\u0440\u0430\u043A\u0442\u0430", CONTRACT_STATUS[contract.status] ?? words(contract.status)],
+    ...contract.status === "paused" ? [["\u041F\u0430\u0443\u0437\u0430, \u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E", text2(contract.paused_reason)]] : [],
+    ["\u0412\u0435\u0440\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u044F", text2(contract.verification)],
+    ["\u041E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F", text2(contract.constraints)],
+    ["\u0413\u0440\u0430\u043D\u0438\u0446\u044B", text2(contract.boundaries)],
+    ["\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C\u0441\u044F, \u043A\u043E\u0433\u0434\u0430", text2(contract.stop_when)],
+    ...contract.max_turns !== null && contract.max_turns !== void 0 ? [["\u041B\u0438\u043C\u0438\u0442 \u0445\u043E\u0434\u043E\u0432", number(contract.max_turns)]] : []
   ];
 }
 function drawerBody(sel, project, contract, onOpen, onChanged) {
@@ -25190,16 +25190,16 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
   if (sel.type === "project") {
     return {
       title: project.label ?? project.id,
-      subtitle: project.mission || "No mission recorded",
+      subtitle: project.mission || "\u041C\u0438\u0441\u0441\u0438\u044F \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u0430",
       open,
       facts: [
-        ["Initiatives", number(project.initiatives?.length ?? 0)],
-        ["Goals", number(project.goals?.length ?? 0)],
-        ["Milestones not placed", number(project.not_placed?.milestones?.length ?? 0)],
-        ["Objectives not placed", number(project.not_placed?.objectives?.length ?? 0)],
-        ["Goals not placed", number(project.not_placed?.goals?.length ?? 0)],
-        ["Needs placing", number(project.needs_placing?.length ?? 0)],
-        ["Work host", project.work_host === "unavailable" ? "Unavailable" : "Connected"]
+        ["\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B", number(project.initiatives?.length ?? 0)],
+        ["\u0426\u0435\u043B\u0438", number(project.goals?.length ?? 0)],
+        ["\u0412\u0435\u0445\u0438 \u0431\u0435\u0437 \u043C\u0435\u0441\u0442\u0430", number(project.not_placed?.milestones?.length ?? 0)],
+        ["\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438 \u0431\u0435\u0437 \u043C\u0435\u0441\u0442\u0430", number(project.not_placed?.objectives?.length ?? 0)],
+        ["\u0426\u0435\u043B\u0438 \u0431\u0435\u0437 \u043C\u0435\u0441\u0442\u0430", number(project.not_placed?.goals?.length ?? 0)],
+        ["\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u044F", number(project.needs_placing?.length ?? 0)],
+        ["\u0425\u043E\u0441\u0442 \u0440\u0430\u0431\u043E\u0442", project.work_host === "unavailable" ? "\u041D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E" : "\u0421\u0432\u044F\u0437\u0430\u043D\u043E"]
       ]
     };
   }
@@ -25212,9 +25212,9 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
       open,
       facts: [
         ...deliveryDetail(initiative.delivery),
-        ["Milestones", number((initiative.milestones ?? []).length)],
-        ["Work not placed under a goal", number((initiative.not_placed?.tasks ?? []).length)],
-        ["Attention", initiative.attention_reasons?.length ? initiative.attention_reasons.map(words).join(", ") : "none"]
+        ["\u0412\u0435\u0445\u0438", number((initiative.milestones ?? []).length)],
+        ["\u0420\u0430\u0431\u043E\u0442\u0430 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0430 \u043F\u043E\u0434 \u0446\u0435\u043B\u044C\u044E", number((initiative.not_placed?.tasks ?? []).length)],
+        ["\u0412\u043D\u0438\u043C\u0430\u043D\u0438\u0435", initiative.attention_reasons?.length ? initiative.attention_reasons.map(words).join(", ") : "none"]
       ]
     };
   }
@@ -25227,10 +25227,10 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
       subtitle: `${STATE_LABEL[milestone.state] ?? words(milestone.state)}${milestone.initiative_ref ? ` \xB7 under ${milestone.initiative_ref}` : " \xB7 not placed yet"}`,
       facts: [
         ...deliveryDetail(milestone.delivery),
-        ["Due", milestone.due ?? "No due date"],
-        ["Closed", milestone.closed ? "Yes" : "No"],
-        ...milestone.overdue ? [["Overdue", "Yes \u2014 past due and not closed"]] : [],
-        ["Objectives", number((milestone.objectives ?? []).length)]
+        ["\u0421\u0440\u043E\u043A", milestone.due ?? "\u0411\u0435\u0437 \u0441\u0440\u043E\u043A\u0430"],
+        ["Closed", milestone.closed ? "\u0414\u0430" : "\u041D\u0435\u0442"],
+        ...milestone.overdue ? [["\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E", "\u0414\u0430 \u2014 \u043F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E \u0438 \u043D\u0435 \u0437\u0430\u043A\u0440\u044B\u0442\u043E"]] : [],
+        ["\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438", number((milestone.objectives ?? []).length)]
       ],
       extra: jsx(MilestoneItems, { projectId: project.id, milestoneId: milestone.id, onOpen })
     };
@@ -25244,11 +25244,11 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
       open,
       subtitle: `${STATE_LABEL[objective.state] ?? words(objective.state)}${objective.milestone_id ? ` \xB7 under milestone ${objective.milestone_id}` : " \xB7 not placed yet"}`,
       facts: [
-        ["State", STATE_LABEL[objective.state] ?? words(objective.state)],
-        ["Check", check.state === "no_check" || !check.state ? "No check" : STATE_LABEL[check.state] ?? words(check.state)],
-        ["Evidence window", check.window ?? "\u2014"],
-        ["Last evaluated", check.evaluated_at ?? "Never"],
-        ["Goals", number((objective.goals ?? []).length)]
+        ["\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435", STATE_LABEL[objective.state] ?? words(objective.state)],
+        ["\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430", check.state === "no_check" || !check.state ? "\u0411\u0435\u0437 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438" : STATE_LABEL[check.state] ?? words(check.state)],
+        ["\u041E\u043A\u043D\u043E \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432", check.window ?? "\u2014"],
+        ["\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u043E\u0446\u0435\u043D\u043A\u0430", check.evaluated_at ?? "\u041D\u0438\u043A\u043E\u0433\u0434\u0430"],
+        ["\u0426\u0435\u043B\u0438", number((objective.goals ?? []).length)]
       ]
     };
   }
@@ -25262,10 +25262,10 @@ function drawerBody(sel, project, contract, onOpen, onChanged) {
       subtitle: "Goal \xB7 its contract is read-only here",
       open,
       facts: [
-        ["State", STATE_LABEL[goal.state] ?? words(goal.state)],
-        ["Tasks", number(goal.task_count ?? 0)],
-        ["Check", check.state === "no_check" || !check.state ? "No check" : STATE_LABEL[check.state] ?? words(check.state)],
-        ["Placed under", goal.objective_id ? `Objective ${goal.objective_id}` : "Not placed yet"],
+        ["\u0421\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435", STATE_LABEL[goal.state] ?? words(goal.state)],
+        ["\u0417\u0430\u0434\u0430\u0447\u0438", number(goal.task_count ?? 0)],
+        ["\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430", check.state === "no_check" || !check.state ? "\u0411\u0435\u0437 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438" : STATE_LABEL[check.state] ?? words(check.state)],
+        ["\u0420\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E \u043F\u043E\u0434", goal.objective_id ? `Objective ${goal.objective_id}` : "\u0415\u0449\u0451 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E"],
         ...contractFacts(entry, goal.title)
       ],
       // R2 fix 2: a person sets or clears the check here.
@@ -25288,8 +25288,8 @@ function Drawer({ type, body, onClose, onOpen }) {
       ] }, label)) }),
       body.extra ?? null,
       jsxs("div", { className: "dy-rm-actions", children: [
-        jsx(Button, { variant: "primary", action: "roadmap-open", ariaLabel: `Open ${body.title} on its project screen`, onClick: () => onOpen(body.open), children: "Open" }),
-        jsx(Button, { onClick: onClose, children: "Close" })
+        jsx(Button, { variant: "primary", action: "roadmap-open", ariaLabel: `Open ${body.title} on its project screen`, onClick: () => onOpen(body.open), children: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C" }),
+        jsx(Button, { onClick: onClose, children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C" })
       ] })
     ] })
   ] });
@@ -25347,7 +25347,7 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
           event.stopPropagation();
           void restoreRequirement(projectId, kind, itemId, itemLabel);
         },
-        children: "Restore requirement"
+        children: "\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F"
       });
     }
     return jsx(Button, {
@@ -25357,7 +25357,7 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
         event.stopPropagation();
         setWaiveDialog({ projectId, kind, itemId: String(itemId), itemLabel });
       },
-      children: "No longer required"
+      children: "\u0411\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F"
     });
   };
   useEffect(() => {
@@ -25440,7 +25440,7 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
       event.stopPropagation();
       setPlaceDialog({ kind, itemId, projectId: project.id, projectLabel: project.label ?? project.id });
     },
-    children: "Place\u2026"
+    children: "\u0420\u0430\u0437\u043C\u0435\u0441\u0442\u0438\u0442\u044C\u2026"
   });
   const rows = [];
   const add = (node, render) => rows.push({ node, render });
@@ -25460,7 +25460,7 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
       detail: `${number(initiativeCount)} ${plural2(initiativeCount, "initiative")}${project.mission ? ` \xB7 ${project.mission}` : ""}`,
       expandable: true,
       open: projectOpen,
-      chips: project.attention ? chip("Needs attention", "attention") : null,
+      chips: project.attention ? chip("\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F", "attention") : null,
       onToggle: () => toggle(projectNode),
       onOpen: () => {
         openNode(projectNode);
@@ -25474,8 +25474,8 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
         depth: 1,
         tabStop: tabStop2,
         onFocusRow: setFocusNode,
-        label: "Initiatives are turned off for this project.",
-        detail: "Turn them on in the project settings to use the Roadmap here."
+        label: "\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u044B \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u044B.",
+        detail: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \u0438\u0445 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u043F\u0440\u043E\u0435\u043A\u0442\u0430, \u0447\u0442\u043E\u0431\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0437\u0434\u0435\u0441\u044C \u0434\u043E\u0440\u043E\u0436\u043D\u0443\u044E \u043A\u0430\u0440\u0442\u0443."
       }, `${projectNode}:off`));
       continue;
     }
@@ -25490,13 +25490,13 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
         type: "initiative",
         depth: 1,
         label: initiative.title,
-        detail: initiative.attention_reasons?.length ? initiative.attention_reasons.map(words).join(" \xB7 ") : initiative.delivery?.state === "ok" ? `${number(initiative.delivery.total)} linked work items` : "No linked work",
+        detail: initiative.attention_reasons?.length ? initiative.attention_reasons.map(words).join(" \xB7 ") : initiative.delivery?.state === "ok" ? `${number(initiative.delivery.total)} linked work items` : "\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0442",
         expandable: true,
         open: initiativeOpen,
         chips: jsxs(Fragment, { children: [
           deliveryChips(initiative.delivery),
-          readyToConfirm ? chip("Ready to confirm", "ready") : null,
-          initiative.attention ? chip("Attention", "attention") : null
+          readyToConfirm ? chip("\u0413\u043E\u0442\u043E\u0432\u043E \u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E", "ready") : null,
+          initiative.attention ? chip("\u0412\u043D\u0438\u043C\u0430\u043D\u0438\u0435", "attention") : null
         ] }),
         actions: readyToConfirm && canWrite ? jsx(Button, {
           small: true,
@@ -25505,7 +25505,7 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
             event.stopPropagation();
             setConfirmDialog({ projectId: pid, ref, title: initiative.title });
           },
-          children: "Confirm as delivered"
+          children: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u043F\u043E\u0441\u0442\u0430\u0432\u043A\u0443"
         }) : null,
         onToggle: () => toggle(initiativeNode),
         onOpen: () => {
@@ -25528,7 +25528,7 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
           open: milestoneOpen,
           chips: jsxs(Fragment, { children: [
             deliveryChips(milestone.delivery),
-            milestone.overdue ? chip("Overdue", "overdue") : null,
+            milestone.overdue ? chip("\u041F\u0440\u043E\u0441\u0440\u043E\u0447\u0435\u043D\u043E", "overdue") : null,
             waivedChip(milestone)
           ] }),
           actions: waiverAction(pid, "milestone", milestone, milestone.id, milestone.name),
@@ -25625,16 +25625,16 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
           depth: 2,
           tabStop: tabStop2,
           onFocusRow: setFocusNode,
-          label: "Not placed yet",
+          label: "\u0415\u0449\u0451 \u043D\u0435 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u043E",
           detail: initiative.not_placed.tasks.map((item) => `${item.title} (${words(item.bucket)})`).join(", ")
         }, looseNode));
       }
     }
     const notPlaced = project.not_placed ?? {};
     const notPlacedSpec = [
-      ["milestones", "Milestones not placed under an initiative", "milestone"],
-      ["objectives", "Objectives not placed under a milestone", "objective"],
-      ["goals", "Goals not placed under an objective", "goal"]
+      ["milestones", "\u0412\u0435\u0445\u0438 \u043D\u0435 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D\u044B \u043A \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0435", "milestone"],
+      ["objectives", "\u0417\u0430\u0434\u0430\u0447\u0438-\u0446\u0435\u043B\u0438 \u043D\u0435 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D\u044B \u043A \u0432\u0435\u0445\u0435", "objective"],
+      ["goals", "\u0426\u0435\u043B\u0438 \u043D\u0435 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D\u044B \u043A \u0437\u0430\u0434\u0430\u0447\u0435-\u0446\u0435\u043B\u0438", "goal"]
     ];
     for (const [kind, groupLabel, placeKind] of notPlacedSpec) {
       const rowsFor = notPlaced[kind] ?? [];
@@ -25693,12 +25693,12 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
         actions: canWrite ? jsx(Button, {
           small: true,
           action: "roadmap-open-unplaced",
-          ariaLabel: "Open the needs-placing list for this project",
+          ariaLabel: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A \xAB\u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u044F\xBB",
           onClick: (event) => {
             event.stopPropagation();
             onOpen({ project: pid, entryView: "roadmap-unplaced" });
           },
-          children: "Review"
+          children: "\u041E\u0431\u0437\u043E\u0440"
         }) : null,
         onToggle: () => {
         },
@@ -25711,10 +25711,10 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
   const tabStop = nodes.includes(focusNode) ? focusNode : nodes[0];
   const selectedProject = selection ? projects.find((project) => project.id === selection.projectId) ?? null : null;
   const body = selection && selectedProject ? drawerBody(selection, selectedProject, contract, onOpen, () => void load()) : null;
-  const content = loading && !data ? jsx(LoadingState, {}) : error ? jsx(ErrorState, { error, onRetry: load }) : !visibleProjects.length ? jsx(EmptyState, { title: "No projects match this view", description: "Adjust the search, the attention filter, or the project in the switcher." }) : jsxs("div", { className: `dy-rm-shell${body ? "" : " full"}`, children: [
-    jsxs("section", { className: "dy-rm-tree", role: "tree", "aria-label": "Project roadmap tree", onKeyDown: treeKeydown, "data-rm-tree": true, children: [
+  const content = loading && !data ? jsx(LoadingState, {}) : error ? jsx(ErrorState, { error, onRetry: load }) : !visibleProjects.length ? jsx(EmptyState, { title: "\u041D\u0435\u0442 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432 \u0432 \u044D\u0442\u043E\u043C \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0438", description: "\u0421\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u0438\u0440\u0443\u0439\u0442\u0435 \u043F\u043E\u0438\u0441\u043A, \u0444\u0438\u043B\u044C\u0442\u0440 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u043F\u0440\u043E\u0435\u043A\u0442 \u0432 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0442\u0435\u043B\u0435." }) : jsxs("div", { className: `dy-rm-shell${body ? "" : " full"}`, children: [
+    jsxs("section", { className: "dy-rm-tree", role: "tree", "aria-label": "\u0414\u0435\u0440\u0435\u0432\u043E \u0434\u043E\u0440\u043E\u0436\u043D\u043E\u0439 \u043A\u0430\u0440\u0442\u044B \u043F\u0440\u043E\u0435\u043A\u0442\u0430", onKeyDown: treeKeydown, "data-rm-tree": true, children: [
       jsxs("header", { className: "dy-rm-tree-head", children: [
-        jsx("strong", { children: scope === "all" ? "All projects" : projects[0]?.label ?? scope }),
+        jsx("strong", { children: scope === "all" ? "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" : projects[0]?.label ?? scope }),
         jsx("span", { children: `${number(visibleProjects.length)} shown` })
       ] }),
       ...rows.map((row) => row.render(row.node === tabStop))
@@ -25723,32 +25723,32 @@ function RoadmapView({ initialScope = "all", onOpen, onRefresh }) {
   ] });
   return jsxs("div", { className: "dy-rm-page", "data-roadmap-screen": true, children: [
     jsx(PageHead, {
-      title: "Roadmap",
+      title: "\u0414\u043E\u0440\u043E\u0436\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u0430",
       description: "Projects first: initiatives, milestones, objectives and goals \u2014 linked by hand, never inferred.",
       onRefresh: () => {
         void load();
         onRefresh?.();
       },
-      status: error ? "Load failed" : null
+      status: error ? "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C" : null
     }),
     // Filters in the signed v4 order: search, attention, Reset (the project
     // moved to the global switcher, Sahil 04/10).
     // Every control shares one height, radius and font (roadmap-css.js).
-    jsxs("div", { className: "dy-rm-toolbar", role: "group", "aria-label": "Roadmap filters", children: [
+    jsxs("div", { className: "dy-rm-toolbar", role: "group", "aria-label": "\u0424\u0438\u043B\u044C\u0442\u0440\u044B \u0434\u043E\u0440\u043E\u0436\u043D\u043E\u0439 \u043A\u0430\u0440\u0442\u044B", children: [
       // Sahil 04/10 (demo feedback d): the project comes from the global switcher.
       jsxs("label", { className: "dy-rm-control dy-rm-search", children: [
         jsx(Icon, { name: "search" }),
-        jsx("input", { type: "search", placeholder: "Search the roadmap", value: search, onChange: (event) => setSearch(event.target.value), "aria-label": "Search the roadmap" })
+        jsx("input", { type: "search", placeholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0434\u043E\u0440\u043E\u0436\u043D\u043E\u0439 \u043A\u0430\u0440\u0442\u0435", value: search, onChange: (event) => setSearch(event.target.value), "aria-label": "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0434\u043E\u0440\u043E\u0436\u043D\u043E\u0439 \u043A\u0430\u0440\u0442\u0435" })
       ] }),
       jsxs("label", { className: "dy-rm-control dy-rm-attention", children: [
         jsx("input", { type: "checkbox", checked: attentionOnly, onChange: (event) => setAttentionOnly(event.target.checked) }),
-        jsx("span", { children: "Needs attention only" })
+        jsx("span", { children: "\u0422\u043E\u043B\u044C\u043A\u043E \u0442\u0440\u0435\u0431\u0443\u044E\u0449\u0438\u0435 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F" })
       ] }),
       jsx("button", { type: "button", className: "dy-rm-control dy-rm-reset", onClick: () => {
         setSearch("");
         setAttentionOnly(false);
         setOpenNodes(/* @__PURE__ */ new Set());
-      }, children: "Reset" })
+      }, children: "\u0421\u0431\u0440\u043E\u0441" })
     ] }),
     content,
     placeDialog ? jsx(PlaceDialog, {
@@ -25848,7 +25848,7 @@ function useHostDark() {
 }
 
 // hermes_dockyard_plugin/desktop/src/shell/dashboard-page.js
-var ONE_PROJECT_TABS = Object.freeze({ project: "Projects", backlog: "Backlog" });
+var ONE_PROJECT_TABS = Object.freeze({ project: "\u041F\u0440\u043E\u0435\u043A\u0442\u044B", backlog: "\u0411\u044D\u043A\u043B\u043E\u0433" });
 function DashboardPage({ inboxCss = "" } = {}) {
   useDockyardStyles();
   useStylesheet("dy-inbox-stylesheet", "dyInboxStylesheet", inboxCss);
@@ -25886,7 +25886,7 @@ function DashboardPage({ inboxCss = "" } = {}) {
       return true;
     } catch {
       setAppearance(before);
-      emitToast("danger", "That change was not saved. Try again.");
+      emitToast("danger", "\u0418\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.");
       return false;
     }
   };
@@ -26191,7 +26191,7 @@ function DashboardPage({ inboxCss = "" } = {}) {
     if (tab === "inbox") return scopeInbox(payload, selectedProject);
     return null;
   }, [payload, tab, selectedProject, isAll]);
-  const scopeLabel = isAll ? "All projects" : projectName(projectOptions.find((project) => project.id === selectedProject) ?? { id: selectedProject });
+  const scopeLabel = isAll ? "\u0412\u0441\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B" : projectName(projectOptions.find((project) => project.id === selectedProject) ?? { id: selectedProject });
   const scopeNote = (hidden, noun) => !isAll && selectedProject ? jsx(ScopeNote, { name: scopeLabel, hidden, noun, onShowAll: showAllProjects }, "scope-note") : null;
   const activeError = error?.tab === tab ? error.error : null;
   let content;
@@ -26311,7 +26311,7 @@ function DashboardPage({ inboxCss = "" } = {}) {
           className: "dockyard-modal",
           role: "alertdialog",
           "aria-modal": true,
-          "aria-label": "Unsaved changes",
+          "aria-label": "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F",
           onKeyDown: (event) => {
             if (event.key === "Escape" && !navSaving) {
               event.stopPropagation();
@@ -26319,12 +26319,12 @@ function DashboardPage({ inboxCss = "" } = {}) {
             }
           },
           children: [
-            jsx("h2", { children: "Unsaved changes" }),
+            jsx("h2", { children: "\u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F" }),
             jsx("p", { children: `This project has unsaved changes. ${dirtySaver.current ? "Save them and continue, discard them, or cancel to keep editing." : "Discard them to continue, or cancel to keep editing."}` }),
             jsxs("div", { className: "dockyard-modal-actions", children: [
-              jsx(Button, { action: "nav-cancel", disabled: navSaving, onClick: cancelNav, children: "Cancel" }),
-              jsx(Button, { variant: "danger", action: "nav-discard", disabled: navSaving, onClick: discardProjectChange, children: "Discard" }),
-              dirtySaver.current ? jsx(Button, { variant: "primary", action: "nav-save", disabled: navSaving, onClick: saveThenNavigate, children: navSaving ? "Saving..." : "Save and continue" }) : null
+              jsx(Button, { action: "nav-cancel", disabled: navSaving, onClick: cancelNav, children: "\u041E\u0442\u043C\u0435\u043D\u0430" }),
+              jsx(Button, { variant: "danger", action: "nav-discard", disabled: navSaving, onClick: discardProjectChange, children: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u043A\u0438" }),
+              dirtySaver.current ? jsx(Button, { variant: "primary", action: "nav-save", disabled: navSaving, onClick: saveThenNavigate, children: navSaving ? "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..." : "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C" }) : null
             ] })
           ]
         })
@@ -26346,9 +26346,9 @@ function surfacePopup(item) {
   host2.notify({
     id: `dockyard-notification-${item?.id}`,
     kind: "info",
-    title: item?.title ?? "Fleet notification",
-    message: text2 || "Open Project Stewardship to review it.",
-    action: { label: "Open Project Stewardship", onClick: openDockyard }
+    title: item?.title ?? "\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u0435 \u0444\u043B\u043E\u0442\u0430",
+    message: text2 || "\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 Project Stewardship, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u044D\u0442\u043E.",
+    action: { label: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C Project Stewardship", onClick: openDockyard }
   });
 }
 function surfaceMore(count) {
@@ -26356,8 +26356,8 @@ function surfaceMore(count) {
     id: "dockyard-notification-more",
     kind: "info",
     title: `and ${count} more notification${count === 1 ? "" : "s"}`,
-    message: "See them all in Project Stewardship Notifications.",
-    action: { label: "Open Project Stewardship", onClick: openDockyard }
+    message: "\u0421\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0441\u0435 \u0432 \xAB\u0423\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F\u0445 Project Stewardship\xBB.",
+    action: { label: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C Project Stewardship", onClick: openDockyard }
   });
 }
 function startPopupPoller(ctxRest) {
@@ -26413,14 +26413,14 @@ var __plugin = {
         id: "nav",
         area: "sidebar.nav",
         order: 55,
-        data: { codicon: "project", label: "Project Stewardship", path: "/dockyard" }
+        data: { codicon: "project", label: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u043C\u0438", path: "/dockyard" }
       },
       {
         id: "open",
         area: "palette",
         data: {
           id: "hermes-project-stewardship.open",
-          label: "Project Stewardship: Open fleet overview",
+          label: "Project Stewardship: \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u0437\u043E\u0440 \u0444\u043B\u043E\u0442\u0430",
           keywords: ["dockyard", "fleet", "projects", "approvals", "notifications"],
           run: () => host2.navigate("/dockyard")
         }

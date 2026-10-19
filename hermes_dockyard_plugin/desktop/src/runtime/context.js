@@ -32,17 +32,17 @@ export function bindContext(ctx) {
 
 export function mutationMessage(path, result) {
   if (path === '/onboard') return `Project ${result?.project_id || 'created'} onboarded`
-  if (path.endsWith('/approve')) return 'Initiative approved'
-  if (path.endsWith('/reject')) return 'Initiative rejected'
-  if (path.endsWith('/ack')) return 'Notification cleared'
-  if (path.endsWith('/rerank')) return 'Backlog priority updated'
-  if (path.endsWith('/views')) return 'Workflow view saved'
-  if (path.endsWith('/reports')) return 'Report generated'
-  if (path.endsWith('/settings')) return 'Project configuration saved'
-  if (path.endsWith('/freeze')) return 'Project frozen'
-  if (path.endsWith('/resume')) return 'Project resumed'
-  if (path.endsWith('/transition')) return 'Work item updated'
-  return 'Change saved'
+  if (path.endsWith('/approve')) return 'Инициатива одобрена'
+  if (path.endsWith('/reject')) return 'Инициатива отклонена'
+  if (path.endsWith('/ack')) return 'Уведомление очищено'
+  if (path.endsWith('/rerank')) return 'Приоритет бэклога обновлён'
+  if (path.endsWith('/views')) return 'Вид процесса сохранён'
+  if (path.endsWith('/reports')) return 'Отчёт создан'
+  if (path.endsWith('/settings')) return 'Конфигурация проекта сохранена'
+  if (path.endsWith('/freeze')) return 'Проект заморожен'
+  if (path.endsWith('/resume')) return 'Проект возобновлён'
+  if (path.endsWith('/transition')) return 'Рабочий элемент обновлён'
+  return 'Изменение сохранено'
 }
 
 export function emitToast(tone, message) {
@@ -82,7 +82,7 @@ export async function api(path, init) {
       /^\/projects\/[^/]+\/workflows\/[^/]+\/archive$/.test(path)
       ? '403 Forbidden: archive permission (project_archive) is required or this action is denied. No change was made.'
       : /(?:error\s*)?500|internal service error/i.test(raw)
-        ? 'Project Stewardship could not confirm the request.'
+        ? 'Project Stewardship не смог подтвердить запрос.'
         : raw
     if (method !== 'GET' && !init?.suppressErrorToast && !quiet) emitToast('danger', message)
     const failure = new Error(message)

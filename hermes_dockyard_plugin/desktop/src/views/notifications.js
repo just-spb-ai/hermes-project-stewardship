@@ -21,12 +21,12 @@ import { NOTIFICATIONS_CSS } from '../styles/notifications-css.js'
 
 const SEVERITIES = ['info', 'low', 'medium', 'high', 'critical']
 const KIND_LABELS = {
-  approval_required: 'Approvals',
-  health_change: 'Health',
-  alert: 'Alerts',
-  unassigned_work: 'Unassigned',
+  approval_required: 'Одобрения',
+  health_change: 'Здоровье',
+  alert: 'Оповещения',
+  unassigned_work: 'Не назначен',
 }
-const STATE_LABELS = { new: 'New', seen: 'Seen', resolved: 'Resolved' }
+const STATE_LABELS = { new: 'Новое', seen: 'Просмотрено', resolved: 'Решено' }
 const PAGE_SIZE = 50
 
 const kindLabel = (kind) => KIND_LABELS[kind] ?? 'Other'
@@ -34,15 +34,15 @@ const kindLabel = (kind) => KIND_LABELS[kind] ?? 'Other'
 function dayBucket(createdAt) {
   const value = String(createdAt || '')
   const stamp = Date.parse(value)
-  if (!Number.isFinite(stamp)) return 'Earlier'
+  if (!Number.isFinite(stamp)) return 'Ранее'
   const day = new Date(stamp)
   day.setHours(0, 0, 0, 0)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const diff = Math.round((today.getTime() - day.getTime()) / 86400000)
-  if (diff <= 0) return 'Today'
-  if (diff === 1) return 'Yesterday'
-  return 'Earlier'
+  if (diff <= 0) return 'Сегодня'
+  if (diff === 1) return 'Вчера'
+  return 'Ранее'
 }
 
 export function NotificationsView({ view, scopeProjectId = null, onRefresh, onAcknowledged: onChanged, onOpen, onOpenSettings }) {
@@ -76,7 +76,7 @@ export function NotificationsView({ view, scopeProjectId = null, onRefresh, onAc
       if (typeFilter !== 'other' && note.kind !== typeFilter) return false
     }
     if (severityFilter !== 'all' && String(note.severity || 'info').toLowerCase() !== severityFilter) return false
-    if (projectFilter !== 'all' && (note.project || 'Fleet') !== projectFilter) return false
+    if (projectFilter !== 'all' && (note.project || 'Флот') !== projectFilter) return false
     return true
   })
   filtered.sort((left, right) => String(right.created_at || '').localeCompare(String(left.created_at || '')))
@@ -147,22 +147,22 @@ export function NotificationsView({ view, scopeProjectId = null, onRefresh, onAc
   return jsxs(Fragment, { children: [
     jsx('style', { 'data-dy-notifications': 'true', children: NOTIFICATIONS_CSS }),
     jsx(PageHead, {
-      title: 'Notifications',
-      description: 'Fleet events: approvals, health and alerts, with their history.',
+      title: 'Уведомления',
+      description: 'События флота: одобрения, здоровье и оповещения — с их историей.',
       status: newCount > 0 ? `${number(newCount)} new` : null,
       onRefresh,
     }),
     jsxs('div', { className: 'dy-notif-toolbar', children: [
-      jsxs('div', { className: 'dy-notif-filters', role: 'group', 'aria-label': 'Notification filters', children: [
+      jsxs('div', { className: 'dy-notif-filters', role: 'group', 'aria-label': 'Фильтры уведомлений', children: [
         jsx('label', { className: 'dy-notif-filter', children:
-          jsx('select', { 'aria-label': 'Filter by state', value: stateFilter, onChange: (e) => { setStateFilter(e.target.value); setVisible(PAGE_SIZE) }, children:
-            ['all', 'new', 'seen', 'resolved'].map((value) => jsx('option', { value, children: value === 'all' ? 'All states' : STATE_LABELS[value] }, value)) }) }),
+          jsx('select', { 'aria-label': 'Фильтр по состоянию', value: stateFilter, onChange: (e) => { setStateFilter(e.target.value); setVisible(PAGE_SIZE) }, children:
+            ['all', 'new', 'seen', 'resolved'].map((value) => jsx('option', { value, children: value === 'all' ? 'Все состояния' : STATE_LABELS[value] }, value)) }) }),
         jsx('label', { className: 'dy-notif-filter', children:
-          jsx('select', { 'aria-label': 'Filter by type', value: typeFilter, onChange: (e) => { setTypeFilter(e.target.value); setVisible(PAGE_SIZE) }, children:
-            [['all', 'All types'], ['approval_required', 'Approvals'], ['health_change', 'Health'], ['alert', 'Alerts'], ['unassigned_work', 'Unassigned'], ['other', 'Other']].map(([value, label]) => jsx('option', { value, children: label }, value)) }) }),
+          jsx('select', { 'aria-label': 'Фильтр по типу', value: typeFilter, onChange: (e) => { setTypeFilter(e.target.value); setVisible(PAGE_SIZE) }, children:
+            [['all', 'Все типы'], ['approval_required', 'Одобрения'], ['health_change', 'Здоровье'], ['alert', 'Оповещения'], ['unassigned_work', 'Не назначен'], ['other', 'Other']].map(([value, label]) => jsx('option', { value, children: label }, value)) }) }),
         jsx('label', { className: 'dy-notif-filter', children:
-          jsx('select', { 'aria-label': 'Filter by severity', value: severityFilter, onChange: (e) => { setSeverityFilter(e.target.value); setVisible(PAGE_SIZE) }, children:
-            [['all', 'All severities'], ...SEVERITIES.map((s) => [s, s])].map(([value, label]) => jsx('option', { value, children: label }, value)) }) }),
+          jsx('select', { 'aria-label': 'Фильтр по важности', value: severityFilter, onChange: (e) => { setSeverityFilter(e.target.value); setVisible(PAGE_SIZE) }, children:
+            [['all', 'Все важности'], ...SEVERITIES.map((s) => [s, s])].map(([value, label]) => jsx('option', { value, children: label }, value)) }) }),
       ]}),
       jsx('span', { className: 'dy-notif-spacer' }),
       jsx(Button, {
@@ -170,13 +170,13 @@ export function NotificationsView({ view, scopeProjectId = null, onRefresh, onAc
         small: true,
         disabled: busyId === 'all' || filtered.length === 0,
         onClick: markAllSeen,
-        children: busyId === 'all' ? 'Marking…' : 'Mark all as seen',
+        children: busyId === 'all' ? 'Marking…' : 'Отметить все как прочитанные',
       }),
     ]}),
     filterEmpty
-      ? jsx(EmptyState, { title: 'Nothing matches these filters', description: 'Loosen or reset the filters to see more of the history.', icon: 'bell' })
+      ? jsx(EmptyState, { title: 'Ничего не соответствует фильтрам', description: 'Ослабьте или сбросьте фильтры, чтобы увидеть больше истории.', icon: 'bell' })
       : all.length === 0
-        ? jsx(EmptyState, { title: 'No notifications yet', description: 'Fleet events will appear here when work changes state or needs attention.', icon: 'bell' })
+        ? jsx(EmptyState, { title: 'Уведомлений пока нет', description: 'События флота появятся здесь, когда работа меняет состояние или требует внимания.', icon: 'bell' })
         : jsxs('div', { className: 'dy-notif-layout', 'data-panel': selected ? 'open' : 'none', children: [
           jsxs('div', { children: [
             groups.map((group) => jsxs('section', { className: 'dockyard-feed-group', children: [
@@ -194,7 +194,7 @@ export function NotificationsView({ view, scopeProjectId = null, onRefresh, onAc
               }, String(note.id))),
             ]}, group.title)),
             filtered.length > visible
-              ? jsx(Button, { action: 'load-more', className: 'dy-notif-more', onClick: () => setVisible((v) => v + PAGE_SIZE), children: 'Load more' })
+              ? jsx(Button, { action: 'load-more', className: 'dy-notif-more', onClick: () => setVisible((v) => v + PAGE_SIZE), children: 'Показать ещё' })
               : null,
           ]}),
           selected
@@ -212,8 +212,8 @@ export function NotificationsView({ view, scopeProjectId = null, onRefresh, onAc
             : null,
         ]}),
     jsxs('p', { className: 'dy-notif-settings-link', 'data-notification-settings-link': true, children: [
-      jsx('span', { children: 'Notification settings are in App settings.' }),
-      jsx(Button, { small: true, action: 'open-app-settings', onClick: onOpenSettings, children: 'Open App settings' }),
+      jsx('span', { children: 'Настройки уведомлений — в настройках приложения.' }),
+      jsx(Button, { small: true, action: 'open-app-settings', onClick: onOpenSettings, children: 'Открыть настройки приложения' }),
     ]}),
     actionError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Action failed: ${actionError}` }) : null,
   ]})
@@ -238,7 +238,7 @@ export function NotificationRow({ note, busy, selected, onSelect, onSeen, onOpen
           jsx('span', { className: `dockyard-notification-marker ${tone}`, 'aria-hidden': 'true', children: jsx(Icon, { name: tone === 'danger' || tone === 'warning' ? 'alert' : 'bell' }) }),
           jsxs('span', { children: [
             jsxs('span', { className: 'dy-notif-row-titleline', children: [
-              jsx('strong', { children: note.title ?? 'Fleet notification' }),
+              jsx('strong', { children: note.title ?? 'Уведомление флота' }),
               jsx(StatusTag, { tone: state === 'new' ? 'info' : 'neutral', label: STATE_LABELS[state] ?? state }),
             ]}),
             jsx('p', { children: note.body ?? '' }),
@@ -248,10 +248,10 @@ export function NotificationRow({ note, busy, selected, onSelect, onSeen, onOpen
       }),
       jsxs('div', { className: 'dockyard-notification-action', children: [
         typeof onOpen === 'function' && note.deep_link
-          ? jsx(Button, { action: 'open', small: true, onClick: () => onOpen(note.deep_link), children: 'Open' })
+          ? jsx(Button, { action: 'open', small: true, onClick: () => onOpen(note.deep_link), children: 'Открыть' })
           : null,
         state === 'new'
-          ? jsx(Button, { action: 'mark-seen', small: true, disabled: busy, onClick: onSeen, children: busy ? 'Working…' : 'Mark seen' })
+          ? jsx(Button, { action: 'mark-seen', small: true, disabled: busy, onClick: onSeen, children: busy ? 'Working…' : 'Отметить прочитанным' })
           : null,
       ]}),
     ],
@@ -262,8 +262,8 @@ export function NotificationDetail({ note, busy, resolveOpen, onResolveToggle, r
   const state = note.state ?? (note.acked ? 'seen' : 'new')
   const resolvedBy = note.resolved_by
   const seenBy = note.acked_by
-  return jsxs('aside', { className: 'dy-notif-detail', 'data-notification-detail': String(note.id), 'aria-label': 'Notification detail', children: [
-    jsxs('h3', { children: [note.title ?? 'Fleet notification', ' ', jsx(StatusTag, { tone: state === 'new' ? 'info' : 'neutral', label: STATE_LABELS[state] ?? state }) ]}),
+  return jsxs('aside', { className: 'dy-notif-detail', 'data-notification-detail': String(note.id), 'aria-label': 'Детали уведомления', children: [
+    jsxs('h3', { children: [note.title ?? 'Уведомление флота', ' ', jsx(StatusTag, { tone: state === 'new' ? 'info' : 'neutral', label: STATE_LABELS[state] ?? state }) ]}),
     jsx('p', { children: note.body ?? '' }),
     jsx('span', { className: 'dockyard-meta', children: `Project: ${note.project || 'Fleet'}` }),
     jsx('span', { className: 'dockyard-meta', children: `Type: ${kindLabel(note.kind)} · Severity: ${note.severity}` }),
@@ -276,29 +276,29 @@ export function NotificationDetail({ note, busy, resolveOpen, onResolveToggle, r
     ]}) : null,
     jsxs('div', { className: 'dy-notif-detail-actions', children: [
       typeof onOpen === 'function' && note.deep_link
-        ? jsx(Button, { action: 'detail-open', small: true, onClick: () => onOpen(note.deep_link), children: 'Open item' })
+        ? jsx(Button, { action: 'detail-open', small: true, onClick: () => onOpen(note.deep_link), children: 'Открыть элемент' })
         : null,
       state === 'new'
-        ? jsx(Button, { action: 'detail-seen', small: true, disabled: busy, onClick: onSeen, children: busy ? 'Working…' : 'Mark seen' })
+        ? jsx(Button, { action: 'detail-seen', small: true, disabled: busy, onClick: onSeen, children: busy ? 'Working…' : 'Отметить прочитанным' })
         : null,
       state !== 'resolved'
         ? jsx(Button, { action: 'detail-resolve', small: true, disabled: busy, onClick: onResolveToggle, 'aria-expanded': resolveOpen ? 'true' : 'false', children: 'Resolve' })
         : null,
       note.kind === 'approval_required' && note.ref
-        ? jsx(Button, { action: 'detail-approval', small: true, onClick: () => onOpen?.(note.project ? `s4:project/${note.project}` : 's4:approval-inbox'), children: 'Review in Approval Inbox' })
+        ? jsx(Button, { action: 'detail-approval', small: true, onClick: () => onOpen?.(note.project ? `s4:project/${note.project}` : 's4:approval-inbox'), children: 'Проверить во «Входящих одобрениях»' })
         : null,
     ]}),
     resolveOpen && state !== 'resolved'
       ? jsxs(Fragment, { children: [
         jsx('textarea', {
           className: 'dy-notif-resolve-note',
-          'aria-label': 'Resolution note',
-          placeholder: 'Resolution note (optional)',
+          'aria-label': 'Заметка о решении',
+          placeholder: 'Заметка о решении (необязательно)',
           value: resolveNote,
           maxLength: 2000,
           onChange: (e) => onResolveNote(e.target.value),
         }),
-        jsx(Button, { action: 'detail-resolve-confirm', variant: 'primary', small: true, disabled: busy, onClick: onResolve, children: busy ? 'Resolving…' : 'Confirm resolve' }),
+        jsx(Button, { action: 'detail-resolve-confirm', variant: 'primary', small: true, disabled: busy, onClick: onResolve, children: busy ? 'Resolving…' : 'Подтвердить решение' }),
       ]})
       : null,
   ]})
@@ -314,39 +314,39 @@ export function NotificationSettings({ settings, busy, error, onSave }) {
   const quiet = value.quiet_hours ?? {}
   const bypass = value.bypass_quiet_hours ?? ['approval_required']
   const approvalsBypass = bypass.includes('approval_required')
-  return jsxs('aside', { className: 'dy-notif-settings', 'data-notification-settings': 'true', 'aria-label': 'Notification settings', children: [
-    jsx('h3', { children: 'Notification settings' }),
+  return jsxs('aside', { className: 'dy-notif-settings', 'data-notification-settings': 'true', 'aria-label': 'Настройки уведомлений', children: [
+    jsx('h3', { children: 'Настройки уведомлений' }),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-min-severity', children: 'Minimum severity' }),
+      jsx('label', { htmlFor: 'dy-notif-min-severity', children: 'Минимальная важность' }),
       jsx('select', { id: 'dy-notif-min-severity', value: channels.in_app?.min_severity ?? 'low', disabled: busy, onChange: (e) => onSave({ channels: { ...channels, in_app: { ...(channels.in_app ?? {}), min_severity: e.target.value } } }), children:
         SEVERITIES.map((s) => jsx('option', { value: s, children: s }, s)) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-popups-enabled', children: 'Pop-ups' }),
+      jsx('label', { htmlFor: 'dy-notif-popups-enabled', children: 'Всплывающие окна' }),
       jsx('select', { id: 'dy-notif-popups-enabled', value: desktop.enabled === false ? 'off' : 'on', disabled: busy, onChange: (e) => onSave({ channels: { ...channels, desktop: { ...desktop, enabled: e.target.value === 'on' } } }), children:
-        [['on', 'On'], ['off', 'Off']].map(([v, label]) => jsx('option', { value: v, children: label }, v)) }),
+        [['on', 'Вкл'], ['off', 'Выкл']].map(([v, label]) => jsx('option', { value: v, children: label }, v)) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-popups-severity', children: 'Pop-up minimum severity' }),
+      jsx('label', { htmlFor: 'dy-notif-popups-severity', children: 'Минимальная важность для всплывающих' }),
       jsx('select', { id: 'dy-notif-popups-severity', value: desktop.min_severity ?? 'high', disabled: busy, onChange: (e) => onSave({ channels: { ...channels, desktop: { ...desktop, min_severity: e.target.value } } }), children:
         SEVERITIES.map((s) => jsx('option', { value: s, children: s }, s)) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-discord-enabled', children: 'Discord alerts' }),
+      jsx('label', { htmlFor: 'dy-notif-discord-enabled', children: 'Оповещения в Telegram' }),
       jsx('select', { id: 'dy-notif-discord-enabled', value: discordOn ? 'on' : 'off', disabled: busy, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, enabled: e.target.value === 'on' } } }), children:
-        [['off', 'Off'], ['on', 'On']].map(([v, label]) => jsx('option', { value: v, children: label }, v)) }),
+        [['off', 'Выкл'], ['on', 'Вкл']].map(([v, label]) => jsx('option', { value: v, children: label }, v)) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-discord-severity', children: 'Discord minimum severity' }),
+      jsx('label', { htmlFor: 'dy-notif-discord-severity', children: 'Минимальная важность для Telegram' }),
       jsx('select', { id: 'dy-notif-discord-severity', value: discord.min_severity ?? 'high', disabled: busy || !discordOn, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, min_severity: e.target.value } } }), children:
         SEVERITIES.map((s) => jsx('option', { value: s, children: s }, s)) }),
     ]}),
-    jsx('p', { className: 'dy-notif-override-link', 'data-discord-note': true, children: 'Discord alerts are posted by a scheduled job on this computer once it is set up. Until then nothing is sent.' }),
+    jsx('p', { className: 'dy-notif-override-link', 'data-discord-note': true, children: 'Оповещения в Telegram отправляются плановым заданием на этом компьютере после его настройки. До этого ничего не отправляется.' }),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-quiet-start', children: 'Quiet hours' }),
+      jsx('label', { htmlFor: 'dy-notif-quiet-start', children: 'Тихие часы' }),
       jsx('input', { id: 'dy-notif-quiet-start', type: 'time', value: quiet.start ?? '', disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...(quiet || {}), start: e.target.value, end: quiet.end ?? '' } }) }),
       jsx('span', { children: '→' }),
-      jsx('input', { 'aria-label': 'Quiet hours end', type: 'time', value: quiet.end ?? '', disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...(quiet || {}), start: quiet.start ?? '', end: e.target.value } }) }),
+      jsx('input', { 'aria-label': 'Конец тихих часов', type: 'time', value: quiet.end ?? '', disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...(quiet || {}), start: quiet.start ?? '', end: e.target.value } }) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
       jsx('input', { id: 'dy-notif-bypass', type: 'checkbox', checked: approvalsBypass, disabled: busy, onChange: (e) => {
@@ -355,7 +355,7 @@ export function NotificationSettings({ settings, busy, error, onSave }) {
           : bypass.filter((k) => k !== 'approval_required')
         onSave({ bypass_quiet_hours: next })
       } }),
-      jsx('label', { htmlFor: 'dy-notif-bypass', children: 'Approvals ignore quiet hours' }),
+      jsx('label', { htmlFor: 'dy-notif-bypass', children: 'Одобрения игнорируют тихие часы' }),
     ]}),
     jsx('p', { className: 'dy-notif-override-link', children: 'Per-project overrides: pick a project, then Projects \u2192 Settings.' }),
     error ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: `Could not save: ${error}` }) : null,

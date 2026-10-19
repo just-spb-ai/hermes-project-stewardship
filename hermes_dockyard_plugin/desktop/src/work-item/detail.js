@@ -182,7 +182,7 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
     }
     if (draft.due !== base.due) changes.due = draft.due || null
     if (draft.parent_ref !== base.parent_ref) {
-      if (parentReason.trim().length < 4) { setError('Changing the parent needs a reason of at least 4 characters.'); setBusy(false); return }
+      if (parentReason.trim().length < 4) { setError('Смена родителя требует причины минимум из 4 символов.'); setBusy(false); return }
       changes.parent_ref = draft.parent_ref || null
       changes.reason = parentReason.trim()
     }
@@ -224,7 +224,7 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
       // its own PATCH.
       await loadDetail(item.ref)
       setParentReason('')
-      setFeedback('Saved.')
+      setFeedback('Сохранено.')
       await onRefresh?.()
     } catch (failure) {
       setError(String(failure?.message ?? failure))
@@ -241,7 +241,7 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
       })
       setDepRef('')
       await loadDetail(item.ref)
-      setFeedback('Dependency added.')
+      setFeedback('Зависимость добавлена.')
       await onRefresh?.()
     } catch (failure) {
       setError(String(failure?.message ?? failure))
@@ -286,92 +286,92 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
         jsxs('header', { className: 'dockyard-modal-head', children: [
           jsxs('div', { children: [
             jsx('span', { className: 'dockyard-create-eyebrow', children: `Work item · ${detailProject || projectId}` }),
-            jsx('h2', { id: 'dockyard-work-item-title', children: 'Edit backlog item' }),
+            jsx('h2', { id: 'dockyard-work-item-title', children: 'Редактировать пункт бэклога' }),
           ]}),
-          jsx(Button, { action: 'close-work-item-detail', ariaLabel: 'Close work item details', onClick: () => { if (isDirty) { setConfirmDiscard(true) } else { onClose() } }, children: 'Close' }),
+          jsx(Button, { action: 'close-work-item-detail', ariaLabel: 'Закрыть подробности рабочего элемента', onClick: () => { if (isDirty) { setConfirmDiscard(true) } else { onClose() } }, children: 'Закрыть' }),
         ]}),
-        confirmDiscard ? jsxs('div', { className: 'dockyard-dirty-confirm', role: 'alertdialog', 'aria-label': 'Unsaved changes', 'data-discard-confirm': true, children: [
-          jsx('strong', { children: 'Discard unsaved changes?' }),
+        confirmDiscard ? jsxs('div', { className: 'dockyard-dirty-confirm', role: 'alertdialog', 'aria-label': 'Несохранённые изменения', 'data-discard-confirm': true, children: [
+          jsx('strong', { children: 'Отменить несохранённые изменения?' }),
           jsx('p', { children: 'Your edits to this work item have not been saved. Choosing discard loses them; keep editing returns you to the form.' }),
           jsxs('div', { className: 'dockyard-modal-actions', children: [
-            jsx(Button, { action: 'keep-editing', variant: 'primary', onClick: () => setConfirmDiscard(false), children: 'Keep editing' }),
-            jsx(Button, { action: 'confirm-discard', onClick: () => { setConfirmDiscard(false); onClose() }, children: 'Discard changes' }),
+            jsx(Button, { action: 'keep-editing', variant: 'primary', onClick: () => setConfirmDiscard(false), children: 'Продолжить редактирование' }),
+            jsx(Button, { action: 'confirm-discard', onClick: () => { setConfirmDiscard(false); onClose() }, children: 'Отменить изменения' }),
           ]}),
         ] }) : null,
         jsxs('div', { className: 'dockyard-create-body dockyard-edit-body', children: [
           jsxs('div', { className: 'dockyard-create-context dockyard-edit-context', children: [
-            jsx('span', { children: 'Status' }),
+            jsx('span', { children: 'Статус' }),
             jsx('span', { className: `dockyard-status-dot status-${draft?.status ?? 'backlog'}`, 'aria-hidden': true }),
-            jsx('select', { 'aria-label': 'Status', value: draft?.status ?? 'backlog', onChange: (event) => setDraft({ ...draft, status: event.target.value }), children:
+            jsx('select', { 'aria-label': 'Статус', value: draft?.status ?? 'backlog', onChange: (event) => setDraft({ ...draft, status: event.target.value }), children:
               ['backlog', 'in_progress', 'in_review', 'blocked', 'done'].map((status) => jsx('option', { value: status, children: readableLabel(status) }, status)),
             }),
             jsxs('span', { className: 'dockyard-detail-task-id', 'data-task-id': taskIdText ?? undefined, children: [
-              jsx('span', { children: 'Task ID' }),
-              jsx('code', { children: taskIdText ?? 'Unavailable' }),
+              jsx('span', { children: 'ID задачи' }),
+              jsx('code', { children: taskIdText ?? 'Недоступно' }),
             ]}),
             (detail?.work_item?.created_by || item.created_by) ? jsx('span', { children: `· Created by ${detail?.work_item?.created_by || item.created_by}` }) : null,
           ]}),
           jsxs('div', { className: 'dockyard-settings-grid dockyard-create-fields dockyard-edit-fields', children: [
-            jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Title' }), jsx('input', { 'aria-label': 'Title', value: draft?.title ?? '', onChange: (event) => setDraft({ ...draft, title: event.target.value }) })] }),
-            jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Description (optional)' }), jsx('textarea', { 'aria-label': 'Body', rows: 3, placeholder: 'Describe the outcome and acceptance criteria…', value: draft?.body ?? '', onChange: (event) => setDraft({ ...draft, body: event.target.value }) })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Parent (optional)' }), jsx('select', { 'aria-label': 'Parent', value: draft?.parent_ref ?? '', onChange: (event) => setDraft({ ...draft, parent_ref: event.target.value }), children: [
-              jsx('option', { value: '', children: 'Top level' }, 'none'),
+            jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Заголовок' }), jsx('input', { 'aria-label': 'Заголовок', value: draft?.title ?? '', onChange: (event) => setDraft({ ...draft, title: event.target.value }) })] }),
+            jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Описание (необязательно)' }), jsx('textarea', { 'aria-label': 'Описание', rows: 3, placeholder: 'Опишите результат и критерии приёмки…', value: draft?.body ?? '', onChange: (event) => setDraft({ ...draft, body: event.target.value }) })] }),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Родитель (необязательно)' }), jsx('select', { 'aria-label': 'Родитель', value: draft?.parent_ref ?? '', onChange: (event) => setDraft({ ...draft, parent_ref: event.target.value }), children: [
+              jsx('option', { value: '', children: 'Верхний уровень' }, 'none'),
               ...(detail?.parent_choices ?? []).map((choice) => jsx('option', { value: choice.ref, children: `${choice.ref} · ${choice.title}` }, choice.ref)),
               draft?.parent_ref && !(detail?.parent_choices ?? []).some((choice) => choice.ref === draft.parent_ref) ? jsx('option', { value: draft.parent_ref, children: draft.parent_ref }, 'current-parent') : null,
             ] })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Due date (optional)' }), jsx('input', { type: 'date', 'aria-label': 'Due date', value: draft?.due ?? '', onChange: (event) => setDraft({ ...draft, due: event.target.value }) })] }),
-            draft && baseline && draft.parent_ref !== baseline.parent_ref ? jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Reason for changing parent *' }), jsx('input', { 'aria-label': 'Reason for changing parent', value: parentReason, placeholder: 'Required for the audit trail', onChange: (event) => setParentReason(event.target.value) })] }) : null,
-            jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Type' }), jsx('select', { 'aria-label': 'Type', value: draft?.type ?? 'task', onChange: (event) => setDraft({ ...draft, type: event.target.value }), children:
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Срок (необязательно)' }), jsx('input', { type: 'date', 'aria-label': 'Срок', value: draft?.due ?? '', onChange: (event) => setDraft({ ...draft, due: event.target.value }) })] }),
+            draft && baseline && draft.parent_ref !== baseline.parent_ref ? jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Причина смены родителя *' }), jsx('input', { 'aria-label': 'Причина смены родителя', value: parentReason, placeholder: 'Требуется для аудита', onChange: (event) => setParentReason(event.target.value) })] }) : null,
+            jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Тип' }), jsx('select', { 'aria-label': 'Тип', value: draft?.type ?? 'task', onChange: (event) => setDraft({ ...draft, type: event.target.value }), children:
               [...new Set([draft?.type || 'task', 'task', 'bug', 'spike', 'subtask', 'gate', 'feature'])].map((kind) => jsx('option', { value: kind, children: readableLabel(kind) }, kind)),
             })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Estimated days (optional)' }), jsx('input', { type: 'number', min: 0, step: 0.5, 'aria-label': 'Estimated days', placeholder: 'e.g. 2.5', value: draft?.estimate_days ?? '', onChange: (event) => setDraft({ ...draft, estimate_days: event.target.value }) })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Assignee (optional)' }), jsx('select', { 'aria-label': 'Assignee', value: draft?.assignee ?? '', disabled: busy, onChange: (event) => setDraft({ ...draft, assignee: event.target.value }), children: [
-              jsx('option', { value: '', children: 'Unassigned' }, 'none'),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Оценка в днях (необязательно)' }), jsx('input', { type: 'number', min: 0, step: 0.5, 'aria-label': 'Оценка, дней', placeholder: 'e.g. 2.5', value: draft?.estimate_days ?? '', onChange: (event) => setDraft({ ...draft, estimate_days: event.target.value }) })] }),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Исполнитель (необязательно)' }), jsx('select', { 'aria-label': 'Исполнитель', value: draft?.assignee ?? '', disabled: busy, onChange: (event) => setDraft({ ...draft, assignee: event.target.value }), children: [
+              jsx('option', { value: '', children: 'Не назначен' }, 'none'),
               ...(profiles ?? []).filter((profile) => profile.slug || profile.id || profile.name).map((profile) => { const value = profile.slug || profile.id || profile.name; return jsx('option', { value, disabled: profile.available === false && value !== draft?.assignee, children: profile.display_name || profile.name || value }, value) }),
               draft?.assignee && !(profiles ?? []).some((profile) => (profile.slug || profile.id || profile.name) === draft.assignee) ? jsx('option', { value: draft.assignee, children: `${draft.assignee} (current)` }, 'current-assignee') : null,
             ] })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Initiative' }), jsx('select', { 'aria-label': 'Initiative', value: draft?.initiative_ref ?? '', onChange: (event) => setDraft({ ...draft, initiative_ref: event.target.value }), children: [
-              jsx('option', { value: '', children: 'No initiative' }, 'none'),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Инициатива' }), jsx('select', { 'aria-label': 'Инициатива', value: draft?.initiative_ref ?? '', onChange: (event) => setDraft({ ...draft, initiative_ref: event.target.value }), children: [
+              jsx('option', { value: '', children: 'Без инициативы' }, 'none'),
               ...initiatives.map((initiative) => jsx('option', { value: initiative.ref, children: `${initiative.ref} / ${initiative.title}` }, initiative.ref)),
               draft?.initiative_ref && !initiatives.some((initiative) => initiative.ref === draft.initiative_ref) ? jsx('option', { value: draft.initiative_ref, children: `${draft.initiative_ref} (current)` }, 'current-initiative') : null,
             ] })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Goal' }), jsx('select', { 'aria-label': 'Goal', value: goalDraft ?? currentGoal ?? '', disabled: busy, onChange: (event) => setGoalDraft(event.target.value), children: [
-              jsx('option', { value: '', children: 'Not placed yet' }, 'none'),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Цель' }), jsx('select', { 'aria-label': 'Цель', value: goalDraft ?? currentGoal ?? '', disabled: busy, onChange: (event) => setGoalDraft(event.target.value), children: [
+              jsx('option', { value: '', children: 'Ещё не размещено' }, 'none'),
               ...goals.map((goal) => jsx('option', { value: String(goal.id), children: goal.title }, String(goal.id))),
             ] })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Evidence refs (optional)' }), jsx('input', { 'aria-label': 'Evidence refs', placeholder: 'Comma-separated refs', value: draft?.evidence_refs ?? '', onChange: (event) => setDraft({ ...draft, evidence_refs: event.target.value }) })] }),
-            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Labels (optional)' }), jsx('input', { 'aria-label': 'Labels', placeholder: 'Comma-separated labels', value: draft?.labels ?? '', onChange: (event) => setDraft({ ...draft, labels: event.target.value }) })] }),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Ссылки на доказательства (необязательно)' }), jsx('input', { 'aria-label': 'Ссылки на доказательства', placeholder: 'Ссылки через запятую', value: draft?.evidence_refs ?? '', onChange: (event) => setDraft({ ...draft, evidence_refs: event.target.value }) })] }),
+            jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Метки (необязательно)' }), jsx('input', { 'aria-label': 'Метки', placeholder: 'Метки через запятую', value: draft?.labels ?? '', onChange: (event) => setDraft({ ...draft, labels: event.target.value }) })] }),
             jsxs('div', { className: 'dockyard-edit-backlog-fields dockyard-field-wide', children: [
-              jsxs('span', { children: ['Current rank: ', jsx('strong', { children: detail?.work_item?.priority_rank ?? item.priority_rank ?? 'Not ranked' })] }),
-              jsxs('span', { children: ['Priority reason: ', jsx('strong', { children: detail?.work_item?.priority_reason || item.priority_reason || 'Not recorded' })] }),
-              jsx('small', { children: 'Change rank from the backlog table; a new priority reason is required there.' }),
+              jsxs('span', { children: ['Текущий ранг: ', jsx('strong', { children: detail?.work_item?.priority_rank ?? item.priority_rank ?? 'Без ранга' })] }),
+              jsxs('span', { children: ['Причина приоритета: ', jsx('strong', { children: detail?.work_item?.priority_reason || item.priority_reason || 'Не записано' })] }),
+              jsx('small', { children: 'Ранг меняется из таблицы бэклога; там потребуется новая причина приоритета.' }),
             ] }),
           ]}),
           detail ? jsxs('div', { className: 'dockyard-edit-dependencies', 'data-dependency-editor': true, children: [
-            jsxs('strong', { children: ['Dependencies', ` · ${(detail.dependencies ?? []).length}`] }),
-            (detail.dependencies ?? []).length ? jsx('ul', { children: detail.dependencies.map((dependency) => jsx('li', { children: `${dependency.ref} · ${dependency.title}` }, dependency.ref)) }) : jsx('span', { children: 'None recorded' }),
-            jsx('input', { 'aria-label': 'Dependency task ref', placeholder: 'Task ref, e.g. HDY-4', value: depRef, onChange: (event) => setDepRef(event.target.value) }),
+            jsxs('strong', { children: ['Зависимости', ` · ${(detail.dependencies ?? []).length}`] }),
+            (detail.dependencies ?? []).length ? jsx('ul', { children: detail.dependencies.map((dependency) => jsx('li', { children: `${dependency.ref} · ${dependency.title}` }, dependency.ref)) }) : jsx('span', { children: 'Не записано' }),
+            jsx('input', { 'aria-label': 'Ссылка на задачу-зависимость', placeholder: 'Номер задачи, напр. HDY-4', value: depRef, onChange: (event) => setDepRef(event.target.value) }),
             jsx(Button, { action: 'add-dependency', variant: 'quiet', disabled: busy || !depRef.trim(), onClick: addDependency, children: 'Add' }),
           ] }) : null,
           error ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: error }) : null,
         ]}),
         // Approved reference: the Activity timeline is a full-width section
         // below the field columns, with an 'All activity' scope dropdown.
-        detail ? jsxs('section', { className: 'dockyard-detail-activity', 'data-work-history': true, 'aria-label': 'Task activity', children: [
+        detail ? jsxs('section', { className: 'dockyard-detail-activity', 'data-work-history': true, 'aria-label': 'Активность задачи', children: [
           jsxs('div', { className: 'dockyard-detail-activity-head', children: [
             jsx('h3', { children: `Activity · ${historyEntries.length}` }),
             jsxs('div', { className: 'dockyard-activity-actions', children: [
-              historyEntries.length > 2 ? jsx('button', { type: 'button', className: 'dockyard-activity-expand', 'aria-expanded': activityExpanded, onClick: () => setActivityExpanded(!activityExpanded), children: activityExpanded ? 'Show less' : `View all ${historyEntries.length}` }) : null,
+              historyEntries.length > 2 ? jsx('button', { type: 'button', className: 'dockyard-activity-expand', 'aria-expanded': activityExpanded, onClick: () => setActivityExpanded(!activityExpanded), children: activityExpanded ? 'Свернуть' : `View all ${historyEntries.length}` }) : null,
               // jsxs: a static child list (jsx with an array made React warn
               // "Each child in a list should have a unique key", seen 05/10).
               jsxs('label', { className: 'dockyard-activity-scope', children: [
                 jsxs('span', { className: 'dockyard-field-shell dockyard-activity-scope-shell', children: [
                   jsx(Icon, { name: 'filter' }),
-                  jsx('select', { 'data-activity-scope': true, 'aria-label': 'Activity scope', value: historyFilter, onChange: (event) => { setHistoryFilter(event.target.value); setActivityExpanded(false) }, children: [
-                    jsx('option', { value: 'all', children: 'All activity' }, 'all'),
-                    jsx('option', { value: 'status', children: 'Status changes' }, 'status'),
-                    jsx('option', { value: 'assignee', children: 'Assignment' }, 'assignee'),
-                    jsx('option', { value: 'fields', children: 'Field edits' }, 'fields'),
+                  jsx('select', { 'data-activity-scope': true, 'aria-label': 'Охват активности', value: historyFilter, onChange: (event) => { setHistoryFilter(event.target.value); setActivityExpanded(false) }, children: [
+                    jsx('option', { value: 'all', children: 'Вся активность' }, 'all'),
+                    jsx('option', { value: 'status', children: 'Изменения статуса' }, 'status'),
+                    jsx('option', { value: 'assignee', children: 'Назначение' }, 'assignee'),
+                    jsx('option', { value: 'fields', children: 'Правки полей' }, 'fields'),
                   ] }),
                 ]}),
               ]}),
@@ -389,15 +389,15 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
                     : /dependency_removed/.test(rawAction) ? [{ field: 'dependencies', from: detail.dependency, to: null }]
                     : []
                   )
-                  const action = /workitem\.updated/.test(rawAction) ? 'Updated fields'
-                    : /workitem\.transition/.test(rawAction) ? 'Status changed'
-                    : /workitem\.assigned/.test(rawAction) ? 'Assignee changed'
-                    : /dependency_added/.test(rawAction) ? 'Dependency added'
-                    : /dependency_removed/.test(rawAction) ? 'Dependency removed'
+                  const action = /workitem\.updated/.test(rawAction) ? 'Обновлённые поля'
+                    : /workitem\.transition/.test(rawAction) ? 'Статус изменён'
+                    : /workitem\.assigned/.test(rawAction) ? 'Исполнитель изменён'
+                    : /dependency_added/.test(rawAction) ? 'Зависимость добавлена'
+                    : /dependency_removed/.test(rawAction) ? 'Зависимость удалена'
                     : rawAction.replace(/[._]/g, ' ')
-                  const fieldNames = { title: 'Title', body: 'Description', type: 'Type', parent_ref: 'Parent', initiative_ref: 'Initiative', labels: 'Labels', evidence_refs: 'Evidence refs', estimate_days: 'Estimate', due: 'Due date', status: 'Status', assignee: 'Assignee', dependencies: 'Dependency' }
+                  const fieldNames = { title: 'Заголовок', body: 'Описание', type: 'Тип', parent_ref: 'Родитель', initiative_ref: 'Инициатива', labels: 'Метки', evidence_refs: 'Ссылки на доказательства', estimate_days: 'Оценка', due: 'Срок', status: 'Статус', assignee: 'Исполнитель', dependencies: 'Зависимость' }
                   const valueText = (value, field) => Array.isArray(value) ? (value.length ? value.join(', ') : '—') : (value === null || value === undefined || value === '' ? '—' : (['status', 'type'].includes(field) ? readableLabel(value) : String(value)))
-                  const actor = entry.actor_id || entry.actor || entry.verified_actor || 'Actor not recorded'
+                  const actor = entry.actor_id || entry.actor || entry.verified_actor || 'Субъект не записан'
                   const at = entry.ts || entry.created_at || entry.at
                   return jsxs('li', { children: [
                     jsx('strong', { children: action }),
@@ -412,7 +412,7 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
                     detail.reason ? jsx('span', { children: `Reason: ${detail.reason}` }) : null,
                   ] }, String(entry.id ?? index))
                 }) })
-              : jsx('p', { className: 'dockyard-meta', children: (detail?.history ?? []).length ? 'No entries match this scope.' : 'No recorded activity for this item yet.' }),
+              : jsx('p', { className: 'dockyard-meta', children: (detail?.history ?? []).length ? 'Нет записей в этой области.' : 'Активность по этому элементу пока не записана.' }),
         ] }) : null,
         jsxs('div', { className: 'dockyard-form-actions dockyard-detail-footer', children: [
           // Approved reference: Cancel sits on the left; 'Unsaved changes' and
@@ -420,16 +420,16 @@ export function WorkItemDetail({ item, projectId, profiles, initiatives = [], on
           // guarded path as Escape (dirty edits ask first).
           jsx(Button, {
             action: 'cancel-work-item-detail', onClick: () => { if (isDirty) { setConfirmDiscard(true) } else { onClose() } },
-            disabled: busy, children: 'Cancel',
+            disabled: busy, children: 'Отмена',
           }),
           jsxs('span', { className: 'dockyard-detail-footer-right', children: [
             isDirty ? jsxs('span', { className: 'dockyard-edit-unsaved', role: 'status', 'data-dirty-banner': true, children: [
-              jsx('span', { children: 'Unsaved changes' }),
-              jsx(Button, { small: true, action: 'undo-work-item-changes', disabled: busy, onClick: undoChanges, children: 'Undo' }),
+              jsx('span', { children: 'Несохранённые изменения' }),
+              jsx(Button, { small: true, action: 'undo-work-item-changes', disabled: busy, onClick: undoChanges, children: 'Отменить' }),
             ] }) : null,
             jsx(Button, {
               action: 'save-work-item', variant: 'primary', disabled: busy || !isDirty,
-              onClick: save, children: busy ? 'Saving...' : 'Save changes',
+              onClick: save, children: busy ? 'Сохранение...' : 'Сохранить изменения',
             }),
             feedback ? jsx('span', { role: 'status', children: feedback }) : null,
           ]}),
@@ -459,16 +459,16 @@ export function ObjectiveEvidence({ objective, projectId, onSaved }) {
   }
   return jsxs('details', { 'data-objective-evidence': objective.id, children: [
     jsx('summary', { children: `Result: ${readableLabel(state)} · Evidence/history` }),
-    jsx('p', { children: evidence.detail || 'Insufficient data: no recorded evidence.' }),
+    jsx('p', { children: evidence.detail || 'Недостаточно данных: доказательства не записаны.' }),
     jsx('p', { children: `Evidence age: ${evidence.evidence_age_seconds == null ? 'unavailable' : Math.floor(evidence.evidence_age_seconds) + ' seconds'} · Window: ${objective.window || '30d'} · Samples: ${evidence.sample_count || 0} · Pass rate: ${evidence.pass_rate == null ? 'insufficient data' : Math.round(evidence.pass_rate * 100) + '%'}` }),
     jsx('ul', { children: (evidence.history || []).map((sample, index) => jsx('li', { children: `${sample.recorded_at} · ${sample.state} · ${sample.verified_actor || sample.actor || sample.source_evidence?.source || 'objective evaluator'}${sample.source === 'evaluate-now' ? ' (Evaluate now)' : ''} · ${sample.detail || ''} · ${JSON.stringify(sample.evidence || sample.source_evidence || {})}` }, index)) }),
     objective.evaluator_type === 'manual' && objective.enabled !== false ? jsxs('form', { onSubmit: save, children: [
-      jsxs('label', { children: ['Result ', jsx('select', { name: 'result', children: ['passed', 'failed'].map(value => jsx('option', { value, children: value }, value)) })] }),
-      jsxs('label', { children: ['Evidence reference ', jsx('input', { name: 'evidence', required: true, maxLength: 500 })] }),
-      jsxs('label', { children: ['Assessment note ', jsx('input', { name: 'detail', maxLength: 2000 })] }),
-      jsxs('label', { children: ['Expires at (local time) ', jsx('input', { name: 'expiry', type: 'datetime-local' })] }),
-      jsx('button', { type: 'submit', disabled: busy || !objective.can_record_assessment, children: busy ? 'Saving and verifying…' : 'Record human assessment' }),
-      !objective.can_record_assessment ? jsx('p', { children: 'Read-only: a dedicated authenticated human principal is required to record assessments.' }) : null,
+      jsxs('label', { children: ['Результат ', jsx('select', { name: 'result', children: ['passed', 'failed'].map(value => jsx('option', { value, children: value }, value)) })] }),
+      jsxs('label', { children: ['Ссылка на доказательство ', jsx('input', { name: 'evidence', required: true, maxLength: 500 })] }),
+      jsxs('label', { children: ['Заметка оценки ', jsx('input', { name: 'detail', maxLength: 2000 })] }),
+      jsxs('label', { children: ['Истекает в (местное время) ', jsx('input', { name: 'expiry', type: 'datetime-local' })] }),
+      jsx('button', { type: 'submit', disabled: busy || !objective.can_record_assessment, children: busy ? 'Saving and verifying…' : 'Зафиксировать оценку человека' }),
+      !objective.can_record_assessment ? jsx('p', { children: 'Только чтение: для фиксации оценок требуется отдельный аутентифицированный человек.' }) : null,
     ]}) : null,
     error ? jsx('p', { role: 'alert', children: error }) : null,
   ]})

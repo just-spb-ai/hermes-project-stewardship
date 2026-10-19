@@ -45,14 +45,31 @@ class PluginState:
         cls._svc = None
 
 
-def tool_steward_status(project_id: str) -> dict:
+def tool_steward_status(project_id: str = "") -> dict:
     """Settings, health and the delivery-ladder summary for one project.
 
     The ladder block reports derived states only (computed at read time from
     stored links, task statuses and check results). No percentages, no blended
     scores, no forecasts: unknown is reported as unknown.
+
+    Without a project id it lists the enabled projects (id, phase, autonomy,
+    latest health), so an agent never has to guess an id. (Local patch
+    2026-10-17, see project/Research/tools/hermes-project-stewardship-review.md.)
     """
     svc = PluginState.services()
+    if not str(project_id or "").strip():
+        projects = []
+        for row in svc.list_projects():
+            if not row.get("enabled"):
+                continue
+            health = svc.latest_health(row["project_id"])
+            projects.append({
+                "project_id": row["project_id"],
+                "phase": row["phase"],
+                "autonomy_level": row["autonomy_level"],
+                "health": health["status"] if health else "never-verified",
+            })
+        return {"projects": projects}
     out = {"settings": svc.settings(project_id), "health": svc.latest_health(project_id)}
     try:
         from .kanban import ReferenceKanbanAdapter
@@ -125,25 +142,69 @@ TOOLS = {
     "steward_propose_initiative": tool_steward_propose_initiative,
 }
 
+# Model-facing descriptions (local patch 2026-10-17): the upstream schema only
+# repeated the tool name, so agents could not tell when or how to call these.
+_PROJECT_ID_DOC = (
+    "Stewardship project id (the project slug, e.g. 'spb-perps'). "
+    "Call steward_status without arguments to list the ids."
+)
+_TOOL_DESCRIPTIONS = {
+    "steward_status": (
+        "Read-only state of a Project Stewardship project: settings (mission, phase, "
+        "autonomy level, members, policies), the latest health snapshot "
+        "(healthy/watch/degraded/unknown/critical, with evidence) and the delivery-ladder "
+        "summary (goals/objectives/milestones by state, initiatives ready to confirm, "
+        "items not placed). Without project_id it lists the enabled projects with their "
+        "phase and latest health. Use it before planning or reporting on a project."
+    ),
+    "steward_run_cycle": (
+        "Run one verification cycle for a project now: collect git and declared-file "
+        "evidence, evaluate every enabled objective (command checks run allowlisted "
+        "programs when autonomy >= 3; manual ones read the latest human assessment), "
+        "record a health snapshot and return the objective results and "
+        "mutation_blocked_reason. Limited to 6 cycles per project per day; a cycle that "
+        "cannot run answers {\"refused\": reason}. Run it at the start of a review pass, "
+        "before proposing work."
+    ),
+    "steward_propose_initiative": (
+        "Propose an initiative (a bounded unit of project work) to the human Approval "
+        "Inbox. Nothing is approved or executed until a person approves it in the app; "
+        "approval is never a model action. The rationale must cite concrete evidence "
+        "(file paths, numbers, objective results). Use dedupe_key "
+        "'<project>:<topic-slug>'. Duplicates, the open-initiative cap and suppression "
+        "after a rejection answer {\"refused\": reason}: accept it, do not retry under "
+        "another key."
+    ),
+}
+
 _TOOL_PROPERTIES = {
     "steward_status": {
-        "project_id": {"type": "string", "description": "Stewardship project id"},
+        "project_id": {"type": "string", "description": _PROJECT_ID_DOC},
     },
     "steward_run_cycle": {
-        "project_id": {"type": "string", "description": "Stewardship project id"},
-        "idempotency_key": {"type": "string"},
+        "project_id": {"type": "string", "description": _PROJECT_ID_DOC},
+        "idempotency_key": {
+            "type": "string",
+            "description": "Optional. The same key never runs a second cycle.",
+        },
     },
     "steward_propose_initiative": {
-        "project_id": {"type": "string"},
-        "title": {"type": "string"},
-        "rationale": {"type": "string"},
-        "expected_outcome": {"type": "string"},
+        "project_id": {"type": "string", "description": _PROJECT_ID_DOC},
+        "title": {"type": "string", "description": "Short imperative title, at most 120 characters."},
+        "rationale": {
+            "type": "string",
+            "description": "Why now, with evidence: report paths, numbers, failing objective names.",
+        },
+        "expected_outcome": {
+            "type": "string",
+            "description": "What will be true when it is done and which objective or metric shows it.",
+        },
         "risk": {"type": "string", "enum": ["low", "medium", "high"]},
-        "dedupe_key": {"type": "string"},
+        "dedupe_key": {"type": "string", "description": "'<project>:<topic-slug>', stable for one topic."},
     },
 }
 _TOOL_REQUIRED = {
-    "steward_status": ["project_id"],
+    "steward_status": [],
     "steward_run_cycle": ["project_id"],
     "steward_propose_initiative": ["project_id", "title", "rationale"],
 }
@@ -158,7 +219,7 @@ def _tool_handler(fn):
             result = fn(**dict(args or {}))
         except (CycleRefused, ServiceError) as refusal:
             result = {"refused": str(refusal)}
-        return json.dumps(frame_untrusted(result), sort_keys=True, default=str)
+        return json.dumps(frame_untrusted(result), sort_keys=True, default=str, ensure_ascii=False)
 
     return handle
 
@@ -166,7 +227,7 @@ def _tool_handler(fn):
 def _schema(name: str) -> dict:
     return {
         "name": name,
-        "description": f"{name.replace('_', ' ')}. {UNTRUSTED_NOTE}",
+        "description": f"{_TOOL_DESCRIPTIONS[name]} {UNTRUSTED_NOTE}",
         "parameters": {
             "type": "object",
             "properties": _TOOL_PROPERTIES[name],

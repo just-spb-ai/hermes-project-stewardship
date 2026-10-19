@@ -124,9 +124,9 @@ function surfacePopup(item) {
   host.notify({
     id: `dockyard-notification-${item?.id}`,
     kind: 'info',
-    title: item?.title ?? 'Fleet notification',
-    message: text || 'Open Project Stewardship to review it.',
-    action: { label: 'Open Project Stewardship', onClick: openDockyard },
+    title: item?.title ?? 'Уведомление флота',
+    message: text || 'Откройте Project Stewardship, чтобы проверить это.',
+    action: { label: 'Открыть Project Stewardship', onClick: openDockyard },
   })
 }
 
@@ -135,8 +135,8 @@ function surfaceMore(count) {
     id: 'dockyard-notification-more',
     kind: 'info',
     title: `and ${count} more notification${count === 1 ? '' : 's'}`,
-    message: 'See them all in Project Stewardship Notifications.',
-    action: { label: 'Open Project Stewardship', onClick: openDockyard },
+    message: 'Смотреть все в «Уведомлениях Project Stewardship».',
+    action: { label: 'Открыть Project Stewardship', onClick: openDockyard },
   })
 }
 
@@ -208,14 +208,14 @@ const __plugin = {
         id: 'nav',
         area: 'sidebar.nav',
         order: 55,
-        data: { codicon: 'project', label: 'Project Stewardship', path: '/dockyard' },
+        data: { codicon: 'project', label: 'Управление проектами', path: '/dockyard' },
       },
       {
         id: 'open',
         area: 'palette',
         data: {
           id: 'hermes-project-stewardship.open',
-          label: 'Project Stewardship: Open fleet overview',
+          label: 'Project Stewardship: открыть обзор флота',
           keywords: ['dockyard', 'fleet', 'projects', 'approvals', 'notifications'],
           run: () => host.navigate('/dockyard'),
         },

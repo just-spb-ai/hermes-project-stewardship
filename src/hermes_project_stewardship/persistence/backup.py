@@ -13,6 +13,16 @@ from uuid import uuid4
 from .store import Store, iso
 
 
+def _safe_sqlite_identity(value: int) -> int | None:
+    """Coerce st_dev/st_ino into signed 64-bit or None (SQLite INTEGER limit).
+
+    Windows file ids can exceed 2**63-1 and SQLite refuses them (OverflowError).
+    Local fix 2026-10-17 (see project/Research/tools/hermes-project-stewardship-review.md).
+    """
+    value = int(value)
+    return value if -(2**63) <= value <= 2**63 - 1 else None
+
+
 class BackupError(RuntimeError):
     pass
 
@@ -244,7 +254,7 @@ def _restore_content(
             identity = destination.stat()
             connection.execute(
                 "UPDATE project_content SET file_dev=?, file_ino=? WHERE content_id=?",
-                (int(identity.st_dev), int(identity.st_ino), content_id),
+                (_safe_sqlite_identity(identity.st_dev), _safe_sqlite_identity(identity.st_ino), content_id),
             )
         connection.commit()
     except Exception:

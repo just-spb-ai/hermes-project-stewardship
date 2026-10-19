@@ -5,9 +5,9 @@ import { jsx } from '../runtime/react.js'
 // Derived states, exactly as the backend computes them. Unknown is unknown:
 // never rendered as met, and never as zero.
 export const STATE_LABEL = {
-  not_started: 'Not started', in_progress: 'In progress', met: 'Met',
-  at_risk: 'At risk', unknown: 'Unknown', reached: 'Reached', not_reached: 'Not reached',
-  waived: 'No longer required',
+  not_started: 'Не начато', in_progress: 'В работе', met: 'Достигнуто',
+  at_risk: 'Под угрозой', unknown: 'Неизвестно', reached: 'Достигнут', not_reached: 'Не достигнуто',
+  waived: 'Больше не требуется',
 }
 
 export const words = (value) => String(value ?? '').replace(/_/g, ' ')

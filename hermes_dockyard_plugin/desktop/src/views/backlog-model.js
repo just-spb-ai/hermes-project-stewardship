@@ -23,7 +23,7 @@ export const DOCKYARD_ALLOWED_CHILDREN = Object.freeze({
   spike: [],
   subtask: [],
 })
-export const dockyardTypeLabel = (type) => ({ epic: 'Epic', initiative: 'Initiative', feature: 'Feature', task: 'Task', subtask: 'Sub-task', bug: 'Bug', spike: 'Spike' }[type] || readableLabel(type || 'task'))
+export const dockyardTypeLabel = (type) => ({ epic: 'Эпик', initiative: 'Инициатива', feature: 'Фича', task: 'Задача', subtask: 'Подзадача', bug: 'Баг', spike: 'Спайк' }[type] || readableLabel(type || 'task'))
 export const dockyardChildTypes = (parentType) => DOCKYARD_CREATE_CHILD_TYPES[parentType] ?? []
 export const dockyardParentAccepts = (parentType, childType) => (DOCKYARD_ALLOWED_CHILDREN[parentType] ?? []).includes(childType)
 

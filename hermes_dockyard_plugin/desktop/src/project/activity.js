@@ -31,7 +31,7 @@ const STEPS = [50, 200, 500]
 
 const fullTime = (ts) => {
   const at = Date.parse(ts ?? '')
-  return Number.isNaN(at) ? 'Time not recorded' : new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' }).format(at)
+  return Number.isNaN(at) ? 'Время не записано' : new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' }).format(at)
 }
 const plural = (count, word) => `${number(count)} ${word}${count === 1 ? '' : 's'}`
 
@@ -96,7 +96,7 @@ export function ProjectActivityPanel({ project, view, onOpenItem }) {
       const data = await api(`/projects/${encoded}/events?limit=${next}`, { quiet: true })
       setOlder({ limit: next, events: data?.events ?? [] })
     } catch {
-      setError('Could not load older events. Try again.')
+      setError('Не удалось загрузить более старые события. Попробуйте ещё раз.')
     } finally {
       setLoading(false)
     }
@@ -108,14 +108,14 @@ export function ProjectActivityPanel({ project, view, onOpenItem }) {
 
   return jsxs('section', { className: 'dockyard-feature-card dy-act', 'data-activity': project.id, children: [
     jsxs('header', { className: 'dy-act-head', children: [
-      jsx('h2', { children: 'Project activity' }),
+      jsx('h2', { children: 'Активность проекта' }),
       jsx('span', { className: 'dy-act-count', 'data-activity-count': true, children: filtered ? `${number(eventCount(shown))} of ${plural(total, 'event')}` : plural(total, 'event') }),
     ]}),
     rows.length === 0 ? jsxs('div', { className: 'dy-act-empty', 'data-activity-empty': 'none', children: [
-      jsx('p', { children: jsx('strong', { children: 'No events recorded yet.' }) }),
+      jsx('p', { children: jsx('strong', { children: 'События пока не записаны.' }) }),
       jsx('p', { children: 'Events appear here when someone proposes, approves or rejects an initiative, assigns work, or when a stewardship check runs.' }),
     ]}) : jsxs('div', { className: 'dy-act-tools', children: [
-      jsx('div', { className: 'dy-act-chips', role: 'group', 'aria-label': 'Show', children: EVENT_FILTERS.map(([key, label]) => {
+      jsx('div', { className: 'dy-act-chips', role: 'group', 'aria-label': 'Показать', children: EVENT_FILTERS.map(([key, label]) => {
         const count = key === 'all' ? total : eventCount(rows.filter((row) => row.kind === key))
         return jsxs('button', {
           type: 'button', className: 'dy-act-chip', 'aria-pressed': kind === key, 'data-activity-filter': key,
@@ -125,20 +125,20 @@ export function ProjectActivityPanel({ project, view, onOpenItem }) {
       }) }),
       jsx('input', {
         type: 'search', className: 'dy-act-search', 'data-activity-search': true,
-        'aria-label': 'Search activity', placeholder: 'Search events, people or refs',
+        'aria-label': 'Поиск по активности', placeholder: 'Поиск событий, людей или ссылок',
         value: query, onChange: (event) => setQuery(event.target.value),
       }),
     ]}),
     rows.length > 0 && shown.length === 0 ? jsxs('div', { className: 'dy-act-empty', 'data-activity-empty': 'filtered', children: [
-      jsx('p', { children: 'No events match these filters.' }),
-      jsx('button', { type: 'button', className: 'dy-act-open', 'data-activity-clear': true, onClick: () => { setKind('all'); setQuery('') }, children: 'Clear filters' }),
+      jsx('p', { children: 'Нет событий по этим фильтрам.' }),
+      jsx('button', { type: 'button', className: 'dy-act-open', 'data-activity-clear': true, onClick: () => { setKind('all'); setQuery('') }, children: 'Сбросить фильтры' }),
     ]}) : null,
     shown.length > 0 ? jsx(Timeline, { groups, onOpenItem }) : null,
     rows.length > 0 ? jsxs('footer', { className: 'dy-act-foot', children: [
       jsx('span', { children: footnote }),
       full && next ? jsx('button', {
         type: 'button', className: 'dy-act-open', 'data-activity-older': next, disabled: loading,
-        onClick: showOlder, children: loading ? 'Loading…' : 'Show older events',
+        onClick: showOlder, children: loading ? 'Загрузка…' : 'Показать более старые события',
       }) : null,
       error ? jsx('span', { className: 'dy-act-error', role: 'alert', children: error }) : null,
     ]}) : null,
@@ -151,10 +151,10 @@ export function RecentActivityCard({ view, onViewAll }) {
   const rows = activityRows(view.events ?? [], { initiatives: view.initiatives, workItems: view.workItems }).slice(0, 4)
   return jsxs('section', { className: 'dockyard-feature-card dockyard-overview-card', 'data-overview-activity': 'words', children: [
     jsxs('header', { children: [
-      jsx('h2', { children: 'Recent activity' }),
-      jsx('button', { type: 'button', className: 'dy-act-viewall', 'data-activity-view-all': true, onClick: onViewAll, children: 'View all' }),
+      jsx('h2', { children: 'Недавняя активность' }),
+      jsx('button', { type: 'button', className: 'dy-act-viewall', 'data-activity-view-all': true, onClick: onViewAll, children: 'Показать все' }),
     ]}),
-    jsx('p', { children: 'What happened on this project lately.' }),
+    jsx('p', { children: 'Что происходило в проекте в последнее время.' }),
     rows.length > 0 ? jsx('div', { className: 'dockyard-overview-list activity', children: rows.map((row) => {
       const words = row.title ? `${row.label} · ${row.title}` : row.label
       return jsxs('article', { 'data-activity-row': row.key, children: [
@@ -166,6 +166,6 @@ export function RecentActivityCard({ view, onViewAll }) {
         row.effect ? jsx(Impact, { row }) : null,
       ]}, row.key)
     }) })
-      : jsx('p', { className: 'dockyard-meta', children: 'No events recorded yet.' }),
+      : jsx('p', { className: 'dockyard-meta', children: 'События пока не записаны.' }),
   ]})
 }

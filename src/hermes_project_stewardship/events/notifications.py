@@ -517,7 +517,17 @@ class NotificationEngine:
     def _zone(self):
         from zoneinfo import ZoneInfo
 
-        return ZoneInfo(self.zone_name)
+        try:
+            return ZoneInfo(self.zone_name)
+        except Exception:
+            # Windows: time.tzname[0] is a localized display name (e.g.
+            # "RTZ 2 (зима)"), not an IANA key — zoneinfo cannot load it.
+            # Fall back to the machine's current fixed offset so quiet hours
+            # and pop-ups still evaluate in local wall time.
+            # (Local patch; upstream candidate.)
+            from datetime import datetime as _dt
+
+            return _dt.now().astimezone().tzinfo
 
     def _local_now(self) -> datetime:
         """Store clock (UTC) converted into the engine's configured zone."""

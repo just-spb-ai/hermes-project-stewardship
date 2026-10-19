@@ -18,7 +18,7 @@ const el = (tag, className, text) => {
   if (text !== undefined) node.textContent = text
   return node
 }
-const previewTag = () => el('span', 'dy-wfd-preview-tag', 'Preview')
+const previewTag = () => el('span', 'dy-wfd-preview-tag', 'Предпросмотр')
 const section = (title, { preview = false, help } = {}) => {
   const box = el('section', 'dy-wfx-section')
   const head = el('h5', '', title)
@@ -41,23 +41,23 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
   const root = el('div', 'dy-wfx')
   if (node.human_gate) {
     // A sign-off step is done by you: the workflow waits here for your decision.
-    const who = section('Who does it')
-    who.appendChild(el('p', 'dy-wfx-help', 'You. The workflow waits here until you approve or send it back.'))
+    const who = section('Кто делает')
+    who.appendChild(el('p', 'dy-wfx-help', 'Вы. Процесс ждёт здесь, пока вы не одобрите или не вернёте его.'))
     root.appendChild(who)
     return { el: root, apply: (next) => next }
   }
 
-  const who = section('Who does it')
-  const pick = el('select', 'dy-wfx-select'); pick.setAttribute('data-wfx-who', ''); pick.setAttribute('aria-label', 'Who does it')
+  const who = section('Кто делает')
+  const pick = el('select', 'dy-wfx-select'); pick.setAttribute('data-wfx-who', ''); pick.setAttribute('aria-label', 'Кто делает')
   const choices = ['', ...members]
   if (stored?.phase_team && !members.includes(stored.phase_team)) choices.push(stored.phase_team)
-  for (const value of choices) { const o = el('option', '', value || 'Whoever the project picks'); o.value = value; pick.appendChild(o) }
+  for (const value of choices) { const o = el('option', '', value || 'Кого выберет проект'); o.value = value; pick.appendChild(o) }
   pick.value = stored?.phase_team ?? node.phase_team ?? ''
   who.appendChild(pick)
 
-  const what = section('What to do')
-  const body = el('textarea', 'dy-wfx-textarea'); body.rows = 3; body.setAttribute('data-wfx-body', ''); body.setAttribute('aria-label', 'What to do')
-  body.placeholder = 'The instructions the bot gets for this step.'
+  const what = section('Что делать')
+  const body = el('textarea', 'dy-wfx-textarea'); body.rows = 3; body.setAttribute('data-wfx-body', ''); body.setAttribute('aria-label', 'Что делать')
+  body.placeholder = 'Инструкции, которые получает бот на этом шаге.'
   body.value = stored?.body ?? ''
   what.appendChild(body)
   root.append(who, what)
@@ -68,36 +68,36 @@ function panelExtras({ node, stored, members, settingsKey, onEditFrame }) {
   const repeats = Boolean(stored?.loop ?? node.loop)
   const roundsNow = Number((stored?.loop ?? node.loop)?.max_iterations ?? 3)
   let repeatBox = null
-  const repeat = section('Repeat')
+  const repeat = section('Повтор')
   if (repeats) {
     repeat.appendChild(el('p', 'dy-wfx-help', `${roundsWords(roundsNow)}. The repeat settings are on this step's frame on the canvas.`))
-    const open = el('button', 'dy-btn', 'Edit the repeat'); open.type = 'button'; open.setAttribute('data-wfx-edit-frame', node.node_id)
+    const open = el('button', 'dy-btn', 'Изменить повторение'); open.type = 'button'; open.setAttribute('data-wfx-edit-frame', node.node_id)
     open.addEventListener('click', () => onEditFrame?.(node.node_id, open.getBoundingClientRect()))
     repeat.appendChild(open)
   } else if (!(node.depends_on ?? []).length) {
-    const why = el('p', 'dy-wfx-help', "This step comes first, so it can't repeat: each round waits on a step before it.")
+    const why = el('p', 'dy-wfx-help', "Этот шаг первый, поэтому он не может повторяться: каждый раунд ждёт предыдущий шаг.")
     why.setAttribute('data-wfx-no-repeat', '')
     repeat.appendChild(why)
   } else {
     repeatBox = el('input'); repeatBox.type = 'checkbox'; repeatBox.checked = false; repeatBox.setAttribute('data-wfx-repeat', '')
-    const repeatLabel = el('label', 'dy-wfx-check'); repeatLabel.append(repeatBox, el('span', '', 'Try again if a round gets stuck (up to 3 rounds; change it on the frame)'))
+    const repeatLabel = el('label', 'dy-wfx-check'); repeatLabel.append(repeatBox, el('span', '', 'Повтор, если раунд застрял (до 3 раундов; меняется на рамке)'))
     repeat.appendChild(repeatLabel)
   }
   root.appendChild(repeat)
 
   // Saved with the workflow (08/10/2026): when its turn comes the step waits
   // for you instead of going to its bot.
-  const ask = section('Ask me first', { help: 'When its turn comes, it waits for you: move it to Doing to start it.' })
+  const ask = section('Сначала спроси меня', { help: 'Когда придёт его очередь, оно ждёт вас: переместите в «В работе», чтобы запустить.' })
   const askBox = el('input'); askBox.type = 'checkbox'; askBox.checked = Boolean(stored?.ask_first ?? node.ask_first); askBox.setAttribute('data-wfx-ask-first', '')
-  const askLabel = el('label', 'dy-wfx-check'); askLabel.append(askBox, el('span', '', 'Ask me before this step starts'))
+  const askLabel = el('label', 'dy-wfx-check'); askLabel.append(askBox, el('span', '', 'Спросить меня перед этим шагом'))
   ask.appendChild(askLabel)
 
-  const limits = section('Limits', { preview: true, help: 'Not sent to the bot yet.' })
+  const limits = section('Limits', { preview: true, help: 'Боту пока не отправлено.' })
   const turns = el('input', 'dy-wfx-input'); turns.type = 'number'; turns.min = '1'; turns.value = current.limits.turns; turns.setAttribute('data-wfx-turns', '')
   const minutes = el('input', 'dy-wfx-input'); minutes.type = 'number'; minutes.min = '1'; minutes.value = current.limits.minutes; minutes.setAttribute('data-wfx-minutes', '')
   const skills = el('input', 'dy-wfx-input'); skills.value = current.limits.skills; skills.placeholder = 'e.g. github-pr-workflow'; skills.setAttribute('data-wfx-skills', '')
-  const pair = el('div', 'dy-wfx-pair'); pair.append(labelled('At most turns', turns), labelled('At most minutes', minutes))
-  limits.append(pair, labelled('Tools (skills)', skills))
+  const pair = el('div', 'dy-wfx-pair'); pair.append(labelled('Не более ходов', turns), labelled('Не более минут', minutes))
+  limits.append(pair, labelled('Инструменты (навыки)', skills))
   root.append(ask, limits)
 
   const apply = (next) => {
@@ -127,7 +127,7 @@ export function canvasDesignHooks({ draft, members, storedNode, settingsKey, onE
   // members may be a getter: the team arrives after the canvas mounts.
   const team = () => (typeof members === 'function' ? members() : members) ?? []
   return {
-    labels: { heading: 'This step', title: 'Step name', deps: 'Comes after (step IDs)', team: '', save: draft ? 'Apply to draft' : 'Save version' },
+    labels: { heading: 'Этот шаг', title: 'Имя шага', deps: 'Идёт после (ID шагов)', team: '', save: draft ? 'Применить к черновику' : 'Сохранить версию' },
     compactFacts: true,
     panelExtras: (node) => panelExtras({ node, stored: storedNode(node.node_id), members: team(), settingsKey, onEditFrame }),
     cardNote: (node) => {
@@ -135,8 +135,8 @@ export function canvasDesignHooks({ draft, members, storedNode, settingsKey, onE
       if (node.when) return `If ${shortName(node.when.node)} ${node.when.status === 'blocked' ? 'gets stuck' : 'is done'}`
       // "Sign-off", not "Your sign-off": the gate's status ("awaiting
       // decision") is the longest on the card and they share the line.
-      if (node.human_gate) return 'Sign-off'
-      if (node.ask_first) return 'Asks you first'
+      if (node.human_gate) return 'Подписание'
+      if (node.ask_first) return 'Спрашивает тебя первым'
       return null
     },
     frames: (nodes) => nodes.filter((n) => n.loop).map((n) => {

@@ -67,6 +67,18 @@ _MEDIA_PREVIEW_KINDS = {
 }
 
 
+def _safe_sqlite_identity(value: int) -> Optional[int]:
+    """Coerce st_dev/st_ino into signed 64-bit or None (SQLite INTEGER limit).
+
+    Windows file ids can exceed 2**63-1 and SQLite refuses them (OverflowError).
+    The schema treats NULL as "identity unknown" and integrity checks skip it.
+    Local fix 2026-10-17: upstream writes int(st_ino) directly; uploads crashed
+    on Windows. See project/Research/tools/hermes-project-stewardship-review.md.
+    """
+    value = int(value)
+    return value if -(2**63) <= value <= 2**63 - 1 else None
+
+
 def _content_limit(media_type: str) -> int:
     """The largest file a media type may be: 25 MB for videos, 5 MB otherwise."""
     return _MAX_VIDEO_BYTES if media_type.startswith("video/") else _MAX_CONTENT_BYTES
@@ -2060,8 +2072,8 @@ class StewardshipService:
                             digest,
                             actor,
                             uploaded_at,
-                            int(identity.st_dev),
-                            int(identity.st_ino),
+                            _safe_sqlite_identity(identity.st_dev),
+                            _safe_sqlite_identity(identity.st_ino),
                         ),
                     )
             except BaseException:

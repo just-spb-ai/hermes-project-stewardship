@@ -21,11 +21,11 @@ export const isDone = (status) => DONE_STATUSES.includes(status)
 // Blocked = blocked, Done = done. There is no catch-all column: an item whose
 // status no column lists is named in a notice above the board instead.
 export const STAGES = Object.freeze([
-  { key: 'backlog', label: 'Backlog', statuses: ['backlog'], hint: 'Not started' },
-  { key: 'active', label: 'In progress', statuses: ['in_progress', 'executing', 'active'], hint: 'Being worked on' },
-  { key: 'review', label: 'Review', statuses: ['in_review', 'review'], hint: 'Waiting for a check' },
-  { key: 'blocked', label: 'Blocked', statuses: ['blocked'], hint: 'Stopped until something changes' },
-  { key: 'done', label: 'Done', statuses: DONE_STATUSES, hint: 'Finished' },
+  { key: 'backlog', label: 'Бэклог', statuses: ['backlog'], hint: 'Не начато' },
+  { key: 'active', label: 'В работе', statuses: ['in_progress', 'executing', 'active'], hint: 'В работе' },
+  { key: 'review', label: 'Обзор', statuses: ['in_review', 'review'], hint: 'Ожидает проверки' },
+  { key: 'blocked', label: 'Заблокировано', statuses: ['blocked'], hint: 'Остановлено, пока что-нибудь не изменится' },
+  { key: 'done', label: 'Готово', statuses: DONE_STATUSES, hint: 'Завершено' },
 ])
 const STAGE_BY_KEY = Object.fromEntries(STAGES.map((stage) => [stage.key, stage]))
 export const stageLabel = (key) => STAGE_BY_KEY[key]?.label ?? key
@@ -71,7 +71,7 @@ const EPIC_MOVES = Object.freeze({ backlog: ['active'], active: [], review: [], 
 // open blockers in Backlog until they finish, and refuses to close it.
 export function movesFor(item, openBlockers = 0) {
   const from = stageKeyOf(item)
-  if (!from) return { targets: [], reason: 'This item is not in a board column.' }
+  if (!from) return { targets: [], reason: 'Элемент не находится в колонке доски.' }
   const epic = (item.type || 'task') === 'epic'
   let keys = (epic ? EPIC_MOVES : TASK_MOVES)[from] ?? []
   let reason = null
@@ -79,7 +79,7 @@ export function movesFor(item, openBlockers = 0) {
     keys = []
     reason = `Can't start yet: waiting on ${openBlockers} open ${openBlockers === 1 ? 'blocker' : 'blockers'}.`
   } else if (keys.length === 0) {
-    reason = from === 'done' ? 'Finished work stays in Done.' : epic ? 'Hermes does not move an epic from this column.' : null
+    reason = from === 'done' ? 'Завершённая работа остаётся в «Готово».' : epic ? 'Hermes не переносит эпик из этой колонки.' : null
   }
   return { targets: keys.map((key) => ({ key, label: STAGE_BY_KEY[key].label, status: dropStatusOf(key) })), reason }
 }
@@ -172,7 +172,7 @@ export function cardFacts(item, data = {}, today = null) {
 
 export const CARD_FIELDS = Object.freeze(['assignee', 'links', 'due', 'labels', 'planning'])
 export const CARD_FIELD_LABELS = Object.freeze({
-  assignee: 'Assignee', links: 'Blocked by and Blocks', due: 'Due date', labels: 'Labels', planning: 'Initiative and milestone',
+  assignee: 'Исполнитель', links: 'Блокируется и блокирует', due: 'Срок', labels: 'Метки', planning: 'Инициатива и веха',
 })
 export const defaultFields = () => ({ assignee: true, links: true, due: true, labels: true, planning: false })
 export const DENSITIES = Object.freeze(['compact', 'detailed'])
@@ -227,7 +227,7 @@ export function applyFilters(items, filters, factsByRef = {}) {
 // A view is what you are looking at: layout, filters and card settings.
 // "All work" is built in: everything, on the board, compact cards.
 
-export const ALL_WORK = 'All work'
+export const ALL_WORK = 'Вся работа'
 export const defaultDefinition = () => ({ layout: 'board', filters: emptyFilters(), density: 'compact', fields: defaultFields() })
 
 const sortedFields = (fields) => CARD_FIELDS.filter((key) => fields[key])
@@ -288,10 +288,10 @@ export function describeFilters(filters) {
 
 // "Board · Assignee Ada Lovelace · Label mobile" for the views panel; "All cards open" when they are.
 export function describeDefinition(definition) {
-  const parts = [definition.layout === 'list' ? 'List' : 'Board']
+  const parts = [definition.layout === 'list' ? 'List' : 'Доска']
   const filters = describeFilters(definition.filters)
   if (filters) parts.push(filters)
-  if (definition.layout !== 'list' && definition.density === 'detailed') parts.push('All cards open')
+  if (definition.layout !== 'list' && definition.density === 'detailed') parts.push('Все карточки открыты')
   return parts.join(' · ')
 }
 

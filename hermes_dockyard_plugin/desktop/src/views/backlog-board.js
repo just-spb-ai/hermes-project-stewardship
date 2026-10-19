@@ -156,15 +156,15 @@ export function BacklogBoard(ctx) {
   } = ctx
   return jsxs('div', { 'data-backlog-board': project.id, children: [
     jsx(PageHead, {
-      title: 'Backlog',
-      description: 'One ranked queue for what should happen next.',
+      title: 'Бэклог',
+      description: 'Одна ранжированная очередь того, что должно произойти дальше.',
       status: `${number(entries.length)} ranked`,
       onRefresh,
     }),
     jsxs('div', { className: 'dockyard-project-toolbar backlog-create-toolbar', children: [
       jsx('span', { className: 'dockyard-meta', children: `${project.name || project.id} / Work items` }),
       jsx(Button, { action: 'open-bulk-import', small: true, disabled: !canCreate, onClick: () => { setImportOpen(true); setImportRows(null); setImportValid(false); setImportError(null); setImportResult(null); setImportStep(1) }, children: 'Import' }),
-      jsx(Button, { action: 'open-create-backlog-item', variant: 'primary', small: true, disabled: !canCreate, onClick: () => openCreate(), children: 'Create item' }),
+      jsx(Button, { action: 'open-create-backlog-item', variant: 'primary', small: true, disabled: !canCreate, onClick: () => openCreate(), children: 'Создать элемент' }),
     ]}),
     // Sahil 04/10 (demo feedback b): a gentle note, never a blocker. Unassigned
     // work is never picked up by a bot; each item opens so it can be assigned.
@@ -177,7 +177,7 @@ export function BacklogBoard(ctx) {
           unassigned.length > 5 ? jsx('span', { children: `and ${number(unassigned.length - 5)} more` }, 'more') : null,
         ] }),
       ] }),
-      hasUnassignedItems ? jsx(Button, { small: true, onClick: () => setColumnFilters((current) => ({ ...current, assignee: '__unassigned__' })), children: 'Show in the list' }) : null,
+      hasUnassignedItems ? jsx(Button, { small: true, onClick: () => setColumnFilters((current) => ({ ...current, assignee: '__unassigned__' })), children: 'Показать в списке' }) : null,
     ] }) : null,
     // PROTOTYPE v4: bulk reassignment now lives in the selection popover;
     // preview/execute/retry handlers unchanged.
@@ -191,23 +191,23 @@ export function BacklogBoard(ctx) {
       jsx('strong', { children: `${bulkOperation.op_id} · ${bulkOperation.state}` }),
       jsx('span', { children: `${(bulkOperation.items ?? []).filter((item) => item.outcome === 'completed').length} of ${(bulkOperation.items ?? []).length} completed · actor ${bulkOperation.actor || 'verified principal'}` }),
       jsx('ul', { children: (bulkOperation.items ?? []).map((item) => jsx('li', { children: `${item.item_id} · ${item.outcome} · ${item.audit?.actor || bulkOperation.actor || 'verified principal'} · ${item.audit?.action || 'audit pending'}${item.detail ? ` · ${item.detail}` : ''}` }, item.item_id)) }),
-      bulkOperation.state !== 'completed' ? jsx(Button, { action: 'retry-bulk-reassignment', disabled: bulkBusy, small: true, onClick: retryBulk, children: 'Retry remaining items' }) : null,
+      bulkOperation.state !== 'completed' ? jsx(Button, { action: 'retry-bulk-reassignment', disabled: bulkBusy, small: true, onClick: retryBulk, children: 'Повторить оставшиеся пункты' }) : null,
     ] }) : null,
     Object.values(transfers).map((operation) => jsxs('div', { className: 'dockyard-view-only-note', 'data-transfer-operation': operation.op_id, role: 'status', children: [
       jsx('strong', { children: `${operation.op_id} · ${operation.state}` }),
       jsx('span', { children: `${(operation.items ?? []).length} items · project ${operation.project_id || project.id}` }),
-      jsx('button', { type: 'button', 'data-transfer-refresh': operation.op_id, onClick: () => refreshTransfer(operation.op_id), children: 'Refresh' }),
-      jsx('button', { type: 'button', 'data-transfer-retry': operation.op_id, onClick: () => retryTransfer(operation.op_id), children: 'Retry remaining items' }),
+      jsx('button', { type: 'button', 'data-transfer-refresh': operation.op_id, onClick: () => refreshTransfer(operation.op_id), children: 'Обновить' }),
+      jsx('button', { type: 'button', 'data-transfer-retry': operation.op_id, onClick: () => retryTransfer(operation.op_id), children: 'Повторить оставшиеся пункты' }),
     ] }, operation.op_id)),
     entries.length > 0 ? jsxs('section', { className: 'dockyard-backlog-list', 'data-backlog-table': true, children: [
       jsxs('div', { className: 'dockyard-cmdbar', 'data-column-filters': true, children: [
         jsxs('label', { className: 'cm-search', children: [
           jsx(Icon, { name: 'search' }, 'v4-search'),
-          jsx('input', { type: 'search', 'data-cm-search': true, 'aria-label': 'Search backlog', placeholder: 'Search backlog', value: search, onInput: (event) => setSearch(event.target.value) }),
+          jsx('input', { type: 'search', 'data-cm-search': true, 'aria-label': 'Поиск в бэклоге', placeholder: 'Поиск в бэклоге', value: search, onInput: (event) => setSearch(event.target.value) }),
         ] }),
         // LANE-TOOLBAR: icon-driven Sort/Group controls with floating popover menus.
         ...[
-          ['sort', 'arrow-up-down', 'Sort', `${sortLabels[sortKey]} ${sortDir > 0 ? '↑' : '↓'}`, sortKey !== 'rank' || sortDir < 0,
+          ['sort', 'arrow-up-down', 'Сортировка', `${sortLabels[sortKey]} ${sortDir > 0 ? '↑' : '↓'}`, sortKey !== 'rank' || sortDir < 0,
             ['rank', 'type', 'title', 'status', 'initiative', 'assignee', 'age'].map((key) => [key, sortLabels[key], sortKey === key]),
             (key) => { if (sortKey === key) setSortDir(-sortDir); else { setSortKey(key); setSortDir(1) } }],
           ['group', 'layers', 'Group', GROUP_LABELS[groupBy], groupBy !== 'none',
@@ -234,41 +234,41 @@ export function BacklogBoard(ctx) {
                 children: [
                   jsx('span', { className: 'cm-check', children: active ? jsx(Icon, { name: 'check' }) : null }, 'check'),
                   jsx('span', { className: 'cm-option-label', children: optionLabel }, 'label'),
-                  menu === 'sort' && active ? jsx('span', { className: 'cm-dir', title: sortDir > 0 ? 'Ascending — select again to reverse' : 'Descending — select again to reverse', children: jsx(Icon, { name: sortDir > 0 ? 'arrow-up-narrow-wide' : 'arrow-down-wide-narrow' }) }, 'dir') : null,
+                  menu === 'sort' && active ? jsx('span', { className: 'cm-dir', title: sortDir > 0 ? 'По возрастанию — нажмите ещё раз для обратного' : 'По убыванию — нажмите ещё раз для обратного', children: jsx(Icon, { name: sortDir > 0 ? 'arrow-up-narrow-wide' : 'arrow-down-wide-narrow' }) }, 'dir') : null,
                 ] }, key)),
             ] }) : null,
         ] }, menu)),
         jsx('span', { className: 'cm-divider', 'aria-hidden': true }),
         jsxs('label', { className: 'cm-filter', children: [
-          jsx('span', { children: 'Type' }),
-          jsx('select', { 'data-filter-field': 'type', 'aria-label': 'Filter by type', value: columnFilters.type, onChange: (event) => setColumnFilters((current) => ({ ...current, type: event.target.value })), children: [
-            jsx('option', { value: '', children: 'All types' }, 'all'),
+          jsx('span', { children: 'Тип' }),
+          jsx('select', { 'data-filter-field': 'type', 'aria-label': 'Фильтр по типу', value: columnFilters.type, onChange: (event) => setColumnFilters((current) => ({ ...current, type: event.target.value })), children: [
+            jsx('option', { value: '', children: 'Все типы' }, 'all'),
             ...typeFilterValues.map((type) => jsx('option', { value: type, children: typeLabel(type) }, type)),
           ] }),
         ] }),
         jsxs('label', { className: 'cm-filter', children: [
-          jsx('span', { children: 'Status' }),
-          jsx('select', { 'data-filter-field': 'status', 'aria-label': 'Filter by status', value: columnFilters.status, onChange: (event) => setColumnFilters((current) => ({ ...current, status: event.target.value })), children: [
-            jsx('option', { value: '', children: 'All statuses' }, 'all'),
+          jsx('span', { children: 'Статус' }),
+          jsx('select', { 'data-filter-field': 'status', 'aria-label': 'Фильтр по статусу', value: columnFilters.status, onChange: (event) => setColumnFilters((current) => ({ ...current, status: event.target.value })), children: [
+            jsx('option', { value: '', children: 'Все статусы' }, 'all'),
             ...statusFilterValues.map((status) => jsx('option', { value: status, children: STATUS_LABELS[status] || readableLabel(status) }, status)),
           ] }),
         ] }),
         jsxs('label', { className: 'cm-filter', children: [
-          jsx('span', { children: 'Initiative' }),
-          jsx('select', { 'data-filter-field': 'initiative', 'aria-label': 'Filter by initiative', value: columnFilters.initiative, onChange: (event) => setColumnFilters((current) => ({ ...current, initiative: event.target.value })), children: [
-            jsx('option', { value: '', children: 'All initiatives' }, 'all'),
+          jsx('span', { children: 'Инициатива' }),
+          jsx('select', { 'data-filter-field': 'initiative', 'aria-label': 'Фильтр по инициативе', value: columnFilters.initiative, onChange: (event) => setColumnFilters((current) => ({ ...current, initiative: event.target.value })), children: [
+            jsx('option', { value: '', children: 'Все инициативы' }, 'all'),
             ...initiativeFilterValues.map((ref) => jsx('option', { value: ref, children: initiativeLabel(ref) }, ref)),
           ] }),
         ] }),
         jsxs('label', { className: 'cm-filter', children: [
-          jsx('span', { children: 'Assignee' }),
-          jsx('select', { 'data-filter-field': 'assignee', 'aria-label': 'Filter by assignee', value: columnFilters.assignee, onChange: (event) => setColumnFilters((current) => ({ ...current, assignee: event.target.value })), children: [
-            jsx('option', { value: '', children: 'All assignees' }, 'all'),
-            hasUnassignedItems ? jsx('option', { value: '__unassigned__', children: 'Unassigned' }, 'unassigned') : null,
+          jsx('span', { children: 'Исполнитель' }),
+          jsx('select', { 'data-filter-field': 'assignee', 'aria-label': 'Фильтр по исполнителю', value: columnFilters.assignee, onChange: (event) => setColumnFilters((current) => ({ ...current, assignee: event.target.value })), children: [
+            jsx('option', { value: '', children: 'Все исполнители' }, 'all'),
+            hasUnassignedItems ? jsx('option', { value: '__unassigned__', children: 'Не назначен' }, 'unassigned') : null,
             ...assigneeFilterValues.map((owner) => jsx('option', { value: owner, children: ownerLabel(owner) }, owner)),
           ] }),
         ] }),
-        hasFilters ? jsx('button', { type: 'button', className: 'cm-reset-filters', 'data-clear-filters': true, onClick: resetFilters, children: 'Clear all' }) : null,
+        hasFilters ? jsx('button', { type: 'button', className: 'cm-reset-filters', 'data-clear-filters': true, onClick: resetFilters, children: 'Очистить всё' }) : null,
         jsx('span', { className: 'cm-count', 'data-cm-count': true, role: 'status', title: [
           `${number(treeRows.length)} of ${number(entries.length)} items`,
           q ? `search “${search}”` : '',
@@ -280,18 +280,18 @@ export function BacklogBoard(ctx) {
       jsxs('div', { className: 'tree-head', children: [
         jsx('span', { className: 'th-gutter' }),
         sortHeader('rank', 'Rank', 'th-rank'),
-        sortHeader('type', 'Type', 'th-type'),
-        sortHeader('title', 'Work item', 'th-title'),
-        sortHeader('status', 'Status', 'th-status'),
-        sortHeader('initiative', 'Initiative', 'th-initiative'),
-        sortHeader('assignee', 'Assignee', 'th-who'),
-        sortHeader('age', 'Age', 'th-age'),
-        jsx('span', { className: 'th-reason', children: 'Priority reason' }),
-        jsx('span', { className: 'th-act', 'aria-label': 'Actions' }),
+        sortHeader('type', 'Тип', 'th-type'),
+        sortHeader('title', 'Рабочий элемент', 'th-title'),
+        sortHeader('status', 'Статус', 'th-status'),
+        sortHeader('initiative', 'Инициатива', 'th-initiative'),
+        sortHeader('assignee', 'Исполнитель', 'th-who'),
+        sortHeader('age', 'Давность', 'th-age'),
+        jsx('span', { className: 'th-reason', children: 'Причина приоритета' }),
+        jsx('span', { className: 'th-act', 'aria-label': 'Действия' }),
       ] }),
       treeRows.length === 0 ? jsxs('div', { className: 'tree-group-head', 'data-no-matches': true, children: [
-        jsx('span', { children: hasFilters ? 'No items match the current search and filters.' : 'No backlog items to show.' }),
-        hasFilters ? jsx('button', { type: 'button', className: 'cm-chip', onClick: resetFilters, children: 'Clear filters' }) : null,
+        jsx('span', { children: hasFilters ? 'Нет пунктов, соответствующих поиску и фильтрам.' : 'Нет пунктов бэклога для показа.' }),
+        hasFilters ? jsx('button', { type: 'button', className: 'cm-chip', onClick: resetFilters, children: 'Сбросить фильтры' }) : null,
       ] }) : null,
       ...groups.flatMap(([label, rows], gi) => [
         label !== null ? jsxs('div', { className: 'tree-group-head', children: [
@@ -385,13 +385,13 @@ export function BacklogBoard(ctx) {
               jsxs('span', { className: 'tree-status', children: [
                 cell === 'status'
                   ? jsx('select', { autoFocus: true, className: 'cell-edit is-input', 'data-cell-input': 'status', value: (item.status && STATUS_UI[item.status]) || 'backlog', onChange: (event) => { setEditing(null); changeStatus(ref, event.target.value) }, onBlur: () => setEditing(null), children: validStatusChoices.map((st) => jsx('option', { value: st, children: STATUS_LABELS[st] }, st)) })
-                  : jsxs('button', { type: 'button', className: `cell-edit cell-status tree-status ${stUi === 'done' ? 'success' : (overdue || stUi === 'blocked') ? 'danger' : stUi === 'in_progress' ? 'info' : stUi === 'in_review' ? 'warning' : 'neutral'}`, 'data-cell': 'status', title: 'Change status', onClick: (event) => { event.stopPropagation(); setEditing({ ref, field: 'status' }) }, children: [
+                  : jsxs('button', { type: 'button', className: `cell-edit cell-status tree-status ${stUi === 'done' ? 'success' : (overdue || stUi === 'blocked') ? 'danger' : stUi === 'in_progress' ? 'info' : stUi === 'in_review' ? 'warning' : 'neutral'}`, 'data-cell': 'status', title: 'Изменить статус', onClick: (event) => { event.stopPropagation(); setEditing({ ref, field: 'status' }) }, children: [
                       jsx('span', { className: 'tree-status-icon', 'aria-hidden': true }),
-                      jsx('span', { children: STATUS_LABELS[item.status] || 'Backlog' }),
+                      jsx('span', { children: STATUS_LABELS[item.status] || 'Бэклог' }),
                     ] }),
                 err && err.field === 'status' ? jsx('span', { className: 'cell-due overdue', children: err.message }) : null,
               ] }),
-              jsxs('span', { className: 'tree-initiative', title: item.initiative_ref ? `Initiative ${item.initiative_ref}` : 'No linked initiative', children: [
+              jsxs('span', { className: 'tree-initiative', title: item.initiative_ref ? `Initiative ${item.initiative_ref}` : 'Связанной инициативы нет', children: [
                 item.initiative_ref
                   ? jsxs('span', { className: 'initiative-cell-value', children: [
                       jsx('strong', { children: initiativeLabel(item.initiative_ref) }),
@@ -402,41 +402,41 @@ export function BacklogBoard(ctx) {
               jsxs('span', { className: 'tree-who', children: [
                 cell === 'assignee'
                   ? jsxs('select', { autoFocus: true, className: 'cell-edit is-input', 'data-cell-input': 'assignee', value: item.assignee || '', onChange: (event) => { setEditing(null); assignItem(ref, event.target.value) }, onBlur: () => setEditing(null), children: [
-                      jsx('option', { value: '', children: 'Unassigned' }),
+                      jsx('option', { value: '', children: 'Не назначен' }),
                       ...(view.bots ?? []).map((bot) => jsx('option', { value: bot.id, children: bot.name || bot.id }, bot.id)),
                     ] })
-                  : jsxs('button', { type: 'button', className: 'cell-edit cell-who', 'data-cell': 'assignee', title: (item.type === 'epic') ? 'Epics are never assigned — their children carry the work' : 'Change assignee', disabled: (item.type || 'task') === 'epic', onClick: (event) => { event.stopPropagation(); if ((item.type || 'task') === 'epic') { flashCell(ref, 'assignee', 'Epics are never assigned — assign one of its children instead.'); return } setEditing({ ref, field: 'assignee' }) }, children: [
+                  : jsxs('button', { type: 'button', className: 'cell-edit cell-who', 'data-cell': 'assignee', title: (item.type === 'epic') ? 'Эпики не назначаются — работу несут их дочерние элементы' : 'Сменить исполнителя', disabled: (item.type || 'task') === 'epic', onClick: (event) => { event.stopPropagation(); if ((item.type || 'task') === 'epic') { flashCell(ref, 'assignee', 'Эпики не назначаются — назначьте одного из его дочерних элементов.'); return } setEditing({ ref, field: 'assignee' }) }, children: [
                       item.assignee ? jsx('span', { className: 'tree-avatar', children: String(item.assignee).replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() }) : jsx('span', { className: 'tree-avatar none', children: '—' }),
                       jsx('span', { className: 'who-name', children: ownerLabel(item.assignee) }),
                     ] }),
                 err && err.field === 'assignee' ? jsx('span', { className: 'cell-due overdue', children: err.message }) : null,
               ] }),
-              jsx('span', { className: 'tree-age', title: entry?.aged_since ? `Ranked since ${entry.aged_since}` : 'Rank date unavailable', children: entry?.aged_since ? `${Math.max(0, Math.floor((Date.now() - Date.parse(entry.aged_since)) / 86400000))}d` : '—' }),
-              jsx('span', { className: 'tree-priority-reason', title: entry?.priority_reason || 'No priority reason recorded', children: entry?.priority_reason || 'No reason recorded' }),
+              jsx('span', { className: 'tree-age', title: entry?.aged_since ? `Ranked since ${entry.aged_since}` : 'Дата ранга недоступна', children: entry?.aged_since ? `${Math.max(0, Math.floor((Date.now() - Date.parse(entry.aged_since)) / 86400000))}d` : '—' }),
+              jsx('span', { className: 'tree-priority-reason', title: entry?.priority_reason || 'Причина приоритета не записана', children: entry?.priority_reason || 'Причина не записана' }),
               jsxs('span', { className: 'tree-actions', children: [
                 jsx('button', { type: 'button', className: 'tree-menu-btn', 'data-menu-ref': ref, 'aria-expanded': String(menuRef === ref), 'aria-label': `Actions for ${titleText}`, onClick: (event) => { event.stopPropagation(); setMenuRef(menuRef === ref ? null : ref) }, children: '⋯' }),
               ] }),
               menuRef === ref ? jsxs('div', { className: 'tree-menu', role: 'menu', onClick: (event) => event.stopPropagation(), children: [
-                jsx('div', { className: 'menu-label', children: 'Open' }),
-                jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'details', onClick: () => { setMenuRef(null); setDetailItem(item) }, children: [jsx(Icon, { name: 'pencil' }), 'Open task details'] }),
+                jsx('div', { className: 'menu-label', children: 'Открыть' }),
+                jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'details', onClick: () => { setMenuRef(null); setDetailItem(item) }, children: [jsx(Icon, { name: 'pencil' }), 'Детали задачи'] }),
                 validTypeChoices.length > 1 ? jsxs('label', { className: 'tree-menu-field', children: [
-                  jsx('span', { children: 'Type' }),
+                  jsx('span', { children: 'Тип' }),
                   jsx('select', { 'data-menu-type': ref, 'aria-label': `Change type for ${titleText}`, value: item.type, onChange: (event) => { setMenuRef(null); changeType(ref, event.target.value) }, children:
                     validTypeChoices.map((type) => jsx('option', { value: type, children: typeLabel(type) }, type)),
                   }),
-                ] }) : jsxs('div', { className: 'tree-menu-static', children: [jsx('span', { children: 'Type' }), jsx('strong', { children: typeLabel(item.type) })] }),
+                ] }) : jsxs('div', { className: 'tree-menu-static', children: [jsx('span', { children: 'Тип' }), jsx('strong', { children: typeLabel(item.type) })] }),
                 mayAddChild || mayReparent || (depth === 0 && entry)
-                  ? jsx('div', { className: 'menu-label', children: 'Structure' }) : null,
-                mayAddChild ? jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'add-child', onClick: () => { setMenuRef(null); openCreate(ref) }, children: [jsx(Icon, { name: 'type-subtask' }), 'Add child item'] }) : null,
-                mayReparent ? jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'reparent', onClick: () => requestReparent(ref), children: [jsx(Icon, { name: 'arrow-right' }), 'Change parent…'] }) : null,
+                  ? jsx('div', { className: 'menu-label', children: 'Структура' }) : null,
+                mayAddChild ? jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'add-child', onClick: () => { setMenuRef(null); openCreate(ref) }, children: [jsx(Icon, { name: 'type-subtask' }), 'Добавить дочерний элемент'] }) : null,
+                mayReparent ? jsxs('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'reparent', onClick: () => requestReparent(ref), children: [jsx(Icon, { name: 'arrow-right' }), 'Сменить родителя…'] }) : null,
                 depth === 0 && entry ? jsxs('div', { className: 'tree-menu-rank-actions', children: [
-                  jsx('div', { className: 'menu-label', children: 'Priority' }),
-                  jsx('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'up', disabled: Number(entry.rank) <= 1, onClick: () => { setMenuRef(null); requestMove(entry, Number(entry.rank) - 1) }, children: 'Move up' }),
-                  jsx('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'down', disabled: Number(entry.rank) >= entries.length, onClick: () => { setMenuRef(null); requestMove(entry, Number(entry.rank) + 1) }, children: 'Move down' }),
+                  jsx('div', { className: 'menu-label', children: 'Приоритет' }),
+                  jsx('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'up', disabled: Number(entry.rank) <= 1, onClick: () => { setMenuRef(null); requestMove(entry, Number(entry.rank) - 1) }, children: 'Вверх' }),
+                  jsx('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'down', disabled: Number(entry.rank) >= entries.length, onClick: () => { setMenuRef(null); requestMove(entry, Number(entry.rank) + 1) }, children: 'Вниз' }),
                 ] }) : null,
                 item.status !== 'done' && item.type !== 'epic' ? jsxs('div', { className: 'tree-menu-status-actions', children: [
-                  jsx('div', { className: 'menu-label', children: 'Status' }),
-                  jsx('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'status-done', onClick: () => { setMenuRef(null); changeStatus(ref, 'done') }, children: 'Mark done' }),
+                  jsx('div', { className: 'menu-label', children: 'Статус' }),
+                  jsx('button', { type: 'button', role: 'menuitem', 'data-menu-action': 'status-done', onClick: () => { setMenuRef(null); changeStatus(ref, 'done') }, children: 'Отметить выполненным' }),
                 ] }) : null,
               ] }) : null,
             ],
@@ -446,7 +446,7 @@ export function BacklogBoard(ctx) {
       bulkSelected.length ? jsxs('div', { className: 'sel-pop', 'data-selection-popover': true, onClick: (event) => event.stopPropagation(), children: [
         jsx('span', { className: 'sel-count', children: `${bulkSelected.length} selected` }),
         jsx('span', { className: 'sel-sep' }),
-        jsxs('select', { 'data-pop-target': true, 'aria-label': 'Bulk target', defaultValue: '', children: [
+        jsxs('select', { 'data-pop-target': true, 'aria-label': 'Цель массовой операции', defaultValue: '', children: [
           jsx('option', { value: '', disabled: true, children: 'Act on selection…' }),
           ...(view.bots ?? []).map((bot) => jsxs('option', { value: `assign:${bot.id}`, children: [`Reassign all → ${bot.name || bot.id}`] }, `a-${bot.id}`)),
           ...STATUS_OPTIONS.map((st) => jsxs('option', { value: `status:${st}`, children: [`Set status → ${STATUS_LABELS[st]}`] }, `s-${st}`)),
@@ -467,9 +467,9 @@ export function BacklogBoard(ctx) {
         } }),
         !bulkSameSource && bulkSelected.length > 0 ? jsx('span', { style: { fontSize: 11, color: 'var(--dy-warning)', padding: '0 6px' }, children: 'mixed current assignees' }) : null,
         bulkPreview ? jsxs('button', { type: 'button', 'data-pop-action': 'execute', disabled: bulkBusy || !selectedEligible, onClick: () => { executeBulk(); }, children: [`Confirm reassign (${(bulkPreview.eligible_items ?? []).length})`] }) : null,
-        jsxs('button', { type: 'button', 'data-pop-action': 'clear', onClick: () => { setBulkSelected([]); setBulkPreview(null); setBulkOperation(null); setBulkError(null) }, children: ['Clear', jsx('span', { style: { opacity: .6 }, children: ' esc' })] }),
+        jsxs('button', { type: 'button', 'data-pop-action': 'clear', onClick: () => { setBulkSelected([]); setBulkPreview(null); setBulkOperation(null); setBulkError(null) }, children: ['Очистить', jsx('span', { style: { opacity: .6 }, children: ' esc' })] }),
       ] }) : null,
-    ] }) : (q ? jsx(EmptyState, { title: 'No matches', description: `Nothing in the backlog matches “${search}”. Clear the filter to see all items.`, icon: 'project', children: jsx(Button, { small: true, onClick: () => setSearch(''), children: 'Clear filter' }) }) : jsx(EmptyState, { title: 'No ranked backlog items', description: 'Work items appear here after they are added to the project backlog.', icon: 'project' })),
+    ] }) : (q ? jsx(EmptyState, { title: 'Совпадений нет', description: `Nothing in the backlog matches “${search}”. Clear the filter to see all items.`, icon: 'project', children: jsx(Button, { small: true, onClick: () => setSearch(''), children: 'Сбросить фильтр' }) }) : jsx(EmptyState, { title: 'Нет ранжированных пунктов бэклога', description: 'Рабочие элементы появятся здесь после добавления в бэклог проекта.', icon: 'project' })),
     detailItem ? jsx(WorkItemDetail, { item: detailItem, projectId: project.id, profiles: view.profiles ?? [], initiatives: view.initiatives ?? [], onClose: () => setDetailItem(null), onRefresh }) : null,
     jsx(BacklogImportWizard, {
       project, importOpen, importStep, importText, importMode, importRows, importValid, importError, importBusy, importResult, importSelected, importWarningsOnly, importColumnMetadata, setImportMode, setImportText, setImportRows, setImportValid, setImportError, setImportBusy, setImportStep, setImportSelected, closeImport, parseImport, runImport, api,
@@ -483,49 +483,49 @@ export function BacklogBoard(ctx) {
       children: [
       jsxs('form', { className: 'dockyard-modal dockyard-create-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dockyard-create-title', 'data-create-backlog-item': true, onSubmit: (event) => { event.preventDefault(); saveCreate() }, children: [
         jsxs('header', { className: 'dockyard-modal-head', children: [
-          jsxs('div', { children: [jsx('span', { className: 'dockyard-create-eyebrow', children: `New work item · ${project.id}` }), jsx('h2', { id: 'dockyard-create-title', children: 'Create backlog item' })] }),
-          jsx(Button, { action: 'close-create-backlog-item', ariaLabel: 'Close create item dialog', disabled: createSaving, onClick: () => setCreateOpen(false), children: 'Close' }),
+          jsxs('div', { children: [jsx('span', { className: 'dockyard-create-eyebrow', children: `New work item · ${project.id}` }), jsx('h2', { id: 'dockyard-create-title', children: 'Создать элемент бэклога' })] }),
+          jsx(Button, { action: 'close-create-backlog-item', ariaLabel: 'Закрыть диалог создания элемента', disabled: createSaving, onClick: () => setCreateOpen(false), children: 'Закрыть' }),
         ]}),
         jsxs('div', { className: 'dockyard-create-body', children: [
           jsxs('p', { className: 'dockyard-create-context', children: [jsx('span', { className: 'dockyard-status-dot status-backlog', 'aria-hidden': true }), 'Starts in Backlog · Sahil is recorded as creator'] }),
           jsxs('div', { className: 'dockyard-settings-grid dockyard-create-fields', children: [
-          jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Title' }), jsx('input', { 'data-create-field': 'title', value: createForm.title, onInput: (event) => updateCreate('title', event.target.value), onChange: (event) => updateCreate('title', event.target.value), placeholder: 'Describe the delivery outcome' })] }),
-          jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Description (optional)' }), jsx('textarea', { rows: 3, 'data-create-field': 'body', value: createForm.body, onChange: (event) => updateCreate('body', event.target.value), placeholder: 'Describe the outcome and acceptance criteria…' })] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Parent (optional)' }), jsx('select', { 'data-create-field': 'parent', value: createForm.parent, onChange: (event) => updateCreate('parent', event.target.value), children: [
-            ROOT_TYPES.includes(createForm.type) ? jsx('option', { value: '', children: 'Top level' }, 'none') : null,
+          jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Заголовок' }), jsx('input', { 'data-create-field': 'title', value: createForm.title, onInput: (event) => updateCreate('title', event.target.value), onChange: (event) => updateCreate('title', event.target.value), placeholder: 'Опишите результат поставки' })] }),
+          jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [jsx('span', { children: 'Описание (необязательно)' }), jsx('textarea', { rows: 3, 'data-create-field': 'body', value: createForm.body, onChange: (event) => updateCreate('body', event.target.value), placeholder: 'Опишите результат и критерии приёмки…' })] }),
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Родитель (необязательно)' }), jsx('select', { 'data-create-field': 'parent', value: createForm.parent, onChange: (event) => updateCreate('parent', event.target.value), children: [
+            ROOT_TYPES.includes(createForm.type) ? jsx('option', { value: '', children: 'Верхний уровень' }, 'none') : null,
             ...availableCreateParents.map((parent) => jsx('option', { value: parent.ref, children: `${parent.title || parent.ref} · ${typeLabel(parent.type)}` }, parent.ref)),
           ]})] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Due date (optional)' }), jsx('input', { type: 'date', 'data-create-field': 'due', value: createForm.due, onInput: (event) => updateCreate('due', event.target.value), onChange: (event) => updateCreate('due', event.target.value) })] }),
-          jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Type' }), jsx('select', { 'data-create-field': 'type', value: createForm.type, onChange: (event) => updateCreate('type', event.target.value), children:
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Срок (необязательно)' }), jsx('input', { type: 'date', 'data-create-field': 'due', value: createForm.due, onInput: (event) => updateCreate('due', event.target.value), onChange: (event) => updateCreate('due', event.target.value) })] }),
+          jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Тип' }), jsx('select', { 'data-create-field': 'type', value: createForm.type, onChange: (event) => updateCreate('type', event.target.value), children:
             availableCreateTypes.map((type) => jsx('option', { value: type, children: typeLabel(type) }, type)),
           })] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Estimated days (optional)' }), jsx('input', { type: 'number', min: 0, step: 0.5, 'data-create-field': 'estimate_days', value: createForm.estimate_days, onInput: (event) => updateCreate('estimate_days', event.target.value), onChange: (event) => updateCreate('estimate_days', event.target.value), placeholder: 'e.g. 2.5' })] }),
-          jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Assignee' }), jsx('select', { 'data-create-field': 'assignee', value: createForm.assignee, onChange: (event) => updateCreate('assignee', event.target.value), children: [
-            jsx('option', { value: '', children: 'Choose an assignee' }, 'choose'),
-            jsx('option', { value: UNASSIGNED, children: 'Unassigned' }, 'unassigned'),
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Оценка в днях (необязательно)' }), jsx('input', { type: 'number', min: 0, step: 0.5, 'data-create-field': 'estimate_days', value: createForm.estimate_days, onInput: (event) => updateCreate('estimate_days', event.target.value), onChange: (event) => updateCreate('estimate_days', event.target.value), placeholder: 'e.g. 2.5' })] }),
+          jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Исполнитель' }), jsx('select', { 'data-create-field': 'assignee', value: createForm.assignee, onChange: (event) => updateCreate('assignee', event.target.value), children: [
+            jsx('option', { value: '', children: 'Выбрать исполнителя' }, 'choose'),
+            jsx('option', { value: UNASSIGNED, children: 'Не назначен' }, 'unassigned'),
             ...(view.bots ?? []).map((bot) => jsx('option', { value: bot.id, children: bot.name || bot.id }, bot.id)),
           ]}),
           // The note sits under the field it explains (Sahil 04/10).
-          createForm.assignee === UNASSIGNED ? jsx('small', { className: 'create-help', 'data-create-help': 'unassigned', children: 'No bot will pick this up until it is assigned.' }) : null,
+          createForm.assignee === UNASSIGNED ? jsx('small', { className: 'create-help', 'data-create-help': 'unassigned', children: 'Ни один бот не подхватит это, пока оно не назначено.' }) : null,
           ] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Initiative' }), jsx('select', { 'data-create-field': 'initiative', value: createForm.initiative, onChange: (event) => updateCreate('initiative', event.target.value), children: [
-            jsx('option', { value: '', children: 'No initiative' }, 'none'),
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { className: 'field-optional-hint', children: 'Инициатива' }), jsx('select', { 'data-create-field': 'initiative', value: createForm.initiative, onChange: (event) => updateCreate('initiative', event.target.value), children: [
+            jsx('option', { value: '', children: 'Без инициативы' }, 'none'),
             ...(view.initiatives ?? []).map((initiative) => jsx('option', { value: initiative.ref, children: `${initiative.ref} / ${initiative.title}` }, initiative.ref)),
           ]})] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Evidence refs (optional)' }), jsx('input', { 'data-create-field': 'evidence_refs', value: createForm.evidence_refs, onChange: (event) => updateCreate('evidence_refs', event.target.value), placeholder: 'Comma-separated refs' })] }),
-          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Labels (optional)' }), jsx('input', { 'data-create-field': 'labels', value: createForm.labels, onChange: (event) => updateCreate('labels', event.target.value), placeholder: 'Comma-separated labels' })] }),
-          jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Initial rank' }), jsx('input', { type: 'number', min: 1, max: maxInitialRank, 'data-create-field': 'rank', value: createForm.rank, onInput: (event) => updateCreate('rank', event.target.value), onChange: (event) => updateCreate('rank', event.target.value) })] }),
-          jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Priority reason' }), jsx('textarea', { rows: 3, 'data-create-field': 'reason', value: createForm.reason, onInput: (event) => updateCreate('reason', event.target.value), onChange: (event) => updateCreate('reason', event.target.value), placeholder: 'Why should this item hold this rank?' })] }),
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Ссылки на доказательства (необязательно)' }), jsx('input', { 'data-create-field': 'evidence_refs', value: createForm.evidence_refs, onChange: (event) => updateCreate('evidence_refs', event.target.value), placeholder: 'Ссылки через запятую' })] }),
+          jsxs('label', { className: 'dockyard-field', children: [jsx('span', { children: 'Метки (необязательно)' }), jsx('input', { 'data-create-field': 'labels', value: createForm.labels, onChange: (event) => updateCreate('labels', event.target.value), placeholder: 'Метки через запятую' })] }),
+          jsxs('label', { className: 'dockyard-field field-required', children: [jsx('span', { children: 'Начальный ранг' }), jsx('input', { type: 'number', min: 1, max: maxInitialRank, 'data-create-field': 'rank', value: createForm.rank, onInput: (event) => updateCreate('rank', event.target.value), onChange: (event) => updateCreate('rank', event.target.value) })] }),
+          jsxs('label', { className: 'dockyard-field dockyard-field-wide field-required', children: [jsx('span', { children: 'Причина приоритета' }), jsx('textarea', { rows: 3, 'data-create-field': 'reason', value: createForm.reason, onInput: (event) => updateCreate('reason', event.target.value), onChange: (event) => updateCreate('reason', event.target.value), placeholder: 'Почему этот элемент должен держать этот ранг?' })] }),
         ]}),
-        createTouched.title && createForm.title.trim().length < 3 ? jsx('p', { className: 'create-help bad', 'data-create-help': 'title', children: 'Title must be at least 3 characters.' }) : null,
-        createTouched.assignee && !createForm.assignee ? jsx('p', { className: 'create-help bad', 'data-create-help': 'assignee', children: 'Choose an assignee, or Unassigned.' }) : null,
-        createTouched.reason && createForm.reason.trim().length < 4 ? jsx('p', { className: 'create-help bad', 'data-create-help': 'reason', children: 'A ranking reason is required — it becomes the audit record.' }) : null,
+        createTouched.title && createForm.title.trim().length < 3 ? jsx('p', { className: 'create-help bad', 'data-create-help': 'title', children: 'Заголовок — минимум 3 символа.' }) : null,
+        createTouched.assignee && !createForm.assignee ? jsx('p', { className: 'create-help bad', 'data-create-help': 'assignee', children: 'Выберите исполнителя или «Не назначен».' }) : null,
+        createTouched.reason && createForm.reason.trim().length < 4 ? jsx('p', { className: 'create-help bad', 'data-create-help': 'reason', children: 'Требуется причина ранжирования — она становится записью аудита.' }) : null,
         jsx('p', { className: 'create-help', 'data-create-reqnote': true, children: '* required. Initial rank and priority reason are recorded in the backlog audit trail.' }),
         createError ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: createError }) : null,
         ]}),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
-          jsx(Button, { disabled: createSaving, onClick: () => setCreateOpen(false), children: 'Cancel' }),
-          jsx(Button, { action: 'submit-create-backlog-item', variant: 'primary', disabled: createSaving || !createValid, onClick: saveCreate, children: createSaving ? 'Creating...' : 'Create and add' }),
+          jsx(Button, { disabled: createSaving, onClick: () => setCreateOpen(false), children: 'Отмена' }),
+          jsx(Button, { action: 'submit-create-backlog-item', variant: 'primary', disabled: createSaving || !createValid, onClick: saveCreate, children: createSaving ? 'Создание…' : 'Создать и добавить' }),
         ]}),
       ]}),
     ]}),

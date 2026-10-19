@@ -47,13 +47,13 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
   const enabled = lifecycleState?.enabled !== false
   const phase = lifecycleState?.phase || project.phase || 'unknown'
   const lifecycleCopy = {
-    enable: { endpoint: 're-enable', label: 'Enable', past: 'enabled' },
-    disable: { endpoint: 'disable', label: 'Disable', past: 'disabled' },
-    pause: { endpoint: 'pause', label: 'Pause', past: 'paused' },
-    resume: { endpoint: 'resume', label: 'Resume', past: 'resumed' },
-    freeze: { endpoint: 'freeze', label: 'Freeze', past: 'frozen' },
-    archive: { endpoint: 'archive', label: 'Archive', past: 'archived' },
-    restore: { endpoint: 'restore', label: 'Restore', past: 'restored' },
+    enable: { endpoint: 're-enable', label: 'Включить', past: 'enabled' },
+    disable: { endpoint: 'disable', label: 'Выключить', past: 'disabled' },
+    pause: { endpoint: 'pause', label: 'Пауза', past: 'paused' },
+    resume: { endpoint: 'resume', label: 'Продолжить', past: 'resumed' },
+    freeze: { endpoint: 'freeze', label: 'Заморозить', past: 'frozen' },
+    archive: { endpoint: 'archive', label: 'В архив', past: 'archived' },
+    restore: { endpoint: 'restore', label: 'Восстановить', past: 'restored' },
   }
   const archived = Boolean(lifecycleState?.archived_at)
   // A switched-off project can be archived too, and Restore brings it back
@@ -104,7 +104,7 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
           },
         },
       })
-      setMessage({ tone: 'success', text: 'Project configuration saved.' })
+      setMessage({ tone: 'success', text: 'Конфигурация проекта сохранена.' })
       setEditing(false)
       onDirty?.(false)
       onRefresh?.()
@@ -142,15 +142,15 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
   }
   return jsxs('section', { className: 'dockyard-feature-card dockyard-settings-card', 'data-project-settings-form': true, children: [
     jsxs('header', { className: 'dockyard-section-head', children: [
-      jsxs('div', { children: [jsx('h2', { children: 'Project configuration' }), jsx('p', { children: 'Ownership, autonomy, verification, release and notification boundaries.' })] }),
+      jsxs('div', { children: [jsx('h2', { children: 'Конфигурация проекта' }), jsx('p', { children: 'Границы владения, автономии, верификации, релиза и уведомлений.' })] }),
       jsxs('div', { className: 'dockyard-project-state-summary', children: [
-        jsx('span', { 'data-project-enabled-state': true, children: jsx(StatusTag, { tone: enabled ? 'success' : 'neutral', label: enabled ? 'Enabled' : 'Disabled' }) }),
+        jsx('span', { 'data-project-enabled-state': true, children: jsx(StatusTag, { tone: enabled ? 'success' : 'neutral', label: enabled ? 'Включено' : 'Выключено' }) }),
         jsx('span', { 'data-project-phase-state': true, children: jsx(StatusTag, { tone: phase === 'active' ? 'success' : 'warning', label: phase.charAt(0).toUpperCase() + phase.slice(1) }) }),
       ]}),
     ]}),
     jsxs('section', { className: 'dockyard-lifecycle-panel', 'data-project-lifecycle': true, children: [
       jsxs('header', { children: [
-        jsxs('div', { children: [jsx('h3', { children: 'Project lifecycle' }), jsx('p', { children: enabled ? 'Only actions valid for the current phase are available.' : 'Configuration remains readable while the project is disabled.' })] }),
+        jsxs('div', { children: [jsx('h3', { children: 'Жизненный цикл проекта' }), jsx('p', { children: enabled ? 'Доступны только действия, допустимые для текущей фазы.' : 'Конфигурация остаётся читаемой, пока проект отключён.' })] }),
         jsx('div', { className: 'dockyard-lifecycle-actions', children: lifecycleActions.map((action) => jsx('button', {
           type: 'button',
           className: `dockyard-button small${['disable', 'freeze', 'archive'].includes(action) ? ' danger' : ['enable', 'restore'].includes(action) ? ' primary' : ''}`,
@@ -163,65 +163,65 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
     ]}),
     jsxs('fieldset', { className: 'dockyard-settings-grid dockyard-settings-fieldset', disabled: !enabled || !editing, children: [
       jsxs('div', { className: 'dockyard-settings-category', children: [
-        jsx('div', { className: 'dockyard-settings-category-label', children: 'General' }),
+        jsx('div', { className: 'dockyard-settings-category-label', children: 'Общее' }),
         jsxs('label', { className: 'dockyard-field dockyard-field-wide', children: [
-          jsx('span', { children: 'Mission' }),
+          jsx('span', { children: 'Миссия' }),
           jsx('textarea', { 'data-setting-field': 'mission', rows: 3, value: form.mission, onInput: (event) => update('mission', event.target.value), onChange: (event) => update('mission', event.target.value) }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Lead profile' }),
+          jsx('span', { children: 'Профиль ведущего' }),
           jsx('input', { 'data-setting-field': 'lead-profile', value: form.leadProfile, onChange: (event) => update('leadProfile', event.target.value) }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Member profiles' }),
+          jsx('span', { children: 'Профили участников' }),
           jsx('input', { 'data-setting-field': 'members', value: form.members, placeholder: 'bot-a, bot-b', onChange: (event) => update('members', event.target.value) }),
         ]}),
       ]}),
       jsxs('div', { className: 'dockyard-settings-category', children: [
-        jsx('div', { className: 'dockyard-settings-category-label', children: 'Autonomy & verification' }),
+        jsx('div', { className: 'dockyard-settings-category-label', children: 'Автономия и верификация' }),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Autonomy level' }),
+          jsx('span', { children: 'Уровень автономии' }),
           jsx('select', { 'data-setting-field': 'autonomy', value: form.autonomyLevel, onChange: (event) => update('autonomyLevel', event.target.value), children:
             [0, 1, 2, 3, 4, 5].map((level) => jsx('option', { value: String(level), children: `${level} / ${level === 0 ? 'manual' : level === 5 ? 'bounded maximum' : 'bounded'}` }, String(level))),
           }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Human gate from risk' }),
+          jsx('span', { children: 'Человеческий гейт из-за риска' }),
           jsx('select', { value: form.humanGateRisk, onChange: (event) => update('humanGateRisk', event.target.value), children:
             ['low', 'medium', 'high', 'critical'].map((risk) => jsx('option', { value: risk, children: risk }, risk)),
           }),
         ]}),
         jsxs('label', { className: 'dockyard-check-field', children: [
           jsx('input', { type: 'checkbox', checked: form.autoStartLowRisk, onChange: (event) => update('autoStartLowRisk', event.target.checked) }),
-          jsxs('span', { children: [jsx('strong', { children: 'Auto-start low-risk work' }), jsx('small', { children: 'Only inside the declared autonomy boundary.' })] }),
+          jsxs('span', { children: [jsx('strong', { children: 'Автозапуск низкорисковых работ' }), jsx('small', { children: 'Только внутри объявленной границы автономии.' })] }),
         ]}),
         jsxs('label', { className: 'dockyard-check-field', children: [
           jsx('input', { type: 'checkbox', 'data-setting-field': 'require-tests', checked: form.requireTests, onChange: (event) => update('requireTests', event.target.checked) }),
-          jsxs('span', { children: [jsx('strong', { children: 'Require test evidence' }), jsx('small', { children: 'Block verification without a test result.' })] }),
+          jsxs('span', { children: [jsx('strong', { children: 'Требовать доказательств тестов' }), jsx('small', { children: 'Не верифицировать без результата тестов.' })] }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Maximum open initiatives' }),
+          jsx('span', { children: 'Максимум открытых инициатив' }),
           jsx('input', { type: 'number', min: 1, max: 25, value: form.maxOpenInitiatives, onChange: (event) => update('maxOpenInitiatives', event.target.value) }),
         ]}),
       ]}),
       jsxs('div', { className: 'dockyard-settings-category', children: [
-        jsx('div', { className: 'dockyard-settings-category-label', children: 'Release & notifications' }),
+        jsx('div', { className: 'dockyard-settings-category-label', children: 'Релиз и уведомления' }),
         jsxs('label', { className: 'dockyard-check-field', children: [
           jsx('input', { type: 'checkbox', checked: form.requireRollback, onChange: (event) => update('requireRollback', event.target.checked) }),
-          jsxs('span', { children: [jsx('strong', { children: 'Require rollback plan' }), jsx('small', { children: 'Every release must declare its recovery path.' })] }),
+          jsxs('span', { children: [jsx('strong', { children: 'Требовать план отката' }), jsx('small', { children: 'Каждый релиз должен объявить путь восстановления.' })] }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Soak period in hours' }),
+          jsx('span', { children: 'Период выдержки, часов' }),
           jsx('input', { type: 'number', min: 0, max: 720, 'data-setting-field': 'soak-hours', value: form.soakHours, onChange: (event) => update('soakHours', event.target.value) }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Alert threshold' }),
+          jsx('span', { children: 'Порог оповещения' }),
           jsx('select', { value: form.severityThreshold, onChange: (event) => update('severityThreshold', event.target.value), children:
             ['info', 'low', 'medium', 'high', 'critical'].map((severity) => jsx('option', { value: severity, children: severity }, severity)),
           }),
         ]}),
         jsxs('label', { className: 'dockyard-field', children: [
-          jsx('span', { children: 'Notification cadence' }),
+          jsx('span', { children: 'Частота уведомлений' }),
           jsx('select', { 'data-setting-field': 'digest', value: form.digest, onChange: (event) => update('digest', event.target.value), children:
             ['immediate', 'daily', 'weekly', 'off'].map((cadence) => jsx('option', { value: cadence, children: cadence }, cadence)),
           }),
@@ -231,11 +231,11 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
     message ? jsx('p', { className: message.tone === 'danger' ? 'dockyard-inline-error' : 'dockyard-inline-success', role: 'status', children: message.text }) : null,
     enabled ? jsx('div', { className: 'dockyard-form-actions', children: editing
       ? jsxs(Fragment, { children: [
-          jsx(Button, { action: 'cancel-project-settings', disabled: saving, onClick: () => { setForm(buildForm()); setEditing(false); onDirty?.(false); setMessage(null) }, children: 'Cancel' }),
-          jsx(Button, { action: 'save-project-settings', variant: 'primary', disabled: saving || !form.mission.trim(), onClick: save, children: saving ? 'Saving...' : 'Save configuration' }),
+          jsx(Button, { action: 'cancel-project-settings', disabled: saving, onClick: () => { setForm(buildForm()); setEditing(false); onDirty?.(false); setMessage(null) }, children: 'Отмена' }),
+          jsx(Button, { action: 'save-project-settings', variant: 'primary', disabled: saving || !form.mission.trim(), onClick: save, children: saving ? 'Сохранение...' : 'Сохранить конфигурацию' }),
         ]})
-      : jsx(Button, { action: 'edit-project-settings', variant: 'primary', onClick: () => { setForm(buildForm()); setEditing(true); onDirty?.(false); setMessage(null) }, children: 'Edit configuration' }),
-    }) : jsx('p', { className: 'dockyard-meta', children: 'Enable this project before editing its configuration.' }),
+      : jsx(Button, { action: 'edit-project-settings', variant: 'primary', onClick: () => { setForm(buildForm()); setEditing(true); onDirty?.(false); setMessage(null) }, children: 'Изменить конфигурацию' }),
+    }) : jsx('p', { className: 'dockyard-meta', children: 'Включите проект, прежде чем редактировать его конфигурацию.' }),
     jsxs('section', { className: 'dockyard-modal-layer', 'data-lifecycle-confirm': true, hidden: !pendingLifecycle, children: [
       jsxs('div', { className: 'dockyard-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dockyard-lifecycle-title', children: [
         jsx('h2', { id: 'dockyard-lifecycle-title', children: `${lifecycleCopy[pendingLifecycle]?.label || 'Change'} project?` }),
@@ -243,8 +243,8 @@ export function ProjectSettingsPanel({ project, settings, onRefresh, onDirty, on
           ? `${project.id} will be hidden everywhere: dashboard, projects, roadmap, inbox, search and alerts. Stewardship stops for it while it is archived. Nothing is deleted: its Hermes project, board, tasks and repository stay exactly as they are. Restore it any time from ${RESTORE_FROM}, and it comes back exactly as it is now (${enabled ? 'switched on' : 'switched off'}, ${phase}).`
           : `This changes ${project.id} from its current ${enabled ? 'enabled' : 'disabled'} and ${phase} state.` }),
         jsxs('div', { className: 'dockyard-modal-actions', children: [
-          jsx(Button, { disabled: lifecycleBusy, onClick: () => setPendingLifecycle(null), children: 'Cancel' }),
-          jsx(Button, { action: 'confirm-lifecycle-action', variant: ['disable', 'freeze', 'archive'].includes(pendingLifecycle) ? 'danger' : 'primary', disabled: lifecycleBusy, onClick: confirmLifecycle, children: lifecycleBusy ? 'Applying...' : `Confirm ${lifecycleCopy[pendingLifecycle]?.label || 'change'}` }),
+          jsx(Button, { disabled: lifecycleBusy, onClick: () => setPendingLifecycle(null), children: 'Отмена' }),
+          jsx(Button, { action: 'confirm-lifecycle-action', variant: ['disable', 'freeze', 'archive'].includes(pendingLifecycle) ? 'danger' : 'primary', disabled: lifecycleBusy, onClick: confirmLifecycle, children: lifecycleBusy ? 'Применение…' : `Confirm ${lifecycleCopy[pendingLifecycle]?.label || 'change'}` }),
         ]}),
       ]}),
     ]}),

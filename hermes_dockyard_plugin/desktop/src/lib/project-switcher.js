@@ -20,12 +20,12 @@ import { Icon } from './ui.js'
 export const ALL_PROJECTS = '*'
 
 const HEALTH = Object.freeze({
-  critical: ['danger', 'Critical'],
-  frozen: ['danger', 'Frozen'],
-  attention: ['danger', 'Needs attention'],
-  degraded: ['warning', 'Degraded'],
-  watch: ['warning', 'Watch'],
-  healthy: ['success', 'Healthy'],
+  critical: ['danger', 'Критично'],
+  frozen: ['danger', 'Заморожен'],
+  attention: ['danger', 'Требует внимания'],
+  degraded: ['warning', 'Деградация'],
+  watch: ['warning', 'Наблюдение'],
+  healthy: ['success', 'Здоров'],
 })
 // Unknown health shows nothing: an empty grey dot reads as a status it is not.
 export const healthOf = (project) => HEALTH[project?.health] ?? [null, '']
@@ -78,7 +78,7 @@ function useSwitcherList(projects, scope) {
   const onKeyDown = (event, pick, close) => {
     if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); return }
     if (event.key === 'Enter') { event.preventDefault(); if (entries[active]) pick(entries[active].id); return }
-    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+    if (['ArrowDown', 'ArrowUp', 'Главная', 'End'].includes(event.key)) {
       event.preventDefault()
       const last = Math.max(0, entries.length - 1)
       setActive(event.key === 'Home' ? 0 : event.key === 'End' ? last
@@ -94,12 +94,12 @@ function SwitcherSearch({ idPrefix, list, onPick, onClose }) {
     jsx('input', {
       autoFocus: true,
       role: 'combobox',
-      'aria-label': 'Find project',
+      'aria-label': 'Найти проект',
       'aria-expanded': true,
       'aria-controls': `${idPrefix}-options`,
       'aria-autocomplete': 'list',
       'aria-activedescendant': list.entries[list.active] ? `${idPrefix}-option-${list.active}` : undefined,
-      placeholder: 'Find a project',
+      placeholder: 'Найти проект',
       value: list.query,
       onChange: (event) => list.setQuery(event.target.value),
       onKeyDown: (event) => list.onKeyDown(event, onPick, onClose),
@@ -110,8 +110,8 @@ function SwitcherSearch({ idPrefix, list, onPick, onClose }) {
 function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
   const activeId = `${idPrefix}-option-${list.active}`
   useEffect(() => { document.getElementById(activeId)?.scrollIntoView?.({ block: 'nearest' }) }, [activeId])
-  if (!list.entries.length) return jsx('p', { role: 'status', className: 'dy-sw-empty', children: 'No matching projects' })
-  return jsx('div', { role: 'listbox', id: `${idPrefix}-options`, 'aria-label': 'Projects', className: 'dy-sw-options', children:
+  if (!list.entries.length) return jsx('p', { role: 'status', className: 'dy-sw-empty', children: 'Нет подходящих проектов' })
+  return jsx('div', { role: 'listbox', id: `${idPrefix}-options`, 'aria-label': 'Проекты', className: 'dy-sw-options', children:
     list.entries.map((entry, index) => {
       const project = entry.project
       const [tone, healthLabel] = entry.all ? ['neutral', ''] : healthOf(project)
@@ -120,7 +120,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
         role: 'option',
         id: `${idPrefix}-option-${index}`,
         'aria-selected': entry.id === scope,
-        'aria-label': entry.all ? 'All projects' : projectName(project),
+        'aria-label': entry.all ? 'Все проекты' : projectName(project),
         className: 'dy-sw-option',
         'data-active': index === list.active ? 'true' : undefined,
         'data-project-option': entry.id,
@@ -130,7 +130,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
         children: [
           jsx(ProjectAvatar, { project, all: entry.all }),
           jsxs('span', { className: 'dy-sw-option-copy', children: [
-            jsx('strong', { children: entry.all ? 'All projects' : projectName(project) }),
+            jsx('strong', { children: entry.all ? 'Все проекты' : projectName(project) }),
             meta ? jsx('span', { children: meta }) : null,
           ] }),
           entry.all || !tone ? null : jsx('span', { className: `dy-sw-dot ${tone}`, title: healthLabel, 'aria-hidden': true }),
@@ -142,7 +142,7 @@ function SwitcherOptions({ idPrefix, list, scope, projects, onPick }) {
 
 function TriggerLabel({ projects, scope }) {
   const current = scope && scope !== ALL_PROJECTS ? projects.find((project) => project.id === scope) : null
-  const label = scope === ALL_PROJECTS ? 'All projects' : current ? projectName(current) : (scope || 'Choose project')
+  const label = scope === ALL_PROJECTS ? 'Все проекты' : current ? projectName(current) : (scope || 'Выбрать проект')
   return [
     jsx(ProjectAvatar, { project: current ?? { id: label }, all: scope === ALL_PROJECTS }, 'avatar'),
     jsx('span', { className: 'dy-sw-trigger-name', children: label }, 'name'),
@@ -162,8 +162,8 @@ function SwitcherFoot({ onNewProject, onOnboardExisting, onOpenArchived, archive
     children: [jsx(Icon, { name: icon }), label],
   }, marker)
   const actions = [
-    onNewProject ? action('data-switcher-new-project', 'plus', 'New project', onNewProject) : null,
-    onOnboardExisting ? action('data-switcher-onboard-existing', 'folder-open', 'Onboard existing project', onOnboardExisting) : null,
+    onNewProject ? action('data-switcher-new-project', 'plus', 'Новый проект', onNewProject) : null,
+    onOnboardExisting ? action('data-switcher-onboard-existing', 'folder-open', 'Подключить существующий проект', onOnboardExisting) : null,
     // Archived projects are hidden everywhere else; this is the way to them (11/10/2026).
     onOpenArchived && archivedCount > 0
       ? action('data-switcher-archived', 'archive', `Archived projects (${archivedCount})`, onOpenArchived) : null,
@@ -187,14 +187,14 @@ export function ProjectSwitcher({ projects, scope, onChange, onNewProject, onOnb
         ref: trigger,
         type: 'button',
         className: 'dy-sw-trigger',
-        'aria-label': 'Project context',
+        'aria-label': 'Контекст проекта',
         'aria-haspopup': 'listbox',
         'aria-expanded': open,
         'data-scope': scope ?? '',
         onClick: () => { if (!open) list.openAt(); setOpen(!open) },
         children: [...TriggerLabel({ projects, scope }), jsx('span', { className: 'dy-sw-caret', children: jsx(Icon, { name: 'arrow-up-down' }) }, 'caret')],
       }),
-      open ? jsxs('div', { className: 'dy-sw-popover', role: 'dialog', 'aria-label': 'Switch project', children: [
+      open ? jsxs('div', { className: 'dy-sw-popover', role: 'dialog', 'aria-label': 'Сменить проект', children: [
         jsx(SwitcherSearch, { idPrefix: 'dy-sw', list, onPick: pick, onClose: () => close() }),
         jsx(SwitcherOptions, { idPrefix: 'dy-sw', list, scope, projects, onPick: pick }),
         jsx(SwitcherFoot, { onNewProject, onOnboardExisting, onOpenArchived, archivedCount, close }),
@@ -211,7 +211,7 @@ export function ScopeNote({ name, hidden = 0, noun = 'items', onShowAll }) {
       jsx('strong', { children: `Showing ${name} only.` }),
       hidden > 0 ? ` ${plural(hidden, noun.replace(/s$/, ''), noun)} in other projects.` : '',
     ] }),
-    jsx('button', { type: 'button', className: 'dockyard-button small', 'data-show-all-projects': 'true', onClick: onShowAll, children: 'Show all projects' }),
+    jsx('button', { type: 'button', className: 'dockyard-button small', 'data-show-all-projects': 'true', onClick: onShowAll, children: 'Показать все проекты' }),
   ] })
 }
 
@@ -231,7 +231,7 @@ export function ProjectChooser({ projects, screen, onPick, onNewProject, onOnboa
               jsx(ProjectAvatar, { project, size: 'lg' }),
               jsxs('span', { className: 'dy-sw-option-copy', children: [
                 jsx('strong', { children: projectName(project) }),
-                jsx('span', { children: projectMeta(project) || 'No work yet' }),
+                jsx('span', { children: projectMeta(project) || 'Работы пока нет' }),
               ] }),
               tone ? jsxs('span', { className: `dy-sw-health ${tone}`, children: [jsx('span', { className: 'dy-sw-dot', 'aria-hidden': true }), healthLabel] }) : null,
               jsx('span', { className: 'dy-chooser-go', 'aria-hidden': true, children: jsx(Icon, { name: 'chevron' }) }),
@@ -239,9 +239,9 @@ export function ProjectChooser({ projects, screen, onPick, onNewProject, onOnboa
           }) }, project.id)
         }) })
       : jsxs('div', { className: 'dy-chooser-empty', children: [
-          jsx('p', { children: 'No projects yet.' }),
-          onNewProject ? jsx('button', { type: 'button', className: 'dockyard-button primary', onClick: onNewProject, children: 'New project' }) : null,
-          onOnboardExisting ? jsx('button', { type: 'button', className: 'dockyard-button', onClick: onOnboardExisting, children: 'Onboard existing project' }) : null,
+          jsx('p', { children: 'Проектов пока нет.' }),
+          onNewProject ? jsx('button', { type: 'button', className: 'dockyard-button primary', onClick: onNewProject, children: 'Новый проект' }) : null,
+          onOnboardExisting ? jsx('button', { type: 'button', className: 'dockyard-button', onClick: onOnboardExisting, children: 'Подключить существующий проект' }) : null,
         ] }),
   ] })
 }

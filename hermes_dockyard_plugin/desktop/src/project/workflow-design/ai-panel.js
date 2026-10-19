@@ -73,29 +73,29 @@ export function writeAiPinned(pinned) { pinnedNow = Boolean(pinned) }
 const TOGGLE = '[data-action="wfd-ask-ai"]'
 const focusToggle = () => { window.setTimeout(() => document.querySelector(TOGGLE)?.focus(), 0) }
 const STATUS_WORDS = {
-  pending: 'Nothing changes on the canvas until you press Apply.',
-  parked: 'Not applied.',
-  replaced: 'Replaced by the suggestion below, which includes these changes.',
-  stale: 'The canvas has changed since this suggestion. Ask again for an up-to-date one.',
-  applied: 'Applied to the canvas.',
+  pending: 'На холсте ничего не изменится, пока вы не нажмёте «Применить».',
+  parked: 'Не применено.',
+  replaced: 'Заменено предложением ниже, которое включает эти изменения.',
+  stale: 'Холст изменился с момента этого предложения. Запросите актуальное.',
+  applied: 'Применено на холсте.',
 }
-const SETTLED_WORDS = { saved: 'Saved.', discarded: 'Discarded.' }
+const SETTLED_WORDS = { saved: 'Сохранено.', discarded: 'Отменено.' }
 
 function SuggestionCard({ entry, status, onApply, onNotYet, onUndo }) {
   const s = entry.suggestion
   return jsxs('div', { className: `dy-wfd-ai-suggestion is-${status}`, 'data-wfd-ai-suggestion': status, children: [
-    jsx('h4', { children: s.kind === 'draft' ? 'Suggested steps' : 'Suggested change' }),
+    jsx('h4', { children: s.kind === 'draft' ? 'Предлагаемые шаги' : 'Предложенное изменение' }),
     entry.did?.length ? jsx('ul', { className: 'dy-wfd-ai-changes', 'data-wfd-ai-changes': true, children: entry.did.map((d, i) => jsx('li', { children: d }, `${i}-${d}`)) }) : null,
-    s.kind === 'change' ? jsxs('details', { children: [jsx('summary', { children: 'All the steps after this change' }), jsx(StepsPreview, { nodes: s.nodes })] }) : null,
+    s.kind === 'change' ? jsxs('details', { children: [jsx('summary', { children: 'Все шаги после этого изменения' }), jsx(StepsPreview, { nodes: s.nodes })] }) : null,
     entry.undone ? jsx('p', { className: 'dockyard-meta', children: 'Undone.' })
       : entry.settled ? jsx('p', { className: 'dockyard-meta', 'data-wfd-ai-settled': entry.settled, children: `${STATUS_WORDS.applied} ${SETTLED_WORDS[entry.settled]}` })
         : jsx('p', { className: 'dockyard-meta', children: STATUS_WORDS[status] }),
     status === 'pending' ? jsxs('div', { className: 'dy-wfd-ai-suggestion-actions', children: [
       jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-apply', onClick: onApply, children: 'Apply' }),
-      jsx(Button, { small: true, action: 'wfd-ai-not-yet', onClick: onNotYet, children: 'Not yet' }),
+      jsx(Button, { small: true, action: 'wfd-ai-not-yet', onClick: onNotYet, children: 'Пока нет' }),
     ] }) : null,
-    status === 'parked' ? jsx('div', { className: 'dy-wfd-ai-suggestion-actions', children: jsx(Button, { small: true, action: 'wfd-ai-apply', onClick: onApply, children: 'Apply after all' }) }) : null,
-    status === 'applied' && !entry.undone && !entry.settled ? jsx('div', { className: 'dy-wfd-ai-suggestion-actions', children: jsx(Button, { small: true, action: 'wfd-ai-undo', onClick: onUndo, children: 'Undo this change' }) }) : null,
+    status === 'parked' ? jsx('div', { className: 'dy-wfd-ai-suggestion-actions', children: jsx(Button, { small: true, action: 'wfd-ai-apply', onClick: onApply, children: 'Применить после всех' }) }) : null,
+    status === 'applied' && !entry.undone && !entry.settled ? jsx('div', { className: 'dy-wfd-ai-suggestion-actions', children: jsx(Button, { small: true, action: 'wfd-ai-undo', onClick: onUndo, children: 'Отменить это изменение' }) }) : null,
   ] })
 }
 
@@ -154,7 +154,7 @@ export function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pin
   const live = [...thread].reverse().find((e) => e.suggestion?.status === 'pending' && sameSteps(e.suggestion.base, nodes)) ?? null
   const send = (message = text) => {
     const clean = message.trim()
-    if (!clean) { setError('Type what you want first.'); return }
+    if (!clean) { setError('Сначала введи, что хочешь.'); return }
     setError(null); setText('')
     const user = aiEntry({ role: 'user', text: clean })
     const from = live ? live.suggestion.nodes : nodes
@@ -200,17 +200,17 @@ export function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pin
       entry.steps ? jsx(StepsPreview, { nodes: entry.steps }) : null,
       ...(entry.after ?? []).map((line, i) => jsx('p', { children: line }, `a${i}`)),
       entry.suggestion ? jsx(SuggestionCard, { entry, status, onApply: () => apply(entry), onNotYet: () => notYet(entry), onUndo: () => undo(entry) })
-        : entry.did?.length ? jsxs('details', { children: [jsx('summary', { children: 'What I changed' }), jsx('ul', { children: entry.did.map((d, i) => jsx('li', { children: d }, `${i}-${d}`)) })] }) : null,
+        : entry.did?.length ? jsxs('details', { children: [jsx('summary', { children: 'Что я изменил' }), jsx('ul', { children: entry.did.map((d, i) => jsx('li', { children: d }, `${i}-${d}`)) })] }) : null,
     ] }, entry.id)
   }
   return jsxs('aside', { ref: panelRef, id: 'wfd-ai-sidebar', className: 'dy-wfd-ai', 'aria-labelledby': 'wfd-ai-title', 'data-wfd-ai-sidebar': true, 'data-pinned': pinned ? 'true' : 'false', children: [
     jsxs('header', { className: 'dy-wfd-ai-head', children: [
       jsxs('div', { children: [
-        jsx('h2', { id: 'wfd-ai-title', children: 'Ask AI' }),
+        jsx('h2', { id: 'wfd-ai-title', children: 'Спросить ИИ' }),
         jsx('p', { className: 'dy-wfd-ai-sub', children: workflowTitle }),
       ] }),
-      jsx(Button, { small: true, action: 'wfd-ai-pin', variant: pinned ? 'primary' : '', data: { 'aria-pressed': pinned ? 'true' : 'false', title: pinned ? 'Let it float over the page again' : 'Keep it open beside the page' }, onClick: () => onPin(!pinned), children: pinned ? 'Unpin' : 'Pin' }),
-      jsx(Button, { small: true, action: 'wfd-ai-close', ariaLabel: 'Close the AI chat', onClick: () => { closeRef.current(); focusToggle() }, children: '×' }),
+      jsx(Button, { small: true, action: 'wfd-ai-pin', variant: pinned ? 'primary' : '', data: { 'aria-pressed': pinned ? 'true' : 'false', title: pinned ? 'Снова сделать плавающим над страницей' : 'Держать открытым рядом со страницей' }, onClick: () => onPin(!pinned), children: pinned ? 'Открепить' : 'Закрепить' }),
+      jsx(Button, { small: true, action: 'wfd-ai-close', ariaLabel: 'Закрыть чат с ИИ', onClick: () => { closeRef.current(); focusToggle() }, children: '×' }),
     ] }),
     jsx(PracticeAiNote, {}),
     jsxs('div', { className: 'dy-wfd-ai-thread', ref: listRef, 'aria-live': 'polite', children: [
@@ -221,20 +221,20 @@ export function AiSidebar({ members, nodes, workflowTitle, thread, onThread, pin
         ? jsx('p', { className: 'dy-wfd-ai-user', 'data-wfd-ai-user': true, children: entry.text }, entry.id)
         : renderAi(entry))),
     ] }),
-    empty && !thread.length ? jsx('div', { className: 'dy-wfd-chips', role: 'group', 'aria-label': 'Examples', children: AI_EXAMPLES.map((example) => jsx('button', { type: 'button', 'data-wfd-ai-example': example, onClick: () => send(example), children: example }, example)) }) : null,
+    empty && !thread.length ? jsx('div', { className: 'dy-wfd-chips', role: 'group', 'aria-label': 'Примеры', children: AI_EXAMPLES.map((example) => jsx('button', { type: 'button', 'data-wfd-ai-example': example, onClick: () => send(example), children: example }, example)) }) : null,
     // The AI's changes can be kept or dropped from here too: floating, the
     // sidebar covers the right end of the toolbar.
-    unsaved ? jsxs('div', { className: 'dy-wfd-ai-unsaved', role: 'group', 'aria-label': 'Unsaved changes', 'data-wfd-ai-unsaved': true, children: [
-      jsx('span', { children: 'Unsaved changes on the canvas' }),
-      jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-save', onClick: onSave, children: 'Save version' }),
-      jsx(Button, { small: true, action: 'wfd-ai-discard', onClick: onDiscard, children: 'Discard' }),
+    unsaved ? jsxs('div', { className: 'dy-wfd-ai-unsaved', role: 'group', 'aria-label': 'Несохранённые изменения', 'data-wfd-ai-unsaved': true, children: [
+      jsx('span', { children: 'Несохранённые изменения на холсте' }),
+      jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-save', onClick: onSave, children: 'Сохранить версию' }),
+      jsx(Button, { small: true, action: 'wfd-ai-discard', onClick: onDiscard, children: 'Отменить правки' }),
       saveError ? jsx('p', { className: 'dy-wfd-error', role: 'alert', children: saveError }) : null,
     ] }) : null,
     jsxs('div', { className: 'dy-wfd-ai-compose', children: [
-      jsx('textarea', { ref: inputRef, rows: 2, value: text, 'data-wfd-ai-input': true, 'aria-label': 'Message to the AI', 'aria-invalid': error ? 'true' : 'false', placeholder: empty ? 'e.g. Fix a bug until the tests pass' : 'e.g. what does this do? or: repeat up to 3 times', onChange: (e) => setText(e.target.value), onKeyDown: (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } } }),
-      jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-send', onClick: () => send(), children: 'Send' }),
+      jsx('textarea', { ref: inputRef, rows: 2, value: text, 'data-wfd-ai-input': true, 'aria-label': 'Сообщение ИИ', 'aria-invalid': error ? 'true' : 'false', placeholder: empty ? 'напр. Исправить баг, пока тесты не пройдут' : 'напр. что это делает? или: повторить до 3 раз', onChange: (e) => setText(e.target.value), onKeyDown: (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } } }),
+      jsx(Button, { small: true, variant: 'primary', action: 'wfd-ai-send', onClick: () => send(), children: 'Отправить' }),
     ] }),
     error ? jsx('p', { className: 'dy-wfd-error', role: 'alert', children: error }) : null,
-    jsx('p', { className: 'dockyard-meta', children: 'Nothing changes until you press Apply, and nothing is saved until Save version.' }),
+    jsx('p', { className: 'dockyard-meta', children: 'Ничего не изменится, пока вы не нажмёте «Применить», и ничего не сохранится до «Сохранить версию».' }),
   ] })
 }

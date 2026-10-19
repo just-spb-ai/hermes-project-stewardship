@@ -7,9 +7,9 @@
 // "canonical board was not found"). Every view shows what it can and says why
 // the rest is missing, in the backend's words (the unlinked_project
 // intervention in dockyard_service.py), never an error card.
-export const UNLINKED_TITLE = 'Not linked to a Hermes project'
-export const UNLINKED_DETAIL = 'Hermes has no project with this id or slug, so its work cannot be shown.'
-export const UNLINKED_LABEL = 'Not linked'
+export const UNLINKED_TITLE = 'Не привязан к проекту Hermes'
+export const UNLINKED_DETAIL = 'У Hermes нет проекта с таким id или слагом, поэтому его работа не может быть показана.'
+export const UNLINKED_LABEL = 'Не связан'
 
 export function unlinkedNextStep(projectId) {
   return `Create a Hermes project with the slug "${projectId}" to link it.`
@@ -48,6 +48,6 @@ export async function hermesRead(link, read, empty) {
 // project Hermes answered for: it has no such project.
 export function unavailableWords(reason) {
   if (reason === 'unlinked') return `${UNLINKED_TITLE}: its work cannot be shown.`
-  if (reason === 'archived') return 'Unavailable: archived.'
-  return 'Unavailable: the work host did not respond.'
+  if (reason === 'archived') return 'Недоступно: в архиве.'
+  return 'Недоступно: хост работы не ответил.'
 }

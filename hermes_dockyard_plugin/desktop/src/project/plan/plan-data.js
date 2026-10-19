@@ -42,9 +42,9 @@ export const findItem = (plan, ref) => (plan && ref ? listOf(plan, ref.kind).fin
 
 // The one status a row and its details both show: { tone, label }.
 export function statusOf(item) {
-  if (item.archived) return { tone: 'neutral', label: 'Archived' }
+  if (item.archived) return { tone: 'neutral', label: 'В архиве' }
   if (item.kind === 'initiative') return { tone: STATUS_TONE[item.status] ?? 'neutral', label: STATUS_LABEL[item.status] ?? item.status }
-  if (item.kind === 'milestone') return item.closed ? { tone: 'success', label: 'Closed' } : isOverdue(item) ? { tone: 'danger', label: 'Overdue' } : { tone: 'info', label: 'Open' }
+  if (item.kind === 'milestone') return item.closed ? { tone: 'success', label: 'Closed' } : isOverdue(item) ? { tone: 'danger', label: 'Просрочено' } : { tone: 'info', label: 'Открыть' }
   if (item.kind === 'objective') return { tone: OUTCOME_TONE[item.outcome] ?? 'neutral', label: OUTCOME_LABEL[item.outcome] ?? item.outcome }
   return { tone: GOAL_TONE[item.state] ?? 'neutral', label: GOAL_LABEL[item.state] ?? item.state }
 }

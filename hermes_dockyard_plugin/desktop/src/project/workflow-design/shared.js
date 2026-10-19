@@ -13,9 +13,9 @@ import { readWorkflowSettings } from './standins.js'
 import { writeWorkflowSettings } from './standins.js'
 import { CHECK_WORDS } from './standins.js'
 
-export const PreviewTag = ({ children = 'Preview' }) => jsx('span', { className: 'dy-wfd-preview-tag', children })
+export const PreviewTag = ({ children = 'Предпросмотр' }) => jsx('span', { className: 'dy-wfd-preview-tag', children })
 export const PracticeAiNote = () => jsxs('p', { className: 'dy-wfd-ai-note', 'data-wfd-practice-ai': true, children: [
-  jsx(PreviewTag, { children: 'Practice AI' }), ' Canned answers for this review; no model is called.',
+  jsx(PreviewTag, { children: 'Практика ИИ' }), ' Canned answers for this review; no model is called.',
 ] })
 
 // Steps in the order they run (each step after the steps it waits for).
@@ -64,7 +64,7 @@ const matches = (words, ...fields) => !words || fields.some((f) => String(f ?? '
 export function TemplatePicker({ builtins, groups, saved, value, onPick }) {
   const tabs = [
     ...groups.map((group) => ({ id: group.id, label: group.tab ?? group.title, title: group.title, items: builtins.filter((t) => t.group === group.id) })),
-    { id: 'library', label: 'Saved', title: 'Saved in your library' },
+    { id: 'library', label: 'Сохранено', title: 'Сохранено в библиотеке' },
   ]
   const [filter, setFilter] = useState('')
   const [open, setOpen] = useState(() => (value ? (value.source === 'library' ? 'library' : value.item.group) : tabs[0].id))
@@ -105,17 +105,17 @@ export function TemplatePicker({ builtins, groups, saved, value, onPick }) {
     if (!items.length) note = jsx('span', { className: 'dockyard-meta', role: 'status', children: `No templates match "${filter.trim()}".` })
   } else if (current.id === 'library') {
     if (saved === null) note = jsx('span', { className: 'dockyard-meta', role: 'status', children: 'Loading saved templates…' })
-    else if (!saved.length) note = jsx('span', { className: 'dockyard-meta', 'data-wfd-no-templates': true, children: 'None saved yet. In the library, save a workflow for every project to make it a template.' })
+    else if (!saved.length) note = jsx('span', { className: 'dockyard-meta', 'data-wfd-no-templates': true, children: 'Пока ничего не сохранено. Чтобы сделать процесс шаблоном, сохраните его для всех проектов в библиотеке.' })
     else items = saved.map((t) => item('library', t, false))
   } else {
     items = current.items.map((t) => item('builtin', t, false))
   }
   return jsxs('div', { className: 'dy-wfd-tpl', children: [
     jsxs('label', { className: 'dy-wfd-field', children: [
-      jsx('span', { children: 'Find a template' }),
-      jsx('input', { type: 'search', value: filter, 'data-wfd-template-filter': true, placeholder: 'Search all templates, e.g. bug, release, research', onChange: (e) => setFilter(e.target.value) }),
+      jsx('span', { children: 'Найти шаблон' }),
+      jsx('input', { type: 'search', value: filter, 'data-wfd-template-filter': true, placeholder: 'Поиск по всем шаблонам, напр. баг, релиз, исследование', onChange: (e) => setFilter(e.target.value) }),
     ] }),
-    jsx('div', { className: 'dy-wfd-tpl-tabs', role: 'tablist', 'aria-label': 'Template groups', onKeyDown: onTabKey, children: tabs.map((tab, index) => {
+    jsx('div', { className: 'dy-wfd-tpl-tabs', role: 'tablist', 'aria-label': 'Группы шаблонов', onKeyDown: onTabKey, children: tabs.map((tab, index) => {
       const selected = current?.id === tab.id
       const count = countOf(tab)
       return jsxs('button', {
@@ -129,7 +129,7 @@ export function TemplatePicker({ builtins, groups, saved, value, onPick }) {
       id: 'wfd-tpl-panel', className: 'dy-wfd-tpl-panel', 'data-wfd-template-panel': current ? current.id : 'matches',
       role: current ? 'tabpanel' : 'region', 'aria-labelledby': current ? `wfd-tpl-tab-${current.id}` : undefined, 'aria-label': current ? undefined : `Templates matching ${filter.trim()}`,
       children: [
-        items.length ? jsx('div', { className: 'dy-wfd-tpl-list', role: 'radiogroup', 'aria-label': current ? current.title : 'Matching templates', children: items }) : null,
+        items.length ? jsx('div', { className: 'dy-wfd-tpl-list', role: 'radiogroup', 'aria-label': current ? current.title : 'Подходящие шаблоны', children: items }) : null,
         note,
       ],
     }),
@@ -157,11 +157,11 @@ export function ImportResult({ result }) {
 // or the one a workflow was created from) shows its answers but changes nothing.
 export function AiPlan({ draft, onAnswer, readOnly = false }) {
   return jsxs('div', { className: 'dy-wfd-ai-plan', 'data-wfd-ai-plan': draft.name, children: [
-    jsx('h4', { children: "Here's my plan" }),
+    jsx('h4', { children: "Вот мой план" }),
     jsx('ol', { className: 'dy-wfd-ai-explain', children: draft.explain.map((line) => jsx('li', { children: line }, line)) }),
-    jsx('h4', { children: 'Steps' }),
+    jsx('h4', { children: 'Шаги' }),
     jsx(StepsPreview, { nodes: draft.nodes }),
-    draft.questions.length ? jsx('h4', { children: 'Questions for you' }) : null,
+    draft.questions.length ? jsx('h4', { children: 'Вопросы к тебе' }) : null,
     ...draft.questions.map((q) => jsxs('div', { className: 'dy-wfd-question', role: 'group', 'aria-label': q.text, 'data-wfd-question': q.id, children: [
       jsx('span', { children: q.text }),
       jsx('span', { className: 'dy-wfd-chips', children: q.options.map((o) => jsx('button', { type: 'button', 'aria-pressed': q.current === o.value, 'data-wfd-answer': `${q.id}:${o.value}`, disabled: readOnly, onClick: () => onAnswer(q.id, o.value), children: o.label }, String(o.value))) }),
@@ -169,9 +169,9 @@ export function AiPlan({ draft, onAnswer, readOnly = false }) {
   ] })
 }
 
-const TRIGGERS = [['manual', 'By hand: I press Start'], ['schedule', 'On a schedule'], ['event', 'When something happens']]
-const SCHEDULES = [['weekdays', 'Every weekday'], ['daily', 'Every day'], ['mondays', 'Every Monday']]
-const EVENTS = [['task-done', 'A task in this project finishes'], ['task-blocked', 'A task in this project gets stuck'], ['run-done', 'A run of this workflow finishes']]
+const TRIGGERS = [['manual', 'Вручную: я нажимаю «Старт»'], ['schedule', 'По расписанию'], ['event', 'Когда что-то происходит']]
+const SCHEDULES = [['weekdays', 'По будням'], ['daily', 'Каждый день'], ['mondays', 'Каждый понедельник']]
+const EVENTS = [['task-done', 'Задача в этом проекте завершается'], ['task-blocked', 'Задача в этом проекте застревает'], ['run-done', 'Запуск этого процесса завершается']]
 
 export function WorkflowSettingsDialog({ project, workflow, title, members, onClose }) {
   const saved = readWorkflowSettings(project, workflow)
@@ -186,8 +186,8 @@ export function WorkflowSettingsDialog({ project, workflow, title, members, onCl
   }, [onClose])
   const save = () => {
     const runs = Number(improve.afterRuns)
-    if (improve.on && !(Number.isInteger(runs) && runs >= 1 && runs <= 50)) { setError('After how many runs: a whole number from 1 to 50.'); return }
-    if (trigger.kind === 'schedule' && !/^([01]\d|2[0-3]):[0-5]\d$/.test(trigger.time)) { setError('Time: use 24-hour time, e.g. 09:00.'); return }
+    if (improve.on && !(Number.isInteger(runs) && runs >= 1 && runs <= 50)) { setError('Через сколько запусков: целое число от 1 до 50.'); return }
+    if (trigger.kind === 'schedule' && !/^([01]\d|2[0-3]):[0-5]\d$/.test(trigger.time)) { setError('Время: 24-часовой формат, напр. 09:00.'); return }
     writeWorkflowSettings(project, workflow, { trigger, improve: { ...improve, afterRuns: runs || 5 } })
     onClose()
   }
@@ -198,34 +198,34 @@ export function WorkflowSettingsDialog({ project, workflow, title, members, onCl
   return jsx('section', { className: 'dockyard-modal-layer', 'data-wfd-settings': workflow, onClick: (event) => { if (event.target === event.currentTarget) onClose() }, children:
     jsxs('div', { className: 'dockyard-modal dy-wfd-modal', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'wfd-settings-title', children: [
       jsxs('div', { className: 'dockyard-modal-head', children: [
-        jsxs('div', { children: [jsx('h2', { id: 'wfd-settings-title', children: 'Workflow settings' }), jsx('p', { children: title })] }),
-        jsx(Button, { small: true, action: 'wfd-settings-close', ariaLabel: 'Close settings', onClick: onClose, children: '×' }),
+        jsxs('div', { children: [jsx('h2', { id: 'wfd-settings-title', children: 'Настройки процесса' }), jsx('p', { children: title })] }),
+        jsx(Button, { small: true, action: 'wfd-settings-close', ariaLabel: 'Закрыть настройки', onClick: onClose, children: '×' }),
       ] }),
       jsxs('fieldset', { className: 'dy-wfd-fieldset', children: [
-        jsxs('legend', { children: ['When it runs ', jsx(PreviewTag, {})] }),
+        jsxs('legend', { children: ['Когда запускается ', jsx(PreviewTag, {})] }),
         ...TRIGGERS.map(([value, words]) => radio(value, words)),
         trigger.kind === 'schedule' ? jsxs('div', { className: 'dy-wfd-row', children: [
-          jsxs('label', { children: [jsx('span', { children: 'How often' }), jsx('select', { value: trigger.schedule, 'data-wfd-schedule': true, onChange: (e) => setTrigger({ ...trigger, schedule: e.target.value }), children: SCHEDULES.map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }),
-          jsxs('label', { children: [jsx('span', { children: 'At (UK time)' }), jsx('input', { value: trigger.time, 'data-wfd-time': true, inputMode: 'numeric', onChange: (e) => setTrigger({ ...trigger, time: e.target.value }) })] }),
+          jsxs('label', { children: [jsx('span', { children: 'Как часто' }), jsx('select', { value: trigger.schedule, 'data-wfd-schedule': true, onChange: (e) => setTrigger({ ...trigger, schedule: e.target.value }), children: SCHEDULES.map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }),
+          jsxs('label', { children: [jsx('span', { children: 'В (время UK)' }), jsx('input', { value: trigger.time, 'data-wfd-time': true, inputMode: 'numeric', onChange: (e) => setTrigger({ ...trigger, time: e.target.value }) })] }),
         ] }) : null,
-        trigger.kind === 'event' ? jsxs('label', { className: 'dy-wfd-row', children: [jsx('span', { children: 'When' }), jsx('select', { value: trigger.event, 'data-wfd-event': true, onChange: (e) => setTrigger({ ...trigger, event: e.target.value }), children: EVENTS.map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }) : null,
+        trigger.kind === 'event' ? jsxs('label', { className: 'dy-wfd-row', children: [jsx('span', { children: 'Когда' }), jsx('select', { value: trigger.event, 'data-wfd-event': true, onChange: (e) => setTrigger({ ...trigger, event: e.target.value }), children: EVENTS.map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }) : null,
       ] }),
       jsxs('fieldset', { className: 'dy-wfd-fieldset', children: [
-        jsxs('legend', { children: ['Improve over time ', jsx(PreviewTag, {})] }),
+        jsxs('legend', { children: ['Улучшение со временем ', jsx(PreviewTag, {})] }),
         jsxs('label', { className: 'dy-wfd-radio', children: [
           jsx('input', { type: 'checkbox', checked: improve.on, 'data-wfd-improve': true, onChange: (e) => setImprove({ ...improve, on: e.target.checked }) }),
-          jsx('span', { children: 'After a number of runs, a reviewer bot suggests changes' }),
+          jsx('span', { children: 'После нескольких запусков бот-ревьюер предлагает изменения' }),
         ] }),
         improve.on ? jsxs('div', { className: 'dy-wfd-row', children: [
-          jsxs('label', { children: [jsx('span', { children: 'After this many runs' }), jsx('input', { type: 'number', min: 1, max: 50, value: improve.afterRuns, 'data-wfd-improve-runs': true, onChange: (e) => setImprove({ ...improve, afterRuns: e.target.value }) })] }),
-          jsxs('label', { children: [jsx('span', { children: 'Reviewer' }), jsx('select', { value: improve.reviewer, 'data-wfd-improve-reviewer': true, onChange: (e) => setImprove({ ...improve, reviewer: e.target.value }), children: [jsx('option', { value: '', children: 'Whoever the project picks' }, ''), ...members.map((m) => jsx('option', { value: m, children: m }, m))] })] }),
+          jsxs('label', { children: [jsx('span', { children: 'После стольких запусков' }), jsx('input', { type: 'number', min: 1, max: 50, value: improve.afterRuns, 'data-wfd-improve-runs': true, onChange: (e) => setImprove({ ...improve, afterRuns: e.target.value }) })] }),
+          jsxs('label', { children: [jsx('span', { children: 'Проверяющий' }), jsx('select', { value: improve.reviewer, 'data-wfd-improve-reviewer': true, onChange: (e) => setImprove({ ...improve, reviewer: e.target.value }), children: [jsx('option', { value: '', children: 'Кого выберет проект' }, ''), ...members.map((m) => jsx('option', { value: m, children: m }, m))] })] }),
         ] }) : null,
-        jsx('p', { className: 'dockyard-meta', children: 'Nothing changes until you approve the suggestion.' }),
+        jsx('p', { className: 'dockyard-meta', children: 'Ничего не изменится, пока вы не одобрите предложение.' }),
       ] }),
       error ? jsx('p', { className: 'dy-wfd-error', role: 'alert', children: error }) : null,
       jsxs('div', { className: 'dockyard-modal-actions', children: [
-        jsx(Button, { action: 'wfd-settings-cancel', onClick: onClose, children: 'Cancel' }),
-        jsx(Button, { action: 'wfd-settings-save', variant: 'primary', onClick: save, children: 'Save settings' }),
+        jsx(Button, { action: 'wfd-settings-cancel', onClick: onClose, children: 'Отмена' }),
+        jsx(Button, { action: 'wfd-settings-save', variant: 'primary', onClick: save, children: 'Сохранить настройки' }),
       ] }),
     ] }) })
 }
@@ -259,20 +259,20 @@ export function RepeatPopover({ node, anchor, check: savedCheck, onSave, onStop,
   }
   const save = () => {
     const n = Number(rounds)
-    if (!(Number.isInteger(n) && n >= 1 && n <= 10)) { setError('Rounds must be a whole number from 1 to 10.'); return }
+    if (!(Number.isInteger(n) && n >= 1 && n <= 10)) { setError('Раундов должно быть целое число от 1 до 10.'); return }
     run(() => onSave({ rounds: n, check }))
   }
   return jsxs('div', { className: 'dy-wfd-repeat', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'wfd-repeat-title', 'data-wfd-repeat': node.node_id ?? node.id, style: { left: `${left}px`, top: `${top}px`, width: `${width}px` }, children: [
     jsx('h3', { id: 'wfd-repeat-title', children: `Repeat "${node.title}"` }),
-    jsxs('label', { children: [jsx('span', { children: 'At most this many rounds, then it asks you' }), jsx('input', { type: 'number', min: 1, max: 10, value: rounds, 'aria-invalid': error ? 'true' : 'false', 'data-wfd-repeat-rounds': true, onChange: (e) => setRounds(e.target.value) })] }),
-    jsxs('label', { children: [jsxs('span', { children: ["How it's checked ", jsx(PreviewTag, {})] }), jsx('select', { value: check.by, 'data-wfd-repeat-check': true, onChange: (e) => setCheck({ ...check, by: e.target.value }), children: Object.entries(CHECK_WORDS).map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }),
-    check.by === 'judge' ? jsxs('label', { children: [jsx('span', { children: 'Done when' }), jsx('input', { value: check.doneWhen, placeholder: 'e.g. every test passes', 'data-wfd-repeat-done-when': true, onChange: (e) => setCheck({ ...check, doneWhen: e.target.value }) })] }) : null,
-    jsx('p', { className: 'dockyard-meta', children: 'A round that gets stuck starts again; after the last round it asks you.' }),
+    jsxs('label', { children: [jsx('span', { children: 'Не более столько раундов, затем оно спросит вас' }), jsx('input', { type: 'number', min: 1, max: 10, value: rounds, 'aria-invalid': error ? 'true' : 'false', 'data-wfd-repeat-rounds': true, onChange: (e) => setRounds(e.target.value) })] }),
+    jsxs('label', { children: [jsxs('span', { children: ["Как проверяется ", jsx(PreviewTag, {})] }), jsx('select', { value: check.by, 'data-wfd-repeat-check': true, onChange: (e) => setCheck({ ...check, by: e.target.value }), children: Object.entries(CHECK_WORDS).map(([v, w]) => jsx('option', { value: v, children: w }, v)) })] }),
+    check.by === 'judge' ? jsxs('label', { children: [jsx('span', { children: 'Готово, когда' }), jsx('input', { value: check.doneWhen, placeholder: 'e.g. every test passes', 'data-wfd-repeat-done-when': true, onChange: (e) => setCheck({ ...check, doneWhen: e.target.value }) })] }) : null,
+    jsx('p', { className: 'dockyard-meta', children: 'Застрявший раунд начнётся заново; после последнего — спросит тебя.' }),
     error ? jsx('p', { className: 'dy-wfd-error', role: 'alert', children: error }) : null,
     jsxs('div', { className: 'dy-wfd-repeat-actions', children: [
-      jsx(Button, { small: true, variant: 'primary', action: 'wfd-repeat-save', disabled: busy, onClick: save, children: busy ? 'Saving…' : (draft ? 'Apply to draft' : 'Save version') }),
-      jsx(Button, { small: true, action: 'wfd-repeat-stop', disabled: busy, onClick: () => run(onStop), children: 'Stop repeating' }),
-      jsx(Button, { small: true, action: 'wfd-repeat-cancel', disabled: busy, onClick: onClose, children: 'Cancel' }),
+      jsx(Button, { small: true, variant: 'primary', action: 'wfd-repeat-save', disabled: busy, onClick: save, children: busy ? 'Сохранение…' : (draft ? 'Применить к черновику' : 'Сохранить версию') }),
+      jsx(Button, { small: true, action: 'wfd-repeat-stop', disabled: busy, onClick: () => run(onStop), children: 'Прекратить повтор' }),
+      jsx(Button, { small: true, action: 'wfd-repeat-cancel', disabled: busy, onClick: onClose, children: 'Отмена' }),
     ] }),
   ] })
 }

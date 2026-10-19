@@ -7,7 +7,7 @@
 // the host's "404: Plugin not found". That is a setting to change, not a
 // broken page: say so and how, instead of the error card (owner decision
 // 11/10/2026).
-export const PLUGIN_OFF_TITLE = 'Project Stewardship is not switched on for this profile'
+export const PLUGIN_OFF_TITLE = 'Project Stewardship не включён для этого профиля'
 export const PLUGIN_OFF_DETAIL = 'It runs per Hermes profile and this profile does not have it, so there is nothing to show here. Nothing is lost: your projects stay with the profiles that use it.'
 export const PLUGIN_OFF_COMMAND = 'hermes -p <profile> plugins enable hermes-project-stewardship'
 export const PLUGIN_OFF_NEXT_STEP = 'Switch it on for this profile on the Plugins page, or run the command below, then press Try again.'

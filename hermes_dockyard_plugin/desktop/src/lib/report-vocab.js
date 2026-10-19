@@ -18,19 +18,19 @@
 // used. `sections` are the "## " headings the backend writes for the type;
 // `work` marks a Delivery section that also lists the work items.
 export const REPORT_TYPES = Object.freeze([
-  { value: 'executive', label: 'Executive summary', sections: ['Configuration', 'Delivery', 'Risks and decisions'], work: false, activity: true },
-  { value: 'delivery', label: 'Delivery report', sections: ['Configuration', 'Delivery'], work: true, activity: true },
-  { value: 'risk', label: 'Risk and decisions', sections: ['Configuration', 'Risks and decisions'], work: false, activity: false },
-  { value: 'full', label: 'Full project report', sections: ['Configuration', 'Delivery', 'Risks and decisions'], work: true, activity: true },
+  { value: 'executive', label: 'Краткая сводка', sections: ['Конфигурация', 'Поставка', 'Риски и решения'], work: false, activity: true },
+  { value: 'delivery', label: 'Отчёт по поставке', sections: ['Конфигурация', 'Поставка'], work: true, activity: true },
+  { value: 'risk', label: 'Риски и решения', sections: ['Конфигурация', 'Риски и решения'], work: false, activity: false },
+  { value: 'full', label: 'Полный отчёт по проекту', sections: ['Конфигурация', 'Поставка', 'Риски и решения'], work: true, activity: true },
 ])
-const ACTIVITY = 'Recent activity'
+const ACTIVITY = 'Недавняя активность'
 
 const sentence = (value) => {
   const words = String(value ?? '').replace(/[._]+/g, ' ').replace(/\s+/g, ' ').trim()
   return words ? words[0].toUpperCase() + words.slice(1) : ''
 }
 export const reportType = (value) => REPORT_TYPES.find((type) => type.value === value) ?? null
-export const reportTypeLabel = (value) => reportType(value)?.label ?? (sentence(value) || 'Report')
+export const reportTypeLabel = (value) => reportType(value)?.label ?? (sentence(value) || 'Отчёт')
 // Whether a report of this type can carry recent activity at all.
 export const takesActivity = (value) => reportType(value)?.activity ?? false
 
@@ -45,7 +45,7 @@ export function reportSections(value, includeActivity) {
 export function reportHint(value, includeActivity) {
   const type = reportType(value)
   if (!type) return ''
-  const parts = reportSections(value, includeActivity).map((section) => (section === 'Delivery' && type.work ? 'Delivery, with the work list' : section))
+  const parts = reportSections(value, includeActivity).map((section) => (section === 'Поставка' && type.work ? 'Поставка, со списком работ' : section))
   return `Sections: ${parts.join(' · ')}${type.activity ? '' : '. Risk reports never include recent activity.'}`
 }
 

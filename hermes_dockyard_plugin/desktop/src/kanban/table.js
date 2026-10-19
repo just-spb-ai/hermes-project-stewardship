@@ -17,7 +17,7 @@ export function WorkTable({ columns, items, groups, className, emptyText }) {
     columns.map((column) => jsx('td', { children: column.cell(item) }, column.key)) }, item.ref))
   // Flat lists keep the saved-view table's original rule: empty means the raw list is empty.
   const total = groups ? groups.reduce((sum, group) => sum + live(group.items).length, 0) : (items ?? []).length
-  if (total === 0) return jsx('p', { className: 'dockyard-meta', 'data-work-table-empty': true, children: emptyText ?? 'No work items match this saved view.' })
+  if (total === 0) return jsx('p', { className: 'dockyard-meta', 'data-work-table-empty': true, children: emptyText ?? 'Ни один рабочий элемент не соответствует этому виду.' })
   return jsxs('table', { className: ['dockyard-backlog-table', className].filter(Boolean).join(' '), 'data-work-table': true, children: [
     jsx('thead', { children: jsx('tr', { children: columns.map((column) => jsx('th', { scope: 'col', children: column.heading }, column.key)) }) }),
     jsx('tbody', { children: groups

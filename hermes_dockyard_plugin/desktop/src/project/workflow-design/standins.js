@@ -18,7 +18,7 @@ export function writeStepSettings(project, workflow, nodeId, value) { stepSettin
 export function readWorkflowSettings(project, workflow) { return workflowSettings.get(`${project}\u0000${workflow}`) ?? EMPTY_WORKFLOW }
 export function writeWorkflowSettings(project, workflow, value) { workflowSettings.set(`${project}\u0000${workflow}`, value) }
 
-export const CHECK_WORDS = Object.freeze({ none: 'No check', judge: 'AI judge', person: 'You sign off', step: 'A check step' })
+export const CHECK_WORDS = Object.freeze({ none: 'Без проверки', judge: 'ИИ-судья', person: 'Ты подписываешь', step: 'Шаг проверки' })
 
 // ---- steps --------------------------------------------------------------
 const task = (id, title, dependsOn, extra = {}) => ({ id, title, depends_on: dependsOn, human_gate: false, kind: 'task', ...extra })
@@ -40,17 +40,17 @@ const RECIPES = [
     match: /\b(bug|fix|failing|broken|crash|error)\b/i,
     name: 'fix-a-bug',
     nodes: () => [
-      task('reproduce', 'Reproduce the bug', [], { body: 'Write a test that fails because of the bug.' }),
-      task('fix', 'Fix the code', ['reproduce'], { body: 'Change the code until the new test passes and the other tests still pass.', loop: { max_iterations: 5, until: { status: 'done' } } }),
-      signOff('check-fix', 'Check the fix', ['fix']),
-      task('merge', 'Merge the fix', ['check-fix']),
+      task('reproduce', 'Воспроизвести баг', [], { body: 'Напишите тест, падающий из-за бага.' }),
+      task('fix', 'Исправить код', ['reproduce'], { body: 'Меняйте код, пока новый тест не пройдёт и остальные тесты не продолжат проходить.', loop: { max_iterations: 5, until: { status: 'done' } } }),
+      signOff('check-fix', 'Проверить исправление', ['fix']),
+      task('merge', 'Влить исправление', ['check-fix']),
     ],
-    checks: { fix: { by: 'judge', doneWhen: 'The new test passes and every other test still passes.' } },
+    checks: { fix: { by: 'judge', doneWhen: 'Новый тест проходит, и все остальные тесты по-прежнему проходят.' } },
     explain: [
-      'A bot first writes a test that fails because of the bug, so we know the bug is real.',
+      'Бот сначала пишет тест, падающий из-за бага, — так мы знаем, что баг настоящий.',
       'Then it fixes the code. If a round gets stuck it tries again, up to 5 rounds, then asks you.',
       'An AI judge checks each round against "the new test passes and every other test still passes".',
-      'You check the fix before anything is merged, then it is merged.',
+      'Вы проверяете исправление до вливания, затем оно вливается.',
     ],
     loopStep: 'fix',
     workSteps: ['reproduce', 'fix'],
@@ -59,16 +59,16 @@ const RECIPES = [
     match: /\b(release|ship|deploy|launch|publish)\b/i,
     name: 'release-check',
     nodes: () => [
-      task('tests', 'Run the full test suite', []),
-      task('notes', 'Write the release notes', ['tests'], { body: 'List what changed since the last release, in plain words.' }),
-      signOff('sign-off', 'Sign off the release', ['notes']),
-      task('publish', 'Publish the release', ['sign-off']),
+      task('tests', 'Запустить полный набор тестов', []),
+      task('notes', 'Написать заметки о релизе', ['tests'], { body: 'Перечислить простыми словами, что изменилось с прошлого релиза.' }),
+      signOff('sign-off', 'Подписать релиз', ['notes']),
+      task('publish', 'Опубликовать релиз', ['sign-off']),
     ],
     checks: {},
     explain: [
-      'A bot runs the full test suite first; nothing else starts if it fails.',
-      'Then it writes the release notes in plain words.',
-      'You sign off the release, then it is published.',
+      'Бот сначала прогоняет весь набор тестов; если он падает, дальше ничего не запускается.',
+      'Затем он пишет заметки о релизе простыми словами.',
+      'Вы утверждаете релиз, затем он публикуется.',
     ],
     loopStep: null,
     workSteps: ['tests', 'notes'],
@@ -77,15 +77,15 @@ const RECIPES = [
     match: /\b(research|report|summar|digest|investigate|look into)/i,
     name: 'research-summary',
     nodes: () => [
-      task('sources', 'Find the sources', [], { body: 'Find recent, first-hand sources on the topic.' }),
-      task('write', 'Write the summary', ['sources'], { loop: { max_iterations: 3, until: { status: 'done' } } }),
-      signOff('review', 'Review the summary', ['write']),
+      task('sources', 'Найти источники', [], { body: 'Найти свежие первоисточники по теме.' }),
+      task('write', 'Написать сводку', ['sources'], { loop: { max_iterations: 3, until: { status: 'done' } } }),
+      signOff('review', 'Просмотреть сводку', ['write']),
     ],
-    checks: { write: { by: 'judge', doneWhen: 'Every claim names its source.' } },
+    checks: { write: { by: 'judge', doneWhen: 'Каждое утверждение называет свой источник.' } },
     explain: [
-      'A bot finds recent, first-hand sources.',
+      'Бот находит свежие первоисточники.',
       'Then it writes the summary. An AI judge sends it back until every claim names its source, up to 3 rounds, then asks you.',
-      'You review the summary at the end.',
+      'В конце вы проверяете сводку.',
     ],
     loopStep: 'write',
     workSteps: ['sources', 'write'],
@@ -94,15 +94,15 @@ const RECIPES = [
 const GENERIC = {
   name: 'new-workflow',
   nodes: () => [
-    task('plan', 'Plan the work', []),
-    task('do', 'Do the work', ['plan'], { loop: { max_iterations: 3, until: { status: 'done' } } }),
-    signOff('check', 'Check the result', ['do']),
+    task('plan', 'Спланировать работу', []),
+    task('do', 'Выполнить работу', ['plan'], { loop: { max_iterations: 3, until: { status: 'done' } } }),
+    signOff('check', 'Проверить результат', ['do']),
   ],
   checks: {},
   explain: [
-    "I couldn't tell exactly what this is for, so I drafted a simple plan, do, check workflow.",
-    'The work step tries again if it gets stuck, up to 3 rounds, then asks you.',
-    'Tell me more and I will adjust it.',
+    "Я не смог точно понять, для чего это, поэтому набросал простой процесс: план, выполнение, проверка.",
+    'Шаг работы повторяется при застревании — до 3 раундов, затем спросит вас.',
+    'Расскажи подробнее — я поправлю.',
   ],
   loopStep: 'do',
   workSteps: ['plan', 'do'],
@@ -111,14 +111,14 @@ const GENERIC = {
 // One draft: the plan in words, the steps, preview settings and questions.
 export function practiceDraft(description, members = []) {
   const text = String(description ?? '').trim()
-  if (!text) return { error: 'Say what the workflow should do first.' }
+  if (!text) return { error: 'Сначала скажи, что должен делать процесс.' }
   const recipe = RECIPES.find((r) => r.match.test(text)) ?? GENERIC
   const nodes = recipe.nodes()
   const questions = []
-  if (recipe.loopStep) questions.push({ id: 'rounds', text: 'How many rounds before it asks you?', options: [3, 5, 10].map((n) => ({ label: `${n} rounds`, value: n })), current: loopRounds(nodes.find((n) => n.id === recipe.loopStep)) })
-  if (members.length) questions.push({ id: 'who', text: 'Who should do the work?', options: [{ label: 'Whoever the project picks', value: '' }, ...members.map((m) => ({ label: m, value: m }))], current: '' })
-  if (nodes.some((n) => n.human_gate)) questions.push({ id: 'signoff', text: 'Do you want to sign off before it finishes?', options: [{ label: 'Yes', value: true }, { label: 'No', value: false }], current: true })
-  return { name: recipe.name, explain: recipe.explain, nodes, checks: recipe.checks, questions, recipe, did: [`Added ${nodes.length} steps`, ...(recipe.loopStep ? [`Made "${nodes.find((n) => n.id === recipe.loopStep).title}" repeat`] : []), ...(Object.keys(recipe.checks).length ? ['Set an AI judge as the check (preview)'] : [])] }
+  if (recipe.loopStep) questions.push({ id: 'rounds', text: 'Сколько раундов до вопроса вам?', options: [3, 5, 10].map((n) => ({ label: `${n} rounds`, value: n })), current: loopRounds(nodes.find((n) => n.id === recipe.loopStep)) })
+  if (members.length) questions.push({ id: 'who', text: 'Кто должен выполнить работу?', options: [{ label: 'Кого выберет проект', value: '' }, ...members.map((m) => ({ label: m, value: m }))], current: '' })
+  if (nodes.some((n) => n.human_gate)) questions.push({ id: 'signoff', text: 'Хочешь подписать до завершения?', options: [{ label: 'Да', value: true }, { label: 'Нет', value: false }], current: true })
+  return { name: recipe.name, explain: recipe.explain, nodes, checks: recipe.checks, questions, recipe, did: [`Added ${nodes.length} steps`, ...(recipe.loopStep ? [`Made "${nodes.find((n) => n.id === recipe.loopStep).title}" repeat`] : []), ...(Object.keys(recipe.checks).length ? ['Назначить ИИ-судью проверкой (предпросмотр)'] : [])] }
 }
 
 // Answer one of the draft's questions; returns the changed steps.
@@ -253,5 +253,5 @@ function fromActions(raw) {
   if (!titles.length) return { kind: 'invalid', reason: 'This looks like a GitHub Actions file, but it has no named steps to carry over.' }
   const nodes = titles.map((title, i) => task(`step-${i + 1}`, title, i ? [`step-${i}`] : []))
   const name = raw.match(/^name\s*:\s*['"]?(.+?)['"]?\s*$/m)?.[1]
-  return { kind: 'other', format: 'a GitHub Actions file', name: slug(name ?? 'imported-workflow'), nodes, notCarried: ['the commands each step runs', 'secrets', 'when it runs (the on: section)'] }
+  return { kind: 'other', format: 'файл GitHub Actions', name: slug(name ?? 'imported-workflow'), nodes, notCarried: ['the commands each step runs', 'secrets', 'когда он запускается (секция on:)'] }
 }

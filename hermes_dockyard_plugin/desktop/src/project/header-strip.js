@@ -47,7 +47,7 @@ const SEGMENTS = [
 
 function ageText(days) {
   if (typeof days !== 'number' || !Number.isFinite(days)) return null
-  if (days < 1) return 'Under a day'
+  if (days < 1) return 'Меньше дня'
   return `${number(days)} ${days === 1 ? 'day' : 'days'}`
 }
 
@@ -73,7 +73,7 @@ function ProjectChatMenu({ projectId, lead }) {
   return jsx('span', { className: 'dy-ov-chat', 'data-strip-chat': projectId, children: jsx(Menu, {
     label: `Chat with a bot on ${projectId}`,
     action: 'project-chat',
-    trigger: jsxs(Fragment, { children: [jsx(Icon, { name: 'message-square' }), jsx('span', { children: 'Chat' })] }),
+    trigger: jsxs(Fragment, { children: [jsx(Icon, { name: 'message-square' }), jsx('span', { children: 'Чат' })] }),
     items: targets.map((target) => ({
       id: target.profile,
       label: target.role === 'lead' ? `${target.profile} (lead)` : target.profile,
@@ -98,7 +98,7 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
   }, [onClose])
   const items = attention.items
   const sub = !attention.available
-    ? 'The attention check did not load, so nothing is listed. Refresh to try again.'
+    ? 'Проверка внимания не загрузилась, поэтому список пуст. Обновите и попробуйте снова.'
     : items.length === 0
       ? `Nothing needs action in ${projectId} right now.`
       : `${number(items.length)} ${items.length === 1 ? 'thing needs' : 'things need'} action in ${projectId}. Most urgent first.`
@@ -110,17 +110,17 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
       className: 'dy-ov-attn-panel', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'dy-ov-attn-title',
       children: [
         jsxs('header', { children: [
-          jsx('h2', { id: 'dy-ov-attn-title', children: 'Needs attention' }),
-          jsx('button', { type: 'button', className: 'dy-ov-attn-close', 'aria-label': 'Close attention panel', 'data-attention-close': true, onClick: onClose, children: jsx(Icon, { name: 'x' }) }),
+          jsx('h2', { id: 'dy-ov-attn-title', children: 'Требует внимания' }),
+          jsx('button', { type: 'button', className: 'dy-ov-attn-close', 'aria-label': 'Закрыть панель внимания', 'data-attention-close': true, onClick: onClose, children: jsx(Icon, { name: 'x' }) }),
         ]}),
         jsx('p', { className: 'dy-ov-attn-sub', children: sub }),
         items.length > 0
           ? jsx('ul', { className: 'dy-ov-attn-list', children: items.map((item, index) => {
             const open = expanded === item.key
             const facts = [
-              ['Owner', item.owner],
-              ['Waiting', ageText(item.ageDays)],
-              ['Next step', item.next],
+              ['Владелец', item.owner],
+              ['Ожидание', ageText(item.ageDays)],
+              ['Следующий шаг', item.next],
             ].filter(([, value]) => value)
             return jsxs('li', { className: 'dy-ov-attn-item', 'data-tone': item.tone, 'data-attention-item': item.key, children: [
               jsxs('button', {
@@ -142,7 +142,7 @@ function AttentionDrawer({ projectId, attention, onClose, onOpenItem }) {
           }) })
           : jsx('p', { className: 'dy-ov-attn-empty', 'data-attention-empty': true, children: attention.available
             ? 'The banner turns amber or red when work is overdue, blocked or stalled, and blue when a decision waits for you.'
-            : 'No status is shown rather than a guess.' }),
+            : 'Статус не показывается, чтобы не гадать.' }),
       ],
     }),
   })
@@ -167,7 +167,7 @@ export function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, on
       'data-tone': attention.tone, 'data-attention-state': attention.state,
       'aria-haspopup': 'dialog', 'aria-expanded': open,
       'aria-label': `Project status: ${attention.label}. ${attention.summary.replace(/\.$/, '')}. Open attention details.`,
-      title: 'Open attention details',
+      title: 'Открыть подробности внимания',
       onClick: openDrawer,
       onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDrawer() } },
       children: [
@@ -176,7 +176,7 @@ export function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, on
           jsx('strong', { children: attention.label }),
           jsx('span', { className: 'dy-ov-banner-summary', children: `— ${attention.summary}` }),
         ]}),
-        jsx('span', { className: 'dy-ov-banner-view', 'aria-hidden': true, children: 'View' }),
+        jsx('span', { className: 'dy-ov-banner-view', 'aria-hidden': true, children: 'Вид' }),
       ],
     }),
     jsxs('div', { className: 'dy-ov-eyebrow-row', children: [
@@ -190,21 +190,21 @@ export function ProjectHeaderStrip({ project, view, onRefresh, onOpenRoadmap, on
           : null,
       ]}),
       jsxs('div', { className: 'dy-ov-meta', children: [
-        jsx('span', { 'data-strip-updated': true, children: recent ? `Updated ${recent}` : 'No activity yet' }),
-        jsx('span', { 'data-roadmap-link': true, children: jsx('a', { href: '#', onClick: (event) => { event.preventDefault(); onOpenRoadmap?.() }, children: 'View in Roadmap' }) }),
+        jsx('span', { 'data-strip-updated': true, children: recent ? `Updated ${recent}` : 'Активности пока нет' }),
+        jsx('span', { 'data-roadmap-link': true, children: jsx('a', { href: '#', onClick: (event) => { event.preventDefault(); onOpenRoadmap?.() }, children: 'Открыть в дорожной карте' }) }),
         jsx(ProjectChatMenu, { projectId: project.id, lead }, `chat:${project.id}`),
-        jsx('button', { type: 'button', className: 'dy-ov-refresh', 'data-action': 'refresh', 'aria-label': 'Refresh', title: 'Refresh', onClick: onRefresh, children: jsx(Icon, { name: 'refresh' }) }),
+        jsx('button', { type: 'button', className: 'dy-ov-refresh', 'data-action': 'refresh', 'aria-label': 'Обновить', title: 'Обновить', onClick: onRefresh, children: jsx(Icon, { name: 'refresh' }) }),
       ]}),
     ]}),
     jsx('h1', { className: 'dy-ov-headline', 'data-strip-headline': mission ? 'mission' : 'missing', children: mission || project.id }),
     jsxs('div', { className: 'dy-ov-progress', 'data-strip-progress': true, children: [
       jsxs('span', { className: 'dy-ov-pct', children: [
-        delivery.percent === null ? 'No work yet' : `${delivery.percent}%`,
+        delivery.percent === null ? 'Работы пока нет' : `${delivery.percent}%`,
         delivery.total > 0 ? jsx('small', { children: `complete · ${number(delivery.done)} of ${number(delivery.total)} work items` }) : null,
       ]}),
       jsx('div', {
         className: 'dy-ov-track', role: 'img',
-        'aria-label': delivery.total > 0 ? `Delivery: ${legendText}` : 'Delivery: no work items yet',
+        'aria-label': delivery.total > 0 ? `Delivery: ${legendText}` : 'Поставка: рабочих элементов пока нет',
         children: legend.map(([key]) => jsx('span', { className: key, style: { width: `${(delivery[key] / delivery.total) * 100}%` } }, key)),
       }),
       legend.length > 0 ? jsx('div', { className: 'dy-ov-legend', children: legend.map(([key, word]) =>

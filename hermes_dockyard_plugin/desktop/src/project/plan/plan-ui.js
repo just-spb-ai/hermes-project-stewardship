@@ -19,7 +19,7 @@ import { KIND_LABEL } from '../../lib/plan-vocab.js'
 const RISKS = ['low', 'medium', 'high']
 const SEVERITIES = ['low', 'medium', 'high', 'critical']
 const capital = (word) => word[0].toUpperCase() + word.slice(1)
-export const errorText = (failure) => String(failure?.message ?? failure ?? 'Something went wrong')
+export const errorText = (failure) => String(failure?.message ?? failure ?? 'Что-то пошло не так')
 
 export function KindGlyph({ kind }) {
   return jsx('span', { className: `dy-plan-glyph ${kind}`, 'aria-hidden': true, children: ICON[kind] ?? '·' })
@@ -102,7 +102,7 @@ function validate(kind, form, mode) {
   const errors = {}
   // A resubmitted initiative keeps its proposed title (the backend has no rename).
   if (!(mode === 'edit' && kind === 'initiative') && !form.title.trim()) errors.title = `Give the ${KIND_LABEL[kind].toLowerCase()} a name.`
-  if (kind === 'initiative' && !form.rationale.trim()) errors.rationale = 'Say why this initiative matters; reviewers decide on it.'
+  if (kind === 'initiative' && !form.rationale.trim()) errors.rationale = 'Скажите, почему эта инициатива важна; ревьюеры решают по ней.'
   if (kind === 'objective' && !form.target.trim()) errors.target = 'Set a target, for example >=1.'
   return errors
 }
@@ -158,25 +158,25 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
   }
   const fields = {
     initiative: () => [
-      mode === 'create' ? field('title', 'Title', jsx('input', input('title', { autoComplete: 'off' })), { required: true }) : null,
-      field('rationale', 'Why it matters', jsx('textarea', input('rationale', { rows: 3 })), { required: true }),
-      field('expectedOutcome', 'Expected outcome', jsx('textarea', input('expectedOutcome', { rows: 2 })), { hint: 'What should be true when it is done.' }),
-      field('risk', 'Risk', jsx('select', { ...input('risk'), children: options(RISKS) }), { required: true }),
+      mode === 'create' ? field('title', 'Заголовок', jsx('input', input('title', { autoComplete: 'off' })), { required: true }) : null,
+      field('rationale', 'Почему это важно', jsx('textarea', input('rationale', { rows: 3 })), { required: true }),
+      field('expectedOutcome', 'Ожидаемый результат', jsx('textarea', input('expectedOutcome', { rows: 2 })), { hint: 'Что должно быть верно, когда это сделано.' }),
+      field('risk', 'Риск', jsx('select', { ...input('risk'), children: options(RISKS) }), { required: true }),
       // The backend cannot add checks later (resubmit keeps them as they are),
       // so the box is offered when proposing only.
-      mode === 'create' ? field('checks', 'How we’ll know it worked', jsx('textarea', input('checks', { rows: 2, placeholder: 'For example: the test suite passes and sign-ups recover to 40 a day.' })),
+      mode === 'create' ? field('checks', 'Как мы поймём, что это сработало', jsx('textarea', input('checks', { rows: 2, placeholder: 'Например: набор тестов проходит, а регистрации восстанавливаются до 40 в день.' })),
         { hint: 'Optional. Reviewers see these checks. Hermes can only finish an initiative by itself when it has them; without them, mark it complete when the work is done.' }) : null,
     ],
     milestone: () => [
-      field('title', 'Name', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
-      field('due', 'Due date', jsx('input', input('due', { type: 'date' })), { hint: 'Shown as overdue once it passes and the milestone is still open.' }),
-      mode === 'edit' ? jsxs('label', { className: 'dy-plan-check', children: [jsx('input', { type: 'checkbox', checked: form.closed, onChange: set('closed'), 'data-plan-field': 'closed' }), 'Closed (finished)'] }, 'closed') : null,
+      field('title', 'Имя', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
+      field('due', 'Срок', jsx('input', input('due', { type: 'date' })), { hint: 'Показывается как просроченное, когда срок прошёл, а веха ещё открыта.' }),
+      mode === 'edit' ? jsxs('label', { className: 'dy-plan-check', children: [jsx('input', { type: 'checkbox', checked: form.closed, onChange: set('closed'), 'data-plan-field': 'closed' }), 'Закрыто (завершено)'] }, 'closed') : null,
     ],
     objective: () => [
-      field('title', 'Name', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
-      field('description', 'Description', jsx('textarea', input('description', { rows: 2 }))),
-      field('target', 'Target', jsx('input', input('target', { autoComplete: 'off' })), { required: true, hint: 'How evidence is judged, for example >=1.' }),
-      field('severity', 'Severity', jsx('select', { ...input('severity'), children: options(SEVERITIES) }), { required: true }),
+      field('title', 'Имя', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
+      field('description', 'Описание', jsx('textarea', input('description', { rows: 2 }))),
+      field('target', 'Цель', jsx('input', input('target', { autoComplete: 'off' })), { required: true, hint: 'How evidence is judged, for example >=1.' }),
+      field('severity', 'Важность', jsx('select', { ...input('severity'), children: options(SEVERITIES) }), { required: true }),
     ],
     goal: () => {
       // The backend allows each objective in one goal only (archived goals
@@ -185,11 +185,11 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
       const ownerOf = (objectiveId) => plan.goals.find((goal) => goal.id !== item?.id && goal.objectiveIds.includes(objectiveId))
       const toggle = (id, on) => setForm((current) => ({ ...current, objectiveIds: on ? [...current.objectiveIds, id] : current.objectiveIds.filter((x) => x !== id) }))
       return [
-        field('title', 'Title', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
-        field('description', 'Description', jsx('textarea', input('description', { rows: 2 }))),
+        field('title', 'Заголовок', jsx('input', input('title', { autoComplete: 'off' })), { required: true }),
+        field('description', 'Описание', jsx('textarea', input('description', { rows: 2 }))),
         jsxs('fieldset', { className: 'dy-plan-checklist', children: [
-          jsx('legend', { children: 'Objectives that measure this goal (optional)' }),
-          choices.length ? null : jsx('p', { className: 'dockyard-meta', children: 'No objectives yet. Add one first, then link it here.' }),
+          jsx('legend', { children: 'Задачи-цели, измеряющие эту цель (необязательно)' }),
+          choices.length ? null : jsx('p', { className: 'dockyard-meta', children: 'Задач-целей пока нет. Сначала добавьте одну, затем свяжите её здесь.' }),
           ...choices.map((row) => {
             const owner = ownerOf(row.id)
             return jsxs('label', { className: `dy-plan-check${owner ? ' taken' : ''}`, children: [
@@ -202,7 +202,7 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
       ]
     },
   }[kind]()
-  const verb = mode === 'create' ? (kind === 'initiative' ? 'Propose' : 'Create') : (kind === 'initiative' ? 'Resubmit' : 'Save')
+  const verb = mode === 'create' ? (kind === 'initiative' ? 'Предложить' : 'Create') : (kind === 'initiative' ? 'Отправить заново' : 'Сохранить')
   const title = mode === 'create' ? `New ${KIND_LABEL[kind].toLowerCase()}` : kind === 'initiative' ? `Revise “${item.title}”` : `Edit ${KIND_LABEL[kind].toLowerCase()}`
   const note = kind !== 'initiative' ? null : mode === 'create'
     ? 'A new initiative waits for approval before work starts. Reviewers see why it matters and its risk.'
@@ -210,7 +210,7 @@ export function ItemForm({ kind, mode = 'create', item, plan, actions, linkTo, o
   return jsx(PlanDialog, {
     dialogKey: `${mode}-${kind}`, eyebrow: plan.label, title, busy, onClose,
     actions: [
-      jsx(Button, { onClick: onClose, disabled: busy, children: 'Cancel' }, 'cancel'),
+      jsx(Button, { onClick: onClose, disabled: busy, children: 'Отмена' }, 'cancel'),
       jsx(Button, { variant: 'primary', action: `plan-${mode}-${kind}`, disabled: busy, onClick: submit, children: busy ? `${verb}…` : verb }, 'submit'),
     ],
     children: jsxs('form', { className: 'dy-plan-form', noValidate: true, onSubmit: (event) => { event.preventDefault(); submit() }, children: [
@@ -256,8 +256,8 @@ export function LinkDialog({ from, target, plan, actions, onClose, onDone, onCre
     dialogKey: `link-${from.kind}-${target}`, eyebrow: `${KIND_LABEL[from.kind]} · ${from.title}`, title: `Place under a ${parentNoun}`, busy, onClose,
     actions: [
       onCreateNew ? jsx(Button, { action: `plan-link-new-${target}`, disabled: busy, onClick: onCreateNew, children: `New ${noun}…` }, 'new') : null,
-      jsx(Button, { onClick: onClose, disabled: busy, children: 'Cancel' }, 'cancel'),
-      jsx(Button, { variant: 'primary', action: 'plan-link-confirm', disabled: busy || !chosen, onClick: submit, children: busy ? 'Placing…' : 'Place' }, 'link'),
+      jsx(Button, { onClick: onClose, disabled: busy, children: 'Отмена' }, 'cancel'),
+      jsx(Button, { variant: 'primary', action: 'plan-link-confirm', disabled: busy || !chosen, onClick: submit, children: busy ? 'Размещение…' : 'Разместить' }, 'link'),
     ],
     children: jsxs('div', { className: 'dy-plan-form', children: [
       options.length === 0
@@ -304,7 +304,7 @@ export function ActionDialog({ spec, onCancel, onDone }) {
   return jsx(PlanDialog, {
     dialogKey: spec.key, eyebrow: spec.eyebrow, title: spec.title, busy, onClose: onCancel,
     actions: [
-      jsx(Button, { onClick: onCancel, disabled: busy, children: 'Cancel' }, 'cancel'),
+      jsx(Button, { onClick: onCancel, disabled: busy, children: 'Отмена' }, 'cancel'),
       jsx(Button, { variant: spec.variant ?? 'primary', action: `plan-${spec.key}-confirm`, disabled: busy, onClick: submit, children: busy ? 'Working…' : spec.label }, 'confirm'),
     ],
     children: jsxs('div', { className: 'dy-plan-form', children: [
@@ -326,25 +326,25 @@ export function MissionStrip({ plan, actions, onChanged, onConfirm }) {
   const [history, setHistory] = useState(false)
   const cancel = () => { setEditing(false); setDraft(plan.mission); setFailure(null) }
   const saveMission = async () => {
-    if (!draft.trim()) { setFailure('Write the mission, or use Remove mission to clear it.'); return }
+    if (!draft.trim()) { setFailure('Напишите миссию или используйте «Убрать миссию», чтобы очистить её.'); return }
     setBusy(true); setFailure(null)
-    try { await actions.saveMission(draft); emitToast('success', 'Mission saved.'); setEditing(false); onChanged() } catch (error) { setFailure(errorText(error)) } finally { setBusy(false) }
+    try { await actions.saveMission(draft); emitToast('success', 'Миссия сохранена.'); setEditing(false); onChanged() } catch (error) { setFailure(errorText(error)) } finally { setBusy(false) }
   }
-  return jsxs('section', { className: 'dy-plan-mission', 'data-plan-mission': true, 'aria-label': 'Project mission', children: [
-    jsx('span', { className: 'dy-plan-mission-label', children: 'Mission' }),
+  return jsxs('section', { className: 'dy-plan-mission', 'data-plan-mission': true, 'aria-label': 'Миссия проекта', children: [
+    jsx('span', { className: 'dy-plan-mission-label', children: 'Миссия' }),
     editing
       ? jsxs('div', { className: 'dy-plan-mission-edit', children: [
-          jsx('textarea', { 'aria-label': 'Mission statement', 'data-plan-mission-input': true, rows: 2, value: draft, onChange: (event) => setDraft(event.target.value),
+          jsx('textarea', { 'aria-label': 'Формулировка миссии', 'data-plan-mission-input': true, rows: 2, value: draft, onChange: (event) => setDraft(event.target.value),
             onKeyDown: (event) => { if (event.key === 'Escape') { event.stopPropagation(); cancel() } } }),
-          jsx(Button, { small: true, variant: 'primary', action: 'plan-mission-save', disabled: busy, onClick: saveMission, children: busy ? 'Saving…' : 'Save' }),
-          jsx(Button, { small: true, disabled: busy, onClick: cancel, children: 'Cancel' }),
+          jsx(Button, { small: true, variant: 'primary', action: 'plan-mission-save', disabled: busy, onClick: saveMission, children: busy ? 'Сохранение…' : 'Сохранить' }),
+          jsx(Button, { small: true, disabled: busy, onClick: cancel, children: 'Отмена' }),
         ] })
-      : jsx('p', { className: plan.mission ? '' : 'empty', children: plan.mission || 'No mission set. Say what this project exists to achieve.' }),
-    editing ? null : jsx(Button, { small: true, action: 'plan-mission-edit', onClick: () => { setDraft(plan.mission); setEditing(true) }, children: plan.mission ? 'Edit' : 'Add mission' }),
-    editing ? null : jsx(Menu, { label: 'Mission actions', trigger: '⋯', action: 'mission', items: [
-      { id: 'history', label: history ? 'Hide mission history' : `Mission history (${plan.missionHistory.length})`, onSelect: () => setHistory(!history) },
-      plan.mission ? { id: 'archive', label: 'Archive mission…', onSelect: () => onConfirm({ key: 'archive-mission', title: 'Archive this mission?', description: 'The mission moves to history and is removed from the active project.', label: 'Archive mission', done: 'Mission archived.', run: actions.archiveMission }) } : null,
-      plan.mission ? { id: 'remove', label: 'Remove mission…', danger: true, onSelect: () => onConfirm({ key: 'remove-mission', title: 'Remove this mission?', description: 'The active mission is cleared without adding it to mission history.', label: 'Remove mission', done: 'Mission removed.', run: actions.removeMission }) } : null,
+      : jsx('p', { className: plan.mission ? '' : 'empty', children: plan.mission || 'Миссия не задана. Скажите, ради чего существует проект.' }),
+    editing ? null : jsx(Button, { small: true, action: 'plan-mission-edit', onClick: () => { setDraft(plan.mission); setEditing(true) }, children: plan.mission ? 'Изменить' : 'Добавить миссию' }),
+    editing ? null : jsx(Menu, { label: 'Действия миссии', trigger: '⋯', action: 'mission', items: [
+      { id: 'history', label: history ? 'Скрыть историю миссий' : `Mission history (${plan.missionHistory.length})`, onSelect: () => setHistory(!history) },
+      plan.mission ? { id: 'archive', label: 'Архивировать миссию…', onSelect: () => onConfirm({ key: 'archive-mission', title: 'Архивировать эту миссию?', description: 'Миссия перемещается в историю и убирается из активного проекта.', label: 'Архивировать миссию', done: 'Миссия отправлена в архив.', run: actions.archiveMission }) } : null,
+      plan.mission ? { id: 'remove', label: 'Удалить миссию…', danger: true, onSelect: () => onConfirm({ key: 'remove-mission', title: 'Удалить эту миссию?', description: 'Активная миссия очищается, не попадая в историю миссий.', label: 'Удалить миссию', done: 'Миссия удалена.', run: actions.removeMission }) } : null,
     ] }),
     failure ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: failure }) : null,
     history ? jsx('ol', { className: 'dy-plan-mission-history', 'data-plan-mission-history': true, children: plan.missionHistory.length
@@ -353,6 +353,6 @@ export function MissionStrip({ plan, actions, onChanged, onConfirm }) {
           jsx('span', { children: entry.mission }),
           jsx('small', { children: `Archived ${formatWhen(entry.archived_at) || 'previously'} by ${entry.archived_by || 'unknown'}` }),
         ] }, entry.archive_id))
-      : jsx('li', { className: 'empty', children: 'No earlier missions.' }) }) : null,
+      : jsx('li', { className: 'empty', children: 'Более ранних миссий нет.' }) }) : null,
   ] })
 }

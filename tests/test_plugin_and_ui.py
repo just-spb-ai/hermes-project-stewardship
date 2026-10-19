@@ -141,6 +141,15 @@ def test_tool_descriptions_say_answers_are_data(store, monkeypatch):
         assert plugin._schema(name)["description"].endswith(UNTRUSTED_NOTE)
 
 
+def test_status_without_project_id_lists_enabled_projects(store, svc, enabled, monkeypatch):
+    # Local patch 2026-10-17: an agent can discover project ids instead of guessing them.
+    tools = _registered_tools(store, monkeypatch)
+    listed = _framed(tools["steward_status"]({}))["projects"]
+    assert [row["project_id"] for row in listed] == [enabled]
+    assert listed[0]["health"] == "never-verified"
+    assert plugin._schema("steward_status")["parameters"]["required"] == []
+
+
 def test_ui_pick_numbered_fallback(monkeypatch, capsys):
     monkeypatch.setattr("sys.stdin", type("FakeIn", (), {"isatty": lambda s: False})())
     opts = [{"ref": "INIT-A-0001", "title": "A", "risk": "low"},

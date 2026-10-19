@@ -10,7 +10,7 @@ export function normaliseBulkImportText(text, mode) {
     let rowsJson
     try {
       rowsJson = JSON.parse(text)
-      if (!Array.isArray(rowsJson)) throw new Error('JSON must be an array')
+      if (!Array.isArray(rowsJson)) throw new Error('JSON должен быть массивом')
       if (rowsJson.some((row) => row?.initiative_ref)) throw new Error('initiative_ref is not supported by bulk import; link the item after import')
       const supported = new Set(['row_key', 'type', 'title', 'parent', 'parent_key', 'labels', 'estimate_days', 'due'])
       const unknown = rowsJson.flatMap((row) => Object.keys(row ?? {}).filter((key) => !supported.has(key)))

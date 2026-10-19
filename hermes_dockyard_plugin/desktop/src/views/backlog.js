@@ -143,7 +143,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     window.addEventListener('keydown', closeOnEscape)
     return () => window.removeEventListener('keydown', closeOnEscape)
   }, [createOpen, createSaving])
-  if (!project) return jsx(EmptyState, { title: 'No project selected', description: 'Select a project before prioritising its backlog.', icon: 'project' })
+  if (!project) return jsx(EmptyState, { title: 'Проект не выбран', description: 'Выберите проект, прежде чем приоритизировать его бэклог.', icon: 'project' })
   // Work lives in Hermes: none can be created for an unlinked project.
   const canCreate = project.enabled !== false && project.phase === 'active' && !isUnlinked(project)
   const workByRef = Object.fromEntries((view.workItems ?? []).map((item) => [item.ref, item]))
@@ -155,7 +155,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     setError(null)
   }
   // PROTOTYPE v4: tree + view engines (parent_ref read via demo proxy; prod wiring = Phase 4)
-  const STATUS_LABELS = { backlog: 'Backlog', triage: 'Backlog', todo: 'Backlog', ready: 'Backlog', running: 'In progress', in_progress: 'In progress', review: 'In review', in_review: 'In review', blocked: 'Blocked', done: 'Done' }
+  const STATUS_LABELS = { backlog: 'Бэклог', triage: 'Бэклог', todo: 'Бэклог', ready: 'Бэклог', running: 'В работе', in_progress: 'В работе', review: 'На проверке', in_review: 'На проверке', blocked: 'Заблокировано', done: 'Готово' }
   const STATUS_UI = { backlog: 'backlog', triage: 'backlog', todo: 'backlog', ready: 'backlog', running: 'in_progress', in_progress: 'in_progress', review: 'in_review', in_review: 'in_review', blocked: 'blocked', done: 'done' }
   const STATUS_OPTIONS = ['backlog', 'in_progress', 'in_review', 'blocked', 'done']
   const TYPE_NAMES = DOCKYARD_TYPE_NAMES
@@ -168,8 +168,8 @@ export function BacklogView({ view, onRefresh, preset }) {
   const allItems = view.workItems ?? []
   const initiativeByRef = Object.fromEntries((view.initiatives ?? []).map((initiative) => [initiative.ref, initiative]))
   const botById = Object.fromEntries((view.bots ?? []).map((bot) => [bot.id, bot]))
-  const initiativeLabel = (ref) => ref ? (initiativeByRef[ref]?.title || ref) : 'No initiative'
-  const ownerLabel = (id) => id ? (botById[id]?.name || id) : 'Unassigned'
+  const initiativeLabel = (ref) => ref ? (initiativeByRef[ref]?.title || ref) : 'Без инициативы'
+  const ownerLabel = (id) => id ? (botById[id]?.name || id) : 'Не назначен'
   // Sahil 04/10: open unassigned work is never picked up; the board says so.
   const unassigned = unassignedWork(allItems)
   const parentOf = {}
@@ -247,11 +247,11 @@ export function BacklogView({ view, onRefresh, preset }) {
     const map = new Map()
     for (const row of treeRows) {
       const it = workByRef[row.ref] ?? {}
-      const key = groupBy === 'status' ? (STATUS_LABELS[it.status] || it.status || 'Unset')
+      const key = groupBy === 'status' ? (STATUS_LABELS[it.status] || it.status || 'Сброшено')
         : groupBy === 'assignee' ? ownerLabel(it.assignee)
           : groupBy === 'initiative' ? initiativeLabel(it.initiative_ref)
             : groupBy === 'type' ? typeLabel(it.type)
-              : String(it.due || 'No due date').slice(0, 7) || 'No due date'
+              : String(it.due || 'Без срока').slice(0, 7) || 'Без срока'
       ;(map.get(key) || map.set(key, []).get(key)).push(row)
     }
     return [...map.entries()].sort((a, b) => String(a[0]).localeCompare(String(b[0])))
@@ -312,7 +312,7 @@ export function BacklogView({ view, onRefresh, preset }) {
   const commitTitle = (ref, value) => {
     setEditing(null)
     const v = String(value || '').trim()
-    if (v.length < 3) { flashCell(ref, 'title', 'Title must be at least 3 characters.'); return }
+    if (v.length < 3) { flashCell(ref, 'title', 'Заголовок — минимум 3 символа.'); return }
     if (v !== (workByRef[ref]?.title ?? '')) patchItem(ref, { title: v })
   }
   const commitRank = (entry, value) => {
@@ -324,7 +324,7 @@ export function BacklogView({ view, onRefresh, preset }) {
   const changeStatus = async (ref, nextStatus) => {
     const item = workByRef[ref]
     if (!item || nextStatus === item.status) return
-    if ((item.type || 'task') === 'epic' && nextStatus === 'done') { flashCell(ref, 'status', 'Epics are completed through their children — close the sub-items first.'); return }
+    if ((item.type || 'task') === 'epic' && nextStatus === 'done') { flashCell(ref, 'status', 'Эпики завершаются через дочерние элементы — сначала закройте подэлементы.'); return }
     try {
       await api(`/projects/${encodeURIComponent(project.id)}/work-items/${encodeURIComponent(ref)}/transition`, { method: 'POST', body: { status: nextStatus } })
       setCellError(null)
@@ -337,7 +337,7 @@ export function BacklogView({ view, onRefresh, preset }) {
   const assignItem = async (ref, bot) => {
     const item = workByRef[ref]
     if (!item) return
-    if ((item.type || 'task') === 'epic') { flashCell(ref, 'assignee', 'Epics are never assigned — assign one of its children instead.'); return }
+    if ((item.type || 'task') === 'epic') { flashCell(ref, 'assignee', 'Эпики не назначаются — назначьте одного из его дочерних элементов.'); return }
     try {
       await api(`/projects/${encodeURIComponent(project.id)}/work-items/${encodeURIComponent(ref)}/assign`, { method: 'POST', body: { assignee_id: bot || null } })
       setCellError(null)
@@ -386,7 +386,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     setImportError(null)
     setImportValid(false)
     const text = importText.trim()
-    if (!text) { setImportError('Paste CSV lines or a JSON array first.'); setImportRows(null); return }
+    if (!text) { setImportError('Сначала вставьте строки CSV или массив JSON.'); setImportRows(null); return }
     // P6.7/P6.8: the shared backend validator is the single source of truth.
     // JSON paste is normalised to CSV rows here, then validated server-side;
     // the UI must not invent a second validation vocabulary.
@@ -399,7 +399,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     }).then((previewResult) => {
       setImportBusy(false)
       const preview = previewResult?.preview
-      if (!preview) { setImportError('The import service returned no preview.'); setImportRows(null); return }
+      if (!preview) { setImportError('Сервис импорта не вернул предпросмотр.'); setImportRows(null); return }
       const errorByRow = {}
       for (const problem of preview.errors ?? []) {
         const key = String(problem.row ?? '')
@@ -415,13 +415,13 @@ export function BacklogView({ view, onRefresh, preset }) {
         const initiative = String(row.initiative_ref ?? '').trim()
         const rowKey = String(row.row_key ?? '').trim()
         const problems = [...(errorByRow[String(idx + 2)] ?? []), ...(errorByRow[String(row.row_key ?? '')] ?? [])]
-        if (parent && type === 'epic') problems.push('epics are top level — parent must be empty')
+        if (parent && type === 'epic') problems.push('эпики — верхний уровень, родитель должен быть пустым')
         // Warnings are non-blocking (e.g. empty initiative_ref); errors block.
         const errors = problems.filter((problem) => !/can still be imported|warning/i.test(problem))
         const warnings = problems.filter((problem) => /can still be imported|warning/i.test(problem))
         return { idx, type, title, parent, labels, estimate, due, initiative, rowKey, assignee: String(row.owner ?? row.assignee ?? '').trim(), problems, errors, warnings, csv_text: csvText }
       })
-      if (!parsed.length) { setImportError('No rows found in that input.'); setImportRows(null); return }
+      if (!parsed.length) { setImportError('В этом вводе строки не найдены.'); setImportRows(null); return }
       if ((preview.errors ?? []).length && !parsed.some((row) => row.problems.length)) {
         setImportError((preview.errors ?? []).map((problem) => `Row ${problem.row}: ${problem.error}`).join('; '))
       }
@@ -451,7 +451,7 @@ export function BacklogView({ view, onRefresh, preset }) {
         items: Array.isArray(result?.items) ? result.items : [],
         failed: (result?.preview?.errors ?? []).map((problem) => `row ${problem.row}: ${problem.error}`),
       })
-      if (result?.preview?.valid === false) setImportError('The server rejected the import. Return to the source and correct the reported rows.')
+      if (result?.preview?.valid === false) setImportError('Сервер отклонил импорт. Вернитесь к источнику и исправьте указанные строки.')
       setImportStep(3)
       onRefresh()
     } catch (bad) {
@@ -499,11 +499,11 @@ export function BacklogView({ view, onRefresh, preset }) {
     || (Number.isFinite(Number(createForm.estimate_days)) && Number(createForm.estimate_days) >= 0)
   const createFieldError = (key) => {
     if (!createTouched[key]) return null
-    if (key === 'title' && createForm.title.trim().length < 3) return 'At least 3 characters.'
-    if (key === 'assignee' && !createForm.assignee) return 'Choose an assignee, or Unassigned.'
-    if (key === 'reason' && createForm.reason.trim().length < 4) return 'A ranking reason is required (audit trail).'
-    if (key === 'estimate_days' && !estimateValid) return 'Use a non-negative number of days.'
-    if (key === 'type' && !availableCreateTypes.includes(createForm.type)) return 'Choose a supported type for this parent.'
+    if (key === 'title' && createForm.title.trim().length < 3) return 'Минимум 3 символа.'
+    if (key === 'assignee' && !createForm.assignee) return 'Выберите исполнителя или «Не назначен».'
+    if (key === 'reason' && createForm.reason.trim().length < 4) return 'Требуется причина ранжирования (для аудита).'
+    if (key === 'estimate_days' && !estimateValid) return 'Используйте неотрицательное число дней.'
+    if (key === 'type' && !availableCreateTypes.includes(createForm.type)) return 'Выберите поддерживаемый тип для этого родителя.'
     return null
   }
   const createValid = createForm.title.trim().length >= 3
@@ -603,7 +603,7 @@ export function BacklogView({ view, onRefresh, preset }) {
     pendingParentChoices.unshift(workByRef[pendingCurrentParent])
   }
   const pendingParentChanged = Boolean(pendingMove?.mode === 'parent' && pendingParentRef !== pendingCurrentParent)
-  const sortLabels = { rank: 'Rank', type: 'Type', title: 'Work item', status: 'Status', initiative: 'Initiative', assignee: 'Assignee', age: 'Age', estimate: 'Estimate', due: 'Due date' }
+  const sortLabels = { rank: 'Rank', type: 'Тип', title: 'Рабочий элемент', status: 'Статус', initiative: 'Инициатива', assignee: 'Исполнитель', age: 'Давность', estimate: 'Оценка', due: 'Срок' }
   const sortHeader = (key, label, className = '') => jsx('button', {
     type: 'button',
     className: `th-sort th-cell ${className}${sortKey === key ? ' active' : ''}`.trim(),

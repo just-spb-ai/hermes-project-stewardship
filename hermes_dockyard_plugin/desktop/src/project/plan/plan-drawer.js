@@ -36,17 +36,17 @@ import { errorText } from './plan-ui.js'
 // a regression at Observe outcome; a withdrawn or rejected one stopped at the
 // approval gate.
 const LOOP = [
-  ['verify', 'Verify state', () => 'Confirm the project state and evidence source.'],
-  ['detect', 'Detect gap', (i) => i.rationale || 'Research the highest-value project gap.'],
-  ['propose', 'Create initiative', (i) => i.expectedOutcome || 'Declare the expected outcome.'],
+  ['verify', 'Проверить состояние', () => 'Подтвердите состояние проекта и источник доказательств.'],
+  ['detect', 'Выявить пробел', (i) => i.rationale || 'Исследуйте самый ценный пробел проекта.'],
+  ['propose', 'Создать инициативу', (i) => i.expectedOutcome || 'Зафиксируйте ожидаемый результат.'],
   // No priority number: nothing can set one (the API has no field for it).
-  ['prioritise', 'Prioritise', () => 'Counted against the project’s open-initiative limit.'],
-  ['approval', 'Human approval', () => 'Owner reviews the risk, evidence and checks.'],
-  ['execute', 'Build and verify', (i) => checksOf(i.record.validation_contract) ?? 'No checks recorded: mark it complete when the work is done.'],
-  ['release', 'Release', () => 'Release remains bounded by project policy.'],
-  ['observe', 'Observe outcome', () => 'Measure whether the project improved.'],
+  ['prioritise', 'Приоритизировать', () => 'Учитывается в лимите открытых инициатив проекта.'],
+  ['approval', 'Одобрение человеком', () => 'Владелец проверяет риск, доказательства и проверки.'],
+  ['execute', 'Собрать и проверить', (i) => checksOf(i.record.validation_contract) ?? 'Проверки не записаны: отметьте выполнение, когда работа будет сделана.'],
+  ['release', 'Релиз', () => 'Релиз остаётся в рамках политики проекта.'],
+  ['observe', 'Наблюдать результат', () => 'Измерить, улучшился ли проект.'],
 ]
-const STOPPED = { rejected: 'Rejected at approval.', cancelled: 'Withdrawn before approval.' }
+const STOPPED = { rejected: 'Отклонено на одобрении.', cancelled: 'Отозвано до одобрения.' }
 const loopIndex = (status) => ['pending_approval', 'changes_requested', 'rejected', 'cancelled'].includes(status) ? 4
   : ['approved', 'executing'].includes(status) ? 5 : ['completed', 'regressed'].includes(status) ? 7 : 2
 // The checks a proposal carries (its validation contract), or null.
@@ -90,7 +90,7 @@ function ChangesFeedback({ refId }) {
   }, [refId])
   if (!rows) return jsx('p', { className: 'dockyard-meta', children: 'Loading the reviewer’s feedback…' })
   // request_changes_initiative stores the reviewer's feedback in `reason`.
-  return jsx('blockquote', { className: 'dy-plan-feedback', 'data-plan-feedback': true, children: rows.at(-1)?.reason || 'The reviewer asked for changes without a note.' })
+  return jsx('blockquote', { className: 'dy-plan-feedback', 'data-plan-feedback': true, children: rows.at(-1)?.reason || 'Ревьюер запросил изменения без заметки.' })
 }
 
 function MilestoneWork({ milestone, plan, actions, onChanged, readOnly }) {
@@ -113,22 +113,22 @@ function MilestoneWork({ milestone, plan, actions, onChanged, readOnly }) {
   const editable = !readOnly && !milestone.archived
   const attachable = plan.workItems.filter((item) => !milestone.itemRefs.includes(item.ref))
   const wip = Object.entries(detail?.assignee_wip ?? {})
-  return jsxs(Section, { title: 'Work in this milestone', children: [
+  return jsxs(Section, { title: 'Работа в этой вехе', children: [
     failure ? jsx('p', { className: 'dockyard-inline-error', role: 'alert', children: failure }) : null,
     detail ? jsx('p', { className: 'dockyard-meta', children: `Scope: ${detail.committed ?? detail.total} committed, ${detail.done} done, ${detail.blocked ?? 0} blocked (${detail.units || 'items'}, not hours).` })
-      : failure ? null : jsx('p', { className: 'dockyard-meta', children: 'Loading…' }),
+      : failure ? null : jsx('p', { className: 'dockyard-meta', children: 'Загрузка…' }),
     wip.length ? jsx('p', { className: 'dockyard-meta', children: `In progress: ${wip.map(([who, n]) => `${who} ${n}`).join(', ')} (item counts).` }) : null,
     detail?.risks?.length ? jsx('ul', { className: 'dy-plan-risks', children: detail.risks.map((risk, index) => jsx('li', { 'data-risk-kind': risk.kind, children: riskLine(risk) }, `${risk.kind}:${index}`)) }) : null,
     detail ? jsx('p', { className: 'dockyard-meta', children: forecastLine(detail.forecast) }) : null,
-    jsx(Links, { empty: 'No work items yet.', rows: milestone.itemRefs.map((ref) => jsxs('li', { className: 'dy-plan-link-row', children: [
+    jsx(Links, { empty: 'Рабочих элементов пока нет.', rows: milestone.itemRefs.map((ref) => jsxs('li', { className: 'dy-plan-link-row', children: [
       jsx(KindGlyph, { kind: 'work' }),
       jsxs('span', { className: 'dy-plan-link-open static', children: [jsx('strong', { children: plan.workItems.find((item) => item.ref === ref)?.title ?? ref }), jsx('small', { children: ref })] }),
-      editable ? jsx('button', { type: 'button', className: 'dy-plan-unlink', 'data-plan-detach': ref, 'aria-label': `Remove ${ref} from ${milestone.name}`, title: 'Remove from milestone', disabled: busy,
+      editable ? jsx('button', { type: 'button', className: 'dy-plan-unlink', 'data-plan-detach': ref, 'aria-label': `Remove ${ref} from ${milestone.name}`, title: 'Убрать из вехи', disabled: busy,
         onClick: () => run(() => actions.detachWork(milestone.name, ref), `Removed ${ref} from ${milestone.name}.`), children: '×' }) : null,
     ] }, ref)) }),
     editable ? jsxs('div', { className: 'dy-plan-inline', children: [
       jsxs('select', { 'aria-label': `Add a work item to ${milestone.name}`, 'data-plan-attach-choice': true, value: scopeRef, onChange: (event) => setScopeRef(event.target.value), children: [
-        jsx('option', { value: '', children: attachable.length ? 'Add a work item…' : 'Every work item is already here' }),
+        jsx('option', { value: '', children: attachable.length ? 'Добавить рабочий элемент…' : 'Все рабочие элементы уже здесь' }),
         ...attachable.map((item) => jsx('option', { value: item.ref, children: `${item.title} (${item.ref})` }, item.ref)),
       ] }),
       jsx(Button, { small: true, action: 'plan-attach-work', disabled: busy || !scopeRef, onClick: () => run(() => actions.attachWork(milestone.name, scopeRef), `Added ${scopeRef} to ${milestone.name}.`), children: 'Add' }),
@@ -158,7 +158,7 @@ export function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
   const open = (kind, id) => () => ui.open({ kind, id })
   const linkButton = (target, label = '+ Link') => live ? jsx(Button, { small: true, action: `plan-link-${target}`, onClick: () => ui.link(item, target), children: label }) : null
   // An unlink keeps both items; only the link between them goes.
-  const unlink = (title, description, run, label = 'Unlink') => readOnly ? null : () => ui.confirm({ key: 'plan-unlink', title, description, label, done: 'Link removed.', run })
+  const unlink = (title, description, run, label = 'Разорвать связь') => readOnly ? null : () => ui.confirm({ key: 'plan-unlink', title, description, label, done: 'Связь удалена.', run })
   const act = async (work, message) => {
     setBusy(true)
     try { await work(); emitToast('success', message); onChanged() } catch (error) { emitToast('danger', errorText(error)) } finally { setBusy(false) }
@@ -173,75 +173,75 @@ export function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
     const checks = checksOf(item.record.validation_contract)
     tags.push(jsx(Tag, { children: `${item.risk} risk` }, 'risk'))
     body = [
-      jsx(Facts, { rows: [['Why', item.rationale || '—'], ['Expected outcome', item.expectedOutcome || '—'],
-        ['Checks', checks ?? 'None recorded'], ['Reference', item.ref]] }, 'facts'),
-      item.status === 'changes_requested' ? jsxs(Section, { title: 'Changes requested', children: [
+      jsx(Facts, { rows: [['Почему', item.rationale || '—'], ['Ожидаемый результат', item.expectedOutcome || '—'],
+        ['Проверки', checks ?? 'Не записано'], ['Ссылка', item.ref]] }, 'facts'),
+      item.status === 'changes_requested' ? jsxs(Section, { title: 'Запрошены правки', children: [
         jsx(ChangesFeedback, { refId: item.ref }),
-        readOnly ? null : jsx(Button, { small: true, variant: 'primary', action: 'plan-revise', onClick: () => ui.edit(item), children: 'Revise and resubmit' }),
+        readOnly ? null : jsx(Button, { small: true, variant: 'primary', action: 'plan-revise', onClick: () => ui.edit(item), children: 'Доработать и отправить заново' }),
       ] }, 'changes') : null,
-      item.status === 'pending_approval' && !readOnly ? jsxs(Section, { title: 'Waiting for your decision', children: [
-        jsx('p', { className: 'dockyard-meta', children: 'Approve, request changes or reject, with the same checks as the Inbox.' }),
+      item.status === 'pending_approval' && !readOnly ? jsxs(Section, { title: 'Ждёт твоего решения', children: [
+        jsx('p', { className: 'dockyard-meta', children: 'Одобрить, запросить изменения или отклонить — с теми же проверками, что во «Входящих».' }),
         jsx(Button, { small: true, variant: 'primary', action: 'plan-review', onClick: () => ui.review(item), children: 'Review…' }),
       ] }, 'review') : null,
-      jsx(Section, { title: 'Milestones', readOnly, action: linkButton('milestone'), children: jsx(Links, { empty: 'No milestones linked yet.', rows: item.milestones.map((m) => {
+      jsx(Section, { title: 'Вехи', readOnly, action: linkButton('milestone'), children: jsx(Links, { empty: 'Вехи пока не связаны.', rows: item.milestones.map((m) => {
         const row = plan.milestones.find((x) => x.id === m.id)
         return jsx(LinkRow, { kind: 'milestone', title: m.title, onOpen: open('milestone', m.id), unlinkLabel: `Unlink ${m.title}`,
           meta: [row?.due && `due ${row.due}`, row && `${row.done}/${row.total} done`, row?.closed && 'closed'].filter(Boolean).join(' · '),
-          onUnlink: unlink('Unlink this milestone?', `“${m.title}” stays in the project; it is no longer linked to “${item.title}”.`, () => actions.unlinkMilestone(item.ref, m.id)) }, m.id)
+          onUnlink: unlink('Отвязать эту веху?', `“${m.title}” stays in the project; it is no longer linked to “${item.title}”.`, () => actions.unlinkMilestone(item.ref, m.id)) }, m.id)
       }) }) }, 'milestones'),
       // v42: an objective sits under a milestone (not under an initiative), so
       // this list is read-only here — place/unplace an objective from its own
       // drawer, or from the Roadmap.
-      jsx(Section, { title: 'Objectives (via its milestones)', children: jsx(Links, {
-        empty: 'No objectives yet. An objective measures a goal and sits under a milestone.',
+      jsx(Section, { title: 'Задачи-цели (через его вехи)', children: jsx(Links, {
+        empty: 'Задач-целей пока нет. Задача-цель измеряет цель и находится под вехой.',
         rows: item.objectives.map((o) => {
           const row = plan.objectives.find((x) => x.id === o.id)
           return jsx(LinkRow, { kind: 'objective', title: o.title, onOpen: open('objective', o.id),
             meta: row && OUTCOME_LABEL[row.outcome] }, o.id)
         }),
       }) }, 'objectives'),
-      jsx(Section, { title: 'Delivery', children: !item.delivery || item.delivery.state === 'no_linked_work'
-        ? jsx('p', { className: 'dockyard-meta', children: 'No linked work yet.' })
+      jsx(Section, { title: 'Поставка', children: !item.delivery || item.delivery.state === 'no_linked_work'
+        ? jsx('p', { className: 'dockyard-meta', children: 'Связанной работы пока нет.' })
         : item.delivery.state === 'unavailable' ? jsx('p', { className: 'dockyard-meta', children: unavailableWords(item.delivery.reason) })
           : jsx('div', { className: 'dy-plan-buckets', children: [
               ...BUCKETS.map(([key, label]) => jsxs('span', { children: [jsx('strong', { children: number(item.delivery[key] ?? 0) }), label] }, key)),
-              item.delivery.blocked > 0 ? jsxs('span', { className: 'blocked', children: [jsx('strong', { children: number(item.delivery.blocked) }), 'Blocked'] }, 'blocked') : null,
+              item.delivery.blocked > 0 ? jsxs('span', { className: 'blocked', children: [jsx('strong', { children: number(item.delivery.blocked) }), 'Заблокировано'] }, 'blocked') : null,
             ] }) }, 'delivery'),
       jsx('p', { className: 'dy-plan-note', 'data-plan-no-delete': true, children: WITHDRAWABLE_STATUSES.includes(item.status)
         ? 'Initiatives are not deleted: each keeps its approval record. Not needed any more? Withdraw it before approval.'
-        : 'Initiatives are not deleted: each keeps its approval record.' }, 'nodelete'),
-      jsx(Section, { title: 'Stages', children: jsx('ol', { className: 'dy-plan-loop', 'data-plan-loop': item.ref, children: LOOP.map(([key, label, text], index) => jsxs('li', {
+        : 'Инициативы не удаляются: у каждой сохраняется запись об одобрении.' }, 'nodelete'),
+      jsx(Section, { title: 'Этапы', children: jsx('ol', { className: 'dy-plan-loop', 'data-plan-loop': item.ref, children: LOOP.map(([key, label, text], index) => jsxs('li', {
         className: index < stage ? 'done' : index === stage ? (stopped ? 'stopped' : 'current') : '', 'aria-current': index === stage ? 'step' : undefined,
         children: [jsx('strong', { children: label }), index === stage ? jsx('small', { children: stopped ?? text(item) }) : null],
       }, key)) }) }, 'loop'),
     ]
     footer = [
-      COMPLETABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: 'primary', action: 'plan-complete', onClick: () => ui.complete(item), children: 'Mark complete…' }, 'complete') : null,
-      WITHDRAWABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: 'danger', action: 'plan-withdraw', onClick: () => ui.withdraw(item), children: 'Withdraw…' }, 'withdraw') : null,
+      COMPLETABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: 'primary', action: 'plan-complete', onClick: () => ui.complete(item), children: 'Отметить завершённым…' }, 'complete') : null,
+      WITHDRAWABLE_STATUSES.includes(item.status) ? jsx(Button, { variant: 'danger', action: 'plan-withdraw', onClick: () => ui.withdraw(item), children: 'Отозвать…' }, 'withdraw') : null,
     ].filter(Boolean)
   } else if (item.kind === 'milestone') {
     body = [
-      jsx(Facts, { rows: [['Due', item.due ?? 'No due date'], ['Progress', `${number(item.done)} of ${number(item.total)} work items done`]] }, 'facts'),
+      jsx(Facts, { rows: [['Срок', item.due ?? 'Без срока'], ['Прогресс', `${number(item.done)} of ${number(item.total)} work items done`]] }, 'facts'),
       // v42 (R2 fix 5): a milestone's parent is an INITIATIVE (one only).
-      jsx(Section, { title: 'Initiative it is placed under', readOnly, action: linkButton('initiative'), children: jsx(Links, {
-        empty: 'Not placed under an initiative yet.',
+      jsx(Section, { title: 'Инициатива, под которой он размещён', readOnly, action: linkButton('initiative'), children: jsx(Links, {
+        empty: 'Пока не размещено под инициативой.',
         rows: (() => {
           const parent = plan.initiatives.find((x) => x.ref === item.initiativeRef)
           return parent ? [jsx(LinkRow, { kind: 'initiative', title: parent.title, onOpen: open('initiative', parent.ref), unlinkLabel: `Unplace from ${parent.title}`,
-            onUnlink: unlink('Unplace this milestone?', `“${item.title}” stays in the project; it is no longer under “${parent.title}”.`,
-              () => actions.unplaceMilestone(item.id), 'Unplace') }, parent.ref)] : []
+            onUnlink: unlink('Снять размещение этой вехи?', `“${item.title}” stays in the project; it is no longer under “${parent.title}”.`,
+              () => actions.unplaceMilestone(item.id), 'Убрать с места') }, parent.ref)] : []
         })(),
       }) }, 'initiative'),
       jsx(MilestoneWork, { milestone: item, plan, actions, onChanged, readOnly }, 'work'),
     ]
     footer = item.archived ? [
-      jsx(Button, { action: 'plan-restore-milestone', onClick: () => ui.restore(item), children: 'Restore' }, 'restore'),
+      jsx(Button, { action: 'plan-restore-milestone', onClick: () => ui.restore(item), children: 'Восстановить' }, 'restore'),
       jsx(Button, { variant: 'danger', action: 'plan-delete-milestone', onClick: () => ui.remove(item), children: 'Delete for good…' }, 'delete'),
     ] : [
-      jsx(Button, { variant: 'primary', action: 'plan-edit', onClick: () => ui.edit(item), children: 'Edit' }, 'edit'),
+      jsx(Button, { variant: 'primary', action: 'plan-edit', onClick: () => ui.edit(item), children: 'Изменить' }, 'edit'),
       jsx(Button, { action: item.closed ? 'plan-reopen-milestone' : 'plan-close-milestone', disabled: busy,
-        onClick: () => act(() => actions.updateMilestone(item.name, { closed: !item.closed }), item.closed ? 'Milestone reopened.' : 'Milestone closed.'), children: item.closed ? 'Reopen' : 'Close' }, 'close'),
-      jsx(Button, { variant: 'danger', action: 'plan-archive-milestone', onClick: () => ui.archive(item), children: 'Archive' }, 'archive'),
+        onClick: () => act(() => actions.updateMilestone(item.name, { closed: !item.closed }), item.closed ? 'Веха переоткрыта.' : 'Веха закрыта.'), children: item.closed ? 'Reopen' : 'Закрыть' }, 'close'),
+      jsx(Button, { variant: 'danger', action: 'plan-archive-milestone', onClick: () => ui.archive(item), children: 'В архив' }, 'archive'),
     ]
   } else if (item.kind === 'objective') {
     tags.push(jsx(Tag, { children: `${item.severity} severity` }, 'severity'))
@@ -264,36 +264,36 @@ export function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
     const goal = item.goals[0]
     const goalRow = goal && plan.goals.find((x) => x.id === goal.id)
     body = [
-      jsx(Facts, { rows: [['Description', item.description || '—'], ['Target', item.target],
-        ['Evidence', item.samples ? `${number(item.samples)} result(s) in ${item.window}${item.passRate !== null ? `, ${Math.round(item.passRate * 100)}% passed` : ''}` : `None yet (${item.window} window)`]] }, 'facts'),
+      jsx(Facts, { rows: [['Описание', item.description || '—'], ['Цель', item.target],
+        ['Доказательства', item.samples ? `${number(item.samples)} result(s) in ${item.window}${item.passRate !== null ? `, ${Math.round(item.passRate * 100)}% passed` : ''}` : `None yet (${item.window} window)`]] }, 'facts'),
       evaluation ? jsx('p', { className: 'dy-plan-note', role: 'status', 'data-plan-evaluation': true, children: evaluation }, 'evaluation') : null,
       // Evidence history and, for a manual objective, the human assessment
       // form: the old Objectives tab's panel, unchanged (it fails closed
       // without an authenticated human).
       item.record ? jsx(ObjectiveEvidence, { objective: item.record, projectId: plan.projectId, onSaved: onChanged }, 'evidence') : null,
       // The backend allows each objective in one goal.
-      jsx(Section, { title: 'Goal it measures', readOnly, action: goal ? null : linkButton('goal', '+ Add'), children: jsx(Links, {
-        empty: 'Not part of a goal yet. An objective can measure one goal.',
+      jsx(Section, { title: 'Какую цель измеряет', readOnly, action: goal ? null : linkButton('goal', '+ Add'), children: jsx(Links, {
+        empty: 'Пока не часть цели. Задача-цель может измерять одну цель.',
         rows: goal ? [jsx(LinkRow, { kind: 'goal', title: goal.title, onOpen: open('goal', goal.id), unlinkLabel: `Remove from ${goal.title}`,
-          onUnlink: unlink('Remove from this goal?', `“${item.title}” no longer measures the goal “${goal.title}”.`,
-            () => actions.updateGoal(goal.id, { objective_ids: goalRow.objectiveIds.filter((id) => id !== item.id) }), 'Remove') }, goal.id)] : [],
+          onUnlink: unlink('Убрать из этой цели?', `“${item.title}” no longer measures the goal “${goal.title}”.`,
+            () => actions.updateGoal(goal.id, { objective_ids: goalRow.objectiveIds.filter((id) => id !== item.id) }), 'Убрать') }, goal.id)] : [],
       }) }, 'goal'),
       // v42 (R2 fix 5): an objective's parent is a MILESTONE (one only).
-      jsx(Section, { title: 'Milestone it is placed under', readOnly, action: linkButton('milestone'), children: jsx(Links, {
-        empty: 'Not placed under a milestone yet.',
+      jsx(Section, { title: 'Веха, под которой он размещён', readOnly, action: linkButton('milestone'), children: jsx(Links, {
+        empty: 'Пока не размещено под вехой.',
         rows: (() => {
           const parent = plan.milestones.find((x) => x.id === item.milestoneId)
           return parent ? [jsx(LinkRow, { kind: 'milestone', title: parent.title, onOpen: open('milestone', parent.id), unlinkLabel: `Unplace from ${parent.title}`,
             meta: parent.due ? `due ${parent.due}` : undefined,
-            onUnlink: unlink('Unplace this objective?', `“${item.title}” stays in the project; it is no longer under “${parent.title}”.`,
-              () => actions.unplaceObjective(item.id), 'Unplace') }, parent.id)] : []
+            onUnlink: unlink('Снять размещение этой задачи-цели?', `“${item.title}” stays in the project; it is no longer under “${parent.title}”.`,
+              () => actions.unplaceObjective(item.id), 'Убрать с места') }, parent.id)] : []
         })(),
       }) }, 'milestone'),
     ]
     footer = item.archived ? [jsx(Button, { variant: 'danger', action: 'plan-delete-objective', onClick: () => ui.remove(item), children: 'Delete for good…' }, 'delete')] : [
-      jsx(Button, { variant: 'primary', action: 'plan-edit', onClick: () => ui.edit(item), children: 'Edit' }, 'edit'),
-      jsx(Button, { action: 'plan-evaluate', disabled: busy, onClick: evaluate, children: busy ? 'Evaluating…' : 'Evaluate now' }, 'evaluate'),
-      jsx(Button, { variant: 'danger', action: 'plan-archive-objective', onClick: () => ui.archive(item), children: 'Archive' }, 'archive'),
+      jsx(Button, { variant: 'primary', action: 'plan-edit', onClick: () => ui.edit(item), children: 'Изменить' }, 'edit'),
+      jsx(Button, { action: 'plan-evaluate', disabled: busy, onClick: evaluate, children: busy ? 'Оценивание…' : 'Оценить сейчас' }, 'evaluate'),
+      jsx(Button, { variant: 'danger', action: 'plan-archive-objective', onClick: () => ui.archive(item), children: 'В архив' }, 'archive'),
     ]
   } else {
     const active = plan.goals.filter((row) => !row.archived)
@@ -301,29 +301,29 @@ export function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
     const move = (step) => {
       const ids = active.map((row) => row.id)
       ;[ids[index], ids[index + step]] = [ids[index + step], ids[index]]
-      act(() => actions.orderGoals(ids), 'Goal order saved.')
+      act(() => actions.orderGoals(ids), 'Порядок целей сохранён.')
     }
     body = [
-      jsx(Facts, { rows: [['Description', item.description || '—'], ['Order', item.archived ? '—' : `${index + 1} of ${active.length}`]] }, 'facts'),
+      jsx(Facts, { rows: [['Описание', item.description || '—'], ['Порядок', item.archived ? '—' : `${index + 1} of ${active.length}`]] }, 'facts'),
       // v42: a goal's parent is an OBJECTIVE (one only).
-      jsx(Section, { title: 'Objective it is placed under', readOnly, action: item.objectiveId ? null : linkButton('objective', '+ Add'), children: jsx(Links, {
-        empty: 'Not placed under an objective yet.',
+      jsx(Section, { title: 'Задача-цель, под которой он размещён', readOnly, action: item.objectiveId ? null : linkButton('objective', '+ Add'), children: jsx(Links, {
+        empty: 'Пока не размещено под задачей-целью.',
         rows: (() => {
           const row = plan.objectives.find((x) => x.id === item.objectiveId)
           return row ? [jsx(LinkRow, { kind: 'objective', title: row.title, meta: OUTCOME_LABEL[row.outcome], onOpen: open('objective', row.id), unlinkLabel: `Unplace from ${row.title}`,
-            onUnlink: unlink('Unplace this goal?', `“${item.title}” stays in the project; it is no longer under “${row.title}”.`,
-              () => actions.unplaceGoal(item.id), 'Unplace') }, row.id)] : []
+            onUnlink: unlink('Снять размещение этой цели?', `“${item.title}” stays in the project; it is no longer under “${row.title}”.`,
+              () => actions.unplaceGoal(item.id), 'Убрать с места') }, row.id)] : []
         })(),
       }) }, 'objective'),
     ]
     footer = item.archived ? [
-      jsx(Button, { action: 'plan-restore-goal', onClick: () => ui.restore(item), children: 'Restore' }, 'restore'),
+      jsx(Button, { action: 'plan-restore-goal', onClick: () => ui.restore(item), children: 'Восстановить' }, 'restore'),
       jsx(Button, { variant: 'danger', action: 'plan-delete-goal', onClick: () => ui.remove(item), children: 'Delete for good…' }, 'delete'),
     ] : [
-      jsx(Button, { variant: 'primary', action: 'plan-edit', onClick: () => ui.edit(item), children: 'Edit' }, 'edit'),
-      jsx(Button, { action: 'plan-goal-up', disabled: busy || index <= 0, onClick: () => move(-1), children: 'Move up' }, 'up'),
-      jsx(Button, { action: 'plan-goal-down', disabled: busy || index >= active.length - 1, onClick: () => move(1), children: 'Move down' }, 'down'),
-      jsx(Button, { variant: 'danger', action: 'plan-archive-goal', onClick: () => ui.archive(item), children: 'Archive' }, 'archive'),
+      jsx(Button, { variant: 'primary', action: 'plan-edit', onClick: () => ui.edit(item), children: 'Изменить' }, 'edit'),
+      jsx(Button, { action: 'plan-goal-up', disabled: busy || index <= 0, onClick: () => move(-1), children: 'Вверх' }, 'up'),
+      jsx(Button, { action: 'plan-goal-down', disabled: busy || index >= active.length - 1, onClick: () => move(1), children: 'Вниз' }, 'down'),
+      jsx(Button, { variant: 'danger', action: 'plan-archive-goal', onClick: () => ui.archive(item), children: 'В архив' }, 'archive'),
     ]
   }
   return jsxs('aside', { ref: root, className: 'dy-plan-drawer', 'aria-label': `${KIND_LABEL[item.kind]} details`, 'data-plan-drawer': item.kind, 'data-plan-drawer-id': String(item.id), children: [
@@ -331,7 +331,7 @@ export function PlanDrawer({ item, plan, actions, ui, onClose, onChanged }) {
       jsxs('p', { className: 'dockyard-meta', children: [jsx(KindGlyph, { kind: item.kind }), KIND_LABEL[item.kind]] }),
       jsx('h3', { children: item.title }),
       jsx('div', { className: 'dy-plan-tags', children: tags }),
-      jsx('button', { type: 'button', className: 'dy-plan-drawer-close', 'aria-label': 'Close details', 'data-plan-drawer-close': true, onClick: onClose, children: '×' }),
+      jsx('button', { type: 'button', className: 'dy-plan-drawer-close', 'aria-label': 'Закрыть подробности', 'data-plan-drawer-close': true, onClick: onClose, children: '×' }),
     ] }),
     jsx('div', { className: 'dy-plan-drawer-body', children: body }),
     readOnly || !footer.length ? null : jsx('footer', { className: 'dy-plan-drawer-foot', children: footer }),
