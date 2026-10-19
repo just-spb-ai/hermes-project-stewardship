@@ -336,16 +336,16 @@ export function NotificationSettings({ settings, busy, error, onSave }) {
         SEVERITIES.map((s) => jsx('option', { value: s, children: severityLabel(s) }, s)) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-discord-enabled', children: 'Оповещения в Telegram' }),
+      jsx('label', { htmlFor: 'dy-notif-discord-enabled', children: 'Оповещения в Discord' }),
       jsx('select', { id: 'dy-notif-discord-enabled', value: discordOn ? 'on' : 'off', disabled: busy, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, enabled: e.target.value === 'on' } } }), children:
         [['off', 'Выкл'], ['on', 'Вкл']].map(([v, label]) => jsx('option', { value: v, children: label }, v)) }),
     ]}),
     jsxs('div', { className: 'dy-notif-setting', children: [
-      jsx('label', { htmlFor: 'dy-notif-discord-severity', children: 'Минимальная важность для Telegram' }),
+      jsx('label', { htmlFor: 'dy-notif-discord-severity', children: 'Минимальная важность для Discord' }),
       jsx('select', { id: 'dy-notif-discord-severity', value: discord.min_severity ?? 'high', disabled: busy || !discordOn, onChange: (e) => onSave({ channels: { ...channels, discord: { ...discord, min_severity: e.target.value } } }), children:
         SEVERITIES.map((s) => jsx('option', { value: s, children: severityLabel(s) }, s)) }),
     ]}),
-    jsx('p', { className: 'dy-notif-override-link', 'data-discord-note': true, children: 'Оповещения в Telegram отправляются плановым заданием на этом компьютере после его настройки. До этого ничего не отправляется.' }),
+    jsx('p', { className: 'dy-notif-override-link', 'data-discord-note': true, children: 'Оповещения в Discord отправляются плановым заданием на этом компьютере после его настройки. До этого ничего не отправляется.' }),
     jsxs('div', { className: 'dy-notif-setting', children: [
       jsx('label', { htmlFor: 'dy-notif-quiet-start', children: 'Тихие часы' }),
       jsx('input', { id: 'dy-notif-quiet-start', type: 'time', value: quiet.start ?? '', disabled: busy, onChange: (e) => onSave({ quiet_hours: { ...(quiet || {}), start: e.target.value, end: quiet.end ?? '' } }) }),
